@@ -1,5 +1,5 @@
 {
-  "server": "Karadoc",
+  "servers": ["Karadoc"],
   "databases": {
     "config": {
       "host": "127.0.0.1",

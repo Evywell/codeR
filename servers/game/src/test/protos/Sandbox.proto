@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package sandbox;
+
+option java_package = "fr.rob.game.sandbox";
+option java_outer_classname = "SandboxProtos";
+
+message Subject {
+  string firstName = 1;
+  string lastName  = 2;
+  uint32 age       = 3;
+}

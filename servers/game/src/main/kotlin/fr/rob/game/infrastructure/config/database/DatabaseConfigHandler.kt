@@ -9,7 +9,7 @@ import org.codehaus.jackson.node.ObjectNode
 class DatabaseConfigHandler(private val connectionManager: ConnectionManager) : ConfigHandlerInterface {
 
     override fun handle(node: ObjectNode): ConnectionManager {
-        if (node.has("databases")) {
+        if (!node.has("databases")) {
             return connectionManager
         }
 
@@ -20,11 +20,11 @@ class DatabaseConfigHandler(private val connectionManager: ConnectionManager) : 
             val connectionName = databasesNodeFieldNames.next()
             val databaseNode = databasesNode.findValue(connectionName)
             val databaseConfig = DatabaseConfig(
-                    databaseNode["host"].textValue,
-                    databaseNode["port"].longValue,
-                    databaseNode["user"].textValue,
-                    databaseNode["password"].textValue,
-                    databaseNode["database"].textValue
+                databaseNode["host"].textValue,
+                databaseNode["port"].longValue,
+                databaseNode["user"].textValue,
+                databaseNode["password"].textValue,
+                databaseNode["database"].textValue
             )
 
             connectionManager.newConnection(connectionName, databaseConfig)
