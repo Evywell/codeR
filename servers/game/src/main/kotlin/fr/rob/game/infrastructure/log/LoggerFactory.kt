@@ -1,4 +1,4 @@
-package fr.rob.game.application.log
+package fr.rob.game.infrastructure.log
 
 import fr.rob.game.LOG4J_CONFIG_RESOURCE_PATH
 import fr.rob.game.domain.log.LoggerInterface
@@ -6,7 +6,6 @@ import fr.rob.game.infrastructure.config.ResourceManager
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.core.LoggerContext
 import org.apache.logging.log4j.core.appender.ConsoleAppender
-import org.apache.logging.log4j.core.config.Configuration
 import org.apache.logging.log4j.core.config.ConfigurationSource
 import org.apache.logging.log4j.core.config.LoggerConfig
 import org.apache.logging.log4j.core.config.xml.XmlConfigurationFactory

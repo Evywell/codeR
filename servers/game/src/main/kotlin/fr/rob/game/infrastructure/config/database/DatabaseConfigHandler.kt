@@ -1,9 +1,9 @@
 package fr.rob.game.infrastructure.config.database
 
 import fr.rob.core.config.ConfigHandlerInterface
-import fr.rob.core.database.ConnectionManager
 import fr.rob.core.database.DatabaseConfig
 import fr.rob.game.DATABASE
+import fr.rob.game.infrastructure.database.ConnectionManager
 import org.codehaus.jackson.node.ObjectNode
 
 class DatabaseConfigHandler(private val connectionManager: ConnectionManager) : ConfigHandlerInterface {
