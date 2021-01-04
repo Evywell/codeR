@@ -1,6 +1,6 @@
 package fr.rob.game.application.network
 
-import fr.rob.game.application.log.LoggerFactory
+import fr.rob.game.infrastructure.log.LoggerFactory
 import fr.rob.game.domain.server.Server
 import fr.rob.game.domain.server.ServerManager
 

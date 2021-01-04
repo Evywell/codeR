@@ -1,4 +1,4 @@
-package fr.rob.game.application.log
+package fr.rob.game.infrastructure.log
 
 import fr.rob.game.domain.log.LoggerInterface
 import org.apache.logging.log4j.Logger

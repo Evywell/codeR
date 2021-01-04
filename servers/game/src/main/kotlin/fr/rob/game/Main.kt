@@ -1,11 +1,8 @@
 package fr.rob.game
 
-import com.google.inject.AbstractModule
+import fr.rob.core.AbstractModule
 import fr.rob.core.BaseApplication
-import fr.rob.core.database.ConnectionManager
 import fr.rob.core.initiator.Initiator
-import fr.rob.game.application.log.Logger
-import fr.rob.game.application.log.LoggerFactory
 import fr.rob.game.application.network.GameServerManager
 import fr.rob.game.application.setup.AppSetup
 import fr.rob.game.application.setup.tasks.TaskAuthCollectJWTPublicKey
@@ -15,14 +12,17 @@ import fr.rob.game.domain.setup.Setup
 import fr.rob.game.infrastructure.config.ResourceManager
 import fr.rob.game.infrastructure.config.database.DatabaseConfigHandler
 import fr.rob.game.infrastructure.config.server.ServerConfigHandler
+import fr.rob.game.infrastructure.database.ConnectionManager
+import fr.rob.game.infrastructure.database.DatabaseModule
+import fr.rob.game.infrastructure.event.EventManager
 import java.net.URL
 
 
 class Main : BaseApplication() {
 
+    private val eventManager = EventManager()
     private val setup: Setup = AppSetup()
-
-    private val connectionManager = ConnectionManager()
+    private val connectionManager = ConnectionManager(eventManager)
 
     companion object {
         @JvmStatic
@@ -56,7 +56,8 @@ class Main : BaseApplication() {
             .addTask(TASK_LOAD_SERVER_CONFIG, TaskLoadServerConfig(this, setup))
     }
 
-    override fun registerModules(modules: MutableList<AbstractModule>?) {
-        // @todo: Remove this ? Replace by my own module system ?
+    override fun registerModules(modules: MutableList<AbstractModule>) {
+        modules
+            .add(DatabaseModule(eventManager))
     }
 }
