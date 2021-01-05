@@ -1,12 +1,14 @@
 package fr.rob.game.domain.process
 
+import kotlin.reflect.KClass
+
 class ProcessManager {
 
     private val processes = HashMap<String, () -> Any>()
 
-    fun registerProcess(name: String, callback: () -> Any) {
-        processes[name] = callback
+    fun registerProcess(name: KClass<*>, callback: () -> Any) {
+        processes[name.qualifiedName!!] = callback
     }
 
-    fun makeProcess(name: String): Any? = processes[name]?.invoke()
+    fun makeProcess(name: KClass<*>): Any? = processes[name.qualifiedName]?.invoke()
 }
