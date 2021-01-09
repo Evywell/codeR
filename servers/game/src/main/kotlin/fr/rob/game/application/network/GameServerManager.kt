@@ -1,9 +1,9 @@
 package fr.rob.game.application.network
 
-import fr.rob.game.application.log.LoggerFactory
 import fr.rob.game.domain.network.Server
 import fr.rob.game.domain.network.ServerManager
 import fr.rob.game.domain.world.World
+import fr.rob.game.infrastructure.log.LoggerFactory
 
 class GameServerManager : ServerManager() {
 
