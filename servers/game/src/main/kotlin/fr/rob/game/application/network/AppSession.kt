@@ -1,8 +1,8 @@
 package fr.rob.game.application.network
 
-import fr.rob.game.domain.server.GameServer
-import fr.rob.game.domain.server.Session
-import fr.rob.game.domain.server.packet.Packet
+import fr.rob.game.domain.network.GameServer
+import fr.rob.game.domain.network.Session
+import fr.rob.game.domain.network.packet.Packet
 import io.netty.channel.Channel
 import io.netty.util.NetUtil
 import java.net.InetSocketAddress

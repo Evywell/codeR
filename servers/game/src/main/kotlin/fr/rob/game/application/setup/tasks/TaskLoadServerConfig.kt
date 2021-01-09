@@ -9,8 +9,8 @@ import fr.rob.game.CONFIG_DEFAULT
 import fr.rob.game.DATABASE
 import fr.rob.game.DB_CONFIG
 import fr.rob.game.SERVER
-import fr.rob.game.domain.server.Server
-import fr.rob.game.domain.server.Zone
+import fr.rob.game.domain.network.Server
+import fr.rob.game.domain.network.Zone
 import fr.rob.game.domain.setup.Setup
 import fr.rob.game.infrastructure.config.database.STMT_CONFIG_SEL_SERVER_INSTANCES
 import org.codehaus.jackson.map.ObjectMapper

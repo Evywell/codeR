@@ -1,4 +1,4 @@
-package fr.rob.game.domain.server
+package fr.rob.game.domain.network
 
 abstract class ServerManager {
 

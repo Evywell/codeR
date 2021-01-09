@@ -2,7 +2,7 @@ package fr.rob.game.infrastructure.config.server
 
 import fr.rob.core.config.ConfigHandlerInterface
 import fr.rob.game.SERVER
-import fr.rob.game.domain.server.Server
+import fr.rob.game.domain.network.Server
 import org.codehaus.jackson.node.ArrayNode
 import org.codehaus.jackson.node.ObjectNode
 

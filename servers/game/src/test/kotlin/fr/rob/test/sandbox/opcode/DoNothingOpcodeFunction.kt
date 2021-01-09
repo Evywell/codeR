@@ -1,6 +1,6 @@
 package fr.rob.test.sandbox.opcode
 
-import fr.rob.game.domain.server.Session
+import fr.rob.game.domain.network.Session
 
 class DoNothingOpcodeFunction(subject: Any) : OpcodeHandlerTestSubject(subject) {
 

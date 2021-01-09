@@ -1,6 +1,6 @@
 package fr.rob.game.application.setup
 
-import fr.rob.game.domain.server.Server
+import fr.rob.game.domain.network.Server
 import fr.rob.game.domain.setup.Setup
 import java.security.PublicKey
 

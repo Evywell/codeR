@@ -1,8 +1,9 @@
 package fr.rob.game.application.network
 
 import fr.rob.game.application.log.LoggerFactory
-import fr.rob.game.domain.server.Server
-import fr.rob.game.domain.server.ServerManager
+import fr.rob.game.domain.network.Server
+import fr.rob.game.domain.network.ServerManager
+import fr.rob.game.domain.world.World
 
 class GameServerManager : ServerManager() {
 
@@ -10,6 +11,16 @@ class GameServerManager : ServerManager() {
         val address: String = server.serverAddress!!
         val port: Int = parsePortFromAddress(address)
         val gs = GameServer(port, LoggerFactory.create(server.serverName!!))
+
+        val world = World()
+
+        /*
+        world.initialize()
+        world.loop()
+         */
+
+        // @todo: Initiate the world and MapManager using server.mapId
+        // @todo: Make the world loop and launch it, then start the server after all is successfully initialized
 
         gs.start()
     }

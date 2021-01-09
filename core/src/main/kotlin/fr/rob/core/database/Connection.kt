@@ -5,7 +5,7 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.sql.Statement
 
-class Connection(
+open class Connection(
     var host: String,
     var port: Long,
     var user: String,
@@ -18,7 +18,7 @@ class Connection(
     var pool = PreparedStatementPool(this)
 
     constructor(dbname: String, user: String, password: String)
-        : this("localhost", 3306, user, password, dbname)
+            : this("localhost", 3306, user, password, dbname)
 
     fun executeStatement(sql: String): Statement? {
         connect()
@@ -61,7 +61,7 @@ class Connection(
             )
 
             this.connection = DriverManager.getConnection(
-                    dsn
+                dsn
             )
             connected = true
         } catch (e: SQLException) {

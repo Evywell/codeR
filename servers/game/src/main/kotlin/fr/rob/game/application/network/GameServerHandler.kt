@@ -1,9 +1,9 @@
 package fr.rob.game.application.network
 
-import fr.rob.game.domain.server.GameServer
-import fr.rob.game.domain.server.Session
-import fr.rob.game.domain.server.exception.SessionNotFoundException
-import fr.rob.game.domain.server.packet.Packet
+import fr.rob.game.domain.network.GameServer
+import fr.rob.game.domain.network.Session
+import fr.rob.game.domain.network.exception.SessionNotFoundException
+import fr.rob.game.domain.network.packet.Packet
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelHandlerContext

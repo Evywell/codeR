@@ -1,4 +1,4 @@
-package fr.rob.game.domain.server.packet
+package fr.rob.game.domain.network.packet
 
 import java.nio.ByteBuffer
 

@@ -1,7 +1,7 @@
 package fr.rob.game.domain.opcode
 
-import fr.rob.game.domain.server.Session
-import fr.rob.game.domain.server.packet.Packet
+import fr.rob.game.domain.network.Session
+import fr.rob.game.domain.network.packet.Packet
 
 abstract class OpcodeFunction {
 

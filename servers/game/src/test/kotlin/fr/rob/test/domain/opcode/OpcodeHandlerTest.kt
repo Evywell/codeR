@@ -1,8 +1,8 @@
 package fr.rob.test.domain.opcode
 
 import fr.rob.game.domain.opcode.OpcodeHandler
-import fr.rob.game.domain.server.GameServer
-import fr.rob.game.domain.server.packet.Packet
+import fr.rob.game.domain.network.GameServer
+import fr.rob.game.domain.network.packet.Packet
 import fr.rob.game.sandbox.SandboxProtos
 import fr.rob.test.BaseTest
 import fr.rob.test.opcode.HandlingOpcodeWithProtoAsMessageOpcode

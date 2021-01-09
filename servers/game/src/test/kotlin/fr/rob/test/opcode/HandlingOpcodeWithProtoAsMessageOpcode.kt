@@ -2,7 +2,7 @@ package fr.rob.test.opcode
 
 import com.google.protobuf.Message
 import fr.rob.game.application.opcode.ProtobufOpcodeFunction
-import fr.rob.game.domain.server.Session
+import fr.rob.game.domain.network.Session
 import fr.rob.game.sandbox.SandboxProtos
 
 class HandlingOpcodeWithProtoAsMessageOpcode : ProtobufOpcodeFunction() {

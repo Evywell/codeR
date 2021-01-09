@@ -1,4 +1,4 @@
-package fr.rob.game.domain.server
+package fr.rob.game.domain.network
 
 data class Server(
     var serverName: String? = null,

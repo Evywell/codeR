@@ -1,8 +1,8 @@
-package fr.rob.game.domain.server
+package fr.rob.game.domain.network
 
 import fr.rob.game.domain.log.LoggerInterface
 import fr.rob.game.domain.opcode.ClientOpcodeHandler
-import fr.rob.game.domain.server.exception.SessionNotFoundException
+import fr.rob.game.domain.network.exception.SessionNotFoundException
 
 open class GameServer(logger: LoggerInterface) {
 

@@ -2,7 +2,7 @@ package fr.rob.game.application.network
 
 import fr.rob.game.SSL_ENABLED
 import fr.rob.game.domain.log.LoggerInterface
-import fr.rob.game.domain.server.GameServer
+import fr.rob.game.domain.network.GameServer
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.ChannelFuture
 import io.netty.channel.ChannelOption

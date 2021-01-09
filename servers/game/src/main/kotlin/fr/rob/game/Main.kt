@@ -4,13 +4,11 @@ import com.google.inject.AbstractModule
 import fr.rob.core.BaseApplication
 import fr.rob.core.database.ConnectionManager
 import fr.rob.core.initiator.Initiator
-import fr.rob.game.application.log.Logger
-import fr.rob.game.application.log.LoggerFactory
 import fr.rob.game.application.network.GameServerManager
 import fr.rob.game.application.setup.AppSetup
 import fr.rob.game.application.setup.tasks.TaskAuthCollectJWTPublicKey
 import fr.rob.game.application.setup.tasks.TaskLoadServerConfig
-import fr.rob.game.domain.server.ServerManager
+import fr.rob.game.domain.network.ServerManager
 import fr.rob.game.domain.setup.Setup
 import fr.rob.game.infrastructure.config.ResourceManager
 import fr.rob.game.infrastructure.config.database.DatabaseConfigHandler
