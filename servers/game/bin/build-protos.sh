@@ -1,6 +1,16 @@
 #!/bin/bash
 cd $(dirname $0) || exit 1
-protoc=../libs/protoc-3.14.0-osx-x86_64/bin/protoc
+
+UNAMESTR=`uname`
+PLATFORM='unknown'
+
+if [[ "$UNAMESTR" == 'Linux' ]]; then
+   PLATFORM='linux'
+elif [[ "$UNAMESTR" == 'FreeBSD' ]]; then
+   PLATFORM='freebsd'
+fi
+
+protoc=../libs/protoc-3.14.0-$PLATFORM-x86_64/bin/protoc
 
 # main protos
 DST_DIR=../src/main/java
