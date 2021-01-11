@@ -1,4 +1,4 @@
-package fr.rob.game.application.setup
+package fr.rob.game.domain.setup
 
 import fr.rob.game.domain.network.Server
 import fr.rob.game.domain.setup.Setup

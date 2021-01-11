@@ -1,6 +1,7 @@
-package fr.rob.game.application.network
+package fr.rob.game.domain.network.netty
 
-import fr.rob.game.domain.network.GameServer
+import fr.rob.game.domain.network.netty.NettyGameServer
+import fr.rob.game.domain.network.netty.NettyGameServerHandler
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.socket.SocketChannel
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder
@@ -10,7 +11,7 @@ import io.netty.handler.codec.bytes.ByteArrayEncoder
 import io.netty.handler.ssl.SslContextBuilder
 import io.netty.handler.ssl.util.SelfSignedCertificate
 
-class ServerInitializer(private val gameServer: GameServer, private val ssl: Boolean = false) :
+class NettyServerInitializer(private val nettyGameServer: NettyGameServer, private val ssl: Boolean = false) :
     ChannelInitializer<SocketChannel>() {
 
     override fun initChannel(ch: SocketChannel) {
@@ -38,6 +39,6 @@ class ServerInitializer(private val gameServer: GameServer, private val ssl: Boo
         pipeline.addLast("decoder", ByteArrayDecoder())
         pipeline.addLast("frameEncoder", LengthFieldPrepender(4))
         pipeline.addLast("bytesEncoder", ByteArrayEncoder())
-        pipeline.addLast(GameServerHandler(gameServer))
+        pipeline.addLast(NettyGameServerHandler(nettyGameServer))
     }
 }

@@ -1,7 +1,6 @@
-package fr.rob.game.application.network
+package fr.rob.game.domain.network
 
-import fr.rob.game.domain.network.Server
-import fr.rob.game.domain.network.ServerManager
+import fr.rob.game.domain.network.netty.NettyGameServer
 import fr.rob.game.domain.world.World
 import fr.rob.game.infrastructure.log.LoggerFactory
 
@@ -10,7 +9,8 @@ class GameServerManager : ServerManager() {
     override fun buildGameServer(server: Server) {
         val address: String = server.serverAddress!!
         val port: Int = parsePortFromAddress(address)
-        val gs = GameServer(port, LoggerFactory.create(server.serverName!!))
+        // @todo: Use a factory to create the instance. Pass it using the dependency injection
+        val gs = NettyGameServer(port, LoggerFactory.create(server.serverName!!))
 
         val world = World()
 

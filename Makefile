@@ -18,6 +18,10 @@ bp: ## alias of build-proto
 test: ## Runs the :servers:game tests
 	./gradlew :servers:game:test
 
+.PHONY: build
+build: ## Builds the :servers:game project
+	./gradlew :servers:game:build
+
 .PHONY: install-protobuf
 install-protobuf: ## Download the 3.14.0 version of protoc and install it in libs folder
 	wget -P tmp https://github.com/protocolbuffers/protobuf/releases/download/v3.14.0/$(PROTOC_ARCHIVE_NAME)

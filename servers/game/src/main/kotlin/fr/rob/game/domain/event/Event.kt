@@ -1,6 +1,4 @@
-package fr.rob.game.infrastructure.event
-
-import fr.rob.game.domain.event.EventInterface
+package fr.rob.game.domain.event
 
 open class Event(override var propagationStopped: Boolean? = false) : EventInterface {
 
