@@ -1,4 +1,4 @@
-package fr.rob.game.application.network
+package fr.rob.game.domain.network.netty
 
 import fr.rob.game.SSL_ENABLED
 import fr.rob.game.domain.log.LoggerInterface
@@ -11,11 +11,11 @@ import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioServerSocketChannel
 import kotlin.concurrent.thread
 
-class GameServer(private val port: Int, logger: LoggerInterface) : GameServer(logger) {
+class NettyGameServer(private val port: Int, logger: LoggerInterface) : GameServer(logger) {
 
     private val bootstrap: ServerBootstrap = ServerBootstrap()
 
-    fun start() {
+    override fun start() {
         val loopGroup: EventLoopGroup = NioEventLoopGroup()
         val workerGroup: EventLoopGroup = NioEventLoopGroup()
 
@@ -24,7 +24,7 @@ class GameServer(private val port: Int, logger: LoggerInterface) : GameServer(lo
             .childOption(ChannelOption.SO_KEEPALIVE, true)
 
         // Our handler
-        bootstrap.childHandler(ServerInitializer(this, SSL_ENABLED))
+        bootstrap.childHandler(NettyServerInitializer(this, SSL_ENABLED))
 
         val channel: ChannelFuture = bootstrap.bind(port).sync()
 

@@ -1,5 +1,6 @@
-package fr.rob.game.domain.network
+package fr.rob.game.domain.network.session
 
+import fr.rob.game.domain.network.GameServer
 import fr.rob.game.domain.network.packet.Packet
 
 abstract class Session(protected val gameServer: GameServer) {

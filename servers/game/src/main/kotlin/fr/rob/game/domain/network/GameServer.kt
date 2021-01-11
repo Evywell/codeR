@@ -3,6 +3,7 @@ package fr.rob.game.domain.network
 import fr.rob.game.domain.log.LoggerInterface
 import fr.rob.game.domain.opcode.ClientOpcodeHandler
 import fr.rob.game.domain.network.exception.SessionNotFoundException
+import fr.rob.game.domain.network.session.Session
 
 open class GameServer(logger: LoggerInterface) {
 
@@ -25,4 +26,6 @@ open class GameServer(logger: LoggerInterface) {
 
         sessions[identifier] = session
     }
+
+    open fun start() = Unit
 }

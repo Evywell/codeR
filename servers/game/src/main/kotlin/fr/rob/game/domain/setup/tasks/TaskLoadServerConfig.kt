@@ -1,4 +1,4 @@
-package fr.rob.game.application.setup.tasks
+package fr.rob.game.domain.setup.tasks
 
 import fr.rob.core.BaseApplication
 import fr.rob.core.config.Config

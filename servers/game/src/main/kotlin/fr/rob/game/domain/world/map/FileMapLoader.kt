@@ -1,4 +1,4 @@
-package fr.rob.game.application.world.map
+package fr.rob.game.domain.world.map
 
 import fr.rob.game.domain.world.map.Map
 import fr.rob.game.domain.world.map.MapLoaderInterface

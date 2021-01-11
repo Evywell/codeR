@@ -1,4 +1,4 @@
-package fr.rob.game.application.setup.tasks
+package fr.rob.game.domain.setup.tasks
 
 import fr.rob.core.initiator.TaskInterface
 import fr.rob.core.security.PublicKeyReader

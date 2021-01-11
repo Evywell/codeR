@@ -1,7 +1,7 @@
-package fr.rob.game.application.network
+package fr.rob.game.domain.network.netty
 
-import fr.rob.game.domain.network.GameServer
-import fr.rob.game.domain.network.Session
+import fr.rob.game.domain.network.session.AppSession
+import fr.rob.game.domain.network.session.Session
 import fr.rob.game.domain.network.exception.SessionNotFoundException
 import fr.rob.game.domain.network.packet.Packet
 import io.netty.buffer.ByteBuf
@@ -9,11 +9,11 @@ import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
 
-class GameServerHandler(private val gameServer: GameServer) : ChannelInboundHandlerAdapter() {
+class NettyGameServerHandler(private val nettyGameServer: NettyGameServer) : ChannelInboundHandlerAdapter() {
 
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
         try {
-            val session: Session = gameServer.sessionFromIdentifier(ctx.channel().hashCode())
+            val session: Session = nettyGameServer.sessionFromIdentifier(ctx.channel().hashCode())
             val buffer: ByteBuf = Unpooled.copiedBuffer(msg as ByteArray)
             val bytes: ByteArray
 
@@ -28,14 +28,14 @@ class GameServerHandler(private val gameServer: GameServer) : ChannelInboundHand
             val packet = Packet.fromByteArray(bytes)
             val opcode = packet.readOpcode()
 
-            gameServer.clientOpcodeHandler.process(opcode, session, packet)
+            nettyGameServer.clientOpcodeHandler.process(opcode, session, packet)
         } catch (exception: SessionNotFoundException) {
             ctx.channel().close()
         }
     }
 
     override fun channelActive(ctx: ChannelHandlerContext) {
-        gameServer.registerSession(ctx.channel().hashCode(), AppSession(gameServer, ctx.channel()))
+        nettyGameServer.registerSession(ctx.channel().hashCode(), AppSession(nettyGameServer, ctx.channel()))
     }
 
     // @todo: Add channelInactive and destroy the session
