@@ -1,6 +1,21 @@
-UNAME := $(shell uname | sed -e 's/\(.*\)/\L\1/')
-PROTOC_LIB_NAME := protoc-3.14.0-$(UNAME)-x86_64
+UNAME := $(shell uname | tr '[:upper:]' '[:lower:]')
+
+ifeq ($(UNAME), darwin)
+    OS := osx
+else
+	OS := linux
+endif
+
+PROTOC_LIB_NAME := protoc-3.14.0-$(OS)-x86_64
 PROTOC_ARCHIVE_NAME := $(PROTOC_LIB_NAME).zip
+PROTOC_LIB_PATH := servers/game/libs/$(PROTOC_LIB_NAME)
+PROTOC_LIB_BINARY := $(PROTOC_LIB_PATH)/bin/protoc
+
+JAVA_DIR := ./servers/game
+JAVA_DST_DIR := $(JAVA_DIR)/src/main/java
+JAVA_SRC_DIR := $(JAVA_DIR)/src/main/protos
+JAVA_TEST_DST_DIR := $(JAVA_DIR)/src/test/java
+JAVA_TEST_SRC_DIR := $(JAVA_DIR)/src/test/protos
 
 .PHONY: help
 help: ## Outputs this help message
@@ -8,7 +23,8 @@ help: ## Outputs this help message
 
 .PHONY: build-proto
 build-proto:
-	bash servers/game/bin/build-protos.sh
+	$(PROTOC_LIB_BINARY) -I=$(JAVA_SRC_DIR) --java_out=$(JAVA_DST_DIR) $(JAVA_SRC_DIR)/*.proto
+	$(PROTOC_LIB_BINARY) -I=$(JAVA_TEST_SRC_DIR) --java_out=$(JAVA_TEST_DST_DIR) $(JAVA_TEST_SRC_DIR)/*.proto
 
 .PHONY: bp
 bp: ## alias of build-proto
@@ -24,8 +40,8 @@ build: ## Builds the :servers:game project
 
 .PHONY: install-protobuf
 install-protobuf: ## Download the 3.14.0 version of protoc and install it in libs folder
-	wget -P tmp https://github.com/protocolbuffers/protobuf/releases/download/v3.14.0/$(PROTOC_ARCHIVE_NAME)
+	curl https://github.com/protocolbuffers/protobuf/releases/download/v3.14.0/$(PROTOC_ARCHIVE_NAME) -Lo tmp/$(PROTOC_ARCHIVE_NAME)
 	unzip tmp/$(PROTOC_ARCHIVE_NAME) -d tmp/$(PROTOC_LIB_NAME)
-	mkdir -p servers/game/libs/
-	mv tmp/$(PROTOC_LIB_NAME) servers/game/libs/$(PROTOC_LIB_NAME)
+	mkdir -p $(PROTOC_LIB_PATH) && rm -rf $(PROTOC_LIB_PATH)
+	mv tmp/$(PROTOC_LIB_NAME) $(PROTOC_LIB_PATH)
 	rm tmp/$(PROTOC_ARCHIVE_NAME)

@@ -1,3 +1,5 @@
+.DS_STORE
+
 logs/
 # Ignore Gradle project-specific cache directory
 .gradle
