@@ -20,11 +20,11 @@ class ProcessManager {
     /**
      * Creates a new process identified by the `name` parameter in the store
      */
-    fun makeProcess(name: KClass<*>): Any? = processes[name.qualifiedName]?.invoke(null)
+    fun <T: Any> makeProcess(name: KClass<out T>): T = processes[name.qualifiedName]!!.invoke(null) as T
 
     /**
      * Creates a new process identified by the `name` parameter in the store using the `parameters` to configure it
      */
-    fun makeProcess(name: KClass<*>, parameters: Array<Any>): Any? =
-        processes[name.qualifiedName]?.invoke(parameters)
+    fun <T: Any> makeProcess(name: KClass<out T>, parameters: Array<Any>): T =
+        processes[name.qualifiedName]!!.invoke(parameters) as T
 }

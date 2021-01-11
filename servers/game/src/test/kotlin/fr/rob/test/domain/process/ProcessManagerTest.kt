@@ -2,6 +2,8 @@ package fr.rob.test.domain.process
 
 import fr.rob.game.domain.process.ProcessManager
 import fr.rob.test.sandbox.process.CreateProcessWithArgumentsProcess
+import fr.rob.test.sandbox.process.CreateProcessWithInterfaceInterface
+import fr.rob.test.sandbox.process.CreateProcessWithInterfaceProcess
 import fr.rob.test.sandbox.process.ProcessShouldBeIndependentProcess
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -15,10 +17,8 @@ class ProcessManagerTest {
         pm.registerProcess(ProcessShouldBeIndependentProcess::class) { ProcessShouldBeIndependentProcess("Jean") }
 
         // Act
-        val p1: ProcessShouldBeIndependentProcess =
-            pm.makeProcess(ProcessShouldBeIndependentProcess::class) as ProcessShouldBeIndependentProcess
-        val p2: ProcessShouldBeIndependentProcess =
-            pm.makeProcess(ProcessShouldBeIndependentProcess::class) as ProcessShouldBeIndependentProcess
+        val p1: ProcessShouldBeIndependentProcess = pm.makeProcess(ProcessShouldBeIndependentProcess::class)
+        val p2: ProcessShouldBeIndependentProcess = pm.makeProcess(ProcessShouldBeIndependentProcess::class)
 
         p2.name = "Axel"
 
@@ -36,10 +36,22 @@ class ProcessManagerTest {
 
         // Act
         val process = pm.makeProcess(CreateProcessWithArgumentsProcess::class, arrayOf(DependencyClass()))
-                as CreateProcessWithArgumentsProcess
 
         // Assert
         assertEquals("Hello", process.dependency.sayHello())
+    }
+
+    @Test
+    fun `create process using interface`() {
+        // Arrange
+        val pm = ProcessManager()
+        pm.registerProcess(CreateProcessWithInterfaceInterface::class) { CreateProcessWithInterfaceProcess() }
+
+        // Act
+        val process = pm.makeProcess(CreateProcessWithInterfaceInterface::class)
+
+        // Assert
+        assertEquals(true, process is CreateProcessWithInterfaceProcess)
     }
 }
 
