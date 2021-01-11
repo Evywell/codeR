@@ -26,4 +26,6 @@ open class GameServer(logger: LoggerInterface) {
 
         sessions[identifier] = session
     }
+
+    open fun start() = Unit
 }

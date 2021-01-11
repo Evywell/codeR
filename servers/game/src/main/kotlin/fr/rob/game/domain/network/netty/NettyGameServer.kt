@@ -15,7 +15,7 @@ class NettyGameServer(private val port: Int, logger: LoggerInterface) : GameServ
 
     private val bootstrap: ServerBootstrap = ServerBootstrap()
 
-    fun start() {
+    override fun start() {
         val loopGroup: EventLoopGroup = NioEventLoopGroup()
         val workerGroup: EventLoopGroup = NioEventLoopGroup()
 

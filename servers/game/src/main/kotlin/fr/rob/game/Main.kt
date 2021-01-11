@@ -7,7 +7,7 @@ import fr.rob.game.domain.network.GameServerManager
 import fr.rob.game.domain.setup.AppSetup
 import fr.rob.game.domain.setup.tasks.TaskAuthCollectJWTPublicKey
 import fr.rob.game.domain.setup.tasks.TaskLoadServerConfig
-import fr.rob.game.domain.network.ServerManager
+import fr.rob.game.domain.network.netty.NettyGameServerFactory
 import fr.rob.game.domain.setup.Setup
 import fr.rob.game.infrastructure.config.ResourceManager
 import fr.rob.game.infrastructure.config.database.DatabaseConfigHandler
@@ -46,7 +46,7 @@ class Main : BaseApplication() {
             .runTask(TASK_AUTH_COLLECT_JWT_PUBLIC_KEY) // Retrieve and store JWTPublicKey
             .runTask(TASK_LOAD_SERVER_CONFIG) // Store server info
 
-        val serverManager: ServerManager = GameServerManager()
+        val serverManager = GameServerManager(NettyGameServerFactory())
         serverManager.buildGameServers(setup.getServers())
     }
 

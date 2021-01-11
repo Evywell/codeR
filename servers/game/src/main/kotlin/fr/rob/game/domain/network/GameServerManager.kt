@@ -4,13 +4,17 @@ import fr.rob.game.domain.network.netty.NettyGameServer
 import fr.rob.game.domain.world.World
 import fr.rob.game.infrastructure.log.LoggerFactory
 
-class GameServerManager : ServerManager() {
+class GameServerManager (private val factory: GameServerFactoryInterface) {
 
-    override fun buildGameServer(server: Server) {
+    fun buildGameServers(servers: Array<Server>) {
+        servers.forEach { server -> buildGameServer(server) }
+    }
+
+    private fun buildGameServer(server: Server) {
         val address: String = server.serverAddress!!
         val port: Int = parsePortFromAddress(address)
-        // @todo: Use a factory to create the instance. Pass it using the dependency injection
-        val gs = NettyGameServer(port, LoggerFactory.create(server.serverName!!))
+
+        val gs = factory.build(port, LoggerFactory.create(server.serverName!!))
 
         val world = World()
 
