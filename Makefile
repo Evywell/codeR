@@ -5,3 +5,7 @@ build-proto:
 .PHONY: bp
 bp: ## alias of build-proto
 	@make build-proto
+
+.PHONY: test
+test: ## Runs the :servers:game tests
+	./gradlew :servers:game:test

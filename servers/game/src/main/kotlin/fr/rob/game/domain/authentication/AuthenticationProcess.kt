@@ -1,9 +1,12 @@
 package fr.rob.game.domain.authentication
 
 import fr.rob.core.auth.jwt.JWTDecoderInterface
-import fr.rob.game.domain.server.Session
+import fr.rob.game.domain.network.Session
 import java.lang.Exception
 
+/**
+ * @todo: continue in another feature, please ignore
+ */
 class AuthenticationProcess(private val jwtDecoder: JWTDecoderInterface) {
 
     fun authenticateByJWT(token: String, session: Session): Boolean {
