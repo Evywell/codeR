@@ -31,7 +31,7 @@ class NettyGameServerHandler(private val nettyGameServer: NettyGameServer) : Cha
             nettyGameServer.clientOpcodeHandler.process(opcode, session, packet)
         } catch (exception: Exception) {
             if (exception is LoggableException) {
-                exception.message?.let { nettyGameServer.logger.error(it) }
+                exception.message?.let { exception.logger.error(it) }
             }
 
             if (ctx.channel().isOpen) {
