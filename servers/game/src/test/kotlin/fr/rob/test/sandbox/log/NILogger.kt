@@ -1,5 +1,6 @@
 package fr.rob.test.sandbox.log
 
+import fr.rob.game.domain.log.LoggerFactoryInterface
 import fr.rob.game.domain.log.LoggerInterface
 
 class NILogger : LoggerInterface {
@@ -11,4 +12,9 @@ class NILogger : LoggerInterface {
     override fun info(message: String, vararg parameters: Any) = Unit
 
     override fun warning(message: String, vararg parameters: Any) = Unit
+}
+
+class NILoggerFactory : LoggerFactoryInterface {
+
+    override fun create(name: String): LoggerInterface = NILogger()
 }

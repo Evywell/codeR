@@ -1,6 +1,6 @@
 package fr.rob.game.domain.network.netty
 
-import fr.rob.game.domain.network.exception.SessionNotFoundException
+import fr.rob.game.domain.log.LoggableException
 import fr.rob.game.domain.network.packet.Packet
 import fr.rob.game.domain.network.session.AppSession
 import fr.rob.game.domain.network.session.Session
@@ -29,8 +29,14 @@ class NettyGameServerHandler(private val nettyGameServer: NettyGameServer) : Cha
             val opcode = packet.readOpcode()
 
             nettyGameServer.clientOpcodeHandler.process(opcode, session, packet)
-        } catch (exception: SessionNotFoundException) {
-            ctx.channel().close()
+        } catch (exception: Exception) {
+            if (exception is LoggableException) {
+                exception.message?.let { nettyGameServer.logger.error(it) }
+            }
+
+            if (ctx.channel().isOpen) {
+                ctx.channel().close()
+            }
         }
     }
 

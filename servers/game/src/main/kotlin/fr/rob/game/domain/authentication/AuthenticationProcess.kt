@@ -1,4 +1,4 @@
-package fr.rob.game.domain.authentication.jwt
+package fr.rob.game.domain.authentication
 
 import fr.rob.game.domain.network.session.Session
 
@@ -11,7 +11,7 @@ abstract class AuthenticationProcess {
             return false
         }
 
-        session.authenticated = true
+        session.isAuthenticated = true
 
         return true
     }
