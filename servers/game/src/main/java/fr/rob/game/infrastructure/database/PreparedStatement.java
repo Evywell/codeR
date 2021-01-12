@@ -129,6 +129,7 @@ public class PreparedStatement implements java.sql.PreparedStatement {
     }
 
     @Override
+    @Deprecated
     public void setUnicodeStream(int parameterIndex, InputStream x, int length) throws SQLException {
         this.stmt.setUnicodeStream(parameterIndex, x, length);
     }

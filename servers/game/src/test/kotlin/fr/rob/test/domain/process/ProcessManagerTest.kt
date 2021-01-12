@@ -1,10 +1,7 @@
 package fr.rob.test.domain.process
 
 import fr.rob.game.domain.process.ProcessManager
-import fr.rob.test.sandbox.process.CreateProcessWithArgumentsProcess
-import fr.rob.test.sandbox.process.CreateProcessWithInterfaceInterface
-import fr.rob.test.sandbox.process.CreateProcessWithInterfaceProcess
-import fr.rob.test.sandbox.process.ProcessShouldBeIndependentProcess
+import fr.rob.test.sandbox.process.*
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -52,6 +49,23 @@ class ProcessManagerTest {
 
         // Assert
         assertEquals(true, process is CreateProcessWithInterfaceProcess)
+    }
+
+    @Test
+    fun `get same process`() {
+        // Arrange
+        val pm = ProcessManager()
+        pm.registerProcess(GetSameProcessProcess::class) { GetSameProcessProcess() }
+
+        // Act
+        val process1 = pm.getOrMakeProcess(GetSameProcessProcess::class)
+        process1.mutableVar = 1
+
+        val process2 = pm.getOrMakeProcess(GetSameProcessProcess::class)
+
+        // Assert
+        assertEquals(1, process1.mutableVar)
+        assertEquals(1, process2.mutableVar)
     }
 }
 
