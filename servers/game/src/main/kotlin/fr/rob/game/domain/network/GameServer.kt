@@ -1,13 +1,14 @@
 package fr.rob.game.domain.network
 
-import fr.rob.game.domain.log.LoggerInterface
+import fr.rob.game.domain.log.LoggerFactoryInterface
 import fr.rob.game.domain.network.exception.SessionNotFoundException
 import fr.rob.game.domain.network.session.Session
 import fr.rob.game.domain.opcode.ClientOpcodeHandler
 
-open class GameServer(logger: LoggerInterface) {
+open class GameServer(val name: String, loggerFactory: LoggerFactoryInterface) {
 
-    val clientOpcodeHandler = ClientOpcodeHandler(logger)
+    val logger = loggerFactory.create(name)
+    val clientOpcodeHandler = ClientOpcodeHandler(loggerFactory.create("OPCODE"))
 
     private val sessions: MutableMap<Int, Session> = HashMap()
 

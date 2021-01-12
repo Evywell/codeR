@@ -5,10 +5,11 @@ import fr.rob.game.domain.network.packet.Packet
 
 abstract class Session(protected val gameServer: GameServer) {
 
-    var authenticated: Boolean = false
+    var isAuthenticated: Boolean = false
 
     abstract fun getIp(): String
     abstract fun send(packet: Packet)
+    abstract fun close()
 
     fun isLocal(): Boolean {
         return getIp() == LOCALHOST_IPV4 || getIp() == LOCALHOST_IPV6

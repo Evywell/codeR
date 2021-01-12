@@ -17,4 +17,8 @@ class AppSession(nettyGameServer: NettyGameServer, private val channel: Channel)
     override fun send(packet: Packet) {
         TODO("Not yet implemented: waiting for Routing")
     }
+
+    override fun close() {
+        channel.close()
+    }
 }

@@ -3,7 +3,7 @@ package fr.rob.game.domain.opcode
 import fr.rob.game.domain.network.packet.Packet
 import fr.rob.game.domain.network.session.Session
 
-abstract class OpcodeFunction {
+abstract class OpcodeFunction(val authenticationNeeded: Boolean = true) {
 
     /**
      * Called when the opcode is trigger

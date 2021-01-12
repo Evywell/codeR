@@ -1,7 +1,6 @@
 package fr.rob.game.domain.network
 
 import fr.rob.game.domain.world.World
-import fr.rob.game.infrastructure.log.LoggerFactory
 
 class GameServerManager (private val factory: GameServerFactoryInterface) {
 
@@ -13,7 +12,7 @@ class GameServerManager (private val factory: GameServerFactoryInterface) {
         val address: String = server.serverAddress!!
         val port: Int = parsePortFromAddress(address)
 
-        val gs = factory.build(port, LoggerFactory.create(server.serverName!!))
+        val gs = factory.build(port, server.serverName!!)
 
         val world = World()
 

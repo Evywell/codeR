@@ -1,7 +1,7 @@
-package fr.rob.game.domain.authentication
+package fr.rob.game.domain.authentication.jwt
 
 import fr.rob.core.auth.jwt.JWTDecoderInterface
-import fr.rob.game.domain.authentication.jwt.AuthenticationProcess
+import fr.rob.game.domain.authentication.AuthenticationProcess
 import java.lang.Exception
 
 /**

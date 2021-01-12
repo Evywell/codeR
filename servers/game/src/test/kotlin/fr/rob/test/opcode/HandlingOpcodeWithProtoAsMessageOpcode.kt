@@ -5,7 +5,7 @@ import fr.rob.game.domain.network.session.Session
 import fr.rob.game.domain.opcode.ProtobufOpcodeFunction
 import fr.rob.game.sandbox.SandboxProtos
 
-class HandlingOpcodeWithProtoAsMessageOpcode : ProtobufOpcodeFunction() {
+class HandlingOpcodeWithProtoAsMessageOpcode : ProtobufOpcodeFunction(false) {
 
     lateinit var sarahConnor: SandboxProtos.Subject
 

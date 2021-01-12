@@ -18,7 +18,7 @@ class OpcodeHandlerTest : BaseTest() {
     @Test
     fun `ensure the right opcode function is proceed`() {
         // Arrange
-        val session = NISession(GameServer(logger))
+        val session = NISession(GameServer("test", loggerFactory))
         val packet = EmptyPacket()
 
         val opcodeHandler = OpcodeHandler(logger)
@@ -46,7 +46,7 @@ class OpcodeHandlerTest : BaseTest() {
     fun `handling opcode with proto as message`() {
         // Arrange
         val opcode = 1
-        val gs = GameServer(logger)
+        val gs = GameServer("test", loggerFactory)
         val session = NISession(gs)
         val opcodeHandler = OpcodeHandler(logger)
 

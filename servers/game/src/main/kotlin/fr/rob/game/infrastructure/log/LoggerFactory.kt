@@ -1,6 +1,7 @@
 package fr.rob.game.infrastructure.log
 
 import fr.rob.game.LOG4J_CONFIG_RESOURCE_PATH
+import fr.rob.game.domain.log.LoggerFactoryInterface
 import fr.rob.game.domain.log.LoggerInterface
 import fr.rob.game.infrastructure.config.ResourceManager
 import org.apache.logging.log4j.Level
@@ -13,9 +14,9 @@ import org.apache.logging.log4j.core.layout.PatternLayout
 import java.io.File
 import java.io.FileInputStream
 
-object LoggerFactory {
+object LoggerFactory : LoggerFactoryInterface {
 
-    fun create(name: String): LoggerInterface {
+    override fun create(name: String): LoggerInterface {
         val configurationFactory = XmlConfigurationFactory.getInstance()
 
         val configurationSource = ConfigurationSource(

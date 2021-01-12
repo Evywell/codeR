@@ -9,4 +9,6 @@ class NISession(gameServer: GameServer) : Session(gameServer) {
     override fun getIp(): String = ""
 
     override fun send(packet: Packet) = Unit
+
+    override fun close() = Unit
 }
