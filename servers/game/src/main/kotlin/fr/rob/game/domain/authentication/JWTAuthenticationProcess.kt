@@ -1,14 +1,21 @@
 package fr.rob.game.domain.authentication
 
 import fr.rob.core.auth.jwt.JWTDecoderInterface
-import fr.rob.game.domain.network.session.Session
+import fr.rob.game.domain.authentication.jwt.AuthenticationProcess
+import java.lang.Exception
 
 /**
  * @todo: continue in another feature, please ignore
  */
-class AuthenticationProcess(private val jwtDecoder: JWTDecoderInterface) {
+class JWTAuthenticationProcess(private val jwtDecoder: JWTDecoderInterface) : AuthenticationProcess() {
 
-    fun authenticateByJWT(token: String, session: Session): Boolean {
+    private lateinit var token: String
+
+    override fun checkAuthentication(): Boolean {
+        if (token.isEmpty()) {
+            throw Exception("You MUST specify a value for the token")
+        }
+
         return try {
             val result = jwtDecoder.decode(token)
 
@@ -24,8 +31,6 @@ class AuthenticationProcess(private val jwtDecoder: JWTDecoderInterface) {
             if (!game.slug.equals(JWT_AUTH_RESULT_GAME_SLUG)) {
                 return false
             }
-
-            session.authenticated = true
 
             true
         } catch (e: Exception) {
