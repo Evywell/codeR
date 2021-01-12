@@ -6,6 +6,7 @@ import kotlin.reflect.KClass
  * Manage all the Processes of the application
  * It allows to register a process in the processes store and create processes when needed
  */
+@Suppress("UNCHECKED_CAST")
 class ProcessManager {
 
     private val processes = HashMap<String, (args: Array<Any>?) -> Any>()
