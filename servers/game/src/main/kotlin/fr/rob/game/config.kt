@@ -17,4 +17,5 @@ const val SERVER = "server"
 
 const val SSL_ENABLED = false
 
+const val CONFIG_FILE = "config.json"
 const val LOG4J_CONFIG_RESOURCE_PATH = "log4j.config.xml"

@@ -4,6 +4,7 @@ import fr.rob.game.SSL_ENABLED
 import fr.rob.game.domain.log.LoggerFactoryInterface
 import fr.rob.game.domain.log.LoggerInterface
 import fr.rob.game.domain.network.GameServer
+import fr.rob.game.domain.process.ProcessManager
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.ChannelFuture
 import io.netty.channel.ChannelOption
@@ -12,7 +13,12 @@ import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioServerSocketChannel
 import kotlin.concurrent.thread
 
-class NettyGameServer(private val port: Int, name: String, loggerFactory: LoggerFactoryInterface) : GameServer(name, loggerFactory) {
+class NettyGameServer(
+    private val port: Int,
+    name: String,
+    loggerFactory: LoggerFactoryInterface,
+    processManager: ProcessManager
+) : GameServer(name, loggerFactory, processManager) {
 
     private val bootstrap: ServerBootstrap = ServerBootstrap()
 
