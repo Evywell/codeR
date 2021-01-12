@@ -29,6 +29,8 @@ class JWTAuthenticationProcessTest : BaseTest() {
         // @todo: Create a token with the JWTEncoderService using private.pem
         // @todo: Verify the token with the process
         // @todo: Assert the session is authenticated
+        // @link https://general.support.brightcove.com/developer/create-jwt.html ?? Créer des JWT avec bash
+        // @link https://www.jsonwebtoken.io/
 
         // Act
 
