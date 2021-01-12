@@ -4,8 +4,13 @@ import fr.rob.game.domain.log.LoggerFactoryInterface
 import fr.rob.game.domain.network.exception.SessionNotFoundException
 import fr.rob.game.domain.network.session.Session
 import fr.rob.game.domain.opcode.ClientOpcodeHandler
+import fr.rob.game.domain.process.ProcessManager
 
-open class GameServer(val name: String, loggerFactory: LoggerFactoryInterface) {
+open class GameServer(
+    val name: String,
+    loggerFactory: LoggerFactoryInterface,
+    protected val processManager: ProcessManager
+) {
 
     val logger = loggerFactory.create(name)
     val clientOpcodeHandler = ClientOpcodeHandler(loggerFactory.create("OPCODE"))

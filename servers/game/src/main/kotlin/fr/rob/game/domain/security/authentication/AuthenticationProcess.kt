@@ -1,4 +1,4 @@
-package fr.rob.game.domain.authentication
+package fr.rob.game.domain.security.authentication
 
 import fr.rob.game.domain.network.session.Session
 

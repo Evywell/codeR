@@ -11,6 +11,8 @@ import fr.rob.game.domain.setup.tasks.TaskAuthCollectJWTPublicKey
 import fr.rob.game.domain.setup.tasks.TaskLoadServerConfig
 import fr.rob.game.infrastructure.config.ConfigModule
 import fr.rob.game.infrastructure.config.EnvConfigHandler
+import fr.rob.game.domain.process.ProcessManager
+import fr.rob.game.domain.security.SecurityModule
 import fr.rob.game.infrastructure.config.ResourceManager
 import fr.rob.game.infrastructure.config.database.DatabaseConfigHandler
 import fr.rob.game.infrastructure.config.server.ServerConfigHandler
@@ -25,12 +27,13 @@ class Main : BaseApplication() {
     private val eventManager = EventManager()
     private val setup: Setup = AppSetup()
     private val connectionManager = ConnectionManager(eventManager)
+    private val processManager = ProcessManager()
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val configPath: URL = ResourceManager.getResourceURL("config.json")
-                ?: throw RuntimeException("Cannot find config.json")
+            val configPath: URL = ResourceManager.getResourceURL(CONFIG_FILE)
+                ?: throw RuntimeException("Cannot find $CONFIG_FILE")
 
             val app = Main()
             app
@@ -54,7 +57,7 @@ class Main : BaseApplication() {
         initiator
             .runTask(TASK_LOAD_SERVER_CONFIG) // Store server info
 
-        val serverManager = GameServerManager(NettyGameServerFactory())
+        val serverManager = GameServerManager(NettyGameServerFactory(processManager))
         serverManager.buildGameServers(setup.getServers())
     }
 
@@ -67,5 +70,6 @@ class Main : BaseApplication() {
     override fun registerModules(modules: MutableList<AbstractModule>) {
         modules.add(ConfigModule(this))
         modules.add(DatabaseModule(eventManager))
+        modules.add(SecurityModule(setup, processManager))
     }
 }
