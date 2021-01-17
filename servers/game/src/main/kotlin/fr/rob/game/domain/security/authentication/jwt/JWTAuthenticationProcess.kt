@@ -6,7 +6,7 @@ import java.lang.Exception
 
 class JWTAuthenticationProcess(private val jwtDecoder: JWTDecoderInterface) : AuthenticationProcess() {
 
-    private lateinit var token: String
+    lateinit var token: String
 
     override fun checkAuthentication(): Boolean {
         if (token.isEmpty()) {
@@ -40,4 +40,4 @@ const val JWT_AUTH_RESULT_EMAIL = "email"
 const val JWT_AUTH_RESULT_GAME = "game"
 const val JWT_AUTH_RESULT_GAME_SLUG = "rob"
 
-data class JWTResultGame(val slug: String?, val game: String?)
+data class JWTResultGame(var slug: String? = null, var game: String? = null)

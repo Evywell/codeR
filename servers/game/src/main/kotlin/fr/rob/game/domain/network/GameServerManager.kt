@@ -1,6 +1,6 @@
 package fr.rob.game.domain.network
 
-import fr.rob.game.domain.world.World
+import fr.rob.game.domain.game.world.World
 
 class GameServerManager (private val factory: GameServerFactoryInterface) {
 

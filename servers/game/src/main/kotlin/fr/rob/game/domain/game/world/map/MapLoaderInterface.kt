@@ -1,4 +1,4 @@
-package fr.rob.game.domain.world.map
+package fr.rob.game.domain.game.world.map
 
 interface MapLoaderInterface {
 
