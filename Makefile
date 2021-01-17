@@ -6,9 +6,11 @@ else
 	OS := linux
 endif
 
+GAME_DIR := servers/game
+
 PROTOC_LIB_NAME := protoc-3.14.0-$(OS)-x86_64
 PROTOC_ARCHIVE_NAME := $(PROTOC_LIB_NAME).zip
-PROTOC_LIB_PATH := servers/game/libs/$(PROTOC_LIB_NAME)
+PROTOC_LIB_PATH := $(GAME_DIR)/libs/$(PROTOC_LIB_NAME)
 PROTOC_LIB_BINARY := $(PROTOC_LIB_PATH)/bin/protoc
 
 JAVA_DIR := ./servers/game
@@ -32,6 +34,7 @@ bp: ## alias of build-proto
 
 .PHONY: test
 test: ## Runs the :servers:game tests
+	@bash $(GAME_DIR)/bin/test/setup.sh
 	./gradlew :servers:game:test
 
 .PHONY: build
