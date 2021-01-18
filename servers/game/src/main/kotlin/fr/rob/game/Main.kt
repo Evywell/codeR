@@ -5,14 +5,14 @@ import fr.rob.core.BaseApplication
 import fr.rob.core.initiator.Initiator
 import fr.rob.game.domain.network.GameServerManager
 import fr.rob.game.domain.network.netty.NettyGameServerFactory
+import fr.rob.game.domain.process.ProcessManager
+import fr.rob.game.domain.security.SecurityModule
 import fr.rob.game.domain.setup.AppSetup
 import fr.rob.game.domain.setup.Setup
 import fr.rob.game.domain.setup.tasks.TaskAuthCollectJWTPublicKey
 import fr.rob.game.domain.setup.tasks.TaskLoadServerConfig
 import fr.rob.game.infrastructure.config.ConfigModule
 import fr.rob.game.infrastructure.config.EnvConfigHandler
-import fr.rob.game.domain.process.ProcessManager
-import fr.rob.game.domain.security.SecurityModule
 import fr.rob.game.infrastructure.config.ResourceManager
 import fr.rob.game.infrastructure.config.database.DatabaseConfigHandler
 import fr.rob.game.infrastructure.config.server.ServerConfigHandler

@@ -2,7 +2,6 @@ package fr.rob.game.domain.security.authentication.jwt
 
 import fr.rob.core.auth.jwt.JWTDecoderInterface
 import fr.rob.game.domain.security.authentication.AuthenticationProcess
-import java.lang.Exception
 
 class JWTAuthenticationProcess(private val jwtDecoder: JWTDecoderInterface) : AuthenticationProcess() {
 
