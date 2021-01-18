@@ -6,6 +6,7 @@ import fr.rob.game.domain.network.packet.Packet
 abstract class Session(protected val gameServer: GameServer) {
 
     var isAuthenticated: Boolean = false
+    var userId: Int? = null
 
     abstract fun getIp(): String
     abstract fun send(packet: Packet)
