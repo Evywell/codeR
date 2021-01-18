@@ -8,21 +8,21 @@ import fr.rob.game.domain.security.authentication.jwt.JWTAuthenticationProcess
 import fr.rob.game.domain.security.authentication.jwt.JWTResultGame
 import fr.rob.test.BaseTest
 import fr.rob.test.sandbox.network.NISession
-import io.jsonwebtoken.jackson.io.JacksonDeserializer
-import org.junit.Test
-import java.io.File
-import java.security.PublicKey
-import java.util.*
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.jackson.io.JacksonDeserializer
 import org.bouncycastle.util.io.pem.PemReader
 import org.junit.Assert.assertEquals
+import org.junit.Test
+import java.io.File
 import java.io.FileReader
 import java.security.KeyFactory
 import java.security.PrivateKey
+import java.security.PublicKey
+import java.security.spec.PKCS8EncodedKeySpec
 import java.time.LocalDate
 import java.time.ZoneId
+import java.util.*
 import kotlin.collections.HashMap
-import java.security.spec.PKCS8EncodedKeySpec
 
 
 class JWTAuthenticationProcessTest : BaseTest() {

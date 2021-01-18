@@ -1,10 +1,9 @@
 package fr.rob.game.domain.opcode
 
-import fr.rob.game.domain.security.authentication.UnauthenticatedException
 import fr.rob.game.domain.log.LoggerInterface
 import fr.rob.game.domain.network.packet.Packet
 import fr.rob.game.domain.network.session.Session
-import kotlin.jvm.Throws
+import fr.rob.game.domain.security.authentication.UnauthenticatedException
 
 open class OpcodeHandler(private val logger: LoggerInterface) {
 
