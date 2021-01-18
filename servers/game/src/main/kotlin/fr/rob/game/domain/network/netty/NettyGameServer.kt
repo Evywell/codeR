@@ -1,5 +1,6 @@
 package fr.rob.game.domain.network.netty
 
+import fr.rob.core.BaseApplication
 import fr.rob.game.SSL_ENABLED
 import fr.rob.game.domain.log.LoggerFactoryInterface
 import fr.rob.game.domain.network.GameServer
@@ -16,8 +17,9 @@ class NettyGameServer(
     private val port: Int,
     name: String,
     loggerFactory: LoggerFactoryInterface,
+    app: BaseApplication,
     processManager: ProcessManager
-) : GameServer(name, loggerFactory, processManager) {
+) : GameServer(name, loggerFactory, app, processManager) {
 
     private val bootstrap: ServerBootstrap = ServerBootstrap()
 

@@ -57,7 +57,7 @@ class Main : BaseApplication() {
         initiator
             .runTask(TASK_LOAD_SERVER_CONFIG) // Store server info
 
-        val serverManager = GameServerManager(NettyGameServerFactory(processManager))
+        val serverManager = GameServerManager(NettyGameServerFactory(this, processManager))
         serverManager.buildGameServers(setup.getServers())
     }
 

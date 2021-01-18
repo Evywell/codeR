@@ -51,7 +51,7 @@ class JWTAuthenticationProcessTest : BaseTest() {
         authenticationProcess.token = jwt
 
         // Assert
-        assertEquals(true, authenticationProcess.authenticate(session, userId))
+        assertEquals(true, authenticationProcess.authenticate(session))
         assertEquals(true, session.isAuthenticated)
         assertEquals(userId, session.userId)
     }

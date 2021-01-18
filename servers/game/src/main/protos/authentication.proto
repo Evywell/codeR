@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package fr.rob.game.entity.authentication;
+
+option java_outer_classname = "AuthenticationProto";
+
+message DevAuthentication {
+  int32 userId = 1;
+}
+
+message JWTAuthentication {
+  string token = 1;
+}

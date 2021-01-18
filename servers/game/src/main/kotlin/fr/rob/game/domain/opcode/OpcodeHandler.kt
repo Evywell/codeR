@@ -1,11 +1,12 @@
 package fr.rob.game.domain.opcode
 
+import fr.rob.core.BaseApplication
 import fr.rob.game.domain.log.LoggerInterface
 import fr.rob.game.domain.network.packet.Packet
 import fr.rob.game.domain.network.session.Session
 import fr.rob.game.domain.security.authentication.UnauthenticatedException
 
-open class OpcodeHandler(private val logger: LoggerInterface) {
+abstract class OpcodeHandler(protected val app: BaseApplication, private val logger: LoggerInterface) {
 
     private val opcodeTable = HashMap<Int, OpcodeFunction>()
 
@@ -32,4 +33,6 @@ open class OpcodeHandler(private val logger: LoggerInterface) {
     fun registerOpcode(opcode: Int, function: OpcodeFunction) {
         opcodeTable[opcode] = function
     }
+
+    abstract fun initialize()
 }
