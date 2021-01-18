@@ -2,7 +2,6 @@ package fr.rob.game.domain.authentication
 
 import fr.rob.core.auth.jwt.JWTDecoderInterface
 import fr.rob.game.domain.network.session.Session
-import java.lang.Exception
 
 /**
  * @todo: continue in another feature, please ignore

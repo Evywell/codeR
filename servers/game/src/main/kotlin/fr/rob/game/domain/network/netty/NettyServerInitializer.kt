@@ -1,7 +1,5 @@
 package fr.rob.game.domain.network.netty
 
-import fr.rob.game.domain.network.netty.NettyGameServer
-import fr.rob.game.domain.network.netty.NettyGameServerHandler
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.socket.SocketChannel
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder

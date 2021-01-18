@@ -4,9 +4,10 @@ import fr.rob.core.security.PublicKeyReader;
 import io.jsonwebtoken.jackson.io.JacksonDeserializer;
 import io.jsonwebtoken.lang.Maps;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.security.PublicKey;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class JWTDecoderServiceTest {
 

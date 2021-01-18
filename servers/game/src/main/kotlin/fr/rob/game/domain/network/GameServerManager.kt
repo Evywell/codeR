@@ -1,6 +1,5 @@
 package fr.rob.game.domain.network
 
-import fr.rob.game.domain.network.netty.NettyGameServer
 import fr.rob.game.domain.world.World
 import fr.rob.game.infrastructure.log.LoggerFactory
 

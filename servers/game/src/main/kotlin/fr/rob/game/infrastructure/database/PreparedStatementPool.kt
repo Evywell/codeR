@@ -1,6 +1,5 @@
 package fr.rob.game.infrastructure.database
 
-import java.lang.Exception
 import java.sql.SQLException
 
 class PreparedStatementPool(private val connection: Connection) : HashMap<String, PreparedStatement>() {
