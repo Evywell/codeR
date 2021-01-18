@@ -43,6 +43,7 @@ class TaskLoadServerConfig(private val app: BaseApplication, private val setup: 
 
             while (rs.next()) {
                 val zone: Zone = om.readValue(rs.getString(4), Zone::class.java)
+                
                 zone.mapId = rs.getInt(3)
                 server.zones.add(zone)
             }
