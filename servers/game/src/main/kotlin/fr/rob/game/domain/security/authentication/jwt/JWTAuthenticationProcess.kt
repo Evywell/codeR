@@ -39,6 +39,8 @@ class JWTAuthenticationProcess(private val jwtDecoder: JWTDecoderInterface) : Au
             false
         }
     }
+
+    override fun getUserId(): Int = userId!!
 }
 
 const val JWT_AUTH_RESULT_EMAIL = "email"
