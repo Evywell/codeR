@@ -4,7 +4,6 @@ import fr.rob.game.domain.event.EventInterface
 import fr.rob.game.domain.event.EventManagerInterface
 import fr.rob.game.infrastructure.clock.StopWatch
 import fr.rob.game.infrastructure.database.event.AfterCreatePreparedStatementEvent
-import fr.rob.game.infrastructure.event.EventManager
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException

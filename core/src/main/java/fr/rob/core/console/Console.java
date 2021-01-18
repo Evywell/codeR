@@ -4,8 +4,8 @@ import fr.rob.core.console.event.ConsoleEvent;
 import fr.rob.core.console.event.Dispatcher;
 import fr.rob.core.console.event.NewOutputListener;
 import fr.rob.core.console.input.ConsoleInput;
-import fr.rob.core.console.output.ConsoleOutput;
 import fr.rob.core.console.input.InputInterface;
+import fr.rob.core.console.output.ConsoleOutput;
 import fr.rob.core.console.output.OutputInterface;
 
 public class Console {

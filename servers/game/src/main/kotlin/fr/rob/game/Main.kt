@@ -4,11 +4,13 @@ import fr.rob.core.AbstractModule
 import fr.rob.core.BaseApplication
 import fr.rob.core.initiator.Initiator
 import fr.rob.game.domain.network.GameServerManager
+import fr.rob.game.domain.network.netty.NettyGameServerFactory
 import fr.rob.game.domain.setup.AppSetup
+import fr.rob.game.domain.setup.Setup
 import fr.rob.game.domain.setup.tasks.TaskAuthCollectJWTPublicKey
 import fr.rob.game.domain.setup.tasks.TaskLoadServerConfig
-import fr.rob.game.domain.network.netty.NettyGameServerFactory
-import fr.rob.game.domain.setup.Setup
+import fr.rob.game.infrastructure.config.ConfigModule
+import fr.rob.game.infrastructure.config.EnvConfigHandler
 import fr.rob.game.infrastructure.config.ResourceManager
 import fr.rob.game.infrastructure.config.database.DatabaseConfigHandler
 import fr.rob.game.infrastructure.config.server.ServerConfigHandler
@@ -33,6 +35,7 @@ class Main : BaseApplication() {
             val app = Main()
             app
                 .addConfigPath("default", configPath)
+                .handler(EnvConfigHandler())
                 .handler(DatabaseConfigHandler(app.connectionManager))
                 .handler(ServerConfigHandler())
 
@@ -42,8 +45,13 @@ class Main : BaseApplication() {
 
     override fun run() {
         super.run()
+
+        if (this.env !== ENV_DEV) {
+            initiator
+                .runTask(TASK_AUTH_COLLECT_JWT_PUBLIC_KEY) // Retrieve and store JWTPublicKey
+        }
+
         initiator
-            .runTask(TASK_AUTH_COLLECT_JWT_PUBLIC_KEY) // Retrieve and store JWTPublicKey
             .runTask(TASK_LOAD_SERVER_CONFIG) // Store server info
 
         val serverManager = GameServerManager(NettyGameServerFactory())
@@ -57,7 +65,7 @@ class Main : BaseApplication() {
     }
 
     override fun registerModules(modules: MutableList<AbstractModule>) {
-        modules
-            .add(DatabaseModule(eventManager))
+        modules.add(ConfigModule(this))
+        modules.add(DatabaseModule(eventManager))
     }
 }

@@ -11,8 +11,10 @@ import java.util.Map;
 
 public abstract class BaseApplication {
 
+    private final List<AbstractModule> modules = new ArrayList<>();
     private final Map<String, Config> configs = new HashMap<>();
     protected final Initiator initiator = new Initiator();
+    protected String env;
 
     protected abstract void registerModules(List<AbstractModule> modules);
 
@@ -20,7 +22,11 @@ public abstract class BaseApplication {
 
     public void run() {
         // Modules
-        registerModules(new ArrayList<>());
+        registerModules(modules);
+
+        for (AbstractModule module : modules) {
+            module.boot();
+        }
 
         // Loading tasks
         registerInitiatorTasks(initiator);
@@ -35,5 +41,13 @@ public abstract class BaseApplication {
 
     public Config getConfig(String configName) {
         return configs.getOrDefault(configName, null);
+    }
+
+    public String getEnv() {
+        return env;
+    }
+
+    public void setEnv(String env) {
+        this.env = env;
     }
 }

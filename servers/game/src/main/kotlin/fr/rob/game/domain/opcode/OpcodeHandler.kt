@@ -1,8 +1,8 @@
 package fr.rob.game.domain.opcode
 
 import fr.rob.game.domain.log.LoggerInterface
-import fr.rob.game.domain.network.session.Session
 import fr.rob.game.domain.network.packet.Packet
+import fr.rob.game.domain.network.session.Session
 
 open class OpcodeHandler(private val logger: LoggerInterface) {
 
