@@ -1,7 +1,7 @@
 package fr.rob.game.infrastructure.database
 
-import fr.rob.core.database.DatabaseConfig
 import fr.rob.game.domain.event.EventManagerInterface
+import fr.rob.game.infrastructure.config.database.DatabaseConfig
 
 class ConnectionManager(private val eventManager: EventManagerInterface) {
 

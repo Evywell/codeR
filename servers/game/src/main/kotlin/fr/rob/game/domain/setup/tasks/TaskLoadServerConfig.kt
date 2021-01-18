@@ -2,8 +2,6 @@ package fr.rob.game.domain.setup.tasks
 
 import fr.rob.core.BaseApplication
 import fr.rob.core.config.Config
-import fr.rob.core.database.Connection
-import fr.rob.core.database.ConnectionManager
 import fr.rob.core.initiator.TaskInterface
 import fr.rob.game.CONFIG_DEFAULT
 import fr.rob.game.DATABASE
@@ -13,6 +11,8 @@ import fr.rob.game.domain.network.Server
 import fr.rob.game.domain.network.Zone
 import fr.rob.game.domain.setup.Setup
 import fr.rob.game.infrastructure.config.database.STMT_CONFIG_SEL_SERVER_INSTANCES
+import fr.rob.game.infrastructure.database.Connection
+import fr.rob.game.infrastructure.database.ConnectionManager
 import org.codehaus.jackson.map.ObjectMapper
 
 class TaskLoadServerConfig(private val app: BaseApplication, private val setup: Setup) : TaskInterface {
