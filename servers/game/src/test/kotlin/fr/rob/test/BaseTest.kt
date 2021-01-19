@@ -18,6 +18,7 @@ open class BaseTest {
     val loggerFactory: LoggerFactoryInterface = NILoggerFactory()
     val app: BaseApplication = NIApplication()
     val opcodeHandler: OpcodeHandler = NIOpcodeHandler(app, logger)
+    val processManager: ProcessManager = ProcessManager()
 
     fun getResourceURL(resourcePath: String): URL? = BaseTest::class.java.classLoader.getResource(resourcePath)
 
