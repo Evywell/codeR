@@ -12,14 +12,9 @@ class ClientOpcodeHandler(private val processManager: ProcessManager, app: BaseA
     OpcodeHandler(app, logger) {
 
     override fun initialize() {
-        registerAuthenticationOpcode()
-    }
-
-    private fun registerAuthenticationOpcode() {
-        if (app.env === ENV_DEV) {
-            registerOpcode(OpcodeClient.AUTHENTICATE_SESSION, DevAuthenticationOpcode(processManager))
-        } else {
-            registerOpcode(OpcodeClient.AUTHENTICATE_SESSION, JWTAuthenticationOpcode(processManager))
-        }
+        registerOpcode(
+            OpcodeClient.AUTHENTICATE_SESSION,
+            if (app.env === ENV_DEV) DevAuthenticationOpcode(processManager) else JWTAuthenticationOpcode(processManager)
+        )
     }
 }

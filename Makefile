@@ -32,6 +32,10 @@ build-proto:
 bp: ## alias of build-proto
 	@make build-proto
 
+.PHONY: start
+start: ## Runs the :servers:game run
+	./gradlew :servers:game:run
+
 .PHONY: test
 test: ## Runs the :servers:game tests
 	@bash $(GAME_DIR)/bin/test/setup.sh
