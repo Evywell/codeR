@@ -70,6 +70,6 @@ class Main : BaseApplication() {
     override fun registerModules(modules: MutableList<AbstractModule>) {
         modules.add(ConfigModule(this))
         modules.add(DatabaseModule(eventManager))
-        modules.add(SecurityModule(setup, processManager))
+        modules.add(SecurityModule(this, setup, processManager))
     }
 }

@@ -4,11 +4,11 @@ import fr.rob.game.domain.network.session.Session
 
 abstract class AuthenticationProcess {
 
-    protected abstract fun checkAuthentication(): Boolean
+    protected abstract fun checkAuthentication(authMessage: Any): Boolean
     protected abstract fun getUserId(): Int
 
-    fun authenticate(session: Session): Boolean {
-        if (!checkAuthentication()) {
+    fun authenticate(session: Session, authMessage: Any): Boolean {
+        if (!checkAuthentication(authMessage)) {
             return false
         }
 
