@@ -2,13 +2,15 @@ package fr.rob.game.domain.security.authentication.jwt
 
 import fr.rob.core.auth.jwt.JWTDecoderInterface
 import fr.rob.game.domain.security.authentication.AuthenticationProcess
+import fr.rob.game.entity.authentication.AuthenticationProto
 
 class JWTAuthenticationProcess(private val jwtDecoder: JWTDecoderInterface) : AuthenticationProcess() {
 
-    lateinit var token: String
     var userId: Int? = null
 
-    override fun checkAuthentication(): Boolean {
+    override fun checkAuthentication(authMessage: Any): Boolean {
+        val token = (authMessage as AuthenticationProto.JWTAuthentication).token
+
         if (token.isEmpty()) {
             throw Exception("You MUST specify a value for the token")
         }
