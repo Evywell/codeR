@@ -10,3 +10,4 @@
 rootProject.name = 'codeR'
 include 'core'
 include 'servers:game'
+include 'servers:web'
