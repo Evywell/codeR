@@ -1,6 +1,6 @@
-package fr.evywell.web.network
+package fr.rob.web.network
 
-import fr.evywell.web.handler.HomePageHandler
+import fr.rob.web.handler.HomePageHandler
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelFutureListener
@@ -32,15 +32,16 @@ class HttpServerHandler(private val router: Router) : SimpleChannelInboundHandle
 
         val method = request.method()
         val uri = request.uri()
+        val customRequest = Request(request)
 
-        val route = router.match(method, uri)
+        val route = router.match(method, uri, customRequest)
         if (route === null) {
             // Not Found
             writeNotFound(ctx, request)
             return
         }
 
-        var content = route.handler.handle(request)
+        var content = route.handler.handle(customRequest)
 
         if (content === null) {
             content = ""

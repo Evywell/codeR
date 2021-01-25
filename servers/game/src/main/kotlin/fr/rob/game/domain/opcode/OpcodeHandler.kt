@@ -32,4 +32,8 @@ open class OpcodeHandler(private val logger: LoggerInterface) {
     fun registerOpcode(opcode: Int, function: OpcodeFunction) {
         opcodeTable[opcode] = function
     }
+
+    fun getOpcodeFunction(opcode: Int): OpcodeFunction {
+        return opcodeTable[opcode]!!
+    }
 }
