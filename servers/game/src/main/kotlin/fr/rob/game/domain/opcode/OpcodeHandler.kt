@@ -35,4 +35,8 @@ abstract class OpcodeHandler(protected val app: BaseApplication, private val log
     }
 
     abstract fun initialize()
+
+    fun getOpcodeFunction(opcode: Int): OpcodeFunction {
+        return opcodeTable[opcode]!!
+    }
 }
