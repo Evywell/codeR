@@ -1,9 +1,9 @@
-package fr.rob.client.web
+package fr.rob.web
 
-import fr.rob.client.client.network.Client
-import fr.rob.client.web.handler.HomePageHandler
-import fr.rob.client.web.handler.OpcodeHandler
-import fr.rob.client.web.network.HttpServer
+import fr.rob.client.network.Client
+import fr.rob.web.handler.HomePageHandler
+import fr.rob.web.handler.OpcodeHandler
+import fr.rob.web.network.HttpServer
 import fr.rob.game.domain.opcode.ClientOpcodeHandler
 import fr.rob.game.infrastructure.log.LoggerFactory
 

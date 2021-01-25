@@ -1,11 +1,9 @@
-package fr.rob.client.client.network
+package fr.rob.client.network
 
 import fr.rob.game.domain.network.packet.Packet
 import fr.rob.game.domain.network.session.Session
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.ChannelFuture
-
-import io.netty.channel.ChannelInitializer
 
 import java.net.InetSocketAddress
 
