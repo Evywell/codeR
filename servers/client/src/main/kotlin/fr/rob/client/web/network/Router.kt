@@ -1,4 +1,4 @@
-package fr.rob.web.network
+package fr.rob.client.web.network
 
 import io.netty.handler.codec.http.HttpMethod
 

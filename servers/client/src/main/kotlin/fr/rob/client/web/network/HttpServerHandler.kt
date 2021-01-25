@@ -1,6 +1,5 @@
-package fr.rob.web.network
+package fr.rob.client.web.network
 
-import fr.rob.web.handler.HomePageHandler
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelFutureListener

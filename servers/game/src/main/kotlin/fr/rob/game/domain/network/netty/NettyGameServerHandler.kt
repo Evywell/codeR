@@ -41,7 +41,7 @@ class NettyGameServerHandler(private val nettyGameServer: NettyGameServer) : Cha
     }
 
     override fun channelActive(ctx: ChannelHandlerContext) {
-        nettyGameServer.registerSession(ctx.channel().hashCode(), AppSession(nettyGameServer, ctx.channel()))
+        nettyGameServer.registerSession(ctx.channel().hashCode(), AppSession(ctx.channel()))
     }
 
     // @todo: Add channelInactive and destroy the session

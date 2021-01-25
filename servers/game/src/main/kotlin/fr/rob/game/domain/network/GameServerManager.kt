@@ -12,6 +12,7 @@ class GameServerManager (private val factory: GameServerFactoryInterface) {
         val address: String = server.serverAddress!!
         val port: Int = parsePortFromAddress(address)
 
+        println("build server $address:$port")
         val gs = factory.build(port, server.serverName!!)
 
         val world = World()

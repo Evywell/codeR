@@ -49,7 +49,7 @@ class Main : BaseApplication() {
     override fun run() {
         super.run()
 
-        if (this.env !== ENV_DEV) {
+        if (this.env != ENV_DEV) {
             initiator
                 .runTask(TASK_AUTH_COLLECT_JWT_PUBLIC_KEY) // Retrieve and store JWTPublicKey
         }
