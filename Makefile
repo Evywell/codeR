@@ -19,14 +19,18 @@ JAVA_SRC_DIR := $(JAVA_DIR)/src/main/protos
 JAVA_TEST_DST_DIR := $(JAVA_DIR)/src/test/java
 JAVA_TEST_SRC_DIR := $(JAVA_DIR)/src/test/protos
 
+PHP_DIR := ./servers/webclient
+PHP_DST_DIR := $(PHP_DIR)/protobuf
+
 .PHONY: help
 help: ## Outputs this help message
 	@grep -E '(^[a-zA-Z0-9_-]+:.*?##.*$$)|(^##)' ${MAKEFILE_LIST} | awk 'BEGIN {FS = ":.*?## "}{printf "${GREEN}%-23s${RESET} %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
 
 .PHONY: build-proto
 build-proto:
-	$(PROTOC_LIB_BINARY) -I=$(JAVA_SRC_DIR) --java_out=$(JAVA_DST_DIR) $(JAVA_SRC_DIR)/*.proto
-	$(PROTOC_LIB_BINARY) -I=$(JAVA_TEST_SRC_DIR) --java_out=$(JAVA_TEST_DST_DIR) $(JAVA_TEST_SRC_DIR)/*.proto
+	@$(PROTOC_LIB_BINARY) -I=$(JAVA_SRC_DIR) --java_out=$(JAVA_DST_DIR) $(JAVA_SRC_DIR)/*.proto
+	@$(PROTOC_LIB_BINARY) -I=$(JAVA_TEST_SRC_DIR) --java_out=$(JAVA_TEST_DST_DIR) $(JAVA_TEST_SRC_DIR)/*.proto
+	@$(PROTOC_LIB_BINARY) -I=$(JAVA_SRC_DIR) --php_out=$(PHP_DST_DIR) $(JAVA_SRC_DIR)/*.proto
 
 .PHONY: bp
 bp: ## alias of build-proto

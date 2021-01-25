@@ -1,0 +1,17 @@
+{
+    "name": "rob/webclient",
+    "type": "project",
+    "require": {
+        "google/protobuf": "^3.14",
+        "symfony/routing": "^5.2"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^5.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Rob\\Webclient\\": "src",
+            "Rob\\Webclient\\Entities\\": "protobuf/Rob/Webclient/Entities"
+        }
+    }
+}

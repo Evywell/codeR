@@ -748,7 +748,9 @@ public final class AuthenticationProtos {
     java.lang.String[] descriptorData = {
       "\n\024Authentication.proto\022\017fr.rob.entities\"" +
       "*\n\004Auth\022\020\n\010username\030\001 \001(\t\022\020\n\010password\030\002 " +
-      "\001(\tB\026B\024AuthenticationProtosb\006proto3"
+      "\001(\tBHB\024AuthenticationProtos\312\002\026Rob\\Webcli" +
+      "ent\\Entities\342\002\026Rob\\Webclient\\Entitiesb\006p" +
+      "roto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
