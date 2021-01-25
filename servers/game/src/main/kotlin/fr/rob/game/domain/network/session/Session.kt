@@ -1,9 +1,8 @@
 package fr.rob.game.domain.network.session
 
-import fr.rob.game.domain.network.GameServer
 import fr.rob.game.domain.network.packet.Packet
 
-abstract class Session(protected val gameServer: GameServer) {
+abstract class Session {
 
     var isAuthenticated: Boolean = false
     var userId: Int? = null

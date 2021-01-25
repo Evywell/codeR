@@ -8,4 +8,4 @@ dependencies {
     compile project(':servers:game')
 }
 
-mainClassName = 'fr.rob.web.Main'
+mainClassName = 'fr.rob.client.web.Main'

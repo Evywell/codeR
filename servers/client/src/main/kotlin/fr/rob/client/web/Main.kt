@@ -1,20 +1,19 @@
-package fr.rob.web
+package fr.rob.client.web
 
-import fr.rob.client.network.Client
+import fr.rob.client.client.network.Client
+import fr.rob.client.web.handler.HomePageHandler
+import fr.rob.client.web.handler.OpcodeHandler
+import fr.rob.client.web.network.HttpServer
 import fr.rob.game.domain.opcode.ClientOpcodeHandler
 import fr.rob.game.infrastructure.log.LoggerFactory
-import fr.rob.web.handler.HomePageHandler
-import fr.rob.web.handler.OpcodeHandler
-import fr.rob.web.network.HttpServer
-
 
 class Main {
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val client = Client("localhost", 8889)
-            client.start()
+            val client = Client("127.0.0.1", 8889)
+            client.open()
 
             val server = HttpServer(1333)
             val logger = LoggerFactory.create("web")

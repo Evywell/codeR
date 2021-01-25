@@ -1,6 +1,7 @@
-package fr.rob.client.network
+package fr.rob.client.client.network
 
 import fr.rob.game.domain.network.packet.Packet
+import fr.rob.game.domain.network.session.Session
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.ChannelFuture
 
@@ -17,7 +18,9 @@ import io.netty.channel.EventLoopGroup
 
 class Client(private val hostname: String, private val port: Int) {
 
-    fun start() {
+    lateinit var session: Session
+
+    fun open() {
         val group: EventLoopGroup = NioEventLoopGroup()
         try {
             val clientBootstrap = Bootstrap()
@@ -25,7 +28,7 @@ class Client(private val hostname: String, private val port: Int) {
             clientBootstrap.group(group)
             clientBootstrap.channel(NioSocketChannel::class.java)
             clientBootstrap.remoteAddress(InetSocketAddress(hostname, port))
-            clientBootstrap.handler(ClientChannelInitializer())
+            clientBootstrap.handler(ClientChannelInitializer(this))
             val channelFuture: ChannelFuture = clientBootstrap.connect().sync()
 
             channelFuture.channel().closeFuture().sync()
