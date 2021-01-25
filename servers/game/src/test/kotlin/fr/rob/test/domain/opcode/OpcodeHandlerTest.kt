@@ -1,6 +1,10 @@
 package fr.rob.test.domain.opcode
 
 import fr.rob.game.domain.network.packet.Packet
+<<<<<<< HEAD
+=======
+import fr.rob.game.domain.opcode.OpcodeHandler
+>>>>>>> 532e734 (Refs #16: WIP Web server)
 import fr.rob.game.sandbox.SandboxProtos
 import fr.rob.test.BaseTest
 import fr.rob.test.opcode.HandlingOpcodeWithProtoAsMessageOpcode
@@ -16,7 +20,11 @@ class OpcodeHandlerTest : BaseTest() {
     @Test
     fun `ensure the right opcode function is proceed`() {
         // Arrange
+<<<<<<< HEAD
         val session = NISession(getGameServer())
+=======
+        val session = NISession()
+>>>>>>> 532e734 (Refs #16: WIP Web server)
         val packet = EmptyPacket()
 
         val subject1 = BasicSubject("John", "Connor", 14)
@@ -45,7 +53,7 @@ class OpcodeHandlerTest : BaseTest() {
         val opcode = 1
         val gs = getGameServer()
         val session = NISession(gs)
-
+        
         val subject = SandboxProtos.Subject.newBuilder()
             .setFirstName("John")
             .setLastName("Connor")

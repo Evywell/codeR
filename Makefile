@@ -47,8 +47,17 @@ test: ## Runs the :servers:game tests
 	./gradlew :servers:game:test
 
 .PHONY: build
-build: ## Builds the :servers:game project
+build: ## Builds the :servers:game and :servers:client projects
 	./gradlew :servers:game:build
+	./gradlew :servers:client:build
+
+.PHONY: server
+server: ## Launches the game server
+	./gradlew :servers:game:run
+
+.PHONY: client
+client: ## Launches the game client
+	./gradlew :servers:client:run
 
 .PHONY: server
 server: ## Launches the game server
