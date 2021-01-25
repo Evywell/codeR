@@ -43,7 +43,7 @@ class JWTAuthenticationProcessTest : BaseTest() {
 
         val userId = 123456789
         val jwt = generateJWT(userId, "player@localhost", JWTResultGame("rob", "Rob"))
-        val session = NISession(getGameServer())
+        val session = NISession()
 
         // Act
         val authenticationProcess: JWTAuthenticationProcess =

@@ -1,10 +1,9 @@
 package fr.rob.test.sandbox.network
 
-import fr.rob.game.domain.network.GameServer
 import fr.rob.game.domain.network.packet.Packet
 import fr.rob.game.domain.network.session.Session
 
-class NISession(gameServer: GameServer) : Session(gameServer) {
+class NISession : Session() {
 
     override fun getIp(): String = ""
 

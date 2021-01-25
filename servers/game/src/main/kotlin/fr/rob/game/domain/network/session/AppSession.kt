@@ -1,12 +1,11 @@
 package fr.rob.game.domain.network.session
 
-import fr.rob.game.domain.network.netty.NettyGameServer
 import fr.rob.game.domain.network.packet.Packet
 import io.netty.channel.Channel
 import io.netty.util.NetUtil
 import java.net.InetSocketAddress
 
-class AppSession(nettyGameServer: NettyGameServer, private val channel: Channel) : Session(nettyGameServer) {
+open class AppSession(private val channel: Channel) : Session() {
 
     override fun getIp(): String {
         val address = channel.remoteAddress() as InetSocketAddress

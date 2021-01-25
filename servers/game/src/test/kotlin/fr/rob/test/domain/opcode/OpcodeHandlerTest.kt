@@ -1,9 +1,7 @@
 package fr.rob.test.domain.opcode
 
-import fr.rob.game.domain.network.GameServer
 import fr.rob.game.domain.network.packet.Packet
 import fr.rob.game.domain.opcode.OpcodeHandler
-import fr.rob.game.domain.process.ProcessManager
 import fr.rob.game.sandbox.SandboxProtos
 import fr.rob.test.BaseTest
 import fr.rob.test.opcode.HandlingOpcodeWithProtoAsMessageOpcode
@@ -19,7 +17,7 @@ class OpcodeHandlerTest : BaseTest() {
     @Test
     fun `ensure the right opcode function is proceed`() {
         // Arrange
-        val session = NISession(GameServer("test", loggerFactory, ProcessManager()))
+        val session = NISession()
         val packet = EmptyPacket()
 
         val opcodeHandler = OpcodeHandler(logger)
@@ -47,8 +45,7 @@ class OpcodeHandlerTest : BaseTest() {
     fun `handling opcode with proto as message`() {
         // Arrange
         val opcode = 1
-        val gs = GameServer("test", loggerFactory, ProcessManager())
-        val session = NISession(gs)
+        val session = NISession()
         val opcodeHandler = OpcodeHandler(logger)
 
         val subject = SandboxProtos.Subject.newBuilder()
