@@ -1,4 +1,4 @@
-package fr.evywell.web.network
+package fr.rob.web.network
 
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.buffer.PooledByteBufAllocator
