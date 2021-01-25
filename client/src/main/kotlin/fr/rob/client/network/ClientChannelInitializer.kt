@@ -1,4 +1,4 @@
-package fr.rob.client.client.network
+package fr.rob.client.network
 
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.socket.SocketChannel
