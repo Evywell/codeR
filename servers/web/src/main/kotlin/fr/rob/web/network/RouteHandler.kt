@@ -1,4 +1,4 @@
-package fr.rob.client.web.network
+package fr.rob.web.network
 
 
 abstract class RouteHandler {

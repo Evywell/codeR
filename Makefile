@@ -40,7 +40,7 @@ test: ## Runs the :servers:game tests
 .PHONY: build
 build: ## Builds the :servers:game and :servers:client projects
 	./gradlew :servers:game:build
-	./gradlew :servers:client:build
+	./gradlew :servers:web:build
 
 .PHONY: server
 server: ## Launches the game server
@@ -48,7 +48,7 @@ server: ## Launches the game server
 
 .PHONY: client
 client: ## Launches the game client
-	./gradlew :servers:client:run
+	./gradlew :client:run
 
 .PHONY: install-protobuf
 install-protobuf: ## Download the 3.14.0 version of protoc and install it in libs folder

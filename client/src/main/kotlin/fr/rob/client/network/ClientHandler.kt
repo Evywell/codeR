@@ -1,4 +1,4 @@
-package fr.rob.client.client.network
+package fr.rob.client.network
 
 import fr.rob.game.domain.network.session.AppSession
 import io.netty.channel.ChannelHandlerContext
