@@ -2,5 +2,5 @@
 declare(strict_types=1);
 
 return [
-    'CMSG_AUTHENTICATION' => 0x01
+    0x01 => 'CMSG_AUTHENTICATION'
 ];

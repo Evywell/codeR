@@ -52,7 +52,7 @@ server: ## Launches the game server
 
 .PHONY: client
 client: ## Launches the game client
-	./gradlew :client:run
+	./gradlew :servers:web:run
 
 .PHONY: install-protobuf
 install-protobuf: ## Download the 3.14.0 version of protoc and install it in libs folder

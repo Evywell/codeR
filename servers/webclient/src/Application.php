@@ -5,6 +5,7 @@ namespace Rob\Webclient;
 
 use Rob\Webclient\Http\Controller\AbstractController;
 use Rob\Webclient\Opcode\OpcodeManager;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
@@ -26,7 +27,7 @@ class Application
     {
         $this->opcodeManager = $opcodeManager;
         $this->routes = new RouteCollection();
-        $this->context = new RequestContext();
+        $this->context = (new RequestContext())->fromRequest(Request::createFromGlobals());
     }
 
     public function registerRoutes(): void
@@ -61,7 +62,7 @@ class Application
             throw new \InvalidArgumentException("The controller $controllerName does not exist");
         }
 
-        $actionName = $parameters['_action'] ?? 'index';
+        $actionName = $routeParameters['_action'] ?? 'index';
 
         $controllerReflection = new \ReflectionClass($controllerName);
         $isSubClassOfController = $controllerReflection->isSubclassOf(AbstractController::class);
@@ -71,7 +72,7 @@ class Application
         }
 
         $controller = $isSubClassOfController
-            ? $controllerReflection->newInstance($this->context)
+            ? $controllerReflection->newInstance($this->context, $this->opcodeManager)
             : $controllerReflection->newInstance();
 
         return $this->callControllerMethod($actionName, $controller, $routeParameters, $controllerReflection);
