@@ -13,7 +13,7 @@
     "autoload": {
         "psr-4": {
             "Rob\\Webclient\\": "src",
-            "Rob\\Webclient\\Entities\\": "protobuf/Rob/Webclient/Entities"
+            "Rob\\Protos\\": "protobuf/Rob/Protos"
         }
     }
 }

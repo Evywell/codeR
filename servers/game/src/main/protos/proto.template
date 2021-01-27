@@ -2,11 +2,6 @@ syntax = "proto3";
 
 package fr.rob.entities;
 
-option java_outer_classname = "AuthenticationProtos";
+option java_outer_classname = "##PROTONAME##Protos";
 option php_namespace = "Rob\\Protos";
 option php_metadata_namespace = "Rob\\Protos";
-
-message Auth {
-    string username = 1;
-    string password = 2;
-}

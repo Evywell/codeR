@@ -12,7 +12,8 @@ $app = new Application($opcodeManager);
 $app->registerRoutes();
 
 try {
-    $app->run($_SERVER['REQUEST_URI']);
+    $response = $app->run($_SERVER['REQUEST_URI']);
+    $response->send();
 } catch (Exception $e) {
     echo $e->getMessage();
     exit(1);

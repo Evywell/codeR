@@ -5,18 +5,19 @@ namespace Rob\Webclient\Http\Controller;
 
 
 use Rob\Webclient\View\View;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class HomePageController
  * @package Rob\Webclient\Http\Controller
  * @author Axel LEDUC
  */
-class HomePageController
+class HomePageController extends AbstractController
 {
 
-    public function index(): string
+    public function index(): Response
     {
-        return (string) View::factory('homepage');
+        return $this->render(View::factory('homepage'));
     }
 
 }

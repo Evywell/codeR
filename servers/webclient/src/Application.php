@@ -6,7 +6,9 @@ namespace Rob\Webclient;
 use Rob\Webclient\Http\Controller\AbstractController;
 use Rob\Webclient\Opcode\OpcodeManager;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
@@ -21,13 +23,15 @@ class Application
     private OpcodeManager $opcodeManager;
     private RouteCollection $routes;
     private UrlMatcher $matcher;
+    private Request $request;
     private RequestContext $context;
 
     public function __construct(OpcodeManager $opcodeManager)
     {
         $this->opcodeManager = $opcodeManager;
         $this->routes = new RouteCollection();
-        $this->context = (new RequestContext())->fromRequest(Request::createFromGlobals());
+        $this->request = Request::createFromGlobals();
+        $this->context = (new RequestContext())->fromRequest($this->request);
     }
 
     public function registerRoutes(): void
@@ -39,19 +43,19 @@ class Application
         $this->matcher = new UrlMatcher($routes, $this->context);
     }
 
-    public function run(string $uri): void
+    public function run(string $uri): Response
     {
         try {
             $parameters = $this->matcher->match($uri);
 
-            echo $this->instantiateController($parameters);
+            return $this->instantiateController($parameters);
         } catch (ResourceNotFoundException $e) {
             echo "Not Found";
             exit(1);
         }
     }
 
-    private function instantiateController(array $routeParameters): string
+    private function instantiateController(array $routeParameters): Response
     {
         if (!array_key_exists('_controller', $routeParameters)) {
             throw new \InvalidArgumentException("You MUST specified a `_controller` in the route `{$routeParameters['_route']}`");
@@ -71,14 +75,22 @@ class Application
             throw new \InvalidArgumentException("The controller $controllerName does not have an action called $actionName");
         }
 
+        $generator = new UrlGenerator($this->routes, $this->context);
+
         $controller = $isSubClassOfController
-            ? $controllerReflection->newInstance($this->context, $this->opcodeManager)
+            ? $controllerReflection->newInstance($this->request, $this->opcodeManager, $generator)
             : $controllerReflection->newInstance();
 
-        return $this->callControllerMethod($actionName, $controller, $routeParameters, $controllerReflection);
+        $response = $this->callControllerMethod($actionName, $controller, $routeParameters, $controllerReflection);
+
+        if (!$response instanceof Response) {
+            throw new \RuntimeException('An action MUST return a Response');
+        }
+
+        return $response;
     }
 
-    private function callControllerMethod(string $method, $controller, array $routeParameters, \ReflectionClass $controllerReflection): string
+    private function callControllerMethod(string $method, $controller, array $routeParameters, \ReflectionClass $controllerReflection): Response
     {
         $arguments = [];
 
