@@ -1,33 +1,22 @@
 <?php
 
-use Rob\Webclient\Application;
-use Rob\Webclient\Opcode\OpcodeManager;
+use App\Kernel;
+use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\ErrorHandler\Debug;
+use Symfony\Component\HttpFoundation\Request;
 
-/** @var OpcodeManager $opcodeManager */
+require dirname(__DIR__).'/vendor/autoload.php';
 
-require_once "../vendor/autoload.php";
-require_once "../config/bootstrap.php";
+(new Dotenv())->bootEnv(dirname(__DIR__).'/.env');
 
-$app = new Application($opcodeManager);
-$app->registerRoutes();
+if ($_SERVER['APP_DEBUG']) {
+    umask(0000);
 
-try {
-    $response = $app->run($_SERVER['REQUEST_URI']);
-    $response->send();
-} catch (Exception $e) {
-    echo $e->getMessage();
-    exit(1);
+    Debug::enable();
 }
 
-/*
-$formsConfig = require_once "../config/forms.php";
-
-$builder = new \Rob\Webclient\Form\Builder();
-
-$auth = new \Rob\Webclient\Entities\Auth();
-
-$reflection = new ReflectionClass(get_class($auth));
-$properties = $reflection->getProperties();
-
-dd($properties);
-*/
+$kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
+$request = Request::createFromGlobals();
+$response = $kernel->handle($request);
+$response->send();
+$kernel->terminate($request, $response);

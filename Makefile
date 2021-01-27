@@ -19,7 +19,7 @@ JAVA_SRC_DIR := $(JAVA_DIR)/src/main/protos
 JAVA_TEST_DST_DIR := $(JAVA_DIR)/src/test/java
 JAVA_TEST_SRC_DIR := $(JAVA_DIR)/src/test/protos
 
-PHP_DIR := ./servers/webclient
+PHP_DIR := ./servers/webclient2
 PHP_DST_DIR := $(PHP_DIR)/protobuf
 
 .PHONY: help
