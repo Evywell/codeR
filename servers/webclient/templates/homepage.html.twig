@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<ul>
+    {% for opcode in opcodes %}
+        <li><a href="{{ path('opcode_form', {opcode: opcode.id}) }}">{{ opcode.name }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}
