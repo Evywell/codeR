@@ -26,6 +26,14 @@ class ScenarioManager
         }
     }
 
+    /**
+     * Plays all the scenarios or the one specified
+     *
+     * @param string|null $scenario
+     *
+     * @return void
+     * @author Axel LEDUC
+     */
     public function play(?string $scenario = null): void
     {
         $scenariosToPlay = $this->getScenariosToPlay($scenario);
@@ -36,6 +44,12 @@ class ScenarioManager
         }
     }
 
+    /**
+     * Prepares a scenario (define some variables in the store)
+     *
+     * @return void
+     * @author Axel LEDUC
+     */
     private function prepare(): void
     {
         $input = new Input();
@@ -48,6 +62,7 @@ class ScenarioManager
 
     /**
      * @return int
+     * @author Axel LEDUC
      */
     public function getUserId(): int
     {
@@ -56,7 +71,9 @@ class ScenarioManager
 
     /**
      * @param int $userId
+     *
      * @return self
+     * @author Axel LEDUC
      */
     public function setUserId(int $userId): self
     {
@@ -67,8 +84,8 @@ class ScenarioManager
 
     /**
      * @param string|null $scenario
-     * @return ScenarioInterface[]
      *
+     * @return ScenarioInterface[]
      * @author Axel LEDUC
      */
     private function getScenariosToPlay(?string $scenario): array
@@ -80,6 +97,15 @@ class ScenarioManager
         return [$this->scenarios[$scenario]];
     }
 
+    /**
+     * Adds a scenario to the list
+     *
+     * @param $name
+     * @param ScenarioInterface $scenario
+     *
+     * @return void
+     * @author Axel LEDUC
+     */
     private function addScenario($name, ScenarioInterface $scenario)
     {
         if (is_numeric($name)) {
