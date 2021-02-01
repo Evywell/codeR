@@ -39,6 +39,7 @@ start: ## Runs the :servers:game run
 .PHONY: test
 test: ## Runs the :servers:game tests
 	@bash $(GAME_DIR)/bin/test/setup.sh
+	@make bp
 	./gradlew :servers:game:test
 
 .PHONY: build
