@@ -59,10 +59,6 @@ server: ## Launches the game server
 client: ## Launches the game client
 	./gradlew :client:run
 
-.PHONY: server
-server: ## Launches the game server
-	./gradlew :servers:game:run
-
 .PHONY: install-protobuf
 install-protobuf: ## Download the 3.14.0 version of protoc and install it in libs folder
 	curl https://github.com/protocolbuffers/protobuf/releases/download/v3.14.0/$(PROTOC_ARCHIVE_NAME) -Lo tmp/$(PROTOC_ARCHIVE_NAME)

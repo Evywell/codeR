@@ -17,7 +17,7 @@ class DevAuthenticationOpcodeTest : BaseTest() {
         processManager.registerProcess(AuthenticationProcess::class) { DevAuthenticationProcess() }
 
         val opcodeFunction = DevAuthenticationOpcode(processManager)
-        val session = NISession(getGameServer())
+        val session = NISession()
 
         val message = AuthenticationProto.DevAuthentication.newBuilder()
             .setUserId(1234)
