@@ -16,7 +16,7 @@ class JWTAuthenticationOpcodeTest : JWTBaseTest() {
         registerJWTProcess(processManager)
 
         val opcodeFunction = JWTAuthenticationOpcode(processManager)
-        val session = NISession(getGameServer())
+        val session = NISession()
 
         val jwt = generateJWT(123456, "player@localhost", JWTResultGame("rob", "Rob"))
 

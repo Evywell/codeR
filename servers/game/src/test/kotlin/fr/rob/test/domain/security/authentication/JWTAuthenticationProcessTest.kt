@@ -22,7 +22,7 @@ class JWTAuthenticationProcessTest : JWTBaseTest() {
 
         val userId = 123456789
         val jwt = generateJWT(userId, "player@localhost", JWTResultGame("rob", "Rob"))
-        val session = NISession(getGameServer())
+        val session = NISession()
         val authMessage = AuthenticationProto.JWTAuthentication.newBuilder()
             .setToken(jwt)
             .build()
