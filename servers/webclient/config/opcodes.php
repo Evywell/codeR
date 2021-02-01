@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
+use App\Entity\Opcode;
+use Rob\Protos\DevAuthentication;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-define('CMSG_AUTHENTICATE_SESSION', 0x00);
 
 return static function (ContainerConfigurator $container) {
     $container->parameters()
         ->set('opcodes', [
             'CMSG_AUTHENTICATE_SESSION' => [
-                'id' => CMSG_AUTHENTICATE_SESSION,
-                'message' => Rob\Protos\Auth::class
+                'id' => Opcode::CMSG_AUTHENTICATE_SESSION,
+                'message' => DevAuthentication::class
             ]
         ]);
 };
