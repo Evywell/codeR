@@ -18,6 +18,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class MessageType extends AbstractType
 {
 
+    /**
+     * {@inheritDoc}
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -28,6 +31,9 @@ class MessageType extends AbstractType
         $resolver->setAllowedTypes('skeleton', Message::class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $skeleton = $options['skeleton'];
@@ -45,6 +51,15 @@ class MessageType extends AbstractType
         $builder->add('submit', SubmitType::class);
     }
 
+    /**
+     * Returns all fields of a message skeleton
+     *
+     * @param Message $skeleton
+     *
+     * @return array
+     * @throws \ReflectionException
+     * @author Axel LEDUC
+     */
     private function getFieldsFromSkeleton(Message $skeleton): array
     {
         $reflection = new \ReflectionClass(get_class($skeleton));
