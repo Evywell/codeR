@@ -19,7 +19,7 @@ JAVA_SRC_DIR := $(JAVA_DIR)/src/main/protos
 JAVA_TEST_DST_DIR := $(JAVA_DIR)/src/test/java
 JAVA_TEST_SRC_DIR := $(JAVA_DIR)/src/test/protos
 
-PHP_DIR := ./servers/webclient2
+PHP_DIR := ./servers/webclient
 PHP_DST_DIR := $(PHP_DIR)/protobuf
 
 .PHONY: help
@@ -30,6 +30,7 @@ help: ## Outputs this help message
 build-proto:
 	$(PROTOC_LIB_BINARY) -I=$(JAVA_SRC_DIR) --java_out=$(JAVA_DST_DIR) $(JAVA_SRC_DIR)/*.proto
 	$(PROTOC_LIB_BINARY) -I=$(JAVA_TEST_SRC_DIR) --java_out=$(JAVA_TEST_DST_DIR) $(JAVA_TEST_SRC_DIR)/*.proto
+	@$(PROTOC_LIB_BINARY) -I=$(JAVA_SRC_DIR) --php_out=$(PHP_DST_DIR) $(JAVA_SRC_DIR)/*.proto
 
 .PHONY: bp
 bp: ## alias of build-proto
@@ -48,6 +49,10 @@ test: ## Runs the :servers:game tests
 .PHONY: build
 build: ## Builds the :servers:game project
 	./gradlew :servers:game:build
+
+.PHONY: server
+server: ## Launches the game server
+	./gradlew :servers:game:run
 
 .PHONY: install-protobuf
 install-protobuf: ## Download the 3.14.0 version of protoc and install it in libs folder
