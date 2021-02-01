@@ -22,6 +22,15 @@ abstract class AbstractScenario implements ScenarioInterface
         $this->opcodeManager = $opcodeManager;
     }
 
+    /**
+     * Sends a message to the opcode API
+     *
+     * @param int $opcode
+     * @param Message $message
+     *
+     * @return void
+     * @author Axel LEDUC
+     */
     public function sendOpcode(int $opcode, Message $message): void
     {
         $this->opcodeManager->sendMessage($opcode, $message);

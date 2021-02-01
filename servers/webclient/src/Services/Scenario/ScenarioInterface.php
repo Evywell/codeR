@@ -15,7 +15,22 @@ interface ScenarioInterface
         USER_ID = 'userId'
     ;
 
+    /**
+     * Runs the scenario
+     *
+     * @param Input $input
+     *
+     * @return void
+     * @author Axel LEDUC
+     */
     public function process(Input $input): void;
+
+    /**
+     * Returns a string representing the scenario description
+     *
+     * @return string
+     * @author Axel LEDUC
+     */
     public function getDescription(): string;
 
 }

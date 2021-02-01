@@ -17,6 +17,9 @@ use Rob\Protos\DevAuthentication;
 class DevAuthenticationScenario extends AbstractScenario
 {
 
+    /**
+     * {@inheritDoc}
+     */
     public function process(Input $input): void
     {
         $authMessage = new DevAuthentication();
@@ -25,6 +28,9 @@ class DevAuthenticationScenario extends AbstractScenario
         $this->sendOpcode(Opcode::CMSG_AUTHENTICATE_SESSION, $authMessage);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getDescription(): string
     {
         return "Authenticate the current session using the dev methode (only send an userId)";
