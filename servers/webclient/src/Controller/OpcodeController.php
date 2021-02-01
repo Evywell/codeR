@@ -11,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * Class OpcodeController
@@ -23,13 +22,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class OpcodeController extends AbstractController
 {
-
-    private HttpClientInterface $client;
-
-    public function __construct(HttpClientInterface $rob)
-    {
-        $this->client = $rob;
-    }
 
     /**
      * @Route("/{opcode}", name="form", methods={"GET", "HEAD", "POST"})
@@ -43,10 +35,10 @@ class OpcodeController extends AbstractController
      */
     public function index(Request $request, int $opcode, OpcodeManager $opcodeManager): Response
     {
-        $opcodeInfos = $opcodeManager->retrieveFromOpcodeId($opcode);
+        $opcodeInfo = $opcodeManager->retrieveFromOpcodeId($opcode);
 
         /** @var Message $message */
-        $message = new $opcodeInfos['message']();
+        $message = new $opcodeInfo['message']();
 
         $form = $this->createForm(MessageType::class, $message, ['skeleton' => $message]);
 
@@ -56,14 +48,14 @@ class OpcodeController extends AbstractController
             /** @var Message $data */
             $data = $form->getData();
 
-            $this->client->request('POST', '/opcode/' . $opcode, ['json' => $data->serializeToJsonString()]);
+            $opcodeManager->sendMessage($opcode, $data);
 
             return $this->redirectToRoute('homepage');
         }
 
         return $this->render(
             'opcode/index.html.twig',
-            ['form' => $form->createView(), 'opcode' => $opcodeInfos['id']]
+            ['form' => $form->createView(), 'opcode' => $opcodeInfo['id']]
         );
     }
 }

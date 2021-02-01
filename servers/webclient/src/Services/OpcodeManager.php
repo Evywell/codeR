@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\Services;
 
 
+use Google\Protobuf\Internal\Message;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 /**
  * Class OpcodeManager
  *
@@ -15,10 +18,21 @@ class OpcodeManager
 
     private array $cachedOpcodes = [];
     private array $opcodes;
+    private HttpClientInterface $client;
 
-    public function __construct(array $opcodes)
+    public function __construct(array $opcodes, HttpClientInterface $rob)
     {
         $this->opcodes = $opcodes;
+        $this->client = $rob;
+    }
+
+    public function sendMessage(int $opcode, Message $message): void
+    {
+        $this->client->request(
+            'POST',
+            '/opcode/' . $opcode,
+            ['json' => $message->serializeToJsonString()]
+        );
     }
 
     /**
@@ -34,9 +48,9 @@ class OpcodeManager
             return $this->cachedOpcodes[$opcode];
         }
 
-        foreach ($this->opcodes as $name => $infos) {
-            if ($infos['id'] === $opcode) {
-                $this->setCachedOpcode($opcode, $name, $infos);
+        foreach ($this->opcodes as $name => $info) {
+            if ($info['id'] === $opcode) {
+                $this->setCachedOpcode($opcode, $name, $info);
 
                 return $this->cachedOpcodes[$opcode];
             }
@@ -56,9 +70,9 @@ class OpcodeManager
         return self::normalizeOpcodes($this->opcodes);
     }
 
-    private function setCachedOpcode(int $opcode, string $name, array $infos): void
+    private function setCachedOpcode(int $opcode, string $name, array $info): void
     {
-        $this->cachedOpcodes[$opcode] = self::normalizeOpcode($opcode, $name, $infos['message']);
+        $this->cachedOpcodes[$opcode] = self::normalizeOpcode($opcode, $name, $info['message']);
     }
 
     /**
