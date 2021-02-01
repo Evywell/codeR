@@ -8,6 +8,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 
 
 return static function (ContainerConfigurator $container) {
+
     $container->parameters()
         ->set('opcodes', [
             'CMSG_AUTHENTICATE_SESSION' => [

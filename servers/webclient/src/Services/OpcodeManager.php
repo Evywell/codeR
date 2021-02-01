@@ -26,6 +26,16 @@ class OpcodeManager
         $this->client = $rob;
     }
 
+    /**
+     * Sends an HTTP request to the opcode API
+     *
+     * @param int $opcode
+     * @param Message $message
+     *
+     * @return void
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * @author Axel LEDUC
+     */
     public function sendMessage(int $opcode, Message $message): void
     {
         $this->client->request(
@@ -39,6 +49,7 @@ class OpcodeManager
      * Retrieves an opcode info from its id
      *
      * @param int $opcode
+     *
      * @return array
      * @author Axel LEDUC
      */
@@ -70,6 +81,16 @@ class OpcodeManager
         return self::normalizeOpcodes($this->opcodes);
     }
 
+    /**
+     * Stores in cache a normalized opcode
+     *
+     * @param int $opcode
+     * @param string $name
+     * @param array $info
+     *
+     * @return void
+     * @author Axel LEDUC
+     */
     private function setCachedOpcode(int $opcode, string $name, array $info): void
     {
         $this->cachedOpcodes[$opcode] = self::normalizeOpcode($opcode, $name, $info['message']);
@@ -93,6 +114,8 @@ class OpcodeManager
     }
 
     /**
+     * Returns a normalized opcode array
+     *
      * @param int $opcode
      * @param string $name
      * @param string $message
@@ -102,6 +125,7 @@ class OpcodeManager
      */
     private static function normalizeOpcode(int $opcode, string $name, string $message): array
     {
+
         return [
             'id' => $opcode,
             'name' => $name,
