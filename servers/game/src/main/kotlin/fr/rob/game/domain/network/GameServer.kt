@@ -39,5 +39,5 @@ open class GameServer(
         sessions[identifier] = session
     }
 
-    open fun start() = Unit
+    open fun start() {}
 }

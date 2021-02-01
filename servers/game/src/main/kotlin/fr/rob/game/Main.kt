@@ -58,6 +58,7 @@ class Main : BaseApplication() {
             .runTask(TASK_LOAD_SERVER_CONFIG) // Store server info
 
         val serverManager = GameServerManager(NettyGameServerFactory(this, processManager))
+
         serverManager.buildGameServers(setup.getServers())
     }
 
@@ -70,6 +71,6 @@ class Main : BaseApplication() {
     override fun registerModules(modules: MutableList<AbstractModule>) {
         modules.add(ConfigModule(this))
         modules.add(DatabaseModule(eventManager))
-        modules.add(SecurityModule(this, setup, processManager))
+        modules.add(SecurityModule(this.env, setup, processManager))
     }
 }
