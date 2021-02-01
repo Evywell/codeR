@@ -21,7 +21,8 @@ class MessageType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'skeleton' => null
+            'skeleton' => null,
+            'csrf_protection' => true
         ]);
 
         $resolver->setAllowedTypes('skeleton', Message::class);
