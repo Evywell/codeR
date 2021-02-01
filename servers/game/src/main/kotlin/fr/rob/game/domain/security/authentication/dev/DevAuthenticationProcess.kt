@@ -1,7 +1,7 @@
 package fr.rob.game.domain.security.authentication.dev
 
+import fr.rob.entities.AuthenticationProto
 import fr.rob.game.domain.security.authentication.AuthenticationProcess
-import fr.rob.game.entity.authentication.AuthenticationProto
 
 class DevAuthenticationProcess : AuthenticationProcess() {
 

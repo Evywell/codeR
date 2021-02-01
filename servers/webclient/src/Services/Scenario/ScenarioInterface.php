@@ -11,6 +11,10 @@ namespace App\Services\Scenario;
 interface ScenarioInterface
 {
 
+    public const
+        USER_ID = 'userId'
+    ;
+
     public function process(Input $input): void;
     public function getDescription(): string;
 

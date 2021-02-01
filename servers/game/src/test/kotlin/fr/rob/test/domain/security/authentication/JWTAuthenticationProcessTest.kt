@@ -1,10 +1,10 @@
 package fr.rob.test.domain.security.authentication
 
+import fr.rob.entities.AuthenticationProto
 import fr.rob.game.domain.process.ProcessManager
 import fr.rob.game.domain.security.authentication.AuthenticationProcess
 import fr.rob.game.domain.security.authentication.jwt.JWTAuthenticationProcess
 import fr.rob.game.domain.security.authentication.jwt.JWTResultGame
-import fr.rob.game.entity.authentication.AuthenticationProto
 import fr.rob.test.JWTBaseTest
 import fr.rob.test.sandbox.network.NISession
 import org.junit.Assert.assertEquals
