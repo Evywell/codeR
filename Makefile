@@ -6,12 +6,9 @@ else
 	OS := linux
 endif
 
-GAME_DIR := servers/game
+PROTOC := docker-compose run --rm protobuf
 
-PROTOC_LIB_NAME := protoc-3.14.0-$(OS)-x86_64
-PROTOC_ARCHIVE_NAME := $(PROTOC_LIB_NAME).zip
-PROTOC_LIB_PATH := $(GAME_DIR)/libs/$(PROTOC_LIB_NAME)
-PROTOC_LIB_BINARY := $(PROTOC_LIB_PATH)/bin/protoc
+GAME_DIR := servers/game
 
 JAVA_DIR := ./servers/game
 JAVA_DST_DIR := $(JAVA_DIR)/src/main/java
@@ -28,9 +25,9 @@ help: ## Outputs this help message
 
 .PHONY: build-proto
 build-proto:
-	@$(PROTOC_LIB_BINARY) -I=$(JAVA_SRC_DIR) --java_out=$(JAVA_DST_DIR) $(JAVA_SRC_DIR)/*.proto
-	@$(PROTOC_LIB_BINARY) -I=$(JAVA_TEST_SRC_DIR) --java_out=$(JAVA_TEST_DST_DIR) $(JAVA_TEST_SRC_DIR)/*.proto
-	@$(PROTOC_LIB_BINARY) -I=$(JAVA_SRC_DIR) --php_out=$(PHP_DST_DIR) $(JAVA_SRC_DIR)/*.proto
+	@echo "Generating java protos" && $(PROTOC) -I=$(JAVA_SRC_DIR) --java_out=$(JAVA_DST_DIR) $(JAVA_SRC_DIR)/*.proto
+	@echo "Generating test java protos" && $(PROTOC) -I=$(JAVA_TEST_SRC_DIR) --java_out=$(JAVA_TEST_DST_DIR) $(JAVA_TEST_SRC_DIR)/*.proto
+	@echo "Generating php protos" && $(PROTOC) -I=$(JAVA_SRC_DIR) --php_out=$(PHP_DST_DIR) $(JAVA_SRC_DIR)/*.proto
 
 .PHONY: bp
 bp: build-proto ## alias of build-proto
@@ -56,11 +53,3 @@ server: ## Launches the game server
 .PHONY: client
 client: ## Launches the game client
 	./gradlew :client:run
-
-.PHONY: install-protobuf
-install-protobuf: ## Download the 3.14.0 version of protoc and install it in libs folder
-	curl https://github.com/protocolbuffers/protobuf/releases/download/v3.14.0/$(PROTOC_ARCHIVE_NAME) -Lo tmp/$(PROTOC_ARCHIVE_NAME)
-	unzip tmp/$(PROTOC_ARCHIVE_NAME) -d tmp/$(PROTOC_LIB_NAME)
-	mkdir -p $(PROTOC_LIB_PATH) && rm -rf $(PROTOC_LIB_PATH)
-	mv tmp/$(PROTOC_LIB_NAME) $(PROTOC_LIB_PATH)
-	rm tmp/$(PROTOC_ARCHIVE_NAME)
