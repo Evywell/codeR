@@ -27,7 +27,6 @@ class JWTAuthenticationProcessTest : JWTBaseTest() {
             .setToken(jwt)
             .build()
 
-
         // Act
         val authenticationProcess: JWTAuthenticationProcess =
             processManager.makeProcess(AuthenticationProcess::class) as JWTAuthenticationProcess

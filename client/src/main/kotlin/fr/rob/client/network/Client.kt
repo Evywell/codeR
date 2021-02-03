@@ -36,6 +36,6 @@ class Client(private val hostname: String, private val port: Int) {
     }
 
     fun send(packet: Packet) {
-
+        session.send(packet)
     }
 }
