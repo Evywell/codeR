@@ -21,7 +21,7 @@ PHP_DST_DIR := $(PHP_DIR)/protobuf
 
 .PHONY: help
 help: ## Outputs this help message
-	@grep -E '(^[a-zA-Z0-9_-]+:.*?##.*$$)|(^##)' ${MAKEFILE_LIST} | awk 'BEGIN {FS = ":.*?## "}{printf "${GREEN}%-23s${RESET} %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: build-proto
 build-proto:
@@ -53,3 +53,10 @@ server: ## Launches the game server
 .PHONY: client
 client: ## Launches the game client
 	./gradlew :client:run
+
+.PHONY: composer
+composer: servers/webclient/vendor/autoload.php ## Launches a composer install
+
+servers/webclient/vendor/autoload.php: servers/webclient/composer.lock
+	composer install -d servers/webclient
+	touch servers/webclient/vendor/autoload.php
