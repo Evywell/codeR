@@ -10,7 +10,6 @@ class Request(val request: FullHttpRequest) {
     var body = parseJsonRequest()
 
     private fun parseJsonRequest(): String? {
-        val jsonBuf = request.content()
-        return jsonBuf.toString(CharsetUtil.UTF_8)
+        return request.content().toString(CharsetUtil.UTF_8)
     }
 }

@@ -14,7 +14,7 @@ open class AppSession(private val channel: Channel) : Session() {
     }
 
     override fun send(packet: Packet) {
-        TODO("Not yet implemented: waiting for Routing")
+        channel.writeAndFlush(packet.toByteArray())
     }
 
     override fun close() {
