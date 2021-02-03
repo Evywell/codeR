@@ -33,17 +33,15 @@ build-proto:
 	@$(PROTOC_LIB_BINARY) -I=$(JAVA_SRC_DIR) --php_out=$(PHP_DST_DIR) $(JAVA_SRC_DIR)/*.proto
 
 .PHONY: bp
-bp: ## alias of build-proto
-	@make build-proto
+bp: build-proto ## alias of build-proto
 
 .PHONY: start
 start: ## Runs the :servers:game run
 	./gradlew :servers:game:run
 
 .PHONY: test
-test: ## Runs the :servers:game tests
+test: build-proto ## Runs the :servers:game tests
 	@bash $(GAME_DIR)/bin/test/setup.sh
-	@make bp
 	./gradlew :servers:game:test
 
 .PHONY: build
