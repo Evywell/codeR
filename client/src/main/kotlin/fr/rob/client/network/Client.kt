@@ -1,5 +1,6 @@
 package fr.rob.client.network
 
+import fr.rob.core.log.LoggerFactory
 import fr.rob.core.network.Packet
 import fr.rob.core.network.session.Session
 import io.netty.bootstrap.Bootstrap
@@ -16,6 +17,7 @@ import io.netty.channel.EventLoopGroup
 
 class Client(private val hostname: String, private val port: Int) {
 
+    val logger = LoggerFactory.create("client")
     lateinit var session: Session
 
     fun open() {

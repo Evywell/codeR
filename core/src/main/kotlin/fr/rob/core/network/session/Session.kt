@@ -15,6 +15,12 @@ abstract class Session {
         return getIp() == LOCALHOST_IPV4 || getIp() == LOCALHOST_IPV6
     }
 
+    open fun isAuthenticatedOrThrowException() {
+        if (!isAuthenticated) {
+            throw UnauthenticatedException()
+        }
+    }
+
     companion object {
         const val LOCALHOST_IPV4 = "127.0.0.1"
         const val LOCALHOST_IPV6 = "::1"

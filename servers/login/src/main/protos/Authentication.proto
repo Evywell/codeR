@@ -4,7 +4,7 @@ package fr.rob.entities;
 
 option java_outer_classname = "AuthenticationProto";
 option php_namespace = "Rob\\Protos";
-option php_metadata_namespace = "Rob\\Protos";
+option php_metadata_namespace = "Rob\\Protos\\Meta";
 
 message DevAuthentication {
   int32 userId = 1;

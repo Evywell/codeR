@@ -4,4 +4,4 @@ package fr.rob.entities;
 
 option java_outer_classname = "##PROTONAME##Protos";
 option php_namespace = "Rob\\Protos";
-option php_metadata_namespace = "Rob\\Protos";
+option php_metadata_namespace = "Rob\\Protos\\Meta";
