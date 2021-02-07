@@ -16,4 +16,5 @@ message CharacterStand {
 
   int32 numCharacters = 1;
   repeated Character characters = 2;
+  int32 currentCharacterId = 3;
 }

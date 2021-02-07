@@ -11,11 +11,13 @@ class CharacterStandProcess(private val characterRepository: CharacterStandRepos
         val userId = session.userId
 
         val characters = characterRepository.byUserId(userId!!)
+        val currentCharacterId = characterRepository.getCurrentCharacterId(userId)
 
         return CharacterStand
             .newBuilder()
             .setNumCharacters(characters.size)
             .addAllCharacters(characters)
+            .setCurrentCharacterId(currentCharacterId)
             .build()
     }
 }

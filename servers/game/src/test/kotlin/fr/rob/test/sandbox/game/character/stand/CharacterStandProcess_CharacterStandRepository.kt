@@ -5,12 +5,18 @@ import fr.rob.game.domain.game.character.stand.CharacterStandRepositoryInterface
 
 class CharacterStandProcess_CharacterStandRepository : CharacterStandRepositoryInterface {
 
+    private val characters = ArrayList<Character>()
+
+    init {
+        characters.add(Character.newBuilder().setId(13).setName("T101").setLevel(60).build())
+        characters.add(Character.newBuilder().setId(22).setName("T102").setLevel(54).build())
+    }
+
     override fun byUserId(userId: Int): List<Character> {
-        val characters = ArrayList<Character>()
-
-        characters.add(Character.newBuilder().setId(1).setName("T101").setLevel(60).build())
-        characters.add(Character.newBuilder().setId(2).setName("T102").setLevel(54).build())
-
         return characters
+    }
+
+    override fun getCurrentCharacterId(userId: Int): Int {
+        return characters[0].id
     }
 }

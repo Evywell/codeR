@@ -25,12 +25,13 @@ class CharacterStandProcessTest {
 
         // Assert
         assertEquals(2, characterStand.charactersCount)
+        assertEquals(13, characterStand.currentCharacterId)
 
-        assertEquals(1, characterStand.getCharacters(0).id)
+        assertEquals(13, characterStand.getCharacters(0).id)
         assertEquals("T101", characterStand.getCharacters(0).name)
         assertEquals(60, characterStand.getCharacters(0).level)
 
-        assertEquals(2, characterStand.getCharacters(1).id)
+        assertEquals(22, characterStand.getCharacters(1).id)
         assertEquals("T102", characterStand.getCharacters(1).name)
         assertEquals(54, characterStand.getCharacters(1).level)
     }
