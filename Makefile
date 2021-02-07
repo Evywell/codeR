@@ -84,13 +84,16 @@ up: .env ## Runs all the docker containers
 	$(DOCKER_COMPOSE) up -d
 
 .PHONY: test
-test: build-proto ## Runs the :servers:game tests
+test: build-proto setup-tests ## Runs the :servers:game tests
 	@bash $(GAME_DIR)/bin/test/setup.sh
 	@make task-test
 
 .PHONY: task-test
 task-test:
 	$(GRADLE_TASK) :servers:game:test
+
+.PHONY: setup-tests
+setup-tests: servers/game/src/test/resources/private.pem
 
 .PHONY: build
 build: up ## Builds the :servers:game and :servers:client projects
@@ -148,6 +151,9 @@ migration-status: up
 
 migrations/migrator/vendor/autoload.php: up
 	$(MIGRATOR) composer install -d migrations/migrator
+
+servers/game/src/test/resources/private.pem:
+	@bash $(GAME_DIR)/bin/test/setup.sh
 
 servers/webclient/vendor/autoload.php: servers/webclient/composer.lock
 	composer install -d servers/webclient

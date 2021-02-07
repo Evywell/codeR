@@ -43,6 +43,7 @@ class Connection(
 
     fun createPreparedStatement(sql: String): PreparedStatement? {
         connect()
+
         try {
             val stopwatch = StopWatch()
             stopwatch.start()
@@ -55,6 +56,7 @@ class Connection(
         } catch (e: SQLException) {
             e.printStackTrace()
         }
+
         return null
     }
 
