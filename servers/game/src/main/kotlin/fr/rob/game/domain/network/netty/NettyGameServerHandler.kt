@@ -11,7 +11,7 @@ import io.netty.channel.ChannelHandlerContext
 class NettyGameServerHandler(private val nettyServer: NettyGameServer) : NettyServerHandler(nettyServer) {
 
     private val opcodeHandler: OpcodeHandler =
-        ClientOpcodeHandler(nettyServer.processManager, nettyServer.app, nettyServer.loggerFactory.create("opcode"))
+        ClientOpcodeHandler(nettyServer.processManager, nettyServer.loggerFactory.create("opcode"))
 
     override fun processPacket(opcode: Int, session: Session, packet: Packet) {
         opcodeHandler.process(opcode, session, packet)
