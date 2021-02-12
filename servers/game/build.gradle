@@ -2,6 +2,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.4.20'
     id 'java'
     id 'application'
+    id 'jacoco'
 }
 
 dependencies {
@@ -12,6 +13,40 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.20"
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.0'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.0'
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    'fr/rob/entities/**',
+                    'fr/rob/game/infrastructure/**',
+                    'fr/rob/game/domain/network/**',
+            ])
+        }))
+    }
+
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.enabled true
+    }
+
+}
+
+jacoco {
+    toolVersion = "0.8.6"
 }
 
 jar {
