@@ -65,6 +65,10 @@ up: .env ## Runs all the docker containers
 .PHONY: test
 test: build-proto ## Runs the :servers:game tests
 	@bash $(GAME_DIR)/bin/test/setup.sh
+	@make task-test
+
+.PHONY: task-test
+task-test:
 	$(GRADLE_TASK) :servers:game:test
 
 .PHONY: build
