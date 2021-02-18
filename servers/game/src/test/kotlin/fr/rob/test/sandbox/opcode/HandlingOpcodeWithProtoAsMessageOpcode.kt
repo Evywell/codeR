@@ -1,4 +1,4 @@
-package fr.rob.test.opcode
+package fr.rob.test.sandbox.opcode
 
 import com.google.protobuf.Message
 import fr.rob.game.domain.network.session.Session

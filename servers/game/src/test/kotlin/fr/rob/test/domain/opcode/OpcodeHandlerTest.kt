@@ -1,15 +1,18 @@
 package fr.rob.test.domain.opcode
 
 import fr.rob.game.domain.network.packet.Packet
+import fr.rob.game.domain.security.authentication.UnauthenticatedException
 import fr.rob.game.sandbox.SandboxProtos
 import fr.rob.test.BaseTest
-import fr.rob.test.opcode.HandlingOpcodeWithProtoAsMessageOpcode
+import fr.rob.test.sandbox.opcode.HandlingOpcodeWithProtoAsMessageOpcode
 import fr.rob.test.sandbox.network.EmptyPacket
 import fr.rob.test.sandbox.network.NISession
+import fr.rob.test.sandbox.opcode.DoNothingAuthenticatedOpcodeFunction
 import fr.rob.test.sandbox.opcode.DoNothingOpcodeFunction
 import fr.rob.test.sandbox.opcode.TransformToSarahConnorOpcodeFunction
 import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 
 class OpcodeHandlerTest : BaseTest() {
 
@@ -65,6 +68,42 @@ class OpcodeHandlerTest : BaseTest() {
         assertEquals("Sarah", sarahConnor.firstName)
         assertEquals("Connor", sarahConnor.lastName)
         assertEquals(32, sarahConnor.age)
+    }
+
+    @Test
+    fun `launch opcode function with unauthenticated session`() {
+        // Arrange
+        val session = NISession()
+        val opcodeFunction = DoNothingAuthenticatedOpcodeFunction(BasicSubject("a", "a", 18))
+
+        opcodeHandler.registerOpcode(1, opcodeFunction)
+
+        // Act & Assert
+        Assertions.assertThrows(UnauthenticatedException::class.java) {
+            opcodeHandler.process(1, session, Packet(1, null))
+            assertEquals(false, session.isAuthenticated)
+        }
+    }
+
+    @Test
+    fun `process an unregistered opcode`() {
+        // Act & Assert
+        val exception = Assertions.assertThrows(Exception::class.java) {
+            opcodeHandler.process(1, NISession(), Packet(1, null))
+        }
+
+        assertEquals("Cannot find opcode 1", exception.message)
+    }
+
+    @Test
+    fun `get an opcode function`() {
+        // Arrange
+        val opcodeFunction = DoNothingAuthenticatedOpcodeFunction(BasicSubject("a", "a", 18))
+
+        opcodeHandler.registerOpcode(1, opcodeFunction)
+
+        // Act & Assert
+        assertEquals(opcodeFunction, opcodeHandler.getOpcodeFunction(1));
     }
 }
 

@@ -4,7 +4,7 @@ data class Server(
     var serverName: String? = null,
     var serverAddress: String? = null,
     var mapId: Int? = null,
-    var zones: MutableList<Zone> = ArrayList()
+    var zones: List<Zone> = ArrayList()
 )
 
 data class Zone(

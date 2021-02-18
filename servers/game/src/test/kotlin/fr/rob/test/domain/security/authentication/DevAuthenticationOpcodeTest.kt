@@ -7,7 +7,7 @@ import fr.rob.game.domain.security.authentication.dev.DevAuthenticationProcess
 import fr.rob.test.BaseTest
 import fr.rob.test.sandbox.network.NISession
 import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class DevAuthenticationOpcodeTest : BaseTest() {
 
@@ -29,6 +29,7 @@ class DevAuthenticationOpcodeTest : BaseTest() {
 
         // Assert
         assertEquals(true, session.isAuthenticated)
+        assertEquals(1234, session.userId)
         assertEquals(1234, session.userId)
     }
 }
