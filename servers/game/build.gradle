@@ -30,16 +30,19 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
-                    'fr/rob/entities/**',
-                    'fr/rob/game/infrastructure/**',
-                    'fr/rob/game/domain/network/**',
+                'fr/rob/entities/**',
+                'fr/rob/game/infrastructure/**',
+                'fr/rob/game/domain/network/**',
+                'fr/rob/game/domain/setup/tasks/TaskAuthCollectJWTPublicKey.class',
+                'fr/rob/game/domain/setup/tasks/CertsResponse.class',
+                'fr/rob/game/Main**'
             ])
         }))
     }
 
     reports {
-        xml.enabled false
-        csv.enabled false
+        xml.enabled true
+        csv.enabled true
         html.enabled true
     }
 

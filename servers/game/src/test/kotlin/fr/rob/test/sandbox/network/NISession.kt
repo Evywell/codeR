@@ -9,5 +9,7 @@ class NISession : Session() {
 
     override fun send(packet: Packet) {}
 
-    override fun close() {}
+    override fun close() {
+        isAuthenticated = false
+    }
 }

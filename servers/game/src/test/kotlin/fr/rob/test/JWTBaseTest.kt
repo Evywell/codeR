@@ -47,6 +47,21 @@ open class JWTBaseTest : BaseTest() {
             .compact()
     }
 
+    protected fun generateJWTWithPayload(subject: String?, payload: Map<String, Any>?): String {
+        val localDate = LocalDate.now().plusDays(1)
+
+        val builder = Jwts.builder()
+            .setSubject(subject)
+            .setId("ad2fdd4c-2df1-44a5-89da-0092f88c1127")
+            .setIssuedAt(Date())
+            .setExpiration(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+
+        payload?.forEach { (k, v) -> builder.claim(k, v) }
+
+        return builder.signWith(getPrivateKey())
+            .compact()
+    }
+
     private fun getPublicKey(): PublicKey {
         return PublicKeyReader.fromString(getKeyContent("public.pem"))
     }
@@ -58,7 +73,7 @@ open class JWTBaseTest : BaseTest() {
             .toString(Charsets.UTF_8)
     }
 
-    private fun getPrivateKey(): PrivateKey {
+    protected fun getPrivateKey(): PrivateKey {
         val reader = PemReader(FileReader(getKey("private.pem")))
         val spec = PKCS8EncodedKeySpec(reader.readPemObject().content)
 
