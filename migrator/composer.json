@@ -1,0 +1,11 @@
+{
+    "name": "coder/migrator",
+    "authors": [
+        {
+            "name": "Axel"
+        }
+    ],
+    "require": {
+        "robmorgan/phinx": "^0.12.5"
+    }
+}
