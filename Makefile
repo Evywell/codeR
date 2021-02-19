@@ -6,10 +6,17 @@ else
 	OS := linux
 endif
 
+SUPPORTED_COMMANDS := migration-create
+SUPPORTS_MAKE_ARGS := $(findstring $(firstword $(MAKECMDGOALS)), $(SUPPORTED_COMMANDS))
+ifneq "$(SUPPORTS_MAKE_ARGS)" ""
+  COMMAND_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(COMMAND_ARGS):;@:)
+endif
+
 DCR := docker-compose run --rm
 
 PROTOC := $(DCR) protobuf
-MIGRATOR := $(DCR) migrator
+MIGRATOR := $(DCR) migrator migrator/vendor/bin/phinx
 
 GAME_DIR := servers/game
 
@@ -61,11 +68,19 @@ client: ## Launches the game client
 composer: servers/webclient/vendor/autoload.php ## Launches a composer install
 
 .PHONY: migrate
-migrate: migrator/vendor/autoload.php
-	$(MIGRATOR) vendor/bin/phinx migrate -e development
+migrate: migrations/migrator/vendor/autoload.php
+	$(MIGRATOR) migrate --configuration migrator/phinx.php -e development
 
-migrator/vendor/autoload.php:
-	$(MIGRATOR) composer install
+.PHONY: migration-create
+migration-create:
+	$(MIGRATOR) create $(COMMAND_ARGS) --configuration migrator/phinx.php
+
+.PHONY: migration-status
+migration-status:
+	$(MIGRATOR) status --configuration migrator/phinx.php
+
+migrations/migrator/vendor/autoload.php:
+	$(MIGRATOR) composer install -d migrator
 
 servers/webclient/vendor/autoload.php: servers/webclient/composer.lock
 	composer install -d servers/webclient
