@@ -19,7 +19,7 @@ services:
     build:
       context: docker/migrator
     volumes:
-      - ./migrator:/mnt/app
+      - ./migrations:/mnt/app
     networks:
       - gamedb
 
@@ -40,5 +40,5 @@ services:
     environment:
       MYSQL_DATABASE: testing
       MYSQL_USER: testing
-      MYSQL_PASSWORD: passtesting
+      MYSQL_PASSWORD: passwordtesting
       MYSQL_HOST: localhost

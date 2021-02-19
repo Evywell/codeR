@@ -3,8 +3,8 @@
 return
 [
     'paths' => [
-        'migrations' => '%%PHINX_CONFIG_DIR%%/sql/db/migrations',
-        'seeds' => '%%PHINX_CONFIG_DIR%%/sql/db/seeds'
+        'migrations' => '%%PHINX_CONFIG_DIR%%/../sql',
+        'seeds' => '%%PHINX_CONFIG_DIR%%/../sql/seeds'
     ],
     'environments' => [
         'default_migration_table' => 'phinxlog',
@@ -14,7 +14,7 @@ return
             'host' => 'mysql_game',
             'name' => 'testing',
             'user' => 'testing',
-            'pass' => 'passtesting',
+            'pass' => 'passwordtesting',
             'port' => '3306',
             'charset' => 'utf8',
         ],
