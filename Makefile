@@ -6,7 +6,10 @@ else
 	OS := linux
 endif
 
-PROTOC := docker-compose run --rm protobuf
+DCR := docker-compose run --rm
+
+PROTOC := $(DCR) protobuf
+MIGRATOR := $(DCR) migrator
 
 GAME_DIR := servers/game
 
@@ -56,6 +59,13 @@ client: ## Launches the game client
 
 .PHONY: composer
 composer: servers/webclient/vendor/autoload.php ## Launches a composer install
+
+.PHONY: migrate
+migrate: migrator/vendor/autoload.php
+	$(MIGRATOR) vendor/bin/phinx migrate -e development
+
+migrator/vendor/autoload.php:
+	$(MIGRATOR) composer install
 
 servers/webclient/vendor/autoload.php: servers/webclient/composer.lock
 	composer install -d servers/webclient

@@ -1,5 +1,11 @@
 version: '3.7'
 
+networks:
+  gamedb:
+
+volumes:
+  mysqldata:
+
 services:
   protobuf:
     build:
@@ -8,3 +14,31 @@ services:
         - PROTOBUF_VERSION=3.14.0
     volumes:
       - .:/mnt/app
+
+  migrator:
+    build:
+      context: docker/migrator
+    volumes:
+      - ./migrator:/mnt/app
+    networks:
+      - gamedb
+
+  mysql_game:
+    build:
+      context: docker/mysql
+      target: dev
+      args:
+        - USER_ID=${USER_ID:-1000}
+        - GROUP_ID=${GROUP_ID:-1000}
+    volumes:
+      - mysqldata:/mnt/data
+      - ./logs/mysql:/mnt/log
+    ports:
+      - 33060:3306
+    networks:
+      - gamedb
+    environment:
+      MYSQL_DATABASE: testing
+      MYSQL_USER: testing
+      MYSQL_PASSWORD: passtesting
+      MYSQL_HOST: localhost
