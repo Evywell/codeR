@@ -15,6 +15,13 @@ services:
     volumes:
       - .:/mnt/app
 
+  gradle:
+    build:
+      context: docker/gradle
+      target: dev
+    volumes:
+     - .:/mnt/app
+
   migrator:
     build:
       context: docker/migrator

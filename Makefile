@@ -15,6 +15,10 @@ endif
 
 DOCKER_COMPOSE := docker-compose
 DCR := $(DOCKER_COMPOSE) run --rm
+DCE := $(DOCKER_COMPOSE) exec
+
+GRADLE := $(DCE) gradle
+GRADLE_TASK := $(GRADLE) gradle
 
 PROTOC := $(DCR) protobuf
 MIGRATOR := $(DCR) migrator
@@ -56,20 +60,20 @@ up: ## Runs all the docker containers
 .PHONY: test
 test: build-proto ## Runs the :servers:game tests
 	@bash $(GAME_DIR)/bin/test/setup.sh
-	./gradlew :servers:game:test
+	$(GRADLE_TASK) :servers:game:test
 
 .PHONY: build
 build: ## Builds the :servers:game and :servers:client projects
-	./gradlew :servers:game:build
-	./gradlew :servers:web:build
+	$(GRADLE_TASK) :servers:game:build
+	$(GRADLE_TASK) :servers:web:build
 
 .PHONY: server
 server: ## Launches the game server
-	./gradlew :servers:game:run
+	$(GRADLE_TASK) :servers:game:run
 
 .PHONY: client
 client: ## Launches the game client
-	./gradlew :client:run
+	$(GRADLE_TASK) :client:run
 
 .PHONY: composer
 composer: servers/webclient/vendor/autoload.php ## Launches a composer install
