@@ -13,10 +13,13 @@ ifneq "$(SUPPORTS_MAKE_ARGS)" ""
   $(eval $(COMMAND_ARGS):;@:)
 endif
 
-DCR := docker-compose run --rm
+DOCKER_COMPOSE := docker-compose
+DCR := $(DOCKER_COMPOSE) run --rm
 
 PROTOC := $(DCR) protobuf
-MIGRATOR := $(DCR) migrator migrator/vendor/bin/phinx
+MIGRATOR := $(DCR) migrator
+PHINX := $(MIGRATOR) migrator/vendor/bin/phinx
+PHINX_CONFIG_ARG := --configuration migrator/phinx.php
 
 GAME_DIR := servers/game
 
@@ -46,6 +49,10 @@ bp: build-proto ## alias of build-proto
 start: ## Runs the :servers:game run
 	./gradlew :servers:game:run
 
+.PHONY: up
+up: ## Runs all the docker containers
+	$(DOCKER_COMPOSE) up -d
+
 .PHONY: test
 test: build-proto ## Runs the :servers:game tests
 	@bash $(GAME_DIR)/bin/test/setup.sh
@@ -69,17 +76,17 @@ composer: servers/webclient/vendor/autoload.php ## Launches a composer install
 
 .PHONY: migrate
 migrate: migrations/migrator/vendor/autoload.php
-	$(MIGRATOR) migrate --configuration migrator/phinx.php -e development
+	$(PHINX) migrate $(PHINX_CONFIG_ARG) -e development
 
 .PHONY: migration-create
-migration-create:
-	$(MIGRATOR) create $(COMMAND_ARGS) --configuration migrator/phinx.php
+migration-create: migrations/migrator/vendor/autoload.php
+	$(PHINX) create $(COMMAND_ARGS) $(PHINX_CONFIG_ARG)
 
 .PHONY: migration-status
-migration-status:
-	$(MIGRATOR) status --configuration migrator/phinx.php
+migration-status: up
+	$(PHINX) status --configuration migrator/phinx.php
 
-migrations/migrator/vendor/autoload.php:
+migrations/migrator/vendor/autoload.php: up
 	$(MIGRATOR) composer install -d migrator
 
 servers/webclient/vendor/autoload.php: servers/webclient/composer.lock
