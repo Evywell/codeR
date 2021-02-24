@@ -8,6 +8,7 @@ class ConfigModule(private val app: BaseApplication) : AbstractModule() {
 
     override fun boot() {
         app.env = retrieveEnv()
+        app.getConfig(CONFIG_DEFAULT).get(DATABASE) // Load the database configurations
     }
 
     /**

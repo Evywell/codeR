@@ -30,6 +30,5 @@ class DevAuthenticationOpcodeTest : BaseTest() {
         // Assert
         assertEquals(true, session.isAuthenticated)
         assertEquals(1234, session.userId)
-        assertEquals(1234, session.userId)
     }
 }
