@@ -5,6 +5,7 @@ import fr.rob.game.domain.network.Zone
 import fr.rob.game.infrastructure.database.Connection
 import fr.rob.game.infrastructure.database.PreparedStatement
 import org.codehaus.jackson.map.ObjectMapper
+import java.lang.RuntimeException
 
 class LoadServerRepository(connection: Connection) : LoadServerRepositoryInterface {
 
@@ -19,14 +20,21 @@ class LoadServerRepository(connection: Connection) : LoadServerRepositoryInterfa
         val zones = ArrayList<Zone>()
         val rs = serverInfoStatement.resultSet
 
-        while (rs.next()) {
+        if (!rs.next()) {
+            throw RuntimeException("Cannot retrieve server information: ${server.serverName}")
+        }
+
+        val serverName = rs.getString(1)
+        val serverAddress = rs.getString(2)
+
+        do {
             val zone: Zone = om.readValue(rs.getString(4), Zone::class.java)
 
             zone.mapId = rs.getInt(3)
             zones.add(zone)
-        }
+        } while (rs.next())
 
-        return ServerInfo(rs.getString(1), rs.getString(2), zones)
+        return ServerInfo(serverName, serverAddress, zones)
     }
 
     companion object {
