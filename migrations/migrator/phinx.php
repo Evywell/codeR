@@ -1,5 +1,11 @@
 <?php
 
+use Dotenv\Dotenv;
+
+require_once "vendor/autoload.php";
+
+Dotenv::createImmutable(dirname(__DIR__, 2))->load();
+
 return
 [
     'paths' => [
@@ -11,10 +17,10 @@ return
         'default_environment' => 'development',
         'development' => [
             'adapter' => 'mysql',
-            'host' => 'mysql_game',
-            'name' => 'testing',
-            'user' => 'testing',
-            'pass' => 'passwordtesting',
+            'host' => $_ENV['GAME_MYSQL_HOST'],
+            'name' => $_ENV['GAME_MYSQL_DATABASE'],
+            'user' => $_ENV['GAME_MYSQL_USER'],
+            'pass' => $_ENV['GAME_MYSQL_PASSWORD'],
             'port' => '3306',
             'charset' => 'utf8',
         ],
