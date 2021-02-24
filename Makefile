@@ -54,9 +54,9 @@ build-proto: ## Builds protos for java and php
 .PHONY: bp
 bp: build-proto ## alias of build-proto
 
-.PHONY: start
-start: up ## Runs the :servers:game run
-	./gradlew :servers:game:run
+.PHONY: run
+run: up ## Runs the :servers:game run
+	$(GRADLE_TASK) :servers:game:run
 
 .PHONY: up
 up: .env ## Runs all the docker containers
