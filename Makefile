@@ -22,8 +22,8 @@ GRADLE_TASK := $(GRADLE) gradle
 
 PROTOC := $(DCR) protobuf
 MIGRATOR := $(DCR) migrator
-PHINX := $(MIGRATOR) migrator/vendor/bin/phinx
-PHINX_CONFIG_ARG := --configuration migrator/phinx.php
+PHINX := $(MIGRATOR) migrations/migrator/vendor/bin/phinx
+PHINX_CONFIG_ARG := --configuration migrations/migrator/phinx.php
 
 GAME_DIR := servers/game
 
@@ -35,6 +35,11 @@ JAVA_TEST_SRC_DIR := $(JAVA_DIR)/src/test/protos
 
 PHP_DIR := ./servers/webclient
 PHP_DST_DIR := $(PHP_DIR)/protobuf
+
+##> Debug
+DEBUGGER_SOCKET_PORT := 5005
+DEBUGGER_BUILD_JAR_PATH := build/libs/game-1.0.jar
+##< Debug
 
 .PHONY: help
 help: ## Outputs this help message
@@ -50,11 +55,11 @@ build-proto: ## Builds protos for java and php
 bp: build-proto ## alias of build-proto
 
 .PHONY: start
-start: ## Runs the :servers:game run
+start: up ## Runs the :servers:game run
 	./gradlew :servers:game:run
 
 .PHONY: up
-up: ## Runs all the docker containers
+up: .env ## Runs all the docker containers
 	$(DOCKER_COMPOSE) up -d
 
 .PHONY: test
@@ -63,9 +68,13 @@ test: build-proto ## Runs the :servers:game tests
 	$(GRADLE_TASK) :servers:game:test
 
 .PHONY: build
-build: ## Builds the :servers:game and :servers:client projects
+build: up ## Builds the :servers:game and :servers:client projects
 	$(GRADLE_TASK) :servers:game:build
 	$(GRADLE_TASK) :servers:web:build
+
+.PHONY: build-debug
+build-debug: build ## Runs the build then start the debugger socket
+	$(GRADLE) java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:$(DEBUGGER_SOCKET_PORT) $(GAME_DIR)/$(DEBUGGER_BUILD_JAR_PATH)
 
 .PHONY: server
 server: ## Launches the game server
@@ -91,8 +100,11 @@ migration-status: up
 	$(PHINX) status --configuration migrator/phinx.php
 
 migrations/migrator/vendor/autoload.php: up
-	$(MIGRATOR) composer install -d migrator
+	$(MIGRATOR) composer install -d migrations/migrator
 
 servers/webclient/vendor/autoload.php: servers/webclient/composer.lock
 	composer install -d servers/webclient
 	touch servers/webclient/vendor/autoload.php
+
+.env:
+	cp .env.dev .env

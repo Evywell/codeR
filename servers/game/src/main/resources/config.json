@@ -3,25 +3,11 @@
   "env": "dev",
   "databases": {
     "config": {
-      "host": "127.0.0.1",
-      "port": 33306,
-      "user": "root",
-      "password": "root",
-      "database": "rob_config"
-    },
-    "world": {
-      "host": "127.0.0.1",
-      "port": 33306,
-      "user": "root",
-      "password": "root",
-      "database": "rob_world"
-    },
-    "characters": {
-      "host": "127.0.0.1",
-      "port": 33306,
-      "user": "root",
-      "password": "root",
-      "database": "rob_characters"
+      "host": "mysql_game",
+      "port": 3306,
+      "user": "testing",
+      "password": "passwordtesting",
+      "database": "testing"
     }
   }
 }

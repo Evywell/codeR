@@ -20,11 +20,7 @@ object LoggerFactory : LoggerFactoryInterface {
         val configurationFactory = XmlConfigurationFactory.getInstance()
 
         val configurationSource = ConfigurationSource(
-            FileInputStream(
-                File(
-                    ResourceManager.getResourceURL(LOG4J_CONFIG_RESOURCE_PATH)!!.toURI()
-                )
-            )
+            ResourceManager.getResourceStream(LOG4J_CONFIG_RESOURCE_PATH)
         )
 
         val loggerContext = LoggerContext("GlobalConfigContext")
