@@ -6,12 +6,25 @@ import fr.rob.web.network.HttpServer
 import fr.rob.game.domain.opcode.ClientOpcodeHandler
 import fr.rob.game.domain.process.ProcessManager
 import fr.rob.game.infrastructure.log.LoggerFactory
+import java.net.DatagramPacket
+import java.net.DatagramSocket
+import java.net.InetAddress
 
 class Main {
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
+            val socket = DatagramSocket()
+
+            val address = InetAddress.getLocalHost()
+            val buffer = "hello".toByteArray()
+
+            val packet = DatagramPacket(buffer, buffer.size, address, 1234)
+            socket.send(packet)
+
+            return;
+
             val app = Application()
             val processManager = ProcessManager()
 

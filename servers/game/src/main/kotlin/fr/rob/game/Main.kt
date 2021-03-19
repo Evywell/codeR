@@ -7,6 +7,7 @@ import fr.rob.core.initiator.Initiator
 import fr.rob.game.domain.network.GameServerManager
 import fr.rob.game.domain.network.Server
 import fr.rob.game.domain.network.netty.NettyGameServerFactory
+import fr.rob.game.domain.network.netty.NettyUdpGameServer
 import fr.rob.game.domain.process.ProcessManager
 import fr.rob.game.domain.security.SecurityModule
 import fr.rob.game.domain.setup.AppSetup
@@ -23,6 +24,7 @@ import fr.rob.game.infrastructure.config.server.ServerConfigHandler
 import fr.rob.game.infrastructure.database.ConnectionManager
 import fr.rob.game.infrastructure.database.DatabaseModule
 import fr.rob.game.infrastructure.event.EventManager
+import fr.rob.game.infrastructure.log.LoggerFactory
 import java.net.URL
 
 
@@ -36,6 +38,11 @@ class Main : BaseApplication() {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
+	    println("Starting...")
+            val server = NettyUdpGameServer(1234, "udp", LoggerFactory, Main(), ProcessManager())
+            server.start()
+
+            return
             val configPath: URL = ResourceManager.getResourceURL(CONFIG_FILE)
                 ?: throw RuntimeException("Cannot find $CONFIG_FILE")
 

@@ -86,7 +86,7 @@ server: ## Launches the game server
 
 .PHONY: client
 client: ## Launches the game client
-	$(GRADLE_TASK) :client:run
+	$(GRADLE_TASK) servers:web:run
 
 .PHONY: composer
 composer: servers/webclient/vendor/autoload.php ## Launches a composer install
