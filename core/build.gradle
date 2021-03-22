@@ -12,6 +12,9 @@ dependencies {
 
     compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.68'
 
+    implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
+    compile 'org.apache.commons:commons-configuration2:2.7'
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 }

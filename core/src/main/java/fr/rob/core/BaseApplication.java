@@ -1,19 +1,19 @@
 package fr.rob.core;
 
-import fr.rob.core.config.Config;
+import fr.rob.code.config.Config;
+import fr.rob.code.config.ConfigLoaderInterface;
+import fr.rob.code.config.commons.configuration2.ConfigLoader;
 import fr.rob.core.initiator.Initiator;
 
-import java.net.URL;
+import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class BaseApplication {
 
     private final List<AbstractModule> modules = new ArrayList<>();
-    private final Map<String, Config> configs = new HashMap<>();
     protected final Initiator initiator = new Initiator();
+    protected final ConfigLoaderInterface configLoader = new ConfigLoader();
     protected String env;
 
     protected abstract void registerModules(List<AbstractModule> modules);
@@ -32,15 +32,8 @@ public abstract class BaseApplication {
         registerInitiatorTasks(initiator);
     }
 
-    public Config addConfigPath(String configName, URL configPath) {
-        Config config = new Config(configPath);
-        configs.put(configName, config);
-
-        return config;
-    }
-
-    public Config getConfig(String configName) {
-        return configs.getOrDefault(configName, null);
+    public Config loadConfig(File file) {
+        return configLoader.loadConfigFromFile(file);
     }
 
     public String getEnv() {

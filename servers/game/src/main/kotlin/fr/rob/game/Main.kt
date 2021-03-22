@@ -1,8 +1,8 @@
 package fr.rob.game
 
+import fr.rob.code.config.Config
 import fr.rob.core.AbstractModule
 import fr.rob.core.BaseApplication
-import fr.rob.core.config.Config
 import fr.rob.core.initiator.Initiator
 import fr.rob.game.domain.network.GameServerManager
 import fr.rob.game.domain.network.Server
@@ -17,13 +17,13 @@ import fr.rob.game.domain.setup.tasks.repository.LoadServerRepository
 import fr.rob.game.domain.setup.tasks.repository.LoadServerRepositoryInterface
 import fr.rob.game.infrastructure.config.ConfigModule
 import fr.rob.game.infrastructure.config.EnvConfigHandler
-import fr.rob.game.infrastructure.config.ResourceManager
 import fr.rob.game.infrastructure.config.database.DatabaseConfigHandler
 import fr.rob.game.infrastructure.config.server.ServerConfigHandler
 import fr.rob.game.infrastructure.database.ConnectionManager
 import fr.rob.game.infrastructure.database.DatabaseModule
 import fr.rob.game.infrastructure.event.EventManager
-import java.net.URL
+import java.io.File
+import java.nio.file.Paths
 
 
 class Main : BaseApplication() {
@@ -33,18 +33,25 @@ class Main : BaseApplication() {
     private val connectionManager = ConnectionManager(eventManager)
     private val processManager = ProcessManager()
 
+    lateinit var config: Config
+
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val configPath: URL = ResourceManager.getResourceURL(CONFIG_FILE)
-                ?: throw RuntimeException("Cannot find $CONFIG_FILE")
-
             val app = Main()
-            app
-                .addConfigPath("default", configPath)
-                .handler(EnvConfigHandler())
-                .handler(DatabaseConfigHandler(app.connectionManager))
-                .handler(ServerConfigHandler())
+
+            val stream = Main::class.java.classLoader.getResourceAsStream(CONFIG_FILE)!!
+
+            val tmpConfig = File.createTempFile("config", ".tmp", File(Paths.get("").toAbsolutePath().toString()))
+            tmpConfig.writeBytes(stream.readAllBytes())
+
+            tmpConfig.deleteOnExit()
+
+            app.config = app
+                .loadConfig(tmpConfig)
+                .addHandler(EnvConfigHandler())
+                .addHandler(DatabaseConfigHandler(app.connectionManager))
+                .addHandler(ServerConfigHandler())
 
             app.run()
         }
@@ -67,11 +74,9 @@ class Main : BaseApplication() {
     }
 
     override fun registerInitiatorTasks(initiator: Initiator) {
-        val config: Config = this.getConfig(CONFIG_DEFAULT)
-
         @Suppress("UNCHECKED_CAST")
         val servers: Array<Server> = config
-            .get(SERVER) as Array<Server>
+            .retrieveConfig(SERVER) as Array<Server>
 
         val loadServerRepository: LoadServerRepositoryInterface =
             LoadServerRepository(connectionManager.getConnection(DB_CONFIG)

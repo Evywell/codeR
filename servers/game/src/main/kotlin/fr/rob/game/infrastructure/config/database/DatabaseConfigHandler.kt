@@ -1,38 +1,40 @@
 package fr.rob.game.infrastructure.config.database
 
-import fr.rob.core.config.ConfigHandlerInterface
+import fr.rob.code.config.Config
+import fr.rob.code.config.ConfigHandlerInterface
 import fr.rob.game.DATABASE
 import fr.rob.game.infrastructure.database.ConnectionManager
-import org.codehaus.jackson.node.ObjectNode
 
 class DatabaseConfigHandler(private val connectionManager: ConnectionManager) : ConfigHandlerInterface {
 
-    override fun handle(node: ObjectNode): ConnectionManager {
-        if (!node.has("databases")) {
-            return connectionManager
-        }
+    override fun getConfigKey(): String = DATABASE
 
-        val databasesNode = node["databases"]
-        val databasesNodeFieldNames = databasesNode.fieldNames
+    override fun handle(config: Config): Any {
+        // Config database
+        loadConfigDatabase(config)
 
-        while (databasesNodeFieldNames.hasNext()) {
-            val connectionName = databasesNodeFieldNames.next()
-            val databaseNode = databasesNode.findValue(connectionName)
-            val databaseConfig = DatabaseConfig(
-                databaseNode["host"].textValue,
-                databaseNode["port"].longValue,
-                databaseNode["user"].textValue,
-                databaseNode["password"].textValue,
-                databaseNode["database"].textValue
-            )
-
-            connectionManager.newConnection(connectionName, databaseConfig)
-        }
+        // Load other databases (characters, world, ...)
 
         return connectionManager
     }
 
-    override fun getRootName() = "databases"
+    private fun loadConfigDatabase(config: Config) {
+        if (config.getString(getDatabaseKey("config.database"), null) == null) {
+            return
+        }
 
-    override fun getName() = DATABASE
+        connectionManager.newConnection("config", getDatabaseConfig(config, "config"))
+    }
+
+    private fun getDatabaseConfig(config: Config, prefixKey: String): DatabaseConfig =
+         DatabaseConfig(
+            config.getString(getDatabaseKey("$prefixKey.host"), "localhost")!!,
+            config.getLong(getDatabaseKey("$prefixKey.port"), 3306)!!,
+            config.getString(getDatabaseKey("$prefixKey.user"))!!,
+            config.getString(getDatabaseKey("$prefixKey.password"))!!,
+            config.getString(getDatabaseKey("$prefixKey.database"))!!
+        )
+
+
+    private fun getDatabaseKey(key: String): String = getConfigKey() + '.' + key
 }
