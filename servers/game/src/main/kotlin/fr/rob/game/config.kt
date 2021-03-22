@@ -11,11 +11,11 @@ const val TASK_LOAD_SERVER_CONFIG = "server.load-config"
 const val ROB_CERTS_API_URL = "http://192.168.1.19:8888/certs/rob"
 
 const val CONFIG_DEFAULT = "default"
-const val DATABASE = "database"
+const val DATABASE = "databases"
 const val DB_CONFIG = "config"
-const val SERVER = "server"
+const val SERVER = "servers"
 
 const val SSL_ENABLED = false
 
-const val CONFIG_FILE = "config.json"
+const val CONFIG_FILE = "config.properties"
 const val LOG4J_CONFIG_RESOURCE_PATH = "log4j.config.xml"

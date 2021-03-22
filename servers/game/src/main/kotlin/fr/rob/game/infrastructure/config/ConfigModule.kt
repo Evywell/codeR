@@ -4,29 +4,27 @@ import fr.rob.core.AbstractModule
 import fr.rob.core.BaseApplication
 import fr.rob.game.*
 
-class ConfigModule(private val app: BaseApplication) : AbstractModule() {
+class ConfigModule(private val app: Main) : AbstractModule() {
 
     override fun boot() {
         app.env = retrieveEnv()
-        app.getConfig(CONFIG_DEFAULT).get(DATABASE) // Load the database configurations
+        app.config.retrieveConfig(DATABASE) // Load the database configurations
     }
 
     /**
      * Retrieves the right application environment using global ENV variables and config file
      */
     private fun retrieveEnv(): String {
-        val config = app.getConfig(CONFIG_DEFAULT)
-
         val environmentVariableEnv = System.getenv(APP_ENV_KEY)
 
         if (environmentVariableEnv !== null && isEnvValid(environmentVariableEnv)) {
             return environmentVariableEnv
         }
 
-        val configEnv = config.get("env") as String?
+        val config = app.config.retrieveConfig("env") as String
 
-        if (configEnv !== null && isEnvValid(configEnv)) {
-            return configEnv
+        if (isEnvValid(config)) {
+            return config
         }
 
         return ENV_DEV
