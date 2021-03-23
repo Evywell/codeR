@@ -19,8 +19,7 @@ class Config(file: File) : Config() {
 
         val builder = FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration::class.java)
 
-        builder
-            .configure(properties)
+        builder.configure(properties)
 
         config = builder.configuration
     }
