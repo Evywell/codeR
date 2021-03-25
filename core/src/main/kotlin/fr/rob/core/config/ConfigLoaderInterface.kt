@@ -1,4 +1,4 @@
-package fr.rob.code.config
+package fr.rob.core.config
 
 import java.io.File
 

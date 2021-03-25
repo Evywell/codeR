@@ -1,8 +1,8 @@
 package fr.rob.core;
 
-import fr.rob.code.config.Config;
-import fr.rob.code.config.ConfigLoaderInterface;
-import fr.rob.code.config.commons.configuration2.ConfigLoader;
+import fr.rob.core.config.Config;
+import fr.rob.core.config.ConfigLoaderInterface;
+import fr.rob.core.config.commons.configuration2.ConfigLoader;
 import fr.rob.core.initiator.Initiator;
 
 import java.io.File;

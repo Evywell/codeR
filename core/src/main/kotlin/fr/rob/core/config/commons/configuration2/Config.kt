@@ -1,6 +1,6 @@
-package fr.rob.code.config.commons.configuration2
+package fr.rob.core.config.commons.configuration2
 
-import fr.rob.code.config.Config
+import fr.rob.core.config.Config
 import org.apache.commons.configuration2.FileBasedConfiguration
 import org.apache.commons.configuration2.PropertiesConfiguration
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder

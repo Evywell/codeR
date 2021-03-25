@@ -1,7 +1,7 @@
 package fr.rob.game.infrastructure.config.server
 
-import fr.rob.code.config.Config
-import fr.rob.code.config.ConfigHandlerInterface
+import fr.rob.core.config.Config
+import fr.rob.core.config.ConfigHandlerInterface
 import fr.rob.game.SERVER
 import fr.rob.game.domain.network.Server
 

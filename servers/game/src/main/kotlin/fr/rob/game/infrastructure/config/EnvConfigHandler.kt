@@ -1,7 +1,7 @@
 package fr.rob.game.infrastructure.config
 
-import fr.rob.code.config.Config
-import fr.rob.code.config.ConfigHandlerInterface
+import fr.rob.core.config.Config
+import fr.rob.core.config.ConfigHandlerInterface
 
 class EnvConfigHandler : ConfigHandlerInterface {
 

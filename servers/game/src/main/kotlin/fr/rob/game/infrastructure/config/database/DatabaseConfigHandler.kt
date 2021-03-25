@@ -1,7 +1,7 @@
 package fr.rob.game.infrastructure.config.database
 
-import fr.rob.code.config.Config
-import fr.rob.code.config.ConfigHandlerInterface
+import fr.rob.core.config.Config
+import fr.rob.core.config.ConfigHandlerInterface
 import fr.rob.game.DATABASE
 import fr.rob.game.infrastructure.database.ConnectionManager
 

@@ -1,7 +1,7 @@
-package fr.rob.code.config.commons.configuration2
+package fr.rob.core.config.commons.configuration2
 
-import fr.rob.code.config.Config
-import fr.rob.code.config.ConfigLoaderInterface
+import fr.rob.core.config.Config
+import fr.rob.core.config.ConfigLoaderInterface
 import java.io.File
 
 class ConfigLoader : ConfigLoaderInterface {

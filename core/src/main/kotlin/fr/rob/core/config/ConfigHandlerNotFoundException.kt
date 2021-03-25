@@ -1,3 +1,3 @@
-package fr.rob.code.config
+package fr.rob.core.config
 
 class ConfigHandlerNotFoundException(msg: String) : Exception(msg)

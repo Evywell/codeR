@@ -1,4 +1,4 @@
-package fr.rob.code.config
+package fr.rob.core.config
 
 interface ConfigHandlerInterface {
 
@@ -14,7 +14,7 @@ interface ConfigHandlerInterface {
      * ```kotlin
      * val dsn = config.getString("dsn")
      *
-     * return DatabaseConfig(dns)
+     * return DatabaseConfig(dsn)
      * ````
      */
     fun handle(config: Config): Any?

@@ -1,9 +1,11 @@
 package fr.rob.game
 
-import fr.rob.code.config.Config
+import com.xenomachina.argparser.ArgParser
+import fr.rob.core.config.Config
 import fr.rob.core.AbstractModule
 import fr.rob.core.BaseApplication
 import fr.rob.core.initiator.Initiator
+import fr.rob.game.domain.args.GameServerArgs
 import fr.rob.game.domain.network.GameServerManager
 import fr.rob.game.domain.network.Server
 import fr.rob.game.domain.network.netty.NettyGameServerFactory
@@ -38,7 +40,28 @@ class Main : BaseApplication() {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
+            var configFileName: String? = null
+
+            ArgParser(args).parseInto(::GameServerArgs).run {
+                // configFileName = "$config"
+            }
+
             val app = Main()
+
+            app.config = app
+                .loadConfig(getConfigFile(configFileName))
+                .addHandler(EnvConfigHandler())
+                .addHandler(DatabaseConfigHandler(app.connectionManager))
+                .addHandler(ServerConfigHandler())
+
+            app.run()
+        }
+
+        private fun getConfigFile(configFileName: String?): File
+        {
+            if (configFileName != null) {
+                return File(configFileName)
+            }
 
             val stream = Main::class.java.classLoader.getResourceAsStream(CONFIG_FILE)!!
 
@@ -47,13 +70,7 @@ class Main : BaseApplication() {
 
             tmpConfig.deleteOnExit()
 
-            app.config = app
-                .loadConfig(tmpConfig)
-                .addHandler(EnvConfigHandler())
-                .addHandler(DatabaseConfigHandler(app.connectionManager))
-                .addHandler(ServerConfigHandler())
-
-            app.run()
+            return tmpConfig
         }
     }
 
