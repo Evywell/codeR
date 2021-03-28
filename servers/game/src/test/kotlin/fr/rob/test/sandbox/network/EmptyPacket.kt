@@ -1,5 +1,5 @@
 package fr.rob.test.sandbox.network
 
-import fr.rob.game.domain.network.packet.Packet
+import fr.rob.core.network.Packet
 
 class EmptyPacket : Packet(null, null)

@@ -1,7 +1,7 @@
 package fr.rob.test.domain.opcode
 
-import fr.rob.game.domain.network.packet.Packet
-import fr.rob.game.domain.security.authentication.UnauthenticatedException
+import fr.rob.core.network.Packet
+import fr.rob.login.security.authentication.UnauthenticatedException
 import fr.rob.game.sandbox.SandboxProtos
 import fr.rob.test.BaseTest
 import fr.rob.test.sandbox.opcode.HandlingOpcodeWithProtoAsMessageOpcode

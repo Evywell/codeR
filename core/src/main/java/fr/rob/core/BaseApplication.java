@@ -16,6 +16,10 @@ public abstract class BaseApplication {
     protected final ConfigLoaderInterface configLoader = new ConfigLoader();
     protected String env;
 
+    public BaseApplication(String env) {
+        this.env = env;
+    }
+
     protected abstract void registerModules(List<AbstractModule> modules);
 
     protected abstract void registerInitiatorTasks(Initiator initiator);

@@ -1,10 +1,5 @@
 package fr.rob.game
 
-const val APP_ENV_KEY = "ROB_ENV"
-const val ENV_DEV = "dev"
-const val ENV_TEST = "test"
-const val ENV_PROD = "prod"
-
 const val TASK_AUTH_COLLECT_JWT_PUBLIC_KEY = "auth.collect-jwt-public-key"
 const val TASK_LOAD_SERVER_CONFIG = "server.load-config"
 

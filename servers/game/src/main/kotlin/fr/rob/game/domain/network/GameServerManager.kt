@@ -1,8 +1,9 @@
 package fr.rob.game.domain.network
 
+import fr.rob.core.network.ServerFactoryInterface
 import fr.rob.game.domain.game.world.World
 
-class GameServerManager (private val factory: GameServerFactoryInterface) {
+class GameServerManager(private val factory: ServerFactoryInterface) {
 
     fun buildGameServers(servers: Array<Server>) {
         servers.forEach { server -> buildGameServer(server) }

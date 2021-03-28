@@ -1,0 +1,13 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.20'
+    id 'java'
+    id 'application'
+    id 'jacoco'
+}
+
+dependencies {
+    compile project(':core')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+}
+
+mainClassName = 'fr.rob.login.Main'

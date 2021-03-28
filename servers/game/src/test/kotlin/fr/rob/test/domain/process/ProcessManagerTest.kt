@@ -1,6 +1,6 @@
 package fr.rob.test.domain.process
 
-import fr.rob.game.domain.process.ProcessManager
+import fr.rob.core.process.ProcessManager
 import fr.rob.test.sandbox.process.*
 import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.Test

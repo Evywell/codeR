@@ -4,8 +4,8 @@ import fr.rob.client.network.Client
 import fr.rob.web.handler.OpcodeHandler
 import fr.rob.web.network.HttpServer
 import fr.rob.game.domain.opcode.ClientOpcodeHandler
-import fr.rob.game.domain.process.ProcessManager
-import fr.rob.game.infrastructure.log.LoggerFactory
+import fr.rob.core.process.ProcessManager
+import fr.rob.core.log.LoggerFactory
 
 class Main {
 

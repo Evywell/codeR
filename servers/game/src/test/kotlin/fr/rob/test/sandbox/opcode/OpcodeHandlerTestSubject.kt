@@ -1,7 +1,7 @@
 package fr.rob.test.sandbox.opcode
 
-import fr.rob.game.domain.network.packet.Packet
-import fr.rob.game.domain.opcode.OpcodeFunction
+import fr.rob.core.network.Packet
+import fr.rob.core.opcode.OpcodeFunction
 
 abstract class OpcodeHandlerTestSubject(private val subject: Any) : OpcodeFunction(false) {
 

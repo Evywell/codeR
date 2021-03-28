@@ -1,44 +1,23 @@
 package fr.rob.game.domain.network.netty
 
 import fr.rob.core.BaseApplication
-import fr.rob.game.SSL_ENABLED
-import fr.rob.game.domain.log.LoggerFactoryInterface
-import fr.rob.game.domain.network.GameServer
-import fr.rob.game.domain.process.ProcessManager
-import io.netty.bootstrap.ServerBootstrap
-import io.netty.channel.ChannelFuture
-import io.netty.channel.ChannelOption
-import io.netty.channel.EventLoopGroup
-import io.netty.channel.nio.NioEventLoopGroup
-import io.netty.channel.socket.nio.NioServerSocketChannel
-import kotlin.concurrent.thread
+import fr.rob.core.log.LoggerFactoryInterface
+import fr.rob.core.log.LoggerInterface
+import fr.rob.core.network.netty.NettyServer
+import fr.rob.core.network.netty.NettyServerHandler
+import fr.rob.core.process.ProcessManager
 
 class NettyGameServer(
-    private val port: Int,
-    name: String,
-    loggerFactory: LoggerFactoryInterface,
-    app: BaseApplication,
-    processManager: ProcessManager
-) : GameServer(name, loggerFactory, app, processManager) {
+    val name: String,
+    port: Int,
+    ssl: Boolean,
+    val processManager: ProcessManager,
+    val app: BaseApplication,
+    val loggerFactory: LoggerFactoryInterface
+) :
+    NettyServer(port, ssl) {
 
-    private val bootstrap: ServerBootstrap = ServerBootstrap()
+    val logger: LoggerInterface = loggerFactory.create(name)
 
-    override fun start() {
-        val loopGroup: EventLoopGroup = NioEventLoopGroup()
-        val workerGroup: EventLoopGroup = NioEventLoopGroup()
-
-        bootstrap.group(loopGroup, workerGroup).channel(NioServerSocketChannel::class.java)
-            .option(ChannelOption.SO_BACKLOG, 128)
-            .childOption(ChannelOption.SO_KEEPALIVE, true)
-
-        // Our handler
-        bootstrap.childHandler(NettyServerInitializer(this, SSL_ENABLED))
-
-        val channel: ChannelFuture = bootstrap.bind(port).sync()
-
-        thread(start = true) {
-            channel.channel().closeFuture().sync()
-        }
-    }
-
+    override fun handler(): NettyServerHandler = NettyGameServerHandler(this)
 }

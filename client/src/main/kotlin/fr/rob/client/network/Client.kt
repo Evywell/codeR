@@ -1,7 +1,7 @@
 package fr.rob.client.network
 
-import fr.rob.game.domain.network.packet.Packet
-import fr.rob.game.domain.network.session.Session
+import fr.rob.core.network.Packet
+import fr.rob.core.network.session.Session
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.ChannelFuture
 

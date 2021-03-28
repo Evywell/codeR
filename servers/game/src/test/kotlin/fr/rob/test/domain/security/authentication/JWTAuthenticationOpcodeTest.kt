@@ -1,8 +1,8 @@
 package fr.rob.test.domain.security.authentication
 
 import fr.rob.entities.AuthenticationProto
-import fr.rob.game.domain.security.authentication.jwt.JWTAuthenticationOpcode
-import fr.rob.game.domain.security.authentication.jwt.JWTResultGame
+import fr.rob.login.security.authentication.jwt.JWTAuthenticationOpcode
+import fr.rob.login.security.authentication.jwt.JWTResultGame
 import fr.rob.test.JWTBaseTest
 import fr.rob.test.sandbox.network.NISession
 import org.junit.Assert
