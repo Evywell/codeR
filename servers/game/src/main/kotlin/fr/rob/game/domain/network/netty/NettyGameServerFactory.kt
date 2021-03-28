@@ -1,14 +1,17 @@
 package fr.rob.game.domain.network.netty
 
 import fr.rob.core.BaseApplication
-import fr.rob.game.domain.network.GameServer
-import fr.rob.game.domain.network.GameServerFactoryInterface
-import fr.rob.game.domain.process.ProcessManager
-import fr.rob.game.infrastructure.log.LoggerFactory
+import fr.rob.core.network.Server
+import fr.rob.core.network.ServerFactoryInterface
+import fr.rob.core.process.ProcessManager
+import fr.rob.core.log.LoggerFactory
 
-class NettyGameServerFactory(private val app: BaseApplication, private val processManager: ProcessManager) :
-    GameServerFactoryInterface {
+class NettyGameServerFactory(
+    private val app: BaseApplication,
+    private val processManager: ProcessManager
+) : ServerFactoryInterface {
 
-    override fun build(port: Int, name: String): GameServer =
-        NettyGameServer(port, name, LoggerFactory, app, processManager)
+    override fun build(port: Int, name: String, ssl: Boolean): Server =
+        NettyGameServer(name, port, ssl, processManager, app, LoggerFactory)
+
 }

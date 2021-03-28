@@ -1,9 +1,9 @@
 package fr.rob.test.domain.security.authentication
 
 import fr.rob.entities.AuthenticationProto
-import fr.rob.game.domain.security.authentication.AuthenticationProcess
-import fr.rob.game.domain.security.authentication.dev.DevAuthenticationOpcode
-import fr.rob.game.domain.security.authentication.dev.DevAuthenticationProcess
+import fr.rob.login.security.authentication.AuthenticationProcess
+import fr.rob.login.security.authentication.dev.DevAuthenticationOpcode
+import fr.rob.login.security.authentication.dev.DevAuthenticationProcess
 import fr.rob.test.BaseTest
 import fr.rob.test.sandbox.network.NISession
 import org.junit.Assert.assertEquals

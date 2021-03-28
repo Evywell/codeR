@@ -2,7 +2,7 @@
  - **DevAuthenticationProcess**: handle authentication for development purposes.  
    `checkAuthentication` method always returns true. You must specified a `userId` in the message to log as this user.  
    **Extends**: AuthenticationProcess (abstract)  
-   **Registered in**: `fr.rob.game.domain.security.SecurityModule.registerAuthenticationProcess`  
+   **Registered in**: `fr.rob.login.security.SecurityModule.registerAuthenticationProcess`  
    **Examples**:
  ```kotlin
     val message = AuthenticationProto.DevAuthentication.newBuilder()
@@ -17,7 +17,7 @@
    You must specified a JWT token in the message.  
    **Parameters**: The constructor takes a `JWTDecoderInterface` object used to decode the JWT token  
    **Extends**: AuthenticationProcess (abstract)  
-   **Registered in**: `fr.rob.game.domain.security.SecurityModule.registerAuthenticationProcess`  
+   **Registered in**: `fr.rob.login.security.SecurityModule.registerAuthenticationProcess`  
    **Examples**:
 ```kotlin
     val jwt = "..."

@@ -4,8 +4,8 @@ import fr.rob.game.ENV_DEV
 import fr.rob.game.ENV_TEST
 import fr.rob.game.domain.game.OpcodeClient
 import fr.rob.game.domain.opcode.ClientOpcodeHandler
-import fr.rob.game.domain.security.authentication.dev.DevAuthenticationOpcode
-import fr.rob.game.domain.security.authentication.jwt.JWTAuthenticationOpcode
+import fr.rob.login.security.authentication.dev.DevAuthenticationOpcode
+import fr.rob.login.security.authentication.jwt.JWTAuthenticationOpcode
 import fr.rob.test.BaseTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

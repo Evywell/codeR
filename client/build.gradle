@@ -6,4 +6,3 @@ plugins {
 dependencies {
     compile project(':servers:game')
 }
-

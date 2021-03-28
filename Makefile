@@ -26,19 +26,25 @@ PHINX := $(MIGRATOR) migrations/migrator/vendor/bin/phinx
 PHINX_CONFIG_ARG := --configuration migrations/migrator/phinx.php
 
 GAME_DIR := servers/game
+LOGIN_DIR := servers/login
 
-JAVA_DIR := ./servers/game
-JAVA_DST_DIR := $(JAVA_DIR)/src/main/java
-JAVA_SRC_DIR := $(JAVA_DIR)/src/main/protos
-JAVA_TEST_DST_DIR := $(JAVA_DIR)/src/test/java
-JAVA_TEST_SRC_DIR := $(JAVA_DIR)/src/test/protos
+JAVA_GAME_DIR := ./$(GAME_DIR)
+JAVA_GAME_DST_DIR := $(JAVA_GAME_DIR)/src/main/java
+JAVA_GAME_PROTOS_DIR := $(JAVA_GAME_DIR)/src/main/protos
+JAVA_GAME_TEST_DST_DIR := $(JAVA_GAME_DIR)/src/test/java
+JAVA_GAME_TEST_SRC_DIR := $(JAVA_GAME_DIR)/src/test/protos
+
+JAVA_LOGIN_DIR := ./$(LOGIN_DIR)
+JAVA_LOGIN_PROTOS_DIR := $(JAVA_LOGIN_DIR)/src/main/protos
+JAVA_LOGIN_DST_DIR := $(JAVA_LOGIN_DIR)/src/main/java
 
 PHP_DIR := ./servers/webclient
 PHP_DST_DIR := $(PHP_DIR)/protobuf
 
 ##> Debug
 DEBUGGER_SOCKET_PORT := 5005
-DEBUGGER_BUILD_JAR_PATH := build/libs/game-1.0.jar
+DEBUGGER_BUILD_GAME_JAR_PATH := build/libs/game-1.0.jar
+DEBUGGER_BUILD_LOGIN_JAR_PATH := build/libs/login-1.0.jar
 ##< Debug
 
 .PHONY: help
@@ -47,9 +53,19 @@ help: ## Outputs this help message
 
 .PHONY: build-proto
 build-proto: ## Builds protos for java and php
-	@echo "Generating java protos" && $(PROTOC) -I=$(JAVA_SRC_DIR) --java_out=$(JAVA_DST_DIR) $(JAVA_SRC_DIR)/*.proto
-	@echo "Generating test java protos" && $(PROTOC) -I=$(JAVA_TEST_SRC_DIR) --java_out=$(JAVA_TEST_DST_DIR) $(JAVA_TEST_SRC_DIR)/*.proto
-	@echo "Generating php protos" && $(PROTOC) -I=$(JAVA_SRC_DIR) --php_out=$(PHP_DST_DIR) $(JAVA_SRC_DIR)/*.proto
+	@make build-game-proto
+	@make build-login-proto
+
+.PHONY: build-game-proto
+build-game-proto: ## Builds game protos for java and php
+	@echo "Generating game java protos" && $(PROTOC) -I=$(JAVA_GAME_PROTOS_DIR) --java_out=$(JAVA_GAME_DST_DIR) $(JAVA_GAME_PROTOS_DIR)/*.proto
+	@echo "Generating test java protos" && $(PROTOC) -I=$(JAVA_GAME_TEST_SRC_DIR) --java_out=$(JAVA_GAME_TEST_DST_DIR) $(JAVA_GAME_TEST_SRC_DIR)/*.proto
+	@echo "Generating php protos" && $(PROTOC) -I=$(JAVA_GAME_PROTOS_DIR) --php_out=$(PHP_DST_DIR) $(JAVA_GAME_PROTOS_DIR)/*.proto
+
+.PHONY: build-login-proto
+build-login-proto: ## Builds login protos for java and php
+	@echo "Generating login java protos" && $(PROTOC) -I=$(JAVA_LOGIN_PROTOS_DIR) --java_out=$(JAVA_LOGIN_DST_DIR) $(JAVA_LOGIN_PROTOS_DIR)/*.proto
+	@echo "Generating php protos" && $(PROTOC) -I=$(JAVA_LOGIN_PROTOS_DIR) --php_out=$(PHP_DST_DIR) $(JAVA_LOGIN_PROTOS_DIR)/*.proto
 
 .PHONY: bp
 bp: build-proto ## alias of build-proto
@@ -80,9 +96,21 @@ build: up ## Builds the :servers:game and :servers:client projects
 build-debug: build ## Runs the build then start the debugger socket
 	$(GRADLE) java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:$(DEBUGGER_SOCKET_PORT) $(GAME_DIR)/$(DEBUGGER_BUILD_JAR_PATH)
 
+.PHONY: build-login-debug
+build-login-debug: build-login
+	$(GRADLE) java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:$(DEBUGGER_SOCKET_PORT) $(LOGIN_DIR)/$(DEBUGGER_BUILD_LOGIN_JAR_PATH)
+
+.PHONY: build-login
+build-login:
+	$(GRADLE_TASK) :servers:login:build
+
 .PHONY: server
 server: ## Launches the game server
 	$(GRADLE_TASK) :servers:game:run
+
+.PHONY: login
+login: ## Launches the login server
+	$(GRADLE_TASK) :servers:login:run
 
 .PHONY: client
 client: ## Launches the game client
