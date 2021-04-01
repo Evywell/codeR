@@ -6,7 +6,7 @@ import fr.rob.core.ENV_TEST
 import fr.rob.core.initiator.Initiator
 
 class NIApplication : BaseApplication(ENV_TEST) {
-    override fun registerModules(modules: MutableList<AbstractModule>?) {}
+    override fun registerModules(modules: MutableList<AbstractModule>) {}
 
-    override fun registerInitiatorTasks(initiator: Initiator?) {}
+    override fun registerInitiatorTasks(initiator: Initiator) {}
 }
