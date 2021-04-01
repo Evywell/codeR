@@ -2,12 +2,11 @@ package fr.rob.test.domain.setup.tasks
 
 import fr.rob.game.domain.network.Server
 import fr.rob.game.domain.setup.AppSetup
-import fr.rob.game.domain.setup.tasks.TaskLoadServerConfig as Task
+import fr.rob.game.domain.tasks.TaskLoadServerConfig as Task
 import fr.rob.test.sandbox.tasks.LoadServerRepository
 import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import java.lang.RuntimeException
 
 class TaskLoadServerConfigTest {

@@ -1,4 +1,4 @@
-package fr.rob.game.domain.setup.tasks.repository
+package fr.rob.game.domain.tasks.repository
 
 import fr.rob.game.domain.network.Server
 import fr.rob.game.domain.network.Zone

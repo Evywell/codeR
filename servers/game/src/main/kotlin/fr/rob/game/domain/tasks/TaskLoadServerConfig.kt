@@ -1,14 +1,12 @@
-package fr.rob.game.domain.setup.tasks
+package fr.rob.game.domain.tasks
 
 import fr.rob.core.initiator.TaskInterface
 import fr.rob.game.domain.network.Server
-import fr.rob.game.domain.setup.Setup
-import fr.rob.game.domain.setup.tasks.repository.LoadServerRepositoryInterface
+import fr.rob.game.domain.tasks.repository.LoadServerRepositoryInterface
 
 class TaskLoadServerConfig(
     private val servers: Array<Server>,
-    private val repository: LoadServerRepositoryInterface,
-    private val setup: Setup
+    private val repository: LoadServerRepositoryInterface
 ) : TaskInterface {
 
     override fun run() {
@@ -22,7 +20,5 @@ class TaskLoadServerConfig(
                 throw RuntimeException("Cannot find server name ${server.serverName} maps")
             }
         }
-
-        setup.setServers(servers)
     }
 }

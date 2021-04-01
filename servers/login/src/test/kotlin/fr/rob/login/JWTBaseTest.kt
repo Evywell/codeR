@@ -1,4 +1,4 @@
-package fr.rob.test
+package fr.rob.login
 
 import fr.rob.core.auth.jwt.JWTDecoderService
 import fr.rob.core.security.PublicKeyReader
@@ -20,7 +20,7 @@ import java.time.ZoneId
 import java.util.*
 import kotlin.collections.HashMap
 
-open class JWTBaseTest : BaseTest() {
+open class JWTBaseTest {
 
     fun registerJWTProcess(processManager: ProcessManager) {
         processManager.registerProcess(AuthenticationProcess::class) {
