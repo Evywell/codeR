@@ -9,7 +9,6 @@
 
 rootProject.name = 'codeR'
 include 'core'
-include 'shared'
 include 'servers:login'
 include 'servers:game'
 include 'client'

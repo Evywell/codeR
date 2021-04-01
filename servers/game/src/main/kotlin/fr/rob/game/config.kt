@@ -12,4 +12,3 @@ const val SERVER = "servers"
 const val SSL_ENABLED = false
 
 const val CONFIG_FILE = "config.properties"
-const val LOG4J_CONFIG_RESOURCE_PATH = "log4j.config.xml"

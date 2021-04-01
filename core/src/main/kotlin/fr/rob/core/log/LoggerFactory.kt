@@ -11,11 +11,13 @@ import org.apache.logging.log4j.core.layout.PatternLayout
 
 object LoggerFactory : LoggerFactoryInterface {
 
+    private const val LOG4J_CONFIG_RESOURCE_PATH = "log4j.config.xml"
+
     override fun create(name: String): LoggerInterface {
         val configurationFactory = XmlConfigurationFactory.getInstance()
 
         val configurationSource = ConfigurationSource(
-            ResourceManager.getResourceStream("log4j.config.xml")
+            ResourceManager.getResourceStream(LOG4J_CONFIG_RESOURCE_PATH)
         )
 
         val loggerContext = LoggerContext("GlobalConfigContext")
