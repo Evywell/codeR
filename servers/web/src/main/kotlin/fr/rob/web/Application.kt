@@ -7,7 +7,7 @@ import fr.rob.core.initiator.Initiator
 
 class Application : BaseApplication(ENV_DEV) {
 
-    override fun registerModules(modules: MutableList<AbstractModule>?) {}
+    override fun registerModules(modules: MutableList<AbstractModule>) {}
 
-    override fun registerInitiatorTasks(initiator: Initiator?) {}
+    override fun registerInitiatorTasks(initiator: Initiator) {}
 }

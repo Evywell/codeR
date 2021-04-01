@@ -7,6 +7,7 @@ import fr.rob.game.domain.args.GameServerArgs
 import fr.rob.game.infrastructure.database.ConnectionManager
 import fr.rob.game.infrastructure.event.EventManager
 import java.io.File
+import java.io.InputStream
 import java.nio.file.Paths
 
 
@@ -37,7 +38,7 @@ class Main {
                 return File(configFileName)
             }
 
-            val stream = Main::class.java.classLoader.getResourceAsStream(CONFIG_FILE)!!
+            val stream: InputStream = Main::class.java.classLoader.getResourceAsStream(CONFIG_FILE)!!
 
             val tmpConfig = File.createTempFile("config", ".tmp", File(Paths.get("").toAbsolutePath().toString()))
             tmpConfig.writeBytes(stream.readAllBytes())
