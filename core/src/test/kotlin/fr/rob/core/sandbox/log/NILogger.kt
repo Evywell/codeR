@@ -1,4 +1,4 @@
-package fr.rob.test.sandbox.log
+package fr.rob.core.sandbox.log
 
 import fr.rob.core.log.LoggerFactoryInterface
 import fr.rob.core.log.LoggerInterface

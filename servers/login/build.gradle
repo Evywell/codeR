@@ -8,6 +8,12 @@ plugins {
 dependencies {
     compile project(':core')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    testCompile project(':core').sourceSets.test.output
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
 }
 
 mainClassName = 'fr.rob.login.Main'

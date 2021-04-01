@@ -1,12 +1,12 @@
 package fr.rob.test.domain.opcode
 
+import fr.rob.core.BaseTest
 import fr.rob.core.network.Packet
-import fr.rob.login.security.authentication.UnauthenticatedException
+import fr.rob.core.sandbox.network.NISession
+import fr.rob.core.security.authentication.UnauthenticatedException
 import fr.rob.game.sandbox.SandboxProtos
-import fr.rob.test.BaseTest
 import fr.rob.test.sandbox.opcode.HandlingOpcodeWithProtoAsMessageOpcode
 import fr.rob.test.sandbox.network.EmptyPacket
-import fr.rob.test.sandbox.network.NISession
 import fr.rob.test.sandbox.opcode.DoNothingAuthenticatedOpcodeFunction
 import fr.rob.test.sandbox.opcode.DoNothingOpcodeFunction
 import fr.rob.test.sandbox.opcode.TransformToSarahConnorOpcodeFunction

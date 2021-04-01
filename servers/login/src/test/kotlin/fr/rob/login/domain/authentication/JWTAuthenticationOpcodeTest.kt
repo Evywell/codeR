@@ -1,12 +1,12 @@
-package fr.rob.test.domain.security.authentication
+package fr.rob.login.domain.authentication
 
+import fr.rob.core.sandbox.network.NISession
 import fr.rob.entities.AuthenticationProto
+import fr.rob.login.JWTBaseTest
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationOpcode
 import fr.rob.login.security.authentication.jwt.JWTResultGame
-import fr.rob.test.JWTBaseTest
-import fr.rob.test.sandbox.network.NISession
 import org.junit.Assert
-import org.junit.jupiter.api.Test
+import org.junit.Test
 
 class JWTAuthenticationOpcodeTest : JWTBaseTest() {
 

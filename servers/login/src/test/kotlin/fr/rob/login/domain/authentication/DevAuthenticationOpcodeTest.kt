@@ -1,15 +1,15 @@
-package fr.rob.test.domain.security.authentication
+package fr.rob.login.domain.authentication
 
+import fr.rob.core.sandbox.network.NISession
 import fr.rob.entities.AuthenticationProto
+import fr.rob.login.JWTBaseTest
 import fr.rob.login.security.authentication.AuthenticationProcess
 import fr.rob.login.security.authentication.dev.DevAuthenticationOpcode
 import fr.rob.login.security.authentication.dev.DevAuthenticationProcess
-import fr.rob.test.BaseTest
-import fr.rob.test.sandbox.network.NISession
 import org.junit.Assert.assertEquals
-import org.junit.jupiter.api.Test
+import org.junit.Test
 
-class DevAuthenticationOpcodeTest : BaseTest() {
+class DevAuthenticationOpcodeTest : JWTBaseTest() {
 
     @Test
     fun `call the authentication opcode`() {

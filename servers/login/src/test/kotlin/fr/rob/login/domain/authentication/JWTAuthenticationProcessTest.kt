@@ -1,18 +1,17 @@
-package fr.rob.test.domain.security.authentication
+package fr.rob.login.domain.authentication
 
 import com.nhaarman.mockitokotlin2.mock
 import fr.rob.core.auth.jwt.JWTDecoderInterface
 import fr.rob.entities.AuthenticationProto
 import fr.rob.core.process.ProcessManager
+import fr.rob.core.sandbox.network.NISession
+import fr.rob.login.JWTBaseTest
 import fr.rob.login.security.authentication.AuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTResultGame
-import fr.rob.test.JWTBaseTest
-import fr.rob.test.sandbox.network.NISession
 import org.junit.Assert.assertEquals
+import org.junit.Test
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Test
-import java.util.*
 
 
 class JWTAuthenticationProcessTest : JWTBaseTest() {
