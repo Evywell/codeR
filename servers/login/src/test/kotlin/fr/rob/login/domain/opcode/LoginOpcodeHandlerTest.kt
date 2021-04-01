@@ -1,23 +1,26 @@
 package fr.rob.login.domain.opcode
 
+import fr.rob.core.BaseTest
 import fr.rob.core.ENV_DEV
+import fr.rob.core.ENV_TEST
 import fr.rob.login.opcode.LoginOpcodeHandler
-import org.graalvm.compiler.debug.Assertions
+import fr.rob.login.opcode.OpcodeLogin
+import fr.rob.login.security.authentication.dev.DevAuthenticationOpcode
+import fr.rob.login.security.authentication.jwt.JWTAuthenticationOpcode
 import org.junit.Test
+import org.junit.jupiter.api.Assertions
 
-class LoginOpcodeHandlerTest {
+class LoginOpcodeHandlerTest : BaseTest() {
 
     @Test
     fun `check if initialize sets authenticate opcode correctly for dev env`() {
         // Arrange
-        app.env = ENV_DEV
-
-        val clientOpcode = LoginOpcodeHandler(ENV_DEV, processManager, logger)
+        val loginOpcode = LoginOpcodeHandler(ENV_DEV, processManager, logger)
 
         // Act
-        clientOpcode.initialize()
+        loginOpcode.initialize()
 
-        val opcodeFunction = clientOpcode.getOpcodeFunction(OpcodeClient.AUTHENTICATE_SESSION)
+        val opcodeFunction = loginOpcode.getOpcodeFunction(OpcodeLogin.AUTHENTICATE_SESSION)
 
         // Assert
         Assertions.assertEquals(true, opcodeFunction is DevAuthenticationOpcode)
@@ -26,14 +29,12 @@ class LoginOpcodeHandlerTest {
     @Test
     fun `check if initialize sets authenticate opcode correctly for non dev env`() {
         // Arrange
-        app.env = ENV_TEST
-
-        val clientOpcode = ClientOpcodeHandler(processManager, app, logger)
+        val loginOpcode = LoginOpcodeHandler(ENV_TEST, processManager, logger)
 
         // Act
-        clientOpcode.initialize()
+        loginOpcode.initialize()
 
-        val opcodeFunction = clientOpcode.getOpcodeFunction(OpcodeClient.AUTHENTICATE_SESSION)
+        val opcodeFunction = loginOpcode.getOpcodeFunction(OpcodeLogin.AUTHENTICATE_SESSION)
 
         // Assert
         Assertions.assertEquals(true, opcodeFunction is JWTAuthenticationOpcode)

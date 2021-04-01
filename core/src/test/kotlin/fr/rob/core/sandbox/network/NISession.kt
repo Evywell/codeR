@@ -1,4 +1,4 @@
-package fr.rob.test.sandbox.network
+package fr.rob.core.sandbox.network
 
 import fr.rob.core.network.Packet
 import fr.rob.core.network.session.Session
