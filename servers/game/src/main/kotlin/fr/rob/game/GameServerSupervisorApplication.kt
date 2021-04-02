@@ -53,6 +53,9 @@ class GameServerSupervisorApplication(
         @Suppress("UNCHECKED_CAST")
         servers = config.retrieveConfig(SERVER) as Array<Server>
 
+        // Trigger the handle() of the database config handler
+        config.retrieveConfig(DATABASE)
+
         val loadServerRepository: LoadServerRepositoryInterface =
             LoadServerRepository(
                 connectionManager.getConnection(DB_CONFIG)

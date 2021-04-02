@@ -3,6 +3,7 @@ package fr.rob.game.infrastructure.config.database
 import fr.rob.core.config.Config
 import fr.rob.core.config.ConfigHandlerInterface
 import fr.rob.game.DATABASE
+import fr.rob.game.DB_CONFIG
 import fr.rob.game.infrastructure.database.ConnectionManager
 
 class DatabaseConfigHandler(private val connectionManager: ConnectionManager) : ConfigHandlerInterface {
@@ -23,7 +24,7 @@ class DatabaseConfigHandler(private val connectionManager: ConnectionManager) : 
             return
         }
 
-        connectionManager.newConnection("config", getDatabaseConfig(config, "config"))
+        connectionManager.newConnection(DB_CONFIG, getDatabaseConfig(config, "config"))
     }
 
     private fun getDatabaseConfig(config: Config, prefixKey: String): DatabaseConfig =
