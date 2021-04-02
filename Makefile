@@ -94,7 +94,7 @@ build: up ## Builds the :servers:game and :servers:client projects
 
 .PHONY: build-debug
 build-debug: build ## Runs the build then start the debugger socket
-	$(GRADLE) java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:$(DEBUGGER_SOCKET_PORT) $(GAME_DIR)/$(DEBUGGER_BUILD_JAR_PATH)
+	$(GRADLE) java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:$(DEBUGGER_SOCKET_PORT) $(GAME_DIR)/$(DEBUGGER_BUILD_GAME_JAR_PATH)
 
 .PHONY: build-login-debug
 build-login-debug: build-login
