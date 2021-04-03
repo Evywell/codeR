@@ -2,6 +2,7 @@ package fr.rob.game.domain.network
 
 import fr.rob.core.network.ServerFactoryInterface
 import fr.rob.game.domain.game.world.World
+import kotlin.concurrent.thread
 
 class GameServerManager(private val factory: ServerFactoryInterface) {
 
@@ -13,19 +14,20 @@ class GameServerManager(private val factory: ServerFactoryInterface) {
         val address: String = server.serverAddress!!
         val port: Int = parsePortFromAddress(address)
 
-        println("build server $address")
+        println("Building server at address $address")
         val gs = factory.build(port, server.serverName!!)
 
-        val world = World()
+        thread(start = true) {
+            val world = World()
 
-        /*
-        world.initialize()
-        world.loop()
-         */
+            world.initialize()
+            world.loop()
+        }
 
         // @todo: Initiate the world and MapManager using server.mapId
         // @todo: Make the world loop and launch it, then start the server after all is successfully initialized
 
+        println("Game server starting...")
         gs.start()
     }
 
