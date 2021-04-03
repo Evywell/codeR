@@ -15,7 +15,7 @@ open class Server {
         return sessions[identifier]!!
     }
 
-    fun registerSession(identifier: Int, session: Session) {
+    open fun registerSession(identifier: Int, session: Session) {
         if (sessions.containsKey(identifier)) {
             return // Session already registered
         }
