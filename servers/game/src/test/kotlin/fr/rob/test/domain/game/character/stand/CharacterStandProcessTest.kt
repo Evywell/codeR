@@ -1,9 +1,9 @@
 package fr.rob.test.domain.game.character.stand
 
+import fr.rob.core.network.session.exception.UnauthenticatedSessionException
+import fr.rob.core.sandbox.network.NISession
 import fr.rob.game.domain.game.character.stand.CharacterStandProcess
-import fr.rob.game.domain.network.session.UnauthenticatedException
 import fr.rob.test.sandbox.game.character.stand.CharacterStandProcess_CharacterStandRepository
-import fr.rob.test.sandbox.network.NISession
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -42,7 +42,7 @@ class CharacterStandProcessTest {
         val session = NISession()
 
         // Assert
-        assertThrows(UnauthenticatedException::class.java) {
+        assertThrows(UnauthenticatedSessionException::class.java) {
             // Act
             characterStandProcess.createStandFromSession(session)
         }

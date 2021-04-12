@@ -16,8 +16,4 @@ class NettyGameServerHandler(private val nettyServer: NettyGameServer) : NettySe
     override fun processPacket(opcode: Int, session: Session, packet: Packet) {
         opcodeHandler.process(opcode, session, packet)
     }
-
-    override fun channelActive(ctx: ChannelHandlerContext) {
-        nettyServer.registerSession(ctx.channel().hashCode(), NettySession(ctx.channel()))
-    }
 }

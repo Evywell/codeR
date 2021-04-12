@@ -1,6 +1,7 @@
 package fr.rob.core.network.session
 
 import fr.rob.core.network.Packet
+import fr.rob.core.network.session.exception.UnauthenticatedSessionException
 
 abstract class Session {
 
@@ -17,7 +18,7 @@ abstract class Session {
 
     open fun isAuthenticatedOrThrowException() {
         if (!isAuthenticated) {
-            throw UnauthenticatedException()
+            throw UnauthenticatedSessionException()
         }
     }
 

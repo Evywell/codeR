@@ -7,7 +7,7 @@ import fr.rob.login.LoginApplication
 import fr.rob.login.opcode.LoginOpcodeHandler
 
 class NettyLoginServer(app: LoginApplication, loggerFactory: LoggerFactoryInterface, port: Int, ssl: Boolean) :
-    NettyServer(port, ssl) {
+    NettyServer(port, ssl, loggerFactory.create("login")) {
 
     val opcodeHandler = LoginOpcodeHandler(app.env, app.processManager, loggerFactory.create("opcode"))
 
