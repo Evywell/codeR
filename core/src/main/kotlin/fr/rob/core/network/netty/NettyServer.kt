@@ -1,5 +1,6 @@
 package fr.rob.core.network.netty
 
+import fr.rob.core.log.LoggerInterface
 import fr.rob.core.network.Server
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.ChannelFuture
@@ -10,8 +11,9 @@ import io.netty.channel.socket.nio.NioServerSocketChannel
 import kotlin.concurrent.thread
 
 abstract class NettyServer(
-    private val port: Int,
-    private val ssl: Boolean
+    protected val port: Int,
+    private val ssl: Boolean,
+    val logger: LoggerInterface
 ) : Server() {
 
     private val bootstrap: ServerBootstrap = ServerBootstrap()

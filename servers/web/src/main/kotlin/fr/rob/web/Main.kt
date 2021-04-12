@@ -20,7 +20,7 @@ class Main {
 
             val server = HttpServer(HTTP_SERVER_PORT)
             val logger = LoggerFactory.create("web")
-            val opcodeHandler = ClientOpcodeHandler(processManager, app, logger)
+            val opcodeHandler = ClientOpcodeHandler(processManager, logger)
 
             server
                 .post("/opcode/{id}", OpcodeHandler(client, opcodeHandler), mapOf("id" to "[0-9]+"))

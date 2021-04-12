@@ -17,11 +17,9 @@ class NettyGameServer(
     val app: BaseApplication,
     val loggerFactory: LoggerFactoryInterface
 ) :
-    NettyServer(port, ssl) {
+    NettyServer(port, ssl, loggerFactory.create(name)) {
 
     private val sessionPoolManager = SessionPoolManager()
-
-    val logger: LoggerInterface = loggerFactory.create(name)
 
     override fun handler(): NettyServerHandler = NettyGameServerHandler(this)
 

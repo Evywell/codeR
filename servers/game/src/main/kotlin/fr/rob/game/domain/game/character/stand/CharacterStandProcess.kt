@@ -1,7 +1,7 @@
 package fr.rob.game.domain.game.character.stand
 
+import fr.rob.core.network.session.Session
 import fr.rob.entities.CharacterStandProtos.CharacterStand
-import fr.rob.game.domain.network.session.Session
 
 class CharacterStandProcess(private val characterRepository: CharacterStandRepositoryInterface) {
 

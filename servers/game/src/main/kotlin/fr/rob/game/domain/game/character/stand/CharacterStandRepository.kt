@@ -1,7 +1,7 @@
 package fr.rob.game.domain.game.character.stand
 
+import fr.rob.core.database.Connection
 import fr.rob.entities.CharacterStandProtos.CharacterStand.Character
-import fr.rob.game.infrastructure.database.Connection
 import java.util.*
 
 class CharacterStandRepository(private val db: Connection) : CharacterStandRepositoryInterface {

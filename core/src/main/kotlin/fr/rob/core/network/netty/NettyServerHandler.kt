@@ -42,7 +42,7 @@ abstract class NettyServerHandler(private val nettyServer: NettyServer) : Channe
     }
 
     override fun channelActive(ctx: ChannelHandlerContext) {
-        nettyServer.registerSession(ctx.channel().hashCode(), NettySession(ctx.channel()))
+        nettyServer.registerSession(ctx.channel().hashCode(), NettySession(ctx.channel(), nettyServer.logger))
     }
 
     // @todo: Add channelInactive and destroy the session
