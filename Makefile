@@ -127,7 +127,7 @@ composer: servers/webclient/vendor/autoload.php ## Launches a composer install
 .PHONY: migrate
 migrate: migrations/migrator/vendor/autoload.php
 	$(PHINX) migrate $(PHINX_WORLD_CONFIG_ARG) -e development
-	$(PHINX) migrate $(PHINX_VOLATILE_CONFIG_ARG) -e development
+	$(PHINX) migrate $(PHINX_PLAYERS_CONFIG_ARG) -e development
 
 .PHONY: seed
 seed: migrations/migrator/vendor/autoload.php
