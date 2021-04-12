@@ -1,9 +1,10 @@
-package fr.rob.game.infrastructure.database
+package fr.rob.core.database
 
-import fr.rob.game.domain.event.EventInterface
-import fr.rob.game.domain.event.EventManagerInterface
-import fr.rob.game.infrastructure.clock.StopWatch
-import fr.rob.game.infrastructure.database.event.AfterCreatePreparedStatementEvent
+import fr.rob.core.database.event.AfterCreatePreparedStatementEvent
+import fr.rob.core.event.EventInterface
+import fr.rob.core.event.EventManagerInterface
+import fr.rob.core.infrastructure.database.PreparedStatement
+import fr.rob.core.misc.clock.StopWatch
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -79,7 +80,7 @@ class Connection(
             )
 
             this.connection = DriverManager.getConnection(
-                    dsn
+                dsn
             )
             connected = true
         } catch (e: SQLException) {

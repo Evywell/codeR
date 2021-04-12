@@ -1,4 +1,4 @@
-package fr.rob.game.domain.event
+package fr.rob.core.event
 
 interface EventInterface {
 

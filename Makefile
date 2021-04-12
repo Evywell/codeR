@@ -21,9 +21,14 @@ GRADLE := $(DCE) gradle
 GRADLE_TASK := $(GRADLE) gradle
 
 PROTOC := $(DCR) protobuf
+
+##> Migrator
 MIGRATOR := $(DCR) migrator
 PHINX := $(MIGRATOR) migrations/migrator/vendor/bin/phinx
-PHINX_CONFIG_ARG := --configuration migrations/migrator/phinx.php
+PHINX_CONFIG_ARG := --configuration migrations/migrator
+PHINX_WORLD_CONFIG_ARG := $(PHINX_CONFIG_ARG)/phinx-world.php
+PHINX_VOLATILE_CONFIG_ARG := $(PHINX_CONFIG_ARG)/phinx-volatile.php
+##< Migrator
 
 GAME_DIR := servers/game
 LOGIN_DIR := servers/login
@@ -121,7 +126,8 @@ composer: servers/webclient/vendor/autoload.php ## Launches a composer install
 
 .PHONY: migrate
 migrate: migrations/migrator/vendor/autoload.php
-	$(PHINX) migrate $(PHINX_CONFIG_ARG) -e development
+	$(PHINX) migrate $(PHINX_WORLD_CONFIG_ARG) -e development
+	$(PHINX) migrate $(PHINX_VOLATILE_CONFIG_ARG) -e development
 
 .PHONY: seed
 seed: migrations/migrator/vendor/autoload.php
@@ -129,6 +135,7 @@ seed: migrations/migrator/vendor/autoload.php
 
 .PHONY: migration-create
 migration-create: migrations/migrator/vendor/autoload.php
+	$(PHINX) create $(COMMAND_ARGS) $(PHINX_CONFIG_ARG)
 	$(PHINX) create $(COMMAND_ARGS) $(PHINX_CONFIG_ARG)
 
 .PHONY: seed-create

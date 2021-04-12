@@ -4,7 +4,7 @@ import java.util.HashMap
 
 /**
  * Base class for configuration. You can use handler to read config files and returns custom config objects
- * @see fr.rob.code.config.ConfigHandlerInterface
+ * @see fr.rob.core.config.ConfigHandlerInterface
  *
  * @example Add a configuration handler
  * config.addHandler(DatabaseConfigHandler())

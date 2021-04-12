@@ -1,4 +1,4 @@
-package fr.rob.game.infrastructure.config.database
+package fr.rob.core.config.database
 
 data class DatabaseConfig(
     val host: String,
