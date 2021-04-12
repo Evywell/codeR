@@ -11,6 +11,7 @@ abstract class BaseApplication(val env: String) {
 
     private val modules: MutableList<AbstractModule> = ArrayList()
     private val configLoader: ConfigLoaderInterface = ConfigLoader()
+    private lateinit var config: Config
 
     protected val initiator = Initiator()
 
@@ -18,9 +19,15 @@ abstract class BaseApplication(val env: String) {
 
     protected abstract fun registerInitiatorTasks(initiator: Initiator)
 
+    protected abstract fun registerConfigHandlers(config: Config)
+
     open fun run() {
+        // Config
+        registerConfigHandlers(config)
+
         // Modules
         registerModules(modules)
+
         for (module in modules) {
             module.boot()
         }
@@ -30,6 +37,8 @@ abstract class BaseApplication(val env: String) {
     }
 
     open fun loadConfig(file: File): Config {
-        return configLoader.loadConfigFromFile(file)
+        config = configLoader.loadConfigFromFile(file)
+
+        return config
     }
 }

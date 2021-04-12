@@ -3,7 +3,7 @@ package fr.rob.game.domain.network.session
 import fr.rob.core.network.session.Session
 
 class StupidSessionPoolSupervisorStrategy(private val sessionPools: Array<SessionPool>) :
-    SessionPoolSupervisorStrategy {
+    SessionPoolSupervisorStrategyInterface {
 
     private var currentIndex: Int = 0
 
