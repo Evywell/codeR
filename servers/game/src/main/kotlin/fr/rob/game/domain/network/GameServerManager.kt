@@ -24,9 +24,6 @@ class GameServerManager(private val factory: ServerFactoryInterface) {
             world.loop()
         }
 
-        // @todo: Initiate the world and MapManager using server.mapId
-        // @todo: Make the world loop and launch it, then start the server after all is successfully initialized
-
         println("Game server starting...")
         gs.start()
     }

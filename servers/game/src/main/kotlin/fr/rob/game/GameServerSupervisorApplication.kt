@@ -30,8 +30,6 @@ class GameServerSupervisorApplication(
     lateinit var config: Config
 
     override fun run() {
-        registerConfigHandlers()
-
         super.run()
 
         initiator
@@ -40,13 +38,6 @@ class GameServerSupervisorApplication(
         val serverManager = GameServerManager(NettyGameServerFactory(this, processManager))
 
         serverManager.buildGameServers(servers)
-    }
-
-    private fun registerConfigHandlers() {
-        config
-            .addHandler(EnvConfigHandler())
-            .addHandler(DatabaseConfigHandler(connectionManager))
-            .addHandler(ServerConfigHandler())
     }
 
     override fun registerInitiatorTasks(initiator: Initiator) {
@@ -64,6 +55,13 @@ class GameServerSupervisorApplication(
 
         initiator
             .addTask(TASK_LOAD_SERVER_CONFIG, TaskLoadServerConfig(servers, loadServerRepository))
+    }
+
+    override fun registerConfigHandlers(config: Config) {
+        config
+            .addHandler(EnvConfigHandler())
+            .addHandler(DatabaseConfigHandler(connectionManager))
+            .addHandler(ServerConfigHandler())
     }
 
     override fun registerModules(modules: MutableList<AbstractModule>) {

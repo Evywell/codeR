@@ -2,6 +2,7 @@ package fr.rob.login
 
 import fr.rob.core.AbstractModule
 import fr.rob.core.BaseApplication
+import fr.rob.core.config.Config
 import fr.rob.core.initiator.Initiator
 import fr.rob.core.log.LoggerFactoryInterface
 import fr.rob.core.process.ProcessManager
@@ -25,5 +26,7 @@ class LoginApplication(private val loggerFactory: LoggerFactoryInterface, env: S
     }
 
     override fun registerInitiatorTasks(initiator: Initiator) {}
+
+    override fun registerConfigHandlers(config: Config) {}
 
 }

@@ -4,9 +4,11 @@ import fr.rob.core.misc.clock.IntervalTimer
 
 class World {
 
-    private val welcomeTimer = IntervalTimer(1000)
+    private var isRunning: Boolean = false
 
-    fun initialize() { }
+    fun initialize() {
+        isRunning = true
+    }
 
     fun loop() {
         var realCurrentTime: Long
@@ -14,7 +16,7 @@ class World {
         var deltaTime: Long
         var executionTime: Long
 
-        while (true) {
+        while (isRunning) {
             realCurrentTime = System.currentTimeMillis()
 
             deltaTime = realCurrentTime - realPreviousTime
@@ -30,18 +32,7 @@ class World {
         }
     }
 
-    private fun update(deltaTime: Int) {
-        if (welcomeTimer.localTime >= 0) {
-            welcomeTimer.update(deltaTime)
-        } else {
-            welcomeTimer.reset()
-        }
-
-        if (welcomeTimer.passed()) {
-            println("Welcome")
-            welcomeTimer.reset()
-        }
-    }
+    private fun update(deltaTime: Int) { }
 
     companion object {
         private const val WORLD_UPDATE_PER_SECOND = 50
