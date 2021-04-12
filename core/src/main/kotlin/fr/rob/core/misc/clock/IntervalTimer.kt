@@ -1,4 +1,4 @@
-package fr.rob.game.infrastructure.clock
+package fr.rob.core.misc.clock
 
 class IntervalTimer(private var interval: Int, var localTime: Int = 0) {
 

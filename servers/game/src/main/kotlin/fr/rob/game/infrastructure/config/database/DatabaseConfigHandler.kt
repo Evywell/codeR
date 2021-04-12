@@ -1,12 +1,12 @@
 package fr.rob.game.infrastructure.config.database
 
 import fr.rob.core.config.Config
-import fr.rob.core.config.ConfigHandlerInterface
+import fr.rob.core.config.database.AbstractDatabaseConfigHandler
 import fr.rob.game.DATABASE
 import fr.rob.game.DB_CONFIG
-import fr.rob.game.infrastructure.database.ConnectionManager
+import fr.rob.core.database.ConnectionManager
 
-class DatabaseConfigHandler(private val connectionManager: ConnectionManager) : ConfigHandlerInterface {
+class DatabaseConfigHandler(private val connectionManager: ConnectionManager) : AbstractDatabaseConfigHandler() {
 
     override fun getConfigKey(): String = DATABASE
 
@@ -14,7 +14,7 @@ class DatabaseConfigHandler(private val connectionManager: ConnectionManager) : 
         // Config database
         loadConfigDatabase(config)
 
-        // Load other databases (characters, world, ...)
+        // Load other databases (players, world, ...)
 
         return connectionManager
     }
@@ -26,16 +26,4 @@ class DatabaseConfigHandler(private val connectionManager: ConnectionManager) : 
 
         connectionManager.newConnection(DB_CONFIG, getDatabaseConfig(config, "config"))
     }
-
-    private fun getDatabaseConfig(config: Config, prefixKey: String): DatabaseConfig =
-         DatabaseConfig(
-            config.getString(getDatabaseKey("$prefixKey.host"), "localhost")!!,
-            config.getLong(getDatabaseKey("$prefixKey.port"), 3306)!!,
-            config.getString(getDatabaseKey("$prefixKey.user"))!!,
-            config.getString(getDatabaseKey("$prefixKey.password"))!!,
-            config.getString(getDatabaseKey("$prefixKey.database"))!!
-        )
-
-
-    private fun getDatabaseKey(key: String): String = getConfigKey() + '.' + key
 }

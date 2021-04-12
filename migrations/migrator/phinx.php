@@ -6,21 +6,26 @@ require_once "vendor/autoload.php";
 
 Dotenv::createImmutable(dirname(__DIR__, 2))->load();
 
+$dbPrefix = $_SERVER['DB_PREFIX']
+    ?? throw new RuntimeException('You must define a database prefix using $_SERVER[\'DB_PREFIX\']');
+
+$envDbPrefix = strtoupper($dbPrefix);
+
 return
 [
     'paths' => [
-        'migrations' => '%%PHINX_CONFIG_DIR%%/../sql',
-        'seeds' => '%%PHINX_CONFIG_DIR%%/../sql/seeds'
+        'migrations' => "%%PHINX_CONFIG_DIR%%/../sql/$dbPrefix",
+        'seeds' => "%%PHINX_CONFIG_DIR%%/../sql/$dbPrefix/seeds"
     ],
     'environments' => [
         'default_migration_table' => 'phinxlog',
         'default_environment' => 'development',
         'development' => [
             'adapter' => 'mysql',
-            'host' => $_ENV['GAME_MYSQL_HOST'],
-            'name' => $_ENV['GAME_MYSQL_DATABASE'],
-            'user' => $_ENV['GAME_MYSQL_USER'],
-            'pass' => $_ENV['GAME_MYSQL_PASSWORD'],
+            'host' => $_ENV[$envDbPrefix . '_MYSQL_HOST'],
+            'name' => $_ENV[$envDbPrefix . '_MYSQL_DATABASE'],
+            'user' => $_ENV[$envDbPrefix . '_MYSQL_USER'],
+            'pass' => $_ENV[$envDbPrefix . '_MYSQL_PASSWORD'],
             'port' => '3306',
             'charset' => 'utf8',
         ],

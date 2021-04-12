@@ -1,4 +1,4 @@
-package fr.rob.game.domain.event
+package fr.rob.core.event
 
 open class Event(override var propagationStopped: Boolean? = false) : EventInterface {
 

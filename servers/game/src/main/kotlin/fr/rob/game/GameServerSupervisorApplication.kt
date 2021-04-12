@@ -14,9 +14,9 @@ import fr.rob.game.domain.tasks.repository.LoadServerRepositoryInterface
 import fr.rob.game.infrastructure.config.EnvConfigHandler
 import fr.rob.game.infrastructure.config.database.DatabaseConfigHandler
 import fr.rob.game.infrastructure.config.server.ServerConfigHandler
-import fr.rob.game.infrastructure.database.ConnectionManager
+import fr.rob.core.database.ConnectionManager
 import fr.rob.game.infrastructure.database.DatabaseModule
-import fr.rob.game.infrastructure.event.EventManager
+import fr.rob.core.event.EventManager
 
 class GameServerSupervisorApplication(
     env: String,

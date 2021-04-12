@@ -1,8 +1,4 @@
-package fr.rob.game.infrastructure.event
-
-import fr.rob.game.domain.event.EventInterface
-import fr.rob.game.domain.event.EventListenerInterface
-import fr.rob.game.domain.event.EventManagerInterface
+package fr.rob.core.event
 
 class EventManager : EventManagerInterface {
 

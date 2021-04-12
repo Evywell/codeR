@@ -48,6 +48,7 @@ services:
         - USER_ID=${USER_ID:-1000}
         - GROUP_ID=${GROUP_ID:-1000}
     volumes:
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
       - mysqldata:/mnt/data
       - ./logs/mysql:/mnt/log
     ports:
@@ -55,7 +56,6 @@ services:
     networks:
       - gamedb
     environment:
-      MYSQL_DATABASE: ${GAME_MYSQL_DATABASE}
-      MYSQL_USER: ${GAME_MYSQL_USER}
-      MYSQL_PASSWORD: ${GAME_MYSQL_PASSWORD}
-      MYSQL_HOST: ${GAME_MYSQL_HOST}
+      MYSQL_USER: testing
+      MYSQL_PASSWORD: ${WORLD_MYSQL_PASSWORD}
+      MYSQL_HOST: ${WORLD_MYSQL_HOST}

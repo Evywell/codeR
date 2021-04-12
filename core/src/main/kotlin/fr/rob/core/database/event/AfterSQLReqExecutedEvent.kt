@@ -1,4 +1,4 @@
-package fr.rob.game.infrastructure.database.event
+package fr.rob.core.database.event
 
 
 class AfterSQLReqExecutedEvent (sql: String, time: Long) : DatabaseEvent(sql, time) {

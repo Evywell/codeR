@@ -24,6 +24,6 @@ class LoginApplication(private val loggerFactory: LoggerFactoryInterface, env: S
         modules.add(SecurityModule(env, processManager))
     }
 
-    override fun registerInitiatorTasks(initiator: Initiator?) {}
+    override fun registerInitiatorTasks(initiator: Initiator) {}
 
 }

@@ -1,7 +1,7 @@
-package fr.rob.game.infrastructure.database;
+package fr.rob.core.infrastructure.database;
 
-import fr.rob.game.infrastructure.clock.StopWatch;
-import fr.rob.game.infrastructure.database.event.AfterSQLReqExecutedEvent;
+import fr.rob.core.database.event.AfterSQLReqExecutedEvent;
+import fr.rob.core.misc.clock.StopWatch;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -11,16 +11,14 @@ import java.sql.Connection;
 import java.sql.*;
 import java.util.Calendar;
 
-import static fr.rob.game.infrastructure.database.event.AfterSQLReqExecutedEvent.AFTER_SQL_REQ_EXECUTED_EVENT;
-
 public class PreparedStatement implements java.sql.PreparedStatement {
 
     private java.sql.PreparedStatement stmt;
-    private fr.rob.game.infrastructure.database.Connection connection;
+    private fr.rob.core.database.Connection connection;
     private String sql;
 
     public PreparedStatement(
-            fr.rob.game.infrastructure.database.Connection connection,
+            fr.rob.core.database.Connection connection,
             String sql,
             java.sql.PreparedStatement stmt
     ) {
@@ -36,7 +34,7 @@ public class PreparedStatement implements java.sql.PreparedStatement {
         ResultSet rs = this.stmt.executeQuery();
         sw.stop();
 
-        connection.triggerEvent(AFTER_SQL_REQ_EXECUTED_EVENT, new AfterSQLReqExecutedEvent(sql, sw.diffTime()));
+        connection.triggerEvent(AfterSQLReqExecutedEvent.AFTER_SQL_REQ_EXECUTED_EVENT, new AfterSQLReqExecutedEvent(sql, sw.diffTime()));
 
         return rs;
     }
@@ -48,7 +46,7 @@ public class PreparedStatement implements java.sql.PreparedStatement {
         int affectedRows = this.stmt.executeUpdate();
         sw.stop();
 
-        connection.triggerEvent(AFTER_SQL_REQ_EXECUTED_EVENT, new AfterSQLReqExecutedEvent(sql, sw.diffTime()));
+        connection.triggerEvent(AfterSQLReqExecutedEvent.AFTER_SQL_REQ_EXECUTED_EVENT, new AfterSQLReqExecutedEvent(sql, sw.diffTime()));
 
         return affectedRows;
     }

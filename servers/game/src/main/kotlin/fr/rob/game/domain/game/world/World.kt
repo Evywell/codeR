@@ -1,6 +1,6 @@
 package fr.rob.game.domain.game.world
 
-import fr.rob.game.infrastructure.clock.IntervalTimer
+import fr.rob.core.misc.clock.IntervalTimer
 
 class World {
 

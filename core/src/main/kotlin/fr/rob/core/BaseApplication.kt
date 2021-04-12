@@ -7,7 +7,7 @@ import fr.rob.core.initiator.Initiator
 import java.io.File
 import java.util.ArrayList
 
-abstract class BaseApplication(protected var env: String) {
+abstract class BaseApplication(val env: String) {
 
     private val modules: MutableList<AbstractModule> = ArrayList()
     private val configLoader: ConfigLoaderInterface = ConfigLoader()

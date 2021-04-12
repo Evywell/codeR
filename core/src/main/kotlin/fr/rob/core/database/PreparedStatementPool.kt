@@ -1,5 +1,6 @@
-package fr.rob.game.infrastructure.database
+package fr.rob.core.database
 
+import fr.rob.core.infrastructure.database.PreparedStatement
 import java.sql.SQLException
 
 class PreparedStatementPool(private val connection: Connection) : HashMap<String, PreparedStatement>() {
