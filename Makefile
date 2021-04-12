@@ -27,7 +27,7 @@ MIGRATOR := $(DCR) migrator
 PHINX := $(MIGRATOR) migrations/migrator/vendor/bin/phinx
 PHINX_CONFIG_ARG := --configuration migrations/migrator
 PHINX_WORLD_CONFIG_ARG := $(PHINX_CONFIG_ARG)/phinx-world.php
-PHINX_VOLATILE_CONFIG_ARG := $(PHINX_CONFIG_ARG)/phinx-volatile.php
+PHINX_PLAYERS_CONFIG_ARG := $(PHINX_CONFIG_ARG)/phinx-players.php
 ##< Migrator
 
 GAME_DIR := servers/game
