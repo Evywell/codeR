@@ -1,4 +1,4 @@
-package fr.rob.core.test.auth.jwt;
+package fr.rob.core.test.unit.auth.jwt;
 
 import fr.rob.core.auth.jwt.JWTDecodedResultInterface;
 import fr.rob.core.auth.jwt.JWTDecoderService;
