@@ -13,3 +13,8 @@ message DevAuthentication {
 message JWTAuthentication {
   string token = 1;
 }
+
+message AuthenticationResult {
+    int32 result = 1; // Success (1) or Error (0)
+    string code = 2; // Error code
+}

@@ -29,7 +29,7 @@ class SecurityModule(
     }
 
     private fun registerAuthenticationProcess() {
-        if (env === ENV_DEV) {
+        if (env == ENV_DEV) {
             processManager.registerProcess(AuthenticationProcess::class) { DevAuthenticationProcess() }
         } else {
             processManager.registerProcess(AuthenticationProcess::class) {

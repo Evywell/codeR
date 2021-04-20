@@ -9,6 +9,7 @@ class Main {
         @JvmStatic
         fun main(args: Array<String>) {
             val app = LoginApplication(env = ENV_DEV, loggerFactory = LoggerFactory)
+
             app.run()
         }
     }

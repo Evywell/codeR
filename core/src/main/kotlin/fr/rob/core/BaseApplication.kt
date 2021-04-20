@@ -7,11 +7,10 @@ import fr.rob.core.initiator.Initiator
 import java.io.File
 import java.util.ArrayList
 
-abstract class BaseApplication(val env: String) {
+abstract class BaseApplication(open val env: String, private val configLoader: ConfigLoaderInterface = ConfigLoader()) {
 
     private val modules: MutableList<AbstractModule> = ArrayList()
-    private val configLoader: ConfigLoaderInterface = ConfigLoader()
-    private lateinit var config: Config
+    private var config: Config? = null
 
     protected val initiator = Initiator()
 
@@ -23,7 +22,7 @@ abstract class BaseApplication(val env: String) {
 
     open fun run() {
         // Config
-        registerConfigHandlers(config)
+        config?.let { registerConfigHandlers(it) }
 
         // Modules
         registerModules(modules)
@@ -39,6 +38,6 @@ abstract class BaseApplication(val env: String) {
     open fun loadConfig(file: File): Config {
         config = configLoader.loadConfigFromFile(file)
 
-        return config
+        return config as Config
     }
 }
