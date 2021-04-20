@@ -9,6 +9,6 @@ class DevAuthenticationOpcode(processManager: ProcessManager) :
     AuthenticationOpcode(processManager) {
 
     override fun getMessageType(): Message {
-        return AuthenticationProto.JWTAuthentication.getDefaultInstance()
+        return AuthenticationProto.DevAuthentication.getDefaultInstance()
     }
 }
