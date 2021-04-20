@@ -1,4 +1,4 @@
-package fr.rob.core.test.console;
+package fr.rob.core.test.unit.console;
 
 public class ConsoleTest {
 
