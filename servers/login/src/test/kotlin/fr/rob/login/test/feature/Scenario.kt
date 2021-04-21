@@ -30,6 +30,10 @@ open class Scenario {
     fun cleanTest() {
         appServer.stop()
         client.reset()
+
+        while (!appServer.server.isShutdownSuccessfully || !client.isShutdownSuccessfully) {
+            Thread.sleep(50)
+        }
     }
 
     fun sendAndShouldReceiveOpcode(client: Client, expectedOpcode: Int, packet: Packet) {
@@ -52,16 +56,13 @@ open class Scenario {
                 throw TimeoutException() // Improve this ?
             }
 
-            Thread.sleep(50) // Improve this ?
+            Thread.sleep(WAITING_BETWEEN_CHECKS_MS)
         } while (!client.isListenerDone(id))
     }
 
-    @After
-    fun tearDown() {
-    }
-
     companion object {
-        const val DEFAULT_TIMEOUT_MS = 500
+        const val DEFAULT_TIMEOUT_MS = 5000
+        const val WAITING_BETWEEN_CHECKS_MS = 50L
     }
 
 }

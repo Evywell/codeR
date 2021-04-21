@@ -19,7 +19,7 @@ abstract class AuthenticationOpcode(private val processManager: ProcessManager) 
             authenticationResult.result = AUTHENTICATION_RESULT_SUCCESS
         } else {
             authenticationResult.result = AUTHENTICATION_RESULT_ERROR
-            authenticationResult.code = AUTHENTICATION_CODE_BAD_CREDENTIALS
+            authenticationResult.code = authenticationProcess.error
         }
 
         session.send(Packet(ServerOpcodeLogin.AUTHENTICATION_RESULT, authenticationResult.build().toByteArray()))
@@ -28,7 +28,5 @@ abstract class AuthenticationOpcode(private val processManager: ProcessManager) 
     companion object {
         const val AUTHENTICATION_RESULT_ERROR = 0
         const val AUTHENTICATION_RESULT_SUCCESS = 1
-
-        const val AUTHENTICATION_CODE_BAD_CREDENTIALS = "bad_credentials"
     }
 }

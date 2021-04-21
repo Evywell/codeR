@@ -10,6 +10,10 @@ class TestLoginServer(app: LoginApplication): Server() {
     private val opcodeHandler = LoginOpcodeHandler(app.env, app.processManager, app.logger)
     private val queue = ServerQueue(opcodeHandler)
 
+    var isShutdownSuccessfully = false
+        private set
+        get() = queue.isShutdownSuccessfully
+
     init {
         opcodeHandler.initialize()
     }

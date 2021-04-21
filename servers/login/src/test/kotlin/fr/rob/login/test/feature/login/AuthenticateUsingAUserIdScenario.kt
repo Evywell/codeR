@@ -5,6 +5,7 @@ import fr.rob.entities.AuthenticationProto
 import fr.rob.login.opcode.ClientOpcodeLogin
 import fr.rob.login.opcode.ServerOpcodeLogin
 import fr.rob.login.security.authentication.AuthenticationOpcode
+import fr.rob.login.security.authentication.AuthenticationProcess
 import fr.rob.login.test.feature.Scenario
 import org.junit.Test
 
@@ -38,7 +39,7 @@ class AuthenticateUsingAUserIdScenario: Scenario() {
             opcode == ServerOpcodeLogin.AUTHENTICATION_RESULT
             && msg is AuthenticationProto.AuthenticationResult
             && msg.result == AuthenticationOpcode.AUTHENTICATION_RESULT_ERROR
-            && msg.code == AuthenticationOpcode.AUTHENTICATION_CODE_BAD_CREDENTIALS
+            && msg.code == AuthenticationProcess.ERROR_BAD_CREDENTIALS
         }
     }
 }

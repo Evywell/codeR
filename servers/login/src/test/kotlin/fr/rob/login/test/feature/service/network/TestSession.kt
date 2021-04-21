@@ -11,7 +11,5 @@ class TestSession(private val client: Client): Session() {
         client.incomingMessage(packet)
     }
 
-    override fun close() {
-        TODO("Not yet implemented")
-    }
+    override fun close() { }
 }
