@@ -12,6 +12,10 @@ class Client(app: ClientApplication) {
     private val incomingMessageListeners = HashMap<Int, Listener>()
     private val queue = ClientQueue(this, incomingMessageListeners)
 
+    var isShutdownSuccessfully = false
+        private set
+        get() = queue.isShutdownSuccessfully
+
     init {
         queue.start()
     }

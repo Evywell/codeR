@@ -13,6 +13,11 @@ abstract class Queue: Thread() {
 
     protected var deltaTime: Long? = null
 
+    var isShutdownSuccessfully = false
+        private set
+
+    private var isShutdownScheduled = false
+
     protected abstract fun runItem(item: QueueItem?)
 
     fun add(item: QueueItem) {
@@ -20,6 +25,8 @@ abstract class Queue: Thread() {
     }
 
     override fun run() {
+        var executionTime: Long
+
         isRunning = true
 
         while(isRunning) {
@@ -35,12 +42,26 @@ abstract class Queue: Thread() {
 
             realPreviousTime = realCurrentTime as Long
 
-            sleep(100)
+            executionTime = System.currentTimeMillis() - realCurrentTime!!
+
+            if (executionTime < QUEUE_UPDATE_INTERVAL) {
+                sleep(QUEUE_UPDATE_INTERVAL - executionTime)
+            }
+
+            if (isShutdownScheduled) {
+                isRunning = false
+                isShutdownSuccessfully = true
+            }
         }
     }
 
     fun shutdown() {
-        isRunning = false
+        isShutdownScheduled = true
+    }
+
+    companion object {
+        private const val QUEUE_UPDATE_PER_SECOND = 50
+        const val QUEUE_UPDATE_INTERVAL = 1000/QUEUE_UPDATE_PER_SECOND
     }
 }
 

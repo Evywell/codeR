@@ -17,7 +17,7 @@ class ClientQueue(private val client: Client, private val incomingMessageListene
 
         for ((id, listener) in incomingMessageListeners) {
             if (listener.isDone) {
-                deletableListeners.add(id)
+                // deletableListeners.add(id)
 
                 continue
             }
