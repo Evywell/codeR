@@ -2,12 +2,16 @@
 
 use Dotenv\Dotenv;
 
-require_once "vendor/autoload.php";
+require_once 'vendor/autoload.php';
+require_once dirname(__DIR__) . '/sql/constants.php';
 
 Dotenv::createImmutable(dirname(__DIR__, 2))->load();
 
-$dbPrefix = $_SERVER['DB_PREFIX']
-    ?? throw new RuntimeException('You must define a database prefix using $_SERVER[\'DB_PREFIX\']');
+$dbPrefix = $_SERVER['DB_PREFIX'] ?? null;
+
+if ($dbPrefix === null) {
+    throw new RuntimeException('You must define a database prefix using $_SERVER[\'DB_PREFIX\']');
+}
 
 $envDbPrefix = strtoupper($dbPrefix);
 

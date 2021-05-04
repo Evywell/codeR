@@ -1,4 +1,4 @@
-package fr.rob.login.test.feature.login
+package fr.rob.login.test.feature.scenarios
 
 import fr.rob.core.network.Packet
 import fr.rob.entities.AuthenticationProto
@@ -13,6 +13,7 @@ class AuthenticateUsingAUserIdScenario: Scenario() {
 
     @Test
     fun `valid user id`() {
+        // Arrange
         val auth = AuthenticationProto.DevAuthentication
             .newBuilder()
             .setUserId(1)
@@ -20,6 +21,7 @@ class AuthenticateUsingAUserIdScenario: Scenario() {
 
         val authPacket = Packet(ClientOpcodeLogin.AUTHENTICATE_SESSION, auth.toByteArray())
 
+        // Act & Assert
         this.sendAndShouldReceiveCallback(client, authPacket) { opcode, _, msg ->
             opcode == ServerOpcodeLogin.AUTHENTICATION_RESULT
             && (msg is AuthenticationProto.AuthenticationResult && msg.result == AuthenticationOpcode.AUTHENTICATION_RESULT_SUCCESS)
@@ -28,6 +30,7 @@ class AuthenticateUsingAUserIdScenario: Scenario() {
 
     @Test
     fun `invalid user id`() {
+        // Arrange
         val auth = AuthenticationProto.DevAuthentication
             .newBuilder()
             .setUserId(0)
@@ -35,6 +38,7 @@ class AuthenticateUsingAUserIdScenario: Scenario() {
 
         val authPacket = Packet(ClientOpcodeLogin.AUTHENTICATE_SESSION, auth.toByteArray())
 
+        // Act & Assert
         this.sendAndShouldReceiveCallback(client, authPacket) { opcode, _, msg ->
             opcode == ServerOpcodeLogin.AUTHENTICATION_RESULT
             && msg is AuthenticationProto.AuthenticationResult

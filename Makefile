@@ -28,6 +28,9 @@ PHINX := $(MIGRATOR) migrations/migrator/vendor/bin/phinx
 PHINX_CONFIG_ARG := --configuration migrations/migrator
 PHINX_WORLD_CONFIG_ARG := $(PHINX_CONFIG_ARG)/phinx-world.php
 PHINX_PLAYERS_CONFIG_ARG := $(PHINX_CONFIG_ARG)/phinx-players.php
+
+MIGRATOR_SEED_NAME=
+MIGRATOR_DB=
 ##< Migrator
 
 GAME_DIR := servers/game
@@ -134,7 +137,8 @@ migrate: migrations/migrator/vendor/autoload.php
 
 .PHONY: seed
 seed: migrations/migrator/vendor/autoload.php
-	$(PHINX) seed:run $(PHINX_CONFIG_ARG)
+	$(PHINX) seed:run $(PHINX_WORLD_CONFIG_ARG) -e development
+	$(PHINX) seed:run $(PHINX_PLAYERS_CONFIG_ARG) -e development
 
 .PHONY: migration-create
 migration-create: migrations/migrator/vendor/autoload.php
@@ -143,7 +147,7 @@ migration-create: migrations/migrator/vendor/autoload.php
 
 .PHONY: seed-create
 seed-create: migrations/migrator/vendor/autoload.php
-	$(PHINX) seed:create $(COMMAND_ARGS) $(PHINX_CONFIG_ARG)
+	$(PHINX) seed:create $(MIGRATOR_SEED_NAME) $(PHINX_CONFIG_ARG)/phinx-$(MIGRATOR_DB).php
 
 .PHONY: migration-status
 migration-status: up

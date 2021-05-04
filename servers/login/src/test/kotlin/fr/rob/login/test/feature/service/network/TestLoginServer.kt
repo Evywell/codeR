@@ -2,6 +2,7 @@ package fr.rob.login.test.feature.service.network
 
 import fr.rob.core.network.Packet
 import fr.rob.core.network.Server
+import fr.rob.core.network.session.Session
 import fr.rob.login.opcode.LoginOpcodeHandler
 import fr.rob.login.test.feature.LoginApplication
 
@@ -31,6 +32,8 @@ class TestLoginServer(app: LoginApplication): Server() {
 
         queue.add(ServerQueueItem(packet.readOpcode(), session, packet))
     }
+
+    fun getSession(client: Client): Session = sessionFromIdentifier(client.hashCode())
 
     fun stop() {
         queue.shutdown()

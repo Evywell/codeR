@@ -26,6 +26,7 @@ class CharacterStandRepository(private val db: Connection) : CharacterStandRepos
         val stmt = db.getPreparedStatement(SEL_LAST_SELECTED_CHARACTER_BY_USER_ID)
 
         stmt.setInt(1, userId)
+        stmt.execute()
 
         val rs = stmt.resultSet
 
@@ -36,7 +37,11 @@ class CharacterStandRepository(private val db: Connection) : CharacterStandRepos
         return 0
     }
 
-    private fun buildCharacter(characterId: Int, name: String, level: Int): CharacterStandProtos.CharacterStand.Character = CharacterStandProtos.CharacterStand.Character.newBuilder()
+    private fun buildCharacter(
+        characterId: Int,
+        name: String,
+        level: Int
+    ): CharacterStandProtos.CharacterStand.Character = CharacterStandProtos.CharacterStand.Character.newBuilder()
         .setId(characterId)
         .setName(name)
         .setLevel(level)

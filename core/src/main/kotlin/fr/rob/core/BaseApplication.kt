@@ -10,7 +10,7 @@ import java.util.ArrayList
 abstract class BaseApplication(open val env: String, private val configLoader: ConfigLoaderInterface = ConfigLoader()) {
 
     private val modules: MutableList<AbstractModule> = ArrayList()
-    private var config: Config? = null
+    var config: Config? = null
 
     protected val initiator = Initiator()
 

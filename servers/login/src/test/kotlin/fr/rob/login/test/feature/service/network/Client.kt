@@ -2,6 +2,7 @@ package fr.rob.login.test.feature.service.network
 
 import fr.rob.core.network.Packet
 import fr.rob.entities.AuthenticationProto
+import fr.rob.entities.CharacterStandProtos
 import fr.rob.login.opcode.ClientOpcodeLogin
 import fr.rob.login.test.feature.ClientApplication
 import fr.rob.login.test.feature.Scenario.Companion.DEFAULT_TIMEOUT_MS
@@ -37,6 +38,9 @@ class Client(app: ClientApplication) {
             ClientOpcodeLogin.AUTHENTICATE_SESSION -> {
                 result = AuthenticationProto.AuthenticationResult.parseFrom(packet.toByteArray())
             }
+            ClientOpcodeLogin.CHARACTER_STAND -> {
+                result = CharacterStandProtos.CharacterStand.parseFrom(packet.toByteArray())
+            }
         }
 
         return result
@@ -66,5 +70,14 @@ class Client(app: ClientApplication) {
     fun reset() {
         queue.shutdown()
         server = null
+    }
+
+    /**
+     * Helper method for helping purpose, DON'T USE IT for testing the authentication
+     */
+    fun authenticateToServerAs(userId: Int) {
+        val session = server!!.getSession(this)
+        session.userId = userId
+        session.isAuthenticated = true
     }
 }
