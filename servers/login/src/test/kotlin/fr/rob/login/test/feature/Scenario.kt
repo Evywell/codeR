@@ -5,19 +5,26 @@ import fr.rob.core.ENV_DEV
 import fr.rob.core.network.Packet
 import fr.rob.login.test.feature.service.exception.TimeoutException
 import fr.rob.login.test.feature.service.network.Client
+import fr.rob.login.test.feature.service.store.StoreManager
 import org.junit.After
 import org.junit.Before
+import org.junit.jupiter.api.Assertions
 import java.io.File
+import kotlin.system.exitProcess
 
 open class Scenario {
 
-    private val appServer = LoginApplication(ENV_DEV)
     private val appClient = ClientApplication()
 
+    protected val storeManager = StoreManager()
+
+    private val appServer = LoginApplication(ENV_DEV)
     val client = Client(appClient)
 
     @Before
     fun setUp() {
+        initializeStores()
+
         val configFileMock = mock<File>()
 
         appServer.loadConfig(configFileMock)
@@ -36,10 +43,16 @@ open class Scenario {
         }
     }
 
+    open fun initializeStores() { }
+
     fun sendAndShouldReceiveOpcode(client: Client, expectedOpcode: Int, packet: Packet) {
         sendAndShouldReceiveCallback(client, packet) { opcode: Int, _: Packet, _: Any? ->
             expectedOpcode == opcode
         }
+    }
+
+    fun sendPacket(packet: Packet) {
+        client.send(packet)
     }
 
     fun sendAndShouldReceiveCallback(

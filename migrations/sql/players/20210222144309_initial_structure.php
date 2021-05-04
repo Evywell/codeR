@@ -1,10 +1,12 @@
 <?php
 declare(strict_types=1);
 
+use Phinx\Db\Adapter\MysqlAdapter;
 use Phinx\Migration\AbstractMigration;
 
 final class InitialStructure extends AbstractMigration
 {
+
     /**
      * Change Method.
      *
@@ -20,7 +22,13 @@ final class InitialStructure extends AbstractMigration
     {
         $this
             ->table('characters')
+            ->addColumn('user_id', 'integer', ['signed' => false])
             ->addColumn('name', 'string')
+            ->addColumn('level', 'integer', ['limit' => MysqlAdapter::INT_TINY, 'signed' => false])
+            ->addColumn('last_selected_at', 'datetime')
+            ->addTimestamps()
+            ->addIndex('name', ['unique' => true])
             ->create();
     }
+
 }

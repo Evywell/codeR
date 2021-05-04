@@ -12,5 +12,6 @@ class ServerOpcodeLogin {
 
     companion object {
         const val AUTHENTICATION_RESULT = 0x00
+        const val CHARACTER_STAND_RESULT = 0x01
     }
 }

@@ -15,7 +15,7 @@ class ClientQueue(private val client: Client, private val incomingMessageListene
 
         val deletableListeners = ArrayList<Int>()
 
-        for ((id, listener) in incomingMessageListeners) {
+        for ((_, listener) in incomingMessageListeners) {
             if (listener.isDone) {
                 // deletableListeners.add(id)
 

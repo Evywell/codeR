@@ -4,19 +4,21 @@ import fr.rob.core.config.Config
 
 class Config : Config() {
 
-    override fun getString(configurationKey: String, default: String?): String? = null
+    val properties = HashMap<String, Any>()
 
-    override fun getBoolean(configurationKey: String, default: Boolean?): Boolean? = null
+    override fun getString(configurationKey: String, default: String?): String? = properties[configurationKey]?.toString()
 
-    override fun getInteger(configurationKey: String, default: Int?): Int? = null
+    override fun getBoolean(configurationKey: String, default: Boolean?): Boolean? = properties[configurationKey] as Boolean?
 
-    override fun getLong(configurationKey: String, default: Long?): Long? = null
+    override fun getInteger(configurationKey: String, default: Int?): Int? = properties[configurationKey] as Int?
 
-    override fun getFloat(configurationKey: String, default: Float?): Float? = null
+    override fun getLong(configurationKey: String, default: Long?): Long? = properties[configurationKey] as Long?
 
-    override fun getDouble(configurationKey: String, default: Double?): Double? = null
+    override fun getFloat(configurationKey: String, default: Float?): Float? = properties[configurationKey] as Float?
 
-    override fun getByte(configurationKey: String, default: Byte?): Byte? = null
+    override fun getDouble(configurationKey: String, default: Double?): Double? = properties[configurationKey] as Double?
+
+    override fun getByte(configurationKey: String, default: Byte?): Byte? = properties[configurationKey] as Byte?
 
     override fun getStringArray(configurationKey: String): Array<String>? = null
 

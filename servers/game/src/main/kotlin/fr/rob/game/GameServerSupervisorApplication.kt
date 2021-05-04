@@ -27,7 +27,6 @@ class GameServerSupervisorApplication(
     private val processManager = ProcessManager()
 
     lateinit var servers: Array<Server>
-    lateinit var config: Config
 
     override fun run() {
         super.run()
@@ -42,10 +41,10 @@ class GameServerSupervisorApplication(
 
     override fun registerInitiatorTasks(initiator: Initiator) {
         @Suppress("UNCHECKED_CAST")
-        servers = config.retrieveConfig(SERVER) as Array<Server>
+        servers = config!!.retrieveConfig(SERVER) as Array<Server>
 
         // Trigger the handle() of the database config handler
-        config.retrieveConfig(DATABASE)
+        config!!.retrieveConfig(DATABASE)
 
         val loadServerRepository: LoadServerRepositoryInterface =
             LoadServerRepository(

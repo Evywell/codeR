@@ -11,7 +11,10 @@ class CharacterStandProcess(private val characterRepository: CharacterStandRepos
         val userId = session.userId
 
         val characters = characterRepository.byUserId(userId!!)
-        val currentCharacterId = characterRepository.getCurrentCharacterId(userId)
+        val tmpCurrentCharacterId = characterRepository.getCurrentCharacterId(userId)
+
+        val currentCharacterId =
+            if (tmpCurrentCharacterId == 0 && characters.isNotEmpty()) characters[0].id else tmpCurrentCharacterId
 
         return CharacterStandProtos.CharacterStand.newBuilder()
             .setNumCharacters(characters.size)

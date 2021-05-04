@@ -1,3 +1,13 @@
+## Migrator
+### Create seeder (fixtures)
+e.g.
+```shell
+make seed-create MIGRATOR_SEED_NAME=CharacterSeeder MIGRATOR_DB=players
+```
+ - The parameter `MIGRATOR_SEED_NAME` is used to configure the name of the seeder class.  
+ - The parameter `MIGRATOR_DB` is used to configure in which database the seed is created for (`players`, `world` or `config`)
+
+## Nodes
 ### Processes
  - **DevAuthenticationProcess**: handle authentication for development purposes.  
    `checkAuthentication` method always returns true. You must specified a `userId` in the message to log as this user.  

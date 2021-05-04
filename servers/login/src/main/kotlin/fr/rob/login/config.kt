@@ -6,3 +6,4 @@ const val LOGIN_SERVER_PORT = 55501
 const val LOGIN_SERVER_ENABLE_SSL = false
 
 const val CONFIG_KEY_DATABASES = "databases"
+const val DB_PLAYERS = "players"

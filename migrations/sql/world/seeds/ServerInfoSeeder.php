@@ -4,7 +4,7 @@
 use Migrator\Zone\Position;
 use Phinx\Seed\AbstractSeed;
 
-require_once dirname(__DIR__, 2) . '/migrator/vendor/autoload.php';
+require_once dirname(__DIR__, 3) . '/migrator/vendor/autoload.php';
 
 class ServerInfoSeeder extends AbstractSeed
 {
