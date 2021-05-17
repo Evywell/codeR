@@ -6,14 +6,14 @@ import fr.rob.login.security.authentication.AuthenticationProcess
 
 class JWTAuthenticationProcess(private val jwtDecoder: JWTDecoderInterface) : AuthenticationProcess() {
 
-    var userId: Int? = null
-
-    override fun checkAuthentication(authMessage: Any): Boolean {
+    override fun checkAuthentication(authMessage: Any): AuthenticationState {
         val token = (authMessage as AuthenticationProto.JWTAuthentication).token
 
         if (token.isEmpty()) {
             throw Exception("You MUST specify a value for the token")
         }
+
+        val errorState = AuthenticationState(false, error = ERROR_BAD_CREDENTIALS)
 
         return try {
             val result = jwtDecoder.decode(token)
@@ -23,7 +23,7 @@ class JWTAuthenticationProcess(private val jwtDecoder: JWTDecoderInterface) : Au
                 result.get(JWT_AUTH_RESULT_EMAIL) == null
                 || result.get(JWT_AUTH_RESULT_USER_ID) == null
             ) {
-                return false
+                return errorState
             }
 
             val game: JWTResultGame =
@@ -31,18 +31,16 @@ class JWTAuthenticationProcess(private val jwtDecoder: JWTDecoderInterface) : Au
 
             // Wrong game
             if (!game.slug.equals(JWT_AUTH_RESULT_GAME_SLUG)) {
-                return false
+                return errorState
             }
 
-            userId = (result.get(JWT_AUTH_RESULT_USER_ID) as String).toInt()
+            val userId = (result.get(JWT_AUTH_RESULT_USER_ID) as String).toInt()
 
-            true
+            AuthenticationState(true, userId)
         } catch (e: Exception) {
-            false
+            errorState
         }
     }
-
-    override fun getUserId(): Int = userId!!
 }
 
 const val JWT_AUTH_RESULT_EMAIL = "email"

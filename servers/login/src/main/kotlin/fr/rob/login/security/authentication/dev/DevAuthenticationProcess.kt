@@ -5,20 +5,13 @@ import fr.rob.login.security.authentication.AuthenticationProcess
 
 class DevAuthenticationProcess : AuthenticationProcess() {
 
-    var userId: Int? = null
-
-    override fun checkAuthentication(authMessage: Any): Boolean {
-        userId = (authMessage as AuthenticationProto.DevAuthentication).userId
+    override fun checkAuthentication(authMessage: Any): AuthenticationState {
+        val userId = (authMessage as AuthenticationProto.DevAuthentication).userId
 
         if (userId == 0) {
-            userId = null
-
-            return false
+            return AuthenticationState(false, error = ERROR_BAD_CREDENTIALS)
         }
 
-        return true
+        return AuthenticationState(true, userId)
     }
-
-
-    override fun getUserId(): Int = userId!!
 }

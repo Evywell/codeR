@@ -9,6 +9,7 @@ import fr.rob.login.security.authentication.AuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTResultGame
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.jupiter.api.Assertions
 
@@ -33,8 +34,11 @@ class JWTAuthenticationProcessTest : JWTBaseTest() {
         val authenticationProcess: JWTAuthenticationProcess =
             processManager.makeProcess(AuthenticationProcess::class) as JWTAuthenticationProcess
 
+        val authState = authenticationProcess.authenticate(session, authMessage)
+
         // Assert
-        assertEquals(true, authenticationProcess.authenticate(session, authMessage))
+        assertEquals(true, authState.isAuthenticated)
+        assertNull("The state has a wrong value for error", authState.error)
         assertEquals(true, session.isAuthenticated)
         assertEquals(userId, session.userId)
     }
@@ -72,7 +76,7 @@ class JWTAuthenticationProcessTest : JWTBaseTest() {
             processManager.makeProcess(AuthenticationProcess::class) as JWTAuthenticationProcess
 
         // Assert
-        assertEquals(false, authenticationProcess.authenticate(NISession(), authMessage));
+        assertEquals(false, authenticationProcess.authenticate(NISession(), authMessage).isAuthenticated)
     }
 
     @Test
@@ -95,7 +99,7 @@ class JWTAuthenticationProcessTest : JWTBaseTest() {
             processManager.makeProcess(AuthenticationProcess::class) as JWTAuthenticationProcess
 
         // Assert
-        assertEquals(false, authenticationProcess.authenticate(NISession(), authMessage));
+        assertEquals(false, authenticationProcess.authenticate(NISession(), authMessage).isAuthenticated)
     }
 
 }
