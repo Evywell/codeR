@@ -5,6 +5,7 @@ import fr.rob.core.log.LoggerInterface
 import fr.rob.core.opcode.OpcodeHandler
 import fr.rob.core.process.ProcessManager
 import fr.rob.login.game.character.stand.CharacterStandOpcode
+import fr.rob.login.game.character.stand.CharacterStandProcess
 import fr.rob.login.security.authentication.AuthenticationProcess
 import fr.rob.login.security.authentication.dev.DevAuthenticationOpcode
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationOpcode
@@ -14,8 +15,13 @@ class LoginOpcodeHandler(private val env: String, private val processManager: Pr
 
     override fun initialize() {
         this.registerAuthenticationOpcode()
+        this.registerCharacterStandOpcode()
+    }
 
-        registerOpcode(ClientOpcodeLogin.CHARACTER_STAND, CharacterStandOpcode(processManager))
+    private fun registerCharacterStandOpcode() {
+        val standProcess = processManager.makeProcess(CharacterStandProcess::class)
+
+        registerOpcode(ClientOpcodeLogin.CHARACTER_STAND, CharacterStandOpcode(standProcess))
     }
 
     private fun registerAuthenticationOpcode() {

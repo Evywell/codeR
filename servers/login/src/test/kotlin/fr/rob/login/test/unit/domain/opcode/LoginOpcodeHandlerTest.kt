@@ -1,7 +1,6 @@
 package fr.rob.login.test.unit.domain.opcode
 
 import com.nhaarman.mockitokotlin2.mock
-import fr.rob.core.test.unit.BaseTest
 import fr.rob.core.ENV_DEV
 import fr.rob.core.ENV_TEST
 import fr.rob.core.auth.jwt.JWTDecoderService
@@ -12,8 +11,9 @@ import fr.rob.login.security.authentication.dev.DevAuthenticationOpcode
 import fr.rob.login.security.authentication.dev.DevAuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationOpcode
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationProcess
+import fr.rob.login.test.unit.BaseTest
 import org.junit.Test
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 
 class LoginOpcodeHandlerTest : BaseTest() {
 
@@ -32,7 +32,7 @@ class LoginOpcodeHandlerTest : BaseTest() {
         val opcodeFunction = loginOpcode.getOpcodeFunction(ClientOpcodeLogin.AUTHENTICATE_SESSION)
 
         // Assert
-        Assertions.assertEquals(true, opcodeFunction is DevAuthenticationOpcode)
+        assertEquals(true, opcodeFunction is DevAuthenticationOpcode)
     }
 
     @Test
@@ -52,6 +52,6 @@ class LoginOpcodeHandlerTest : BaseTest() {
         val opcodeFunction = loginOpcode.getOpcodeFunction(ClientOpcodeLogin.AUTHENTICATE_SESSION)
 
         // Assert
-        Assertions.assertEquals(true, opcodeFunction is JWTAuthenticationOpcode)
+        assertEquals(true, opcodeFunction is JWTAuthenticationOpcode)
     }
 }
