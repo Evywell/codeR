@@ -26,7 +26,7 @@ interface AdvancedOpcodeHandlerInterface : OpcodeHandlerInterface {
             parameters.add(processManager.getOrMakeProcess(parameterType.kotlin))
         }
 
-        // The start is used to convert an array to a spread operator (*parameters.toTypedArray())
+        // The star is used to convert an array into a spread operator (*parameters.toTypedArray())
         registerOpcode(opcode, constructor.newInstance(*parameters.toTypedArray()) as OpcodeFunction)
     }
 }
