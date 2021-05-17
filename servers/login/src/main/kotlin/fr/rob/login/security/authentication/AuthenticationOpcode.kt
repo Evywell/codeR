@@ -7,11 +7,10 @@ import fr.rob.core.process.ProcessManager
 import fr.rob.entities.AuthenticationProto
 import fr.rob.login.opcode.ServerOpcodeLogin
 
-abstract class AuthenticationOpcode(private val processManager: ProcessManager) :
+abstract class AuthenticationOpcode(private val authenticationProcess: AuthenticationProcess) :
     ProtobufOpcodeFunction(false) {
 
     override fun call(session: Session, message: Any) {
-        val authenticationProcess = processManager.makeProcess(AuthenticationProcess::class)
 
         val authenticationResult = AuthenticationProto.AuthenticationResult.newBuilder()
         val authState = authenticationProcess.authenticate(session, message)
