@@ -14,12 +14,13 @@ abstract class AuthenticationOpcode(private val processManager: ProcessManager) 
         val authenticationProcess = processManager.makeProcess(AuthenticationProcess::class)
 
         val authenticationResult = AuthenticationProto.AuthenticationResult.newBuilder()
+        val authState = authenticationProcess.authenticate(session, message)
 
-        if (authenticationProcess.authenticate(session, message)) {
+        if (authState.isAuthenticated) {
             authenticationResult.result = AUTHENTICATION_RESULT_SUCCESS
         } else {
             authenticationResult.result = AUTHENTICATION_RESULT_ERROR
-            authenticationResult.code = authenticationProcess.error
+            authenticationResult.code = authState.error
         }
 
         session.send(Packet(ServerOpcodeLogin.AUTHENTICATION_RESULT, authenticationResult.build().toByteArray()))

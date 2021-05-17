@@ -4,27 +4,28 @@ import fr.rob.core.network.session.Session
 
 abstract class AuthenticationProcess {
 
-    var error: String? = null
-        private set
+    protected abstract fun checkAuthentication(authMessage: Any): AuthenticationState
 
-    protected abstract fun checkAuthentication(authMessage: Any): Boolean
-    protected abstract fun getUserId(): Int
+    fun authenticate(session: Session, authMessage: Any): AuthenticationState {
+        val state = checkAuthentication(authMessage)
 
-    fun authenticate(session: Session, authMessage: Any): Boolean {
-        if (!checkAuthentication(authMessage)) {
-            this.error = ERROR_BAD_CREDENTIALS
-
-            return false
+        if (!state.isAuthenticated) {
+            return state
         }
 
         session.isAuthenticated = true
-        session.userId = getUserId()
+        session.userId = state.userId
 
-        return true
+        return state
     }
 
     companion object {
         const val ERROR_BAD_CREDENTIALS = "bad_credentials"
     }
 
+    data class AuthenticationState(
+        var isAuthenticated: Boolean,
+        var userId: Int? = null,
+        var error: String? = null
+    )
 }
