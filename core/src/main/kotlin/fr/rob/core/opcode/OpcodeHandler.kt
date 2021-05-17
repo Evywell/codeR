@@ -5,12 +5,12 @@ import fr.rob.core.network.Packet
 import fr.rob.core.network.session.Session
 import fr.rob.core.security.authentication.UnauthenticatedException
 
-abstract class OpcodeHandler(private val logger: LoggerInterface) {
+abstract class OpcodeHandler(private val logger: LoggerInterface) : OpcodeHandlerInterface {
 
     private val opcodeTable = HashMap<Int, OpcodeFunction>()
 
     @Throws(UnauthenticatedException::class, Exception::class)
-    fun process(opcode: Int, session: Session, packet: Packet) {
+    override fun process(opcode: Int, session: Session, packet: Packet) {
         logger.debug("Processing opcode [$opcode]")
 
         val function = opcodeTable[opcode] ?: throw Exception("Cannot find opcode $opcode")
@@ -29,7 +29,7 @@ abstract class OpcodeHandler(private val logger: LoggerInterface) {
         function.call(session, message)
     }
 
-    fun registerOpcode(opcode: Int, function: OpcodeFunction) {
+    override fun registerOpcode(opcode: Int, function: OpcodeFunction) {
         opcodeTable[opcode] = function
     }
 
