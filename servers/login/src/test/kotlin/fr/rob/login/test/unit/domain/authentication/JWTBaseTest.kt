@@ -63,7 +63,7 @@ open class JWTBaseTest : BaseTest() {
             .compact()
     }
 
-    private fun getPublicKey(): PublicKey {
+    protected fun getPublicKey(): PublicKey {
         return PublicKeyReader.fromString(getKeyContent("public.pem"))
     }
 

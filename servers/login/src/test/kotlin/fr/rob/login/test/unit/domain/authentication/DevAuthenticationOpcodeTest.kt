@@ -13,9 +13,7 @@ class DevAuthenticationOpcodeTest : JWTBaseTest() {
     @Test
     fun `call the authentication opcode`() {
         // Arrange
-        processManager.registerProcess(AuthenticationProcess::class) { DevAuthenticationProcess() }
-
-        val opcodeFunction = DevAuthenticationOpcode(processManager)
+        val opcodeFunction = DevAuthenticationOpcode(DevAuthenticationProcess())
         val session = NISession()
 
         val message = AuthenticationProto.DevAuthentication.newBuilder()
