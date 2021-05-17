@@ -4,16 +4,14 @@ import com.google.protobuf.Message
 import fr.rob.core.network.Packet
 import fr.rob.core.network.session.Session
 import fr.rob.core.opcode.ProtobufOpcodeFunction
-import fr.rob.core.process.ProcessManager
 import fr.rob.entities.CharacterStandProtos
 import fr.rob.login.opcode.ServerOpcodeLogin
 
-class CharacterStandOpcode(private val processManager: ProcessManager): ProtobufOpcodeFunction() {
+class CharacterStandOpcode(private val standProcess: CharacterStandProcess): ProtobufOpcodeFunction() {
 
     override fun getMessageType(): Message = CharacterStandProtos.CharacterStandReq.getDefaultInstance()
 
     override fun call(session: Session, message: Any) {
-        val standProcess = processManager.getOrMakeProcess(CharacterStandProcess::class)
         val stand = standProcess.createStandFromSession(session)
 
         session.send(Packet(ServerOpcodeLogin.CHARACTER_STAND_RESULT, stand.toByteArray()))
