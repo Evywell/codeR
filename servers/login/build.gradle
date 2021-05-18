@@ -1,12 +1,14 @@
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
-
 plugins {
     id 'org.jetbrains.kotlin.jvm'
     id 'java'
     id 'application'
     id 'jacoco'
     id 'org.jlleitschuh.gradle.ktlint' version '10.0.0'
+}
+
+ktlint {
+    disabledRules = ["indent", "chain-wrapping"]
+    verbose = true
 }
 
 dependencies {
