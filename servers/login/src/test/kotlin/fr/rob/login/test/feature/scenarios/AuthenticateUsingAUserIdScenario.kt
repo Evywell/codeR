@@ -9,7 +9,7 @@ import fr.rob.login.security.authentication.AuthenticationProcess
 import fr.rob.login.test.feature.Scenario
 import org.junit.Test
 
-class AuthenticateUsingAUserIdScenario: Scenario() {
+class AuthenticateUsingAUserIdScenario : Scenario() {
 
     @Test
     fun `valid user id`() {

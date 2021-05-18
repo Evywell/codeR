@@ -3,7 +3,6 @@ package fr.rob.login.security.authentication
 import fr.rob.core.network.Packet
 import fr.rob.core.network.session.Session
 import fr.rob.core.opcode.ProtobufOpcodeFunction
-import fr.rob.core.process.ProcessManager
 import fr.rob.entities.AuthenticationProto
 import fr.rob.login.opcode.ServerOpcodeLogin
 

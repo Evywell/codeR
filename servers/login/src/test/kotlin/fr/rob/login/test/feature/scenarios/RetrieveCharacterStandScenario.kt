@@ -6,12 +6,12 @@ import fr.rob.entities.CharacterStandProtos.CharacterStand.Character
 import fr.rob.login.opcode.ClientOpcodeLogin
 import fr.rob.login.opcode.ServerOpcodeLogin
 import fr.rob.login.test.feature.AuthenticatedScenario
-import fr.rob.login.test.feature.fixtures.*
+import fr.rob.login.test.feature.fixtures.* // ktlint-disable no-wildcard-imports
 import fr.rob.login.test.feature.service.store.CharacterStore
 import org.junit.Test
 import org.junit.jupiter.api.Assertions
 
-class RetrieveCharacterStandScenario: AuthenticatedScenario() {
+class RetrieveCharacterStandScenario : AuthenticatedScenario() {
 
     override fun initializeStores() {
         super.initializeStores()

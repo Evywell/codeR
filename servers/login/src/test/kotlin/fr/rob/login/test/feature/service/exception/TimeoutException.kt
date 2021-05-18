@@ -1,3 +1,3 @@
 package fr.rob.login.test.feature.service.exception
 
-class TimeoutException: Exception()
+class TimeoutException : Exception()

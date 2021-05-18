@@ -2,9 +2,9 @@ package fr.rob.login.test.unit.domain.authentication
 
 import com.nhaarman.mockitokotlin2.mock
 import fr.rob.core.auth.jwt.JWTDecoderInterface
-import fr.rob.entities.AuthenticationProto
 import fr.rob.core.process.ProcessManager
 import fr.rob.core.test.unit.sandbox.network.NISession
+import fr.rob.entities.AuthenticationProto
 import fr.rob.login.security.authentication.AuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTResultGame
@@ -12,7 +12,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.jupiter.api.Assertions
-
 
 class JWTAuthenticationProcessTest : JWTBaseTest() {
 
@@ -101,5 +100,4 @@ class JWTAuthenticationProcessTest : JWTBaseTest() {
         // Assert
         assertEquals(false, authenticationProcess.authenticate(NISession(), authMessage).isAuthenticated)
     }
-
 }

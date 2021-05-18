@@ -8,9 +8,7 @@ import fr.rob.login.test.feature.service.network.Client
 import fr.rob.login.test.feature.service.store.StoreManager
 import org.junit.After
 import org.junit.Before
-import org.junit.jupiter.api.Assertions
 import java.io.File
-import kotlin.system.exitProcess
 
 open class Scenario {
 
@@ -43,7 +41,7 @@ open class Scenario {
         }
     }
 
-    open fun initializeStores() { }
+    open fun initializeStores() {}
 
     fun sendAndShouldReceiveOpcode(client: Client, expectedOpcode: Int, packet: Packet) {
         sendAndShouldReceiveCallback(client, packet) { opcode: Int, _: Packet, _: Any? ->
@@ -77,5 +75,4 @@ open class Scenario {
         const val DEFAULT_TIMEOUT_MS = 5000
         const val WAITING_BETWEEN_CHECKS_MS = 50L
     }
-
 }

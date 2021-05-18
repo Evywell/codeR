@@ -7,7 +7,7 @@ import fr.rob.login.test.unit.sandbox.game.character.stand.CharacterStandProcess
 import org.junit.Before
 import fr.rob.core.test.unit.BaseTest as CoreBaseTest
 
-open class BaseTest: CoreBaseTest() {
+open class BaseTest : CoreBaseTest() {
 
     @Before
     fun setUp() {

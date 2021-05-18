@@ -5,7 +5,6 @@ import fr.rob.entities.AuthenticationProto
 import fr.rob.entities.CharacterStandProtos
 import fr.rob.login.opcode.ClientOpcodeLogin
 import fr.rob.login.test.feature.ClientApplication
-import fr.rob.login.test.feature.Scenario.Companion.DEFAULT_TIMEOUT_MS
 
 class Client(app: ClientApplication) {
 
@@ -34,7 +33,7 @@ class Client(app: ClientApplication) {
     fun processMessage(opcode: Int, packet: Packet): Any? {
         var result: Any? = null
 
-        when(opcode) {
+        when (opcode) {
             ClientOpcodeLogin.AUTHENTICATE_SESSION -> {
                 result = AuthenticationProto.AuthenticationResult.parseFrom(packet.toByteArray())
             }
