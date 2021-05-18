@@ -19,7 +19,7 @@ import fr.rob.login.test.feature.service.log.Logger
 import fr.rob.login.test.feature.service.network.TestLoginServer
 import fr.rob.login.test.feature.service.config.Config as TestConfig
 
-class LoginApplication(override val env: String = ENV_TEST): BaseApplication(env, ConfigLoader()) {
+class LoginApplication(override val env: String = ENV_TEST) : BaseApplication(env, ConfigLoader()) {
 
     lateinit var server: TestLoginServer
 
@@ -47,7 +47,7 @@ class LoginApplication(override val env: String = ENV_TEST): BaseApplication(env
         modules.add(SecurityModule(env, processManager))
     }
 
-    override fun registerInitiatorTasks(initiator: Initiator) { }
+    override fun registerInitiatorTasks(initiator: Initiator) {}
 
     override fun registerConfigHandlers(config: Config) {
         config
@@ -65,5 +65,4 @@ class LoginApplication(override val env: String = ENV_TEST): BaseApplication(env
         (config as TestConfig).properties["databases.players.password"] = "passwordtesting"
         (config as TestConfig).properties["databases.players.database"] = "players"
     }
-
 }

@@ -7,7 +7,6 @@ abstract class Queue {
 
     private lateinit var queueProcess: QueueProcess
 
-
     private var isRunning = false
 
     private var realCurrentTime: Long? = null
@@ -38,31 +37,39 @@ abstract class Queue {
 
     companion object {
         private const val QUEUE_UPDATE_PER_SECOND = 50
-        const val QUEUE_UPDATE_INTERVAL = 1000/QUEUE_UPDATE_PER_SECOND
+        const val QUEUE_UPDATE_INTERVAL = 1000 / QUEUE_UPDATE_PER_SECOND
     }
 
-    class QueueProcess(private val queue: Queue): Runnable {
+    class QueueProcess(private val queue: Queue) : Runnable {
 
         val itemList = ArrayDeque<QueueItem>()
 
         private var isRunning: Boolean
             get() = queue.isRunning
-            set(value) { queue.isRunning = value }
+            set(value) {
+                queue.isRunning = value
+            }
 
         private val isShutdownScheduled: Boolean
             get() = queue.isShutdownScheduled
 
         private var realCurrentTime: Long?
             get() = queue.realCurrentTime
-            set(value) { queue.realCurrentTime = value }
+            set(value) {
+                queue.realCurrentTime = value
+            }
 
         private var deltaTime: Long?
             get() = queue.deltaTime
-            set(value) { queue.deltaTime = value }
+            set(value) {
+                queue.deltaTime = value
+            }
 
         private var realPreviousTime: Long
             get() = queue.realPreviousTime
-            set(value) { queue.realPreviousTime = value }
+            set(value) {
+                queue.realPreviousTime = value
+            }
 
         override fun run() {
             try {
@@ -70,7 +77,7 @@ abstract class Queue {
 
                 isRunning = true
 
-                while(isRunning) {
+                while (isRunning) {
                     if (isShutdownScheduled) {
                         isRunning = false
                         queue.isShutdownSuccessfully = true
@@ -99,11 +106,10 @@ abstract class Queue {
                 ExceptionHolder.throwException(e)
             }
         }
-
     }
 }
 
-open class QueueItem (
+open class QueueItem(
     open val opcode: Int,
     open val packet: Packet
 )

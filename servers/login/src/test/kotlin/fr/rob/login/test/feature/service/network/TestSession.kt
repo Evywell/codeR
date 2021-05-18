@@ -3,7 +3,7 @@ package fr.rob.login.test.feature.service.network
 import fr.rob.core.network.Packet
 import fr.rob.core.network.session.Session
 
-class TestSession(private val client: Client): Session() {
+class TestSession(private val client: Client) : Session() {
 
     override fun getIp(): String = "127.0.0.1"
 
@@ -11,5 +11,5 @@ class TestSession(private val client: Client): Session() {
         client.incomingMessage(packet)
     }
 
-    override fun close() { }
+    override fun close() {}
 }

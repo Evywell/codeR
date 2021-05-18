@@ -4,8 +4,8 @@ import com.nhaarman.mockitokotlin2.mock
 import fr.rob.core.ENV_DEV
 import fr.rob.core.ENV_TEST
 import fr.rob.core.auth.jwt.JWTDecoderService
-import fr.rob.login.opcode.LoginOpcodeHandler
 import fr.rob.login.opcode.ClientOpcodeLogin
+import fr.rob.login.opcode.LoginOpcodeHandler
 import fr.rob.login.security.authentication.AuthenticationProcess
 import fr.rob.login.security.authentication.dev.DevAuthenticationOpcode
 import fr.rob.login.security.authentication.dev.DevAuthenticationProcess
@@ -13,7 +13,7 @@ import fr.rob.login.security.authentication.jwt.JWTAuthenticationOpcode
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationProcess
 import fr.rob.login.test.unit.BaseTest
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 
 class LoginOpcodeHandlerTest : BaseTest() {
 

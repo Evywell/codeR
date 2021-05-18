@@ -3,7 +3,8 @@ package fr.rob.login.test.feature.service.network
 import fr.rob.core.network.Packet
 import java.util.ArrayList
 
-class ClientQueue(private val client: Client, private val incomingMessageListeners: MutableMap<Int, Listener>): Queue() {
+class ClientQueue(private val client: Client, private val incomingMessageListeners: MutableMap<Int, Listener>) :
+    Queue() {
 
     override fun runItem(item: QueueItem?) {
         var msg: Any? = null
@@ -32,5 +33,5 @@ class ClientQueue(private val client: Client, private val incomingMessageListene
     }
 }
 
-data class ClientQueueItem(override val opcode: Int, override val packet: Packet):
+data class ClientQueueItem(override val opcode: Int, override val packet: Packet) :
     QueueItem(opcode, packet)

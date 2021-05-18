@@ -6,7 +6,7 @@ import fr.rob.core.network.session.Session
 import fr.rob.login.opcode.LoginOpcodeHandler
 import fr.rob.login.test.feature.LoginApplication
 
-class TestLoginServer(app: LoginApplication): Server() {
+class TestLoginServer(app: LoginApplication) : Server() {
 
     private val opcodeHandler = LoginOpcodeHandler(app.env, app.processManager, app.logger)
     private val queue = ServerQueue(opcodeHandler)

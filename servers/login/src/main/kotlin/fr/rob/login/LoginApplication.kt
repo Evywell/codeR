@@ -16,7 +16,8 @@ class LoginApplication(private val loggerFactory: LoggerFactoryInterface, env: S
     override fun run() {
         super.run()
 
-        val loginNode = NettyLoginServer(this, loggerFactory,
+        val loginNode = NettyLoginServer(
+            this, loggerFactory,
             LOGIN_SERVER_PORT,
             LOGIN_SERVER_ENABLE_SSL
         )
@@ -31,5 +32,4 @@ class LoginApplication(private val loggerFactory: LoggerFactoryInterface, env: S
     override fun registerInitiatorTasks(initiator: Initiator) {}
 
     override fun registerConfigHandlers(config: Config) {}
-
 }

@@ -10,7 +10,11 @@ import fr.rob.login.security.authentication.AuthenticationProcess
 import fr.rob.login.security.authentication.dev.DevAuthenticationOpcode
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationOpcode
 
-class LoginOpcodeHandler(private val env: String, override var processManager: ProcessManager, logger: LoggerInterface) :
+class LoginOpcodeHandler(
+    private val env: String,
+    override var processManager: ProcessManager,
+    logger: LoggerInterface
+) :
     OpcodeHandler(logger), AdvancedOpcodeHandlerInterface {
 
     override fun initialize() {

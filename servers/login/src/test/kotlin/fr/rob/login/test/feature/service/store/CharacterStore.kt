@@ -2,7 +2,7 @@ package fr.rob.login.test.feature.service.store
 
 import fr.rob.entities.CharacterStandProtos
 
-class CharacterStore: Store() {
+class CharacterStore : Store() {
 
     var stand: CharacterStandProtos.CharacterStand? = null
     var mainCharacter: CharacterStandProtos.CharacterStand.Character? = null

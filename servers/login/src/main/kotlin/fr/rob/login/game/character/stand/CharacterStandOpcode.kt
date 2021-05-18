@@ -7,7 +7,7 @@ import fr.rob.core.opcode.ProtobufOpcodeFunction
 import fr.rob.entities.CharacterStandProtos
 import fr.rob.login.opcode.ServerOpcodeLogin
 
-class CharacterStandOpcode(private val standProcess: CharacterStandProcess): ProtobufOpcodeFunction() {
+class CharacterStandOpcode(private val standProcess: CharacterStandProcess) : ProtobufOpcodeFunction() {
 
     override fun getMessageType(): Message = CharacterStandProtos.CharacterStandReq.getDefaultInstance()
 

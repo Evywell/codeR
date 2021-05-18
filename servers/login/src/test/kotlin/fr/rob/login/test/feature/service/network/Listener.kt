@@ -25,5 +25,4 @@ class Listener(private val callback: (opcode: Int, packet: Packet, msg: Any?) ->
             isOutdated = true
         }
     }
-
 }

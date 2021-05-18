@@ -1,6 +1,3 @@
 package fr.rob.login.test.feature.service.store
 
-abstract class Store {
-
-
-}
+abstract class Store

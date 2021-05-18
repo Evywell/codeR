@@ -47,9 +47,9 @@ class CharacterStandRepository(private val db: Connection) : CharacterStandRepos
         .setLevel(level)
         .build()
 
-
     companion object {
         const val SEL_CHARACTERS_BY_USER_ID = "SELECT id, name, level FROM characters WHERE user_id = ?"
-        const val SEL_LAST_SELECTED_CHARACTER_BY_USER_ID = "SELECT id FROM characters WHERE user_id = ? ORDER BY last_selected_at DESC LIMIT 1"
+        const val SEL_LAST_SELECTED_CHARACTER_BY_USER_ID =
+            "SELECT id FROM characters WHERE user_id = ? ORDER BY last_selected_at DESC LIMIT 1"
     }
 }

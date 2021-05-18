@@ -4,7 +4,7 @@ import fr.rob.core.network.Packet
 import fr.rob.core.network.session.Session
 import fr.rob.core.opcode.OpcodeHandler
 
-class ServerQueue(private val opcodeHandler: OpcodeHandler): Queue() {
+class ServerQueue(private val opcodeHandler: OpcodeHandler) : Queue() {
 
     override fun runItem(item: QueueItem?) {
         if (item == null) {
@@ -16,5 +16,5 @@ class ServerQueue(private val opcodeHandler: OpcodeHandler): Queue() {
     }
 }
 
-data class ServerQueueItem(override val opcode: Int, val session: Session, override val packet: Packet):
+data class ServerQueueItem(override val opcode: Int, val session: Session, override val packet: Packet) :
     QueueItem(opcode, packet)
