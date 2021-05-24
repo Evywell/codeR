@@ -7,6 +7,7 @@ abstract class Session {
 
     var isAuthenticated: Boolean = false
     var userId: Int? = null
+    var data: SessionData? = null
 
     abstract fun getIp(): String
     abstract fun send(packet: Packet)

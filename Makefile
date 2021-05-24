@@ -95,6 +95,11 @@ test: build-proto setup-tests ## Runs the :servers:game tests
 task-test:
 	$(GRADLE_TASK) :servers:game:test
 
+.PHONY: login-test
+login-test:
+	@make -i seed
+	$(GRADLE_TASK) :servers:login:test
+
 .PHONY: setup-tests
 setup-tests: servers/game/src/test/resources/private.pem
 

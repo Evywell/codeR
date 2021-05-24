@@ -12,4 +12,15 @@ class NISession : Session() {
     override fun close() {
         isAuthenticated = false
     }
+
+    companion object {
+        fun buildAuthenticated(): NISession {
+            val session = NISession()
+
+            session.isAuthenticated = true
+            session.userId = 1
+
+            return session
+        }
+    }
 }

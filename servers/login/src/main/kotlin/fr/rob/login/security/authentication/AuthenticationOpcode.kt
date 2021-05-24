@@ -4,9 +4,13 @@ import fr.rob.core.network.Packet
 import fr.rob.core.network.session.Session
 import fr.rob.core.opcode.ProtobufOpcodeFunction
 import fr.rob.entities.AuthenticationProto
+import fr.rob.login.game.SessionInitializerProcess
 import fr.rob.login.opcode.ServerOpcodeLogin
 
-abstract class AuthenticationOpcode(private val authenticationProcess: AuthenticationProcess) :
+abstract class AuthenticationOpcode(
+    private val authenticationProcess: AuthenticationProcess,
+    private val sessionInitializerProcess: SessionInitializerProcess
+) :
     ProtobufOpcodeFunction(false) {
 
     override fun call(session: Session, message: Any) {
@@ -15,6 +19,8 @@ abstract class AuthenticationOpcode(private val authenticationProcess: Authentic
         val authState = authenticationProcess.authenticate(session, message)
 
         if (authState.isAuthenticated) {
+            sessionInitializerProcess.execute(session)
+
             authenticationResult.result = AUTHENTICATION_RESULT_SUCCESS
         } else {
             authenticationResult.result = AUTHENTICATION_RESULT_ERROR

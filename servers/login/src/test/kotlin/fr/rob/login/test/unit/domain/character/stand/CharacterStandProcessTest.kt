@@ -2,11 +2,13 @@ package fr.rob.login.test.unit.domain.character.stand
 
 import fr.rob.core.network.session.exception.UnauthenticatedSessionException
 import fr.rob.core.test.unit.sandbox.network.NISession
+import fr.rob.entities.CharacterProtos
 import fr.rob.login.game.character.stand.CharacterStandProcess
+import fr.rob.login.network.LoginSessionData
 import fr.rob.login.test.unit.sandbox.game.character.stand.CharacterStandProcess_CharacterStandRepository
+import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Test
 
 class CharacterStandProcessTest {
 
@@ -17,8 +19,13 @@ class CharacterStandProcessTest {
     fun `create stand from authenticated session with characters`() {
         // Arrange
         val session = NISession()
+        val sessionData = LoginSessionData()
+
         session.isAuthenticated = true
         session.userId = 1234
+        session.data = sessionData
+
+        loadCharacterFixtures(sessionData)
 
         // Act
         val characterStand = characterStandProcess.createStandFromSession(session)
@@ -46,5 +53,27 @@ class CharacterStandProcessTest {
             // Act
             characterStandProcess.createStandFromSession(session)
         }
+    }
+
+    private fun loadCharacterFixtures(sessionData: LoginSessionData) {
+        val characters = ArrayList<CharacterProtos.Character>()
+
+        characters.add(
+            CharacterProtos.Character.newBuilder()
+                .setId(13)
+                .setName("T101")
+                .setLevel(60)
+                .build()
+        )
+
+        characters.add(
+            CharacterProtos.Character.newBuilder()
+                .setId(22)
+                .setName("T102")
+                .setLevel(54)
+                .build()
+        )
+
+        sessionData.characters = characters
     }
 }

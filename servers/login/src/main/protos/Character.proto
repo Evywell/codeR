@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package fr.rob.entities;
+
+option java_outer_classname = "CharacterProtos";
+option php_namespace = "Rob\\Protos";
+option php_metadata_namespace = "Rob\\Protos\\Meta";
+
+message Character {
+  int32 id = 1;
+  string name = 2;
+  int32 level = 3;
+}

@@ -5,6 +5,8 @@ import fr.rob.core.log.LoggerInterface
 import fr.rob.core.opcode.AdvancedOpcodeHandlerInterface
 import fr.rob.core.opcode.OpcodeHandler
 import fr.rob.core.process.ProcessManager
+import fr.rob.login.game.SessionInitializerProcess
+import fr.rob.login.game.character.create.CharacterCreateOpcode
 import fr.rob.login.game.character.stand.CharacterStandOpcode
 import fr.rob.login.security.authentication.AuthenticationProcess
 import fr.rob.login.security.authentication.dev.DevAuthenticationOpcode
@@ -21,17 +23,19 @@ class LoginOpcodeHandler(
         this.registerAuthenticationOpcode()
 
         registerAutowiredOpcode(ClientOpcodeLogin.CHARACTER_STAND, CharacterStandOpcode::class)
+        registerAutowiredOpcode(ClientOpcodeLogin.CHARACTER_CREATE, CharacterCreateOpcode::class)
     }
 
     private fun registerAuthenticationOpcode() {
         val authenticationProcess = processManager.makeProcess(AuthenticationProcess::class)
+        val sessionInitializerProcess = processManager.makeProcess(SessionInitializerProcess::class)
 
         registerOpcode(
             ClientOpcodeLogin.AUTHENTICATE_SESSION,
             if (env == ENV_DEV)
-                DevAuthenticationOpcode(authenticationProcess)
+                DevAuthenticationOpcode(authenticationProcess, sessionInitializerProcess)
             else
-                JWTAuthenticationOpcode(authenticationProcess)
+                JWTAuthenticationOpcode(authenticationProcess, sessionInitializerProcess)
         )
     }
 }
