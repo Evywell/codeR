@@ -11,6 +11,9 @@ import fr.rob.core.process.ProcessManager
 import fr.rob.login.CONFIG_KEY_DATABASES
 import fr.rob.login.DB_PLAYERS
 import fr.rob.login.config.DatabaseConfigHandler
+import fr.rob.login.game.SessionInitializerProcess
+import fr.rob.login.game.character.CharacterRepository
+import fr.rob.login.game.character.create.CharacterCreateProcess
 import fr.rob.login.game.character.stand.CharacterStandProcess
 import fr.rob.login.game.character.stand.CharacterStandRepository
 import fr.rob.login.security.SecurityModule
@@ -35,8 +38,18 @@ class LoginApplication(override val env: String = ENV_TEST) : BaseApplication(en
 
         config!!.retrieveConfig(CONFIG_KEY_DATABASES)
 
+        val characterRepository = CharacterRepository(connectionManager.getConnection(DB_PLAYERS)!!)
+
         processManager.registerProcess(CharacterStandProcess::class) {
             CharacterStandProcess(CharacterStandRepository(connectionManager.getConnection(DB_PLAYERS)!!))
+        }
+
+        processManager.registerProcess(CharacterCreateProcess::class) {
+            CharacterCreateProcess(characterRepository)
+        }
+
+        processManager.registerProcess(SessionInitializerProcess::class) {
+            SessionInitializerProcess(characterRepository)
         }
 
         server = TestLoginServer(this)

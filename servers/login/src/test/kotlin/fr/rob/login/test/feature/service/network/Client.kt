@@ -2,7 +2,9 @@ package fr.rob.login.test.feature.service.network
 
 import fr.rob.core.network.Packet
 import fr.rob.entities.AuthenticationProto
+import fr.rob.entities.CharacterCreateProtos
 import fr.rob.entities.CharacterStandProtos
+import fr.rob.login.network.LoginSessionData
 import fr.rob.login.opcode.ClientOpcodeLogin
 import fr.rob.login.test.feature.ClientApplication
 
@@ -40,6 +42,9 @@ class Client(app: ClientApplication) {
             ClientOpcodeLogin.CHARACTER_STAND -> {
                 result = CharacterStandProtos.CharacterStand.parseFrom(packet.toByteArray())
             }
+            ClientOpcodeLogin.CHARACTER_CREATE -> {
+                result = CharacterCreateProtos.CharacterCreateResult.parseFrom(packet.toByteArray())
+            }
         }
 
         return result
@@ -76,7 +81,11 @@ class Client(app: ClientApplication) {
      */
     fun authenticateToServerAs(userId: Int) {
         val session = server!!.getSession(this)
+
         session.userId = userId
         session.isAuthenticated = true
+        session.data = LoginSessionData()
+
+        server!!.initializeSession(session)
     }
 }

@@ -3,10 +3,11 @@ package fr.rob.login.test.feature.service.network
 import fr.rob.core.network.Packet
 import fr.rob.core.network.Server
 import fr.rob.core.network.session.Session
+import fr.rob.login.game.SessionInitializerProcess
 import fr.rob.login.opcode.LoginOpcodeHandler
 import fr.rob.login.test.feature.LoginApplication
 
-class TestLoginServer(app: LoginApplication) : Server() {
+class TestLoginServer(private val app: LoginApplication) : Server() {
 
     private val opcodeHandler = LoginOpcodeHandler(app.env, app.processManager, app.logger)
     private val queue = ServerQueue(opcodeHandler)
@@ -34,6 +35,10 @@ class TestLoginServer(app: LoginApplication) : Server() {
     }
 
     fun getSession(client: Client): Session = sessionFromIdentifier(client.hashCode())
+
+    fun initializeSession(session: Session) {
+        app.processManager.getOrMakeProcess(SessionInitializerProcess::class).execute(session)
+    }
 
     fun stop() {
         queue.shutdown()

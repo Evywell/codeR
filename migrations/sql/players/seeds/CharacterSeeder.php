@@ -1,7 +1,6 @@
 <?php
 
-
-use Phinx\Seed\AbstractSeed;
+use Migrator\AbstractSeed;
 
 class CharacterSeeder extends AbstractSeed
 {
@@ -20,12 +19,11 @@ class CharacterSeeder extends AbstractSeed
                 'id' => 1,
                 'name' => 'Evywell',
                 'level' => CURRENT_LEVEL_MAX,
-                'user_id' => 1
+                'user_id' => 1,
+                'last_selected_at' => (new DateTime())->format('Y-m-d H:i:s')
             ]
         ];
 
-        $this->table('characters')
-            ->insert($characters)
-            ->save();
+        $this->truncateAndInsert('characters', $characters);
     }
 }

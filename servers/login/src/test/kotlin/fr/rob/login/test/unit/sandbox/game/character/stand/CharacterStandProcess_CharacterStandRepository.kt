@@ -12,10 +12,6 @@ class CharacterStandProcess_CharacterStandRepository : CharacterStandRepositoryI
         characters.add(Character.newBuilder().setId(22).setName("T102").setLevel(54).build())
     }
 
-    override fun byUserId(userId: Int): List<Character> {
-        return characters
-    }
-
     override fun getCurrentCharacterId(userId: Int): Int {
         return characters[0].id
     }
