@@ -18,7 +18,12 @@ class CharacterCreateProcess(private val characterRepository: CharacterRepositor
         charactersHolder: CharactersHolderInterface,
         characterSkeleton: CharacterCreateProtos.CharacterCreate
     ): CreateCharacterState {
-        val characterNameLength = characterSkeleton.name.length
+        val characterName = characterSkeleton.name
+        val characterNameLength = characterName.length
+
+        if (!characterName.matches(Regex("^[a-z]+$", RegexOption.IGNORE_CASE))) {
+            return CreateCharacterState(true, ERR_INVALID_CHARACTER_NAME)
+        }
 
         if (isCharacterNameTooSmall(characterNameLength) || isCharacterNameTooBig(characterNameLength)) {
             return CreateCharacterState(
@@ -33,8 +38,8 @@ class CharacterCreateProcess(private val characterRepository: CharacterRepositor
 
         // We first check his own characters to avoid a useless query
         if (
-            charactersHolder.getCharacterByName(characterSkeleton.name) is CharacterProtos.Character
-            || characterRepository.isCharacterNameTaken(characterSkeleton.name)
+            charactersHolder.getCharacterByName(characterName) is CharacterProtos.Character
+            || characterRepository.isCharacterNameTaken(characterName)
         ) {
             return CreateCharacterState(true, ERR_CHARACTER_NAME_ALREADY_TAKEN)
         }
@@ -63,12 +68,13 @@ class CharacterCreateProcess(private val characterRepository: CharacterRepositor
     companion object {
         const val MAX_CHARACTERS_PER_USER = 10
         const val MIN_CHARACTER_NAME_CHARS = 3
-        const val MAX_CHARACTER_NAME_CHARS = 10
+        const val MAX_CHARACTER_NAME_CHARS = 15
 
         const val ERR_CHARACTER_NAME_TOO_SMALL = "err_character_name_too_small"
         const val ERR_CHARACTER_NAME_TOO_BIG = "err_character_name_too_big"
         const val ERR_MAX_CHARACTERS_PER_USER = "err_max_characters_per_user"
         const val ERR_CHARACTER_NAME_ALREADY_TAKEN = "err_character_name_already_taken"
+        const val ERR_INVALID_CHARACTER_NAME = "err_invalid_character_name"
     }
 
     data class CreateCharacterState(var hasError: Boolean, var error: String? = null)
