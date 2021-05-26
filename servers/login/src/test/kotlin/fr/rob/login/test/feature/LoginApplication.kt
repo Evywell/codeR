@@ -27,7 +27,7 @@ class LoginApplication(override val env: String = ENV_TEST) : BaseApplication(en
     lateinit var server: TestLoginServer
 
     private val eventManager = EventManager()
-    private val connectionManager = ConnectionManager(eventManager)
+    val connectionManager = ConnectionManager(eventManager)
     val processManager = ProcessManager()
     val logger = Logger()
 

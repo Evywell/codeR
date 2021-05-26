@@ -30,6 +30,8 @@ class CharacterCreateOpcode(private val createCharacterProcess: CharacterCreateP
 
         val newChar = createCharacterProcess.create(session, message)
 
+        (session.data as LoginSessionData).characters?.add(newChar)
+
         val characterCreateCharacter = CharacterCreateProtos.CharacterCreateResult.Character.newBuilder()
             .setId(newChar.id)
             .setName(newChar.name)

@@ -1,6 +1,7 @@
 package fr.rob.login.game
 
 import fr.rob.core.network.session.Session
+import fr.rob.core.network.session.exception.UnauthenticatedSessionException
 import fr.rob.login.game.character.CharacterRepositoryInterface
 import fr.rob.login.network.LoginSessionData
 
@@ -8,7 +9,7 @@ class SessionInitializerProcess(private val characterRepository: CharacterReposi
 
     fun execute(session: Session) {
         if (!session.isAuthenticated) {
-            throw Exception("Cannot initialize an unauthenticated session") // @todo replace by a better exception
+            throw UnauthenticatedSessionException()
         }
 
         session.data = LoginSessionData()

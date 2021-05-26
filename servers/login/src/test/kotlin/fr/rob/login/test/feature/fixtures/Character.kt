@@ -20,3 +20,4 @@ const val USER_2_ID = 2
  * Unused character names
  */
 const val UNUSED_NAME_1 = "Imnotused"
+const val UNUSED_NAME_2 = "Imstillnotused"

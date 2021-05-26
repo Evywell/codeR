@@ -13,12 +13,6 @@ import org.junit.jupiter.api.Assertions
 
 class RetrieveCharacterStandScenario : AuthenticatedScenario() {
 
-    override fun initializeStores() {
-        super.initializeStores()
-
-        storeManager.setStore(CharacterStore())
-    }
-
     @Test
     fun `as authenticated user with characters, I should retrieve my character stand`() {
         // Arrange
