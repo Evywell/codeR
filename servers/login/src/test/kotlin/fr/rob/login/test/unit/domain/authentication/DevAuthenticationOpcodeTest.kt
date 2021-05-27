@@ -9,7 +9,7 @@ import fr.rob.login.security.authentication.dev.DevAuthenticationOpcode
 import fr.rob.login.security.authentication.dev.DevAuthenticationProcess
 import fr.rob.login.test.unit.BaseTest
 import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class DevAuthenticationOpcodeTest : BaseTest() {
 

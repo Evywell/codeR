@@ -11,7 +11,7 @@ import fr.rob.login.security.authentication.jwt.JWTAuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTResultGame
 import io.jsonwebtoken.jackson.io.JacksonDeserializer
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class JWTAuthenticationOpcodeTest : JWTBaseTest() {
 

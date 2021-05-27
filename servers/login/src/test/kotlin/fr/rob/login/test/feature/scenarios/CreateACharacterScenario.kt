@@ -14,12 +14,9 @@ import fr.rob.login.game.character.create.CharacterCreateProcess.Companion.MAX_C
 import fr.rob.login.opcode.ClientOpcodeLogin
 import fr.rob.login.opcode.ServerOpcodeLogin
 import fr.rob.login.test.feature.AuthenticatedScenario
-import fr.rob.login.test.feature.fixtures.UNUSED_NAME_1
-import fr.rob.login.test.feature.fixtures.UNUSED_NAME_2
-import fr.rob.login.test.feature.fixtures.USER_1_ID
-import fr.rob.login.test.feature.fixtures.USER_1_MAIN_CHARACTER_NAME
+import fr.rob.login.test.feature.fixtures.* // ktlint-disable no-wildcard-imports
 import fr.rob.login.test.feature.service.store.CharacterStore
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class CreateACharacterScenario : AuthenticatedScenario() {
 
@@ -54,6 +51,26 @@ class CreateACharacterScenario : AuthenticatedScenario() {
 
         val character = CharacterCreateProtos.CharacterCreate.newBuilder()
             .setName(USER_1_MAIN_CHARACTER_NAME)
+            .build()
+
+        val packet = Packet(ClientOpcodeLogin.CHARACTER_CREATE, character.toByteArray())
+
+        // Act & Assert
+        sendAndShouldReceiveCallback(client, packet) { opcode, _, msg ->
+            opcode == ServerOpcodeLogin.CHARACTER_CREATE_RESULT
+            && msg is CharacterCreateProtos.CharacterCreateResult
+            && msg.result == CharacterCreateOpcode.RESULT_ERROR
+            && msg.code == ERR_CHARACTER_NAME_ALREADY_TAKEN
+        }
+    }
+
+    @Test
+    fun `attempt to create a character with a name already taken by another player`() {
+        // Arrange
+        authAs(USER_1_ID)
+
+        val character = CharacterCreateProtos.CharacterCreate.newBuilder()
+            .setName(USER_3_MAIN_CHARACTER_NAME)
             .build()
 
         val packet = Packet(ClientOpcodeLogin.CHARACTER_CREATE, character.toByteArray())

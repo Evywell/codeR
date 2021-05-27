@@ -5,8 +5,8 @@ import fr.rob.entities.CharacterProtos
 import fr.rob.login.game.SessionInitializerProcess
 import fr.rob.login.network.LoginSessionData
 import fr.rob.login.test.unit.sandbox.game.character.stand.SessionInitializerProcess_CharacterRepository
-import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class SessionInitializerProcessTest {
 

@@ -10,8 +10,8 @@ import fr.rob.login.security.authentication.jwt.JWTAuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTResultGame
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
-import org.junit.Test
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 
 class JWTAuthenticationProcessTest : JWTBaseTest() {
 

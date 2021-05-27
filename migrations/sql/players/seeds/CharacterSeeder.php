@@ -14,13 +14,22 @@ class CharacterSeeder extends AbstractSeed
      */
     public function run()
     {
+        $now = (new DateTime())->format('Y-m-d H:i:s');
+
         $characters = [
             [
                 'id' => 1,
                 'name' => 'Evywell',
                 'level' => CURRENT_LEVEL_MAX,
                 'user_id' => 1,
-                'last_selected_at' => (new DateTime())->format('Y-m-d H:i:s')
+                'last_selected_at' => $now
+            ],
+            [
+                'id' => 2,
+                'name' => 'Tarthas',
+                'level' => CURRENT_LEVEL_MAX,
+                'user_id' => 3, // We skip the user_id 2 because it a specific user (no characters)
+                'last_selected_at' => $now
             ]
         ];
 

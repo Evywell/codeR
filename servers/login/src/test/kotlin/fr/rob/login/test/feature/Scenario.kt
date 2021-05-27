@@ -7,8 +7,8 @@ import fr.rob.login.test.feature.service.exception.TimeoutException
 import fr.rob.login.test.feature.service.network.Client
 import fr.rob.login.test.feature.service.store.CharacterStore
 import fr.rob.login.test.feature.service.store.StoreManager
-import org.junit.After
-import org.junit.Before
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import java.io.File
 
 open class Scenario {
@@ -20,7 +20,7 @@ open class Scenario {
     protected val appServer = LoginApplication(ENV_DEV)
     val client = Client(appClient)
 
-    @Before
+    @BeforeEach
     fun setUp() {
         initializeStores()
 
@@ -32,7 +32,7 @@ open class Scenario {
         client.connectTo(appServer.server)
     }
 
-    @After
+    @AfterEach
     fun cleanTest() {
         appServer.stop()
         client.reset()

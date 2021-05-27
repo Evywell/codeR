@@ -17,8 +17,12 @@ class CharacterRepository(private val db: Connection) : CharacterRepositoryInter
         return hasNextAndClose(stmt.resultSet)
     }
 
-    override fun insert(userId: Int, characterSkeleton: CharacterCreateProtos.CharacterCreate): CharacterProtos.Character {
-        val character = buildCharacter(characterSkeleton.name, 1) // @todo change this into a constant
+    override fun insert(
+        userId: Int,
+        characterSkeleton: CharacterCreateProtos.CharacterCreate,
+        level: Int
+    ): CharacterProtos.Character {
+        val character = buildCharacter(characterSkeleton.name, level)
 
         val stmt = db.getPreparedStatement(INS_NEW_CHARACTER)
 

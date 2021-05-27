@@ -1,4 +1,4 @@
-package fr.rob.login.test.unit.domain.character.stand
+package fr.rob.login.test.unit.domain.game.character.stand
 
 import fr.rob.core.network.session.exception.UnauthenticatedSessionException
 import fr.rob.core.test.unit.sandbox.network.NISession
@@ -6,9 +6,8 @@ import fr.rob.entities.CharacterProtos
 import fr.rob.login.game.character.stand.CharacterStandProcess
 import fr.rob.login.network.LoginSessionData
 import fr.rob.login.test.unit.sandbox.game.character.stand.CharacterStandProcess_CharacterStandRepository
-import org.junit.Test
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 
 class CharacterStandProcessTest {
 
@@ -31,16 +30,16 @@ class CharacterStandProcessTest {
         val characterStand = characterStandProcess.createStandFromSession(session)
 
         // Assert
-        assertEquals(2, characterStand.charactersCount)
-        assertEquals(13, characterStand.currentCharacterId)
+        Assertions.assertEquals(2, characterStand.charactersCount)
+        Assertions.assertEquals(13, characterStand.currentCharacterId)
 
-        assertEquals(13, characterStand.getCharacters(0).id)
-        assertEquals("T101", characterStand.getCharacters(0).name)
-        assertEquals(60, characterStand.getCharacters(0).level)
+        Assertions.assertEquals(13, characterStand.getCharacters(0).id)
+        Assertions.assertEquals("T101", characterStand.getCharacters(0).name)
+        Assertions.assertEquals(60, characterStand.getCharacters(0).level)
 
-        assertEquals(22, characterStand.getCharacters(1).id)
-        assertEquals("T102", characterStand.getCharacters(1).name)
-        assertEquals(54, characterStand.getCharacters(1).level)
+        Assertions.assertEquals(22, characterStand.getCharacters(1).id)
+        Assertions.assertEquals("T102", characterStand.getCharacters(1).name)
+        Assertions.assertEquals(54, characterStand.getCharacters(1).level)
     }
 
     @Test
@@ -49,7 +48,7 @@ class CharacterStandProcessTest {
         val session = NISession()
 
         // Assert
-        assertThrows(UnauthenticatedSessionException::class.java) {
+        Assertions.assertThrows(UnauthenticatedSessionException::class.java) {
             // Act
             characterStandProcess.createStandFromSession(session)
         }
