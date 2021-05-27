@@ -13,6 +13,7 @@ class CharacterCreateProcess(private val characterRepository: CharacterRepositor
      *  1. A name with MIN_CHARACTER_NAME_CHARS to MAX_CHARACTER_NAME_CHARS characters
      *  2. A maximum of MAX_CHARACTERS_PER_USER characters per user
      *  3. A unique character name
+     *  4. A name without special characters
      */
     fun canCreate(
         charactersHolder: CharactersHolderInterface,
@@ -21,14 +22,17 @@ class CharacterCreateProcess(private val characterRepository: CharacterRepositor
         val characterName = characterSkeleton.name
         val characterNameLength = characterName.length
 
-        if (!characterName.matches(Regex("^[a-z]+$", RegexOption.IGNORE_CASE))) {
+        if (!characterName.matches(Regex(NAME_REGEX, RegexOption.IGNORE_CASE))) {
             return CreateCharacterState(true, ERR_INVALID_CHARACTER_NAME)
         }
 
-        if (isCharacterNameTooSmall(characterNameLength) || isCharacterNameTooBig(characterNameLength)) {
+        val isCharacterNameTooSmall = isCharacterNameTooSmall(characterNameLength)
+        val isCharacterNameTooBig = isCharacterNameTooBig(characterNameLength)
+
+        if (isCharacterNameTooSmall || isCharacterNameTooBig) {
             return CreateCharacterState(
                 true,
-                if (isCharacterNameTooSmall(characterNameLength)) ERR_CHARACTER_NAME_TOO_SMALL else ERR_CHARACTER_NAME_TOO_BIG
+                if (isCharacterNameTooSmall) ERR_CHARACTER_NAME_TOO_SMALL else ERR_CHARACTER_NAME_TOO_BIG
             )
         }
 
@@ -75,6 +79,8 @@ class CharacterCreateProcess(private val characterRepository: CharacterRepositor
         const val ERR_MAX_CHARACTERS_PER_USER = "err_max_characters_per_user"
         const val ERR_CHARACTER_NAME_ALREADY_TAKEN = "err_character_name_already_taken"
         const val ERR_INVALID_CHARACTER_NAME = "err_invalid_character_name"
+
+        private const val NAME_REGEX = "^[a-z]+$"
     }
 
     data class CreateCharacterState(var hasError: Boolean, var error: String? = null)

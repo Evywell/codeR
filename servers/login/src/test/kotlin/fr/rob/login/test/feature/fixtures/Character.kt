@@ -17,6 +17,13 @@ const val USER_1_MAIN_CHARACTER_NAME = "Evywell"
 const val USER_2_ID = 2
 
 /**
+ * USER 3 dataset
+ */
+const val USER_3_CHARACTERS_COUNT = 1
+const val USER_3_MAIN_CHARACTER_ID = 2
+const val USER_3_MAIN_CHARACTER_NAME = "Tarthas"
+
+/**
  * Unused character names
  */
 const val UNUSED_NAME_1 = "Imnotused"

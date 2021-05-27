@@ -13,7 +13,8 @@ class SessionInitializerProcess_CharacterRepository(private val characters: Muta
 
     override fun insert(
         userId: Int,
-        characterSkeleton: CharacterCreateProtos.CharacterCreate
+        characterSkeleton: CharacterCreateProtos.CharacterCreate,
+        level: Int
     ): CharacterProtos.Character {
         TODO("Not yet implemented")
     }

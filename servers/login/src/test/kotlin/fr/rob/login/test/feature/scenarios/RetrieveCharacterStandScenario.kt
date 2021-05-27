@@ -8,8 +8,8 @@ import fr.rob.login.opcode.ServerOpcodeLogin
 import fr.rob.login.test.feature.AuthenticatedScenario
 import fr.rob.login.test.feature.fixtures.* // ktlint-disable no-wildcard-imports
 import fr.rob.login.test.feature.service.store.CharacterStore
-import org.junit.Test
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 
 class RetrieveCharacterStandScenario : AuthenticatedScenario() {
 

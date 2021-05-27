@@ -12,8 +12,8 @@ import fr.rob.login.security.authentication.dev.DevAuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationOpcode
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationProcess
 import fr.rob.login.test.unit.BaseTest
-import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class LoginOpcodeHandlerTest : BaseTest() {
 
