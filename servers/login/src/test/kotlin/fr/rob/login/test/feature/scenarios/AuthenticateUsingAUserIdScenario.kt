@@ -7,11 +7,10 @@ import fr.rob.login.opcode.ServerOpcodeLogin
 import fr.rob.login.security.authentication.AuthenticationOpcode
 import fr.rob.login.security.authentication.AuthenticationProcess
 import fr.rob.login.test.feature.Scenario
-import org.junit.jupiter.api.Test
 
 class AuthenticateUsingAUserIdScenario : Scenario() {
 
-    @Test
+    // @todo: remove
     fun `valid user id`() {
         // Arrange
         val auth = AuthenticationProto.DevAuthentication
@@ -28,7 +27,7 @@ class AuthenticateUsingAUserIdScenario : Scenario() {
         }
     }
 
-    @Test
+    // @todo: remove
     fun `invalid user id`() {
         // Arrange
         val auth = AuthenticationProto.DevAuthentication

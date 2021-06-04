@@ -9,11 +9,10 @@ import fr.rob.login.test.feature.AuthenticatedScenario
 import fr.rob.login.test.feature.fixtures.* // ktlint-disable no-wildcard-imports
 import fr.rob.login.test.feature.service.store.CharacterStore
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Test
 
 class RetrieveCharacterStandScenario : AuthenticatedScenario() {
 
-    @Test
+    // todo: remove
     fun `as authenticated user with characters, I should retrieve my character stand`() {
         // Arrange
         authAs(USER_1_ID)
@@ -39,7 +38,7 @@ class RetrieveCharacterStandScenario : AuthenticatedScenario() {
         Assertions.assertEquals(USER_1_MAIN_CHARACTER_NAME, mainCharacter.name)
     }
 
-    @Test
+    // todo: remove
     fun `as authenticated user with no characters, I should have an empty character stand`() {
         // Arrange
         authAs(USER_2_ID)

@@ -14,18 +14,37 @@ ktlint {
 dependencies {
     compile project(':core')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-
+    compile group: 'io.cucumber', name: 'cucumber-picocontainer', version: '6.10.4'
     testCompile project(':core').sourceSets.test.output
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.1")
+    testImplementation 'io.cucumber:cucumber-java:6.10.4'
+    testImplementation 'io.cucumber:cucumber-junit:6.10.4'
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
 }
 
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
 test {
     useJUnitPlatform()
+}
+
+task cucumber() {
+    dependsOn assemble, testClasses
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--glue', 'fr.rob.login.test.cucumber', 'src/test/kotlin']
+        }
+    }
 }
 
 mainClassName = 'fr.rob.login.Main'
