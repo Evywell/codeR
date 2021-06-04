@@ -1,0 +1,26 @@
+package fr.rob.core.test.cucumber.service
+
+import fr.rob.core.network.Packet
+import fr.rob.core.network.Server
+import fr.rob.core.network.session.Session
+import fr.rob.core.opcode.OpcodeHandler
+import fr.rob.core.test.cucumber.service.stack.ServerStack
+import fr.rob.core.test.cucumber.service.stack.StackItem
+
+class Server(opcodeHandler: OpcodeHandler) : Server() {
+
+    private val stack = ServerStack(opcodeHandler)
+
+    init {
+        opcodeHandler.initialize()
+        stack.start()
+    }
+
+    fun receiveMessage(session: Session, packet: Packet) {
+        stack.pushItem(StackItem(packet.readOpcode(), session, packet))
+    }
+
+    fun stop() {
+        stack.shutdown()
+    }
+}

@@ -97,8 +97,14 @@ task-test:
 
 .PHONY: login-test
 login-test:
-	@make -i seed
 	$(GRADLE_TASK) :servers:login:test
+	@make login-cucumber
+
+.PHONY: login-test
+login-cucumber:
+	@make -i seed
+	$(GRADLE_TASK) :servers:login:cucumber
+
 
 .PHONY: setup-tests
 setup-tests: servers/game/src/test/resources/private.pem
