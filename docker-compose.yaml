@@ -5,6 +5,7 @@ networks:
 
 volumes:
   mysqldata:
+  gradlecache:
 
 services:
   protobuf:
@@ -24,6 +25,7 @@ services:
         - GROUP_ID=${GROUP_ID:-1000}
     volumes:
       - .:/mnt/app
+      - gradlecache:/home/gradle/.gradle
     ports:
       - 5005:5005
     networks:
