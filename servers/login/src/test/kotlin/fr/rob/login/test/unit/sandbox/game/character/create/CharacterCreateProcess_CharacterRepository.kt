@@ -11,7 +11,7 @@ class CharacterCreateProcess_CharacterRepository : CharacterRepositoryInterface 
     }
 
     override fun insert(
-        userId: Int,
+        accountId: Int,
         characterSkeleton: CharacterCreateProtos.CharacterCreate,
         level: Int
     ): CharacterProtos.Character = CharacterProtos.Character.newBuilder()
@@ -21,7 +21,7 @@ class CharacterCreateProcess_CharacterRepository : CharacterRepositoryInterface 
 
     override fun setCurrentCharacter(character: CharacterProtos.Character) {}
 
-    override fun allByUserId(userId: Int): MutableList<CharacterProtos.Character> {
+    override fun allByAccountId(accountId: Int): MutableList<CharacterProtos.Character> {
         TODO("Not yet implemented")
     }
 }

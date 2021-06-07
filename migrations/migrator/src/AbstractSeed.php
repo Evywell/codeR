@@ -26,10 +26,13 @@ class AbstractSeed extends BaseAbstractSeed
      */
     protected function truncateAndInsert(string $table, array $data): void
     {
+        $this->execute("SET FOREIGN_KEY_CHECKS=0;");
         $this->table($table)->truncate();
 
         $this->table($table)
              ->insert($data)
              ->save();
+
+        $this->execute("SET FOREIGN_KEY_CHECKS=1;");
     }
 }

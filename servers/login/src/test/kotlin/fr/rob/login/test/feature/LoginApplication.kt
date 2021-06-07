@@ -48,10 +48,6 @@ class LoginApplication(override val env: String = ENV_TEST) : BaseApplication(en
             CharacterCreateProcess(characterRepository)
         }
 
-        processManager.registerProcess(SessionInitializerProcess::class) {
-            SessionInitializerProcess(characterRepository)
-        }
-
         server = TestLoginServer(this)
         server.start()
     }

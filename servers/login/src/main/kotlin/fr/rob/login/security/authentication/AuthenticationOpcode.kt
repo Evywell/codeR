@@ -19,6 +19,7 @@ abstract class AuthenticationOpcode(
         val authState = authenticationProcess.authenticate(session, message)
 
         if (authState.isAuthenticated) {
+            // Load the session data
             sessionInitializerProcess.execute(session)
 
             authenticationResult.result = AUTHENTICATION_RESULT_SUCCESS
@@ -31,7 +32,7 @@ abstract class AuthenticationOpcode(
     }
 
     companion object {
-        const val AUTHENTICATION_RESULT_ERROR = 0
-        const val AUTHENTICATION_RESULT_SUCCESS = 1
+        const val AUTHENTICATION_RESULT_ERROR = false
+        const val AUTHENTICATION_RESULT_SUCCESS = true
     }
 }

@@ -6,7 +6,8 @@ else
 	OS := linux
 endif
 
-SUPPORTED_COMMANDS := migration-create seed-create
+# @todo: replace this by variables
+SUPPORTED_COMMANDS := migration-players-create seed-create
 SUPPORTS_MAKE_ARGS := $(findstring $(firstword $(MAKECMDGOALS)), $(SUPPORTED_COMMANDS))
 ifneq "$(SUPPORTS_MAKE_ARGS)" ""
   COMMAND_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
@@ -152,9 +153,8 @@ seed: migrations/migrator/vendor/autoload.php
 	$(PHINX) seed:run $(PHINX_PLAYERS_CONFIG_ARG) -e development
 
 .PHONY: migration-create
-migration-create: migrations/migrator/vendor/autoload.php
-	$(PHINX) create $(COMMAND_ARGS) $(PHINX_CONFIG_ARG)
-	$(PHINX) create $(COMMAND_ARGS) $(PHINX_CONFIG_ARG)
+migration-players-create: migrations/migrator/vendor/autoload.php
+	$(PHINX) create $(COMMAND_ARGS) $(PHINX_PLAYERS_CONFIG_ARG)
 
 .PHONY: seed-create
 seed-create: migrations/migrator/vendor/autoload.php

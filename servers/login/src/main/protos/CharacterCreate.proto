@@ -18,7 +18,7 @@ message CharacterCreateResult {
     int32 level = 3;
   }
 
-  int32 result = 1; // Success (1) or Error (0)
+  bool result = 1; // Success (1) or Error (0)
   string code = 2; // Error code
   Character character = 3;
 }

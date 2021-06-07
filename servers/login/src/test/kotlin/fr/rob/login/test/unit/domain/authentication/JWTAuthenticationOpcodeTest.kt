@@ -6,6 +6,7 @@ import fr.rob.core.test.unit.sandbox.network.NISession
 import fr.rob.entities.AuthenticationProto
 import fr.rob.login.game.SessionInitializerProcess
 import fr.rob.login.game.character.CharacterRepositoryInterface
+import fr.rob.login.security.account.AccountProcess
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationOpcode
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTResultGame
@@ -18,7 +19,10 @@ class JWTAuthenticationOpcodeTest : JWTBaseTest() {
     @Test
     fun `call the authentication opcode`() {
         // Arrange
-        val sessionInitializerProcess = SessionInitializerProcess(mock<CharacterRepositoryInterface>())
+        val sessionInitializerProcess = SessionInitializerProcess(
+            mock<CharacterRepositoryInterface>(),
+            processManager.getOrMakeProcess(AccountProcess::class)
+        )
 
         val mapping = HashMap<String, Class<*>>()
         mapping["game"] = JWTResultGame::class.java

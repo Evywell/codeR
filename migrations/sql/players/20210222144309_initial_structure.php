@@ -21,13 +21,23 @@ final class InitialStructure extends AbstractMigration
     public function change(): void
     {
         $this
-            ->table('characters')
+            ->table('accounts', ['signed' => false])
             ->addColumn('user_id', 'integer', ['signed' => false])
+            ->addColumn('is_administrator', 'boolean')
+            ->addColumn('banned_at', 'datetime', ['null' => true])
+            ->addTimestamps()
+            ->addIndex('user_id', ['unique' => true])
+            ->create();
+
+        $this
+            ->table('characters')
+            ->addColumn('account_id', 'integer', ['signed' => false, 'null' => true])
             ->addColumn('name', 'string')
             ->addColumn('level', 'integer', ['limit' => MysqlAdapter::INT_TINY, 'signed' => false])
             ->addColumn('last_selected_at', 'datetime')
             ->addTimestamps()
             ->addIndex('name', ['unique' => true])
+            ->addForeignKey('account_id', 'accounts', 'id', ['delete' => 'SET_NULL'])
             ->create();
     }
 
