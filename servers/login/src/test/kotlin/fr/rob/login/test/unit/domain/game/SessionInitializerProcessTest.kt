@@ -4,6 +4,8 @@ import fr.rob.core.test.unit.sandbox.network.NISession
 import fr.rob.entities.CharacterProtos
 import fr.rob.login.game.SessionInitializerProcess
 import fr.rob.login.network.LoginSessionData
+import fr.rob.login.security.account.AccountProcess
+import fr.rob.login.test.unit.sandbox.game.account.AccountProcess_AccountRepository
 import fr.rob.login.test.unit.sandbox.game.character.stand.SessionInitializerProcess_CharacterRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -14,7 +16,8 @@ class SessionInitializerProcessTest {
     fun `initialize an authenticated session`() {
         // Arrange
         val characterRepository = SessionInitializerProcess_CharacterRepository(getCharactersFixtures())
-        val sessionInitializerProcess = SessionInitializerProcess(characterRepository)
+        val accountProcess = AccountProcess(AccountProcess_AccountRepository())
+        val sessionInitializerProcess = SessionInitializerProcess(characterRepository, accountProcess)
 
         val session = NISession.buildAuthenticated()
 

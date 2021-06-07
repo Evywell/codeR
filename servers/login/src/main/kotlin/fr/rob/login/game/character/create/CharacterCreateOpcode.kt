@@ -46,7 +46,7 @@ class CharacterCreateOpcode(private val createCharacterProcess: CharacterCreateP
     }
 
     companion object {
-        const val RESULT_SUCCESS = 1
-        const val RESULT_ERROR = 0
+        const val RESULT_SUCCESS = true
+        const val RESULT_ERROR = false
     }
 }

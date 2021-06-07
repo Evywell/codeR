@@ -12,7 +12,7 @@ class SessionInitializerProcess_CharacterRepository(private val characters: Muta
     }
 
     override fun insert(
-        userId: Int,
+        accountId: Int,
         characterSkeleton: CharacterCreateProtos.CharacterCreate,
         level: Int
     ): CharacterProtos.Character {
@@ -23,5 +23,5 @@ class SessionInitializerProcess_CharacterRepository(private val characters: Muta
         TODO("Not yet implemented")
     }
 
-    override fun allByUserId(userId: Int): MutableList<CharacterProtos.Character> = characters
+    override fun allByAccountId(accountId: Int): MutableList<CharacterProtos.Character> = characters
 }

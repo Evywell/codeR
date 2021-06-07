@@ -16,6 +16,8 @@ import fr.rob.login.game.character.stand.CharacterStandProcess
 import fr.rob.login.game.character.stand.CharacterStandRepository
 import fr.rob.login.network.netty.NettyLoginServer
 import fr.rob.login.security.SecurityModule
+import fr.rob.login.security.account.AccountProcess
+import fr.rob.login.security.account.AccountRepository
 
 open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, env: String) : BaseApplication(env) {
 
@@ -29,6 +31,7 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
         config!!.retrieveConfig(CONFIG_KEY_DATABASES)
 
         val characterRepository = CharacterRepository(connectionManager.getConnection(DB_PLAYERS)!!)
+        val accountRepository = AccountRepository(connectionManager.getConnection(DB_PLAYERS)!!)
 
         processManager.registerProcess(CharacterStandProcess::class) {
             CharacterStandProcess(CharacterStandRepository(connectionManager.getConnection(DB_PLAYERS)!!))
@@ -38,8 +41,12 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
             CharacterCreateProcess(characterRepository)
         }
 
+        processManager.registerProcess(AccountProcess::class) {
+            AccountProcess(accountRepository)
+        }
+
         processManager.registerProcess(SessionInitializerProcess::class) {
-            SessionInitializerProcess(characterRepository)
+            SessionInitializerProcess(characterRepository, processManager.getOrMakeProcess(AccountProcess::class))
         }
 
         runServer()

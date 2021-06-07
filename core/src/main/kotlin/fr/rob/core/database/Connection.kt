@@ -25,8 +25,8 @@ class Connection(
 
     var eventManager: EventManagerInterface? = null
 
-    constructor(dbname: String, user: String, password: String)
-        : this("localhost", 3306, user, password, dbname)
+    constructor(dbname: String, user: String, password: String) :
+            this("localhost", 3306, user, password, dbname)
 
     fun executeStatement(sql: String): Statement? {
         connect()
@@ -41,13 +41,19 @@ class Connection(
         return null
     }
 
-    fun createPreparedStatement(sql: String): PreparedStatement? {
+    fun createPreparedStatement(sql: String, returnKeys: Boolean): PreparedStatement? {
         connect()
 
         try {
             val stopwatch = StopWatch()
             stopwatch.start()
-            val stmt = PreparedStatement(this, sql, connection.prepareStatement(sql))
+
+            val stmt: PreparedStatement = if (returnKeys) PreparedStatement(
+                this,
+                sql,
+                connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+            ) else PreparedStatement(this, sql, connection.prepareStatement(sql))
+
             stopwatch.stop()
 
             eventManager?.dispatch(AfterCreatePreparedStatementEvent(sql, stopwatch.diffTime()))
@@ -60,8 +66,8 @@ class Connection(
         return null
     }
 
-    fun getPreparedStatement(sql: String): PreparedStatement {
-        return pool.getPreparedStatement(sql)
+    fun getPreparedStatement(sql: String, returnKeys: Boolean = false): PreparedStatement {
+        return pool.getPreparedStatement(sql, returnKeys)
     }
 
     fun triggerEvent(eventName: String, event: EventInterface) {
@@ -100,5 +106,4 @@ class Connection(
             e.printStackTrace()
         }
     }
-
 }

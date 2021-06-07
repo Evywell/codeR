@@ -1,0 +1,15 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+    id 'java'
+    id 'application'
+}
+
+dependencies {
+    implementation("com.github.ajalt.clikt:clikt:3.2.0")
+}
+
+run {
+    standardInput = System.in
+}
+
+mainClassName = 'fr.rob.cli.Main'

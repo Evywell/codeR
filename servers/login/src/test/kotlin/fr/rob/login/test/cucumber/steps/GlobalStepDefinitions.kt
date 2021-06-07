@@ -24,12 +24,12 @@ class GlobalStepDefinitions(private val context: LoginContext) {
 
     @Then("the packet should be a success")
     fun thePacketShouldBeASuccess() {
-        assertEquals(1, getMessageResult())
+        assertEquals(true, getMessageResult())
     }
 
     @Then("the packet should be an error")
     fun thePacketShouldBeAnError() {
-        assertEquals(0, getMessageResult())
+        assertEquals(false, getMessageResult())
     }
 
     @Then("the error message should be {string}")
@@ -42,7 +42,7 @@ class GlobalStepDefinitions(private val context: LoginContext) {
         context.close()
     }
 
-    private fun getMessageResult(): Int = getMessageProperty("result") as Int
+    private fun getMessageResult(): Boolean = getMessageProperty("result") as Boolean
 
     private fun getMessageCode(): String = getMessageProperty("code") as String
 

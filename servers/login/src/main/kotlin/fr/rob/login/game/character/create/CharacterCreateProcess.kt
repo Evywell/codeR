@@ -5,6 +5,7 @@ import fr.rob.entities.CharacterCreateProtos
 import fr.rob.entities.CharacterProtos
 import fr.rob.login.game.character.CharacterRepositoryInterface
 import fr.rob.login.game.character.CharactersHolderInterface
+import fr.rob.login.network.LoginSessionData
 
 class CharacterCreateProcess(private val characterRepository: CharacterRepositoryInterface) {
 
@@ -55,7 +56,7 @@ class CharacterCreateProcess(private val characterRepository: CharacterRepositor
      * No checks are made here, please use `canCreate` method
      */
     fun create(session: Session, characterSkeleton: CharacterCreateProtos.CharacterCreate): CharacterProtos.Character {
-        val character = characterRepository.insert(session.userId!!, characterSkeleton)
+        val character = characterRepository.insert((session.data as LoginSessionData).account.id, characterSkeleton)
 
         // Define the new character as the current one
         characterRepository.setCurrentCharacter(character)

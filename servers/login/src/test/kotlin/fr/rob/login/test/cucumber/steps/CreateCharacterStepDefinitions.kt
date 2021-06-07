@@ -74,6 +74,6 @@ class CreateCharacterStepDefinitions(private val context: LoginContext) {
 
     @After
     fun cleanCharacters() {
-        context.getPlayersDatabase().executeStatement("DELETE FROM characters WHERE id NOT IN (1) and user_id = 1;")
+        context.getPlayersDatabase().executeStatement("DELETE FROM characters WHERE id NOT IN (1) and account_id = 1;")
     }
 }

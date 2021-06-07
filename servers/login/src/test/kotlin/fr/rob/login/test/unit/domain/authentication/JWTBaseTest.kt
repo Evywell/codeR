@@ -3,10 +3,10 @@ package fr.rob.login.test.unit.domain.authentication
 import fr.rob.core.auth.jwt.JWTDecoderService
 import fr.rob.core.process.ProcessManager
 import fr.rob.core.security.PublicKeyReader
-import fr.rob.core.test.unit.BaseTest
 import fr.rob.login.security.authentication.AuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTResultGame
+import fr.rob.login.test.unit.BaseTest
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.jackson.io.JacksonDeserializer
 import org.bouncycastle.util.io.pem.PemReader

@@ -6,9 +6,11 @@ import fr.rob.login.opcode.ClientOpcodeLogin
 import fr.rob.login.security.authentication.AuthenticationOpcode
 import fr.rob.login.security.authentication.AuthenticationProcess
 import fr.rob.login.test.cucumber.context.LoginContext
+import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 
 class AuthenticationStepDefinitions(private val context: LoginContext) {
@@ -46,5 +48,24 @@ class AuthenticationStepDefinitions(private val context: LoginContext) {
 
         assertEquals(AuthenticationOpcode.AUTHENTICATION_RESULT_ERROR, authResult.result)
         assertEquals(AuthenticationProcess.ERROR_BAD_CREDENTIALS, authResult.code)
+    }
+
+    @Given("the user {int} does not have an account")
+    fun theUserXDoesNotHaveAnAccount(userId: Int) {
+        assertFalse(hasUserAnAccount(userId))
+    }
+
+    @Given("the user {int} should have an account")
+    fun theUserXShouldHaveAnAccount(userId: Int) {
+        assertTrue(hasUserAnAccount(userId))
+    }
+
+    private fun hasUserAnAccount(userId: Int): Boolean {
+        val stmt = context.getPlayersDatabase().getPreparedStatement("SELECT 1 FROM accounts WHERE user_id = ?")
+
+        stmt.setInt(1, userId)
+        stmt.execute()
+
+        return stmt.resultSet.next()
     }
 }

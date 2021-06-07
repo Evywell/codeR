@@ -1,11 +1,13 @@
 package fr.rob.login.network
 
 import fr.rob.core.network.session.SessionData
+import fr.rob.entities.AccountProto.Account
 import fr.rob.entities.CharacterProtos.Character
 import fr.rob.login.game.character.CharactersHolderInterface
 
 class LoginSessionData : SessionData, CharactersHolderInterface {
 
+    lateinit var account: Account
     var characters: MutableList<Character>? = null
 
     override fun getCharactersNumber(): Int = characters?.size ?: 0
