@@ -2,11 +2,9 @@ package fr.rob.game.domain.network.netty
 
 import fr.rob.core.network.Packet
 import fr.rob.core.network.netty.NettyServerHandler
-import fr.rob.core.network.netty.NettySession
 import fr.rob.core.network.session.Session
-import fr.rob.game.domain.opcode.ClientOpcodeHandler
 import fr.rob.core.opcode.OpcodeHandler
-import io.netty.channel.ChannelHandlerContext
+import fr.rob.game.domain.opcode.ClientOpcodeHandler
 
 class NettyGameServerHandler(private val nettyServer: NettyGameServer) : NettyServerHandler(nettyServer) {
 

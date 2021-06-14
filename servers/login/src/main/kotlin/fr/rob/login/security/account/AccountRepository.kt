@@ -18,11 +18,7 @@ class AccountRepository(private val db: Connection) : AccountRepositoryInterface
             return null
         }
 
-        return Account.newBuilder()
-            .setId(rs.getInt(1))
-            .setUserId(rs.getInt(2))
-            .setIsAdministrator(rs.getBoolean(3))
-            .build()
+        return AccountBuilder.build(rs.getInt(1), rs.getInt(2), rs.getBoolean(3), rs.getString(4))
     }
 
     override fun insert(accountSkeleton: Account): Account {
@@ -30,6 +26,7 @@ class AccountRepository(private val db: Connection) : AccountRepositoryInterface
 
         stmt.setInt(1, accountSkeleton.userId)
         stmt.setBoolean(2, accountSkeleton.isAdministrator)
+        stmt.setString(3, accountSkeleton.name)
 
         stmt.executeUpdate()
 
@@ -46,10 +43,21 @@ class AccountRepository(private val db: Connection) : AccountRepositoryInterface
             .build()
     }
 
+    override fun updateName(account: Account, accountName: String) {
+        val stmt = db.getPreparedStatement(UPDATE_ACCOUNT_NAME)
+
+        stmt.setString(1, accountName)
+        stmt.setInt(2, account.id)
+
+        stmt.execute()
+    }
+
     companion object {
         const val SEL_ACCOUNT_BY_USER_ID =
-            "SELECT id, user_id, is_administrator, banned_at FROM accounts WHERE user_id = ?;"
+            "SELECT id, user_id, is_administrator, name, banned_at FROM accounts WHERE user_id = ?;"
 
-        const val INS_ACCOUNT = "INSERT INTO accounts (user_id, is_administrator) VALUES (?, ?);"
+        const val INS_ACCOUNT = "INSERT INTO accounts (user_id, is_administrator, name) VALUES (?, ?, ?);"
+
+        const val UPDATE_ACCOUNT_NAME = "UPDATE accounts SET name = ? WHERE id = ?;"
     }
 }

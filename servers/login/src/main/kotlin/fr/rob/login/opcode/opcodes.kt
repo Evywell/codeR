@@ -6,6 +6,9 @@ class ClientOpcodeLogin {
         const val AUTHENTICATE_SESSION = 0x00
         const val CHARACTER_STAND = 0x01
         const val CHARACTER_CREATE = 0x02
+
+        // Operator
+        const val OPERATOR_CHANGE_STRATEGY = 0x14 // 20
     }
 }
 

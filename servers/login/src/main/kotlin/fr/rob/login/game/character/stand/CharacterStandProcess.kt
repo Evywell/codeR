@@ -2,22 +2,27 @@ package fr.rob.login.game.character.stand
 
 import fr.rob.core.network.session.Session
 import fr.rob.entities.CharacterProtos.Character
-import fr.rob.login.network.LoginSessionData
+import fr.rob.login.network.LoginSession
 import fr.rob.entities.CharacterStandProtos.CharacterStand as CharacterStand
 import fr.rob.entities.CharacterStandProtos.CharacterStand.Character as CharacterStandCharacter
 
 class CharacterStandProcess(private val characterRepository: CharacterStandRepositoryInterface) {
 
     fun createStandFromSession(session: Session): CharacterStand {
+        session as LoginSession
+
         session.isAuthenticatedOrThrowException()
 
         val userId = session.userId!!
 
-        val characters = (session.data as LoginSessionData).characters
-            ?: return CharacterStand.newBuilder()
+        val characters = session.characters
+
+        if (characters.isEmpty()) {
+            return CharacterStand.newBuilder()
                 .setNumCharacters(0)
                 .setCurrentCharacterId(0)
                 .build()
+        }
 
         val tmpCurrentCharacterId = characterRepository.getCurrentCharacterId(userId)
 

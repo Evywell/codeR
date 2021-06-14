@@ -8,6 +8,7 @@ option php_metadata_namespace = "Rob\\Protos\\Meta";
 
 message DevAuthentication {
   int32 userId = 1;
+  string accountName = 2;
 }
 
 message JWTAuthentication {

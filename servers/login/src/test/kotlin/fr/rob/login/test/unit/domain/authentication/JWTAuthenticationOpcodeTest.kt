@@ -2,7 +2,6 @@ package fr.rob.login.test.unit.domain.authentication
 
 import com.nhaarman.mockitokotlin2.mock
 import fr.rob.core.auth.jwt.JWTDecoderService
-import fr.rob.core.test.unit.sandbox.network.NISession
 import fr.rob.entities.AuthenticationProto
 import fr.rob.login.game.SessionInitializerProcess
 import fr.rob.login.game.character.CharacterRepositoryInterface
@@ -10,6 +9,7 @@ import fr.rob.login.security.account.AccountProcess
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationOpcode
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTResultGame
+import fr.rob.login.test.unit.sandbox.network.LoginSessionFactory
 import io.jsonwebtoken.jackson.io.JacksonDeserializer
 import org.junit.Assert
 import org.junit.jupiter.api.Test
@@ -32,9 +32,9 @@ class JWTAuthenticationOpcodeTest : JWTBaseTest() {
         val authProcess = JWTAuthenticationProcess(jwtService)
 
         val opcodeFunction = JWTAuthenticationOpcode(authProcess, sessionInitializerProcess)
-        val session = NISession()
+        val session = LoginSessionFactory.buildSession()
 
-        val jwt = generateJWT(123456, "player@localhost", JWTResultGame("rob", "Rob"))
+        val jwt = generateJWT(123456, "player@localhost", JWTResultGame("rob", "Rob"), ACCOUNT_NAME_1)
 
         val message = AuthenticationProto.JWTAuthentication.newBuilder()
             .setToken(jwt)

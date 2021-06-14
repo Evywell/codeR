@@ -34,7 +34,7 @@ open class JWTBaseTest : BaseTest() {
         }
     }
 
-    protected fun generateJWT(userId: Int, email: String, game: JWTResultGame): String {
+    protected fun generateJWT(userId: Int, email: String, game: JWTResultGame, accountName: String): String {
         val localDate = LocalDate.now().plusDays(1)
 
         return Jwts.builder()
@@ -43,6 +43,7 @@ open class JWTBaseTest : BaseTest() {
             .setIssuedAt(Date())
             .setExpiration(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
             .claim("email", email)
+            .claim("account", accountName)
             .claim("game", game)
             .signWith(getPrivateKey())
             .compact()

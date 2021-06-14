@@ -9,10 +9,9 @@ import fr.rob.core.test.cucumber.service.stack.StackItem
 
 class Server(opcodeHandler: OpcodeHandler) : Server() {
 
-    private val stack = ServerStack(opcodeHandler)
+    private var stack: ServerStack = ServerStack(opcodeHandler)
 
     init {
-        opcodeHandler.initialize()
         stack.start()
     }
 

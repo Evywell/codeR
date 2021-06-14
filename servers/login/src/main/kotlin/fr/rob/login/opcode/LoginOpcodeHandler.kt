@@ -11,6 +11,7 @@ import fr.rob.login.game.character.stand.CharacterStandOpcode
 import fr.rob.login.security.authentication.AuthenticationProcess
 import fr.rob.login.security.authentication.dev.DevAuthenticationOpcode
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationOpcode
+import fr.rob.login.security.strategy.ChangeStrategyOpcode
 
 class LoginOpcodeHandler(
     private val env: String,
@@ -24,6 +25,8 @@ class LoginOpcodeHandler(
 
         registerAutowiredOpcode(ClientOpcodeLogin.CHARACTER_STAND, CharacterStandOpcode::class)
         registerAutowiredOpcode(ClientOpcodeLogin.CHARACTER_CREATE, CharacterCreateOpcode::class)
+
+        registerAutowiredOpcode(ClientOpcodeLogin.OPERATOR_CHANGE_STRATEGY, ChangeStrategyOpcode::class)
     }
 
     private fun registerAuthenticationOpcode() {

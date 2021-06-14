@@ -24,6 +24,7 @@ final class InitialStructure extends AbstractMigration
             ->table('accounts', ['signed' => false])
             ->addColumn('user_id', 'integer', ['signed' => false])
             ->addColumn('is_administrator', 'boolean')
+            ->addColumn('name', 'string')
             ->addColumn('banned_at', 'datetime', ['null' => true])
             ->addTimestamps()
             ->addIndex('user_id', ['unique' => true])

@@ -38,6 +38,12 @@ open class Packet(private var opcode: Int?, private var buffer: ByteArray?) {
         return buffer!!.copyOfRange(currentPos, buffer!!.size)
     }
 
+    fun toBytes(): ByteArray = ByteBuffer
+        .allocate(INTEGER_BYTE_LENGTH + buffer!!.size)
+        .putInt(opcode!!)
+        .put(buffer)
+        .array()
+
     private fun readInt(): Int {
         val value = readableBuffer.int
         currentPos += INTEGER_BYTE_LENGTH

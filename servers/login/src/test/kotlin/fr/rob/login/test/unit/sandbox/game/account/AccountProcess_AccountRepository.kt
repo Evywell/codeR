@@ -12,6 +12,8 @@ class AccountProcess_AccountRepository : AccountRepositoryInterface {
     override fun insert(accountSkeleton: Account): Account {
         TODO("Not yet implemented")
     }
+
+    override fun updateName(account: Account, accountName: String) { }
 }
 
 class AccountProcess_AccountRepository2 : AccountRepositoryInterface {
@@ -24,6 +26,8 @@ class AccountProcess_AccountRepository2 : AccountRepositoryInterface {
     override fun insert(accountSkeleton: Account): Account {
         TODO("Not yet implemented")
     }
+
+    override fun updateName(account: Account, accountName: String) { }
 }
 
 class AccountProcess_AccountRepository3 : AccountRepositoryInterface {
@@ -34,4 +38,6 @@ class AccountProcess_AccountRepository3 : AccountRepositoryInterface {
         .setId(3)
         .setUserId(accountSkeleton.userId)
         .build()
+
+    override fun updateName(account: Account, accountName: String) { }
 }

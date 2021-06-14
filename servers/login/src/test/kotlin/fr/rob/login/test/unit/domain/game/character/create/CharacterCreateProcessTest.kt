@@ -1,6 +1,5 @@
 package fr.rob.login.test.unit.domain.game.character.create
 
-import fr.rob.core.test.unit.sandbox.network.NISession
 import fr.rob.entities.AccountProto.Account
 import fr.rob.entities.CharacterCreateProtos
 import fr.rob.login.game.character.create.CharacterCreateProcess
@@ -9,11 +8,11 @@ import fr.rob.login.game.character.create.CharacterCreateProcess.Companion.ERR_C
 import fr.rob.login.game.character.create.CharacterCreateProcess.Companion.ERR_CHARACTER_NAME_TOO_SMALL
 import fr.rob.login.game.character.create.CharacterCreateProcess.Companion.ERR_INVALID_CHARACTER_NAME
 import fr.rob.login.game.character.create.CharacterCreateProcess.Companion.ERR_MAX_CHARACTERS_PER_USER
-import fr.rob.login.network.LoginSessionData
 import fr.rob.login.test.unit.sandbox.game.character.create.CharacterCreateProcess_CharacterRepository
 import fr.rob.login.test.unit.sandbox.game.character.create.CharacterCreateProcess_CharactersHolder
 import fr.rob.login.test.unit.sandbox.game.character.create.CharacterCreateProcess_CharactersHolder2
 import fr.rob.login.test.unit.sandbox.game.character.create.CharacterCreateProcess_CharactersHolder3
+import fr.rob.login.test.unit.sandbox.network.LoginSessionFactory
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -27,21 +26,18 @@ class CharacterCreateProcessTest {
         // Arrange
         val repository = CharacterCreateProcess_CharacterRepository()
         val process = CharacterCreateProcess(repository)
-        val session = NISession.buildAuthenticated()
-        val sessionData = LoginSessionData()
+        val session = LoginSessionFactory.buildAuthenticatedSession()
 
-        sessionData.account = Account.newBuilder()
+        session.account = Account.newBuilder()
             .setId(1)
             .build()
-
-        session.data = sessionData
 
         val characterCreateRequest = CharacterCreateProtos.CharacterCreate.newBuilder()
             .setName("Chris")
             .build()
 
         // Act
-        val character = process.create(session, characterCreateRequest)
+        val character = process.create(session.account.id, characterCreateRequest)
 
         // Assert
         assertEquals("Chris", character.name)

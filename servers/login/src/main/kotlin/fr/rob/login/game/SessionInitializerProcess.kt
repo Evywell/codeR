@@ -1,9 +1,8 @@
 package fr.rob.login.game
 
-import fr.rob.core.network.session.Session
 import fr.rob.core.network.session.exception.UnauthenticatedSessionException
 import fr.rob.login.game.character.CharacterRepositoryInterface
-import fr.rob.login.network.LoginSessionData
+import fr.rob.login.network.LoginSession
 import fr.rob.login.security.account.AccountProcess
 
 class SessionInitializerProcess(
@@ -11,24 +10,21 @@ class SessionInitializerProcess(
     private val accountProcess: AccountProcess
 ) {
 
-    fun execute(session: Session) {
+    fun execute(session: LoginSession, accountName: String) {
         if (!session.isAuthenticated) {
             throw UnauthenticatedSessionException()
         }
 
-        val loginSessionData = LoginSessionData()
-        val account = accountProcess.retrieveOrCreate(session.userId!!)
+        val account = accountProcess.retrieveOrCreate(session.userId!!, accountName)
 
-        loginSessionData.account = account
+        session.account = account
 
-        session.data = loginSessionData
-
-        initSessionCharacters(account.id, session.data as LoginSessionData)
+        initSessionCharacters(account.id, session)
     }
 
-    private fun initSessionCharacters(accountId: Int, sessionData: LoginSessionData) {
+    private fun initSessionCharacters(accountId: Int, session: LoginSession) {
         val characters = characterRepository.allByAccountId(accountId)
 
-        sessionData.characters = characters
+        session.characters = characters
     }
 }

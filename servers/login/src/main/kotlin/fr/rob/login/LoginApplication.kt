@@ -7,6 +7,7 @@ import fr.rob.core.database.ConnectionManager
 import fr.rob.core.event.EventManager
 import fr.rob.core.initiator.Initiator
 import fr.rob.core.log.LoggerFactoryInterface
+import fr.rob.core.network.Server
 import fr.rob.core.process.ProcessManager
 import fr.rob.login.config.DatabaseConfigHandler
 import fr.rob.login.game.SessionInitializerProcess
@@ -18,8 +19,10 @@ import fr.rob.login.network.netty.NettyLoginServer
 import fr.rob.login.security.SecurityModule
 import fr.rob.login.security.account.AccountProcess
 import fr.rob.login.security.account.AccountRepository
+import fr.rob.login.security.strategy.StrategyProcess
 
-open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, env: String) : BaseApplication(env) {
+open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, env: String) :
+    BaseApplication(env, loggerFactory.create("login")) {
 
     private val eventManager = EventManager()
     val connectionManager = ConnectionManager(eventManager)
@@ -49,17 +52,11 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
             SessionInitializerProcess(characterRepository, processManager.getOrMakeProcess(AccountProcess::class))
         }
 
-        runServer()
-    }
+        processManager.registerProcess(StrategyProcess::class) {
+            StrategyProcess(server!!)
+        }
 
-    open fun runServer() {
-        val loginNode = NettyLoginServer(
-            this, loggerFactory,
-            LOGIN_SERVER_PORT,
-            LOGIN_SERVER_ENABLE_SSL
-        )
-
-        loginNode.start()
+        server!!.start()
     }
 
     override fun registerModules(modules: MutableList<AbstractModule>) {
@@ -72,4 +69,10 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
         config
             .addHandler(DatabaseConfigHandler(connectionManager))
     }
+
+    override fun createServer(): Server = NettyLoginServer(
+            this, loggerFactory,
+            LOGIN_SERVER_PORT,
+            LOGIN_SERVER_ENABLE_SSL
+        )
 }

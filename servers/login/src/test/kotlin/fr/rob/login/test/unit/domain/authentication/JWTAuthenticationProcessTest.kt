@@ -23,7 +23,7 @@ class JWTAuthenticationProcessTest : JWTBaseTest() {
         registerJWTProcess(processManager)
 
         val userId = 123456789
-        val jwt = generateJWT(userId, "player@localhost", JWTResultGame("rob", "Rob"))
+        val jwt = generateJWT(userId, "player@localhost", JWTResultGame("rob", "Rob"), ACCOUNT_NAME_1)
         val session = NISession()
         val authMessage = AuthenticationProto.JWTAuthentication.newBuilder()
             .setToken(jwt)
@@ -88,6 +88,29 @@ class JWTAuthenticationProcessTest : JWTBaseTest() {
         val payload = mapOf<String, Any>("email" to "hello@localhost.com")
 
         val jwt = generateJWTWithPayload(null, payload)
+
+        val authMessage = AuthenticationProto.JWTAuthentication.newBuilder()
+            .setToken(jwt)
+            .build()
+
+        // Act
+        val authenticationProcess: JWTAuthenticationProcess =
+            processManager.makeProcess(AuthenticationProcess::class) as JWTAuthenticationProcess
+
+        // Assert
+        assertEquals(false, authenticationProcess.authenticate(NISession(), authMessage).isAuthenticated)
+    }
+
+    @Test
+    fun `try authentication with invalid ticket (account)`() {
+        // Arrange
+        val processManager = ProcessManager()
+
+        registerJWTProcess(processManager)
+
+        val payload = mapOf<String, Any>("email" to "hello@localhost.com", "account" to ACCOUNT_NAME_1)
+
+        val jwt = generateJWTWithPayload("1", payload)
 
         val authMessage = AuthenticationProto.JWTAuthentication.newBuilder()
             .setToken(jwt)

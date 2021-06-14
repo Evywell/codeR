@@ -5,7 +5,7 @@ import fr.rob.core.network.Packet
 import fr.rob.core.network.session.Session
 import fr.rob.core.opcode.ProtobufOpcodeFunction
 import fr.rob.entities.CharacterCreateProtos
-import fr.rob.login.network.LoginSessionData
+import fr.rob.login.network.LoginSession
 import fr.rob.login.opcode.ServerOpcodeLogin
 
 class CharacterCreateOpcode(private val createCharacterProcess: CharacterCreateProcess) : ProtobufOpcodeFunction() {
@@ -14,8 +14,9 @@ class CharacterCreateOpcode(private val createCharacterProcess: CharacterCreateP
 
     override fun call(session: Session, message: Any) {
         message as CharacterCreateProtos.CharacterCreate
+        session as LoginSession
 
-        val createState = createCharacterProcess.canCreate(session.data as LoginSessionData, message)
+        val createState = createCharacterProcess.canCreate(session, message)
 
         if (createState.hasError) {
             val result = CharacterCreateProtos.CharacterCreateResult.newBuilder()
@@ -28,9 +29,9 @@ class CharacterCreateOpcode(private val createCharacterProcess: CharacterCreateP
             return
         }
 
-        val newChar = createCharacterProcess.create(session, message)
+        val newChar = createCharacterProcess.create(session.account.id, message)
 
-        (session.data as LoginSessionData).characters?.add(newChar)
+        session.characters.add(newChar)
 
         val characterCreateCharacter = CharacterCreateProtos.CharacterCreateResult.Character.newBuilder()
             .setId(newChar.id)

@@ -1,11 +1,11 @@
 package fr.rob.login.test.unit.domain.game.character.stand
 
 import fr.rob.core.network.session.exception.UnauthenticatedSessionException
-import fr.rob.core.test.unit.sandbox.network.NISession
 import fr.rob.entities.CharacterProtos
 import fr.rob.login.game.character.stand.CharacterStandProcess
-import fr.rob.login.network.LoginSessionData
+import fr.rob.login.network.LoginSession
 import fr.rob.login.test.unit.sandbox.game.character.stand.CharacterStandProcess_CharacterStandRepository
+import fr.rob.login.test.unit.sandbox.network.LoginSessionFactory
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
@@ -17,14 +17,12 @@ class CharacterStandProcessTest {
     @Test
     fun `create stand from authenticated session with characters`() {
         // Arrange
-        val session = NISession()
-        val sessionData = LoginSessionData()
+        val session = LoginSessionFactory.buildSession()
 
         session.isAuthenticated = true
         session.userId = 1234
-        session.data = sessionData
 
-        loadCharacterFixtures(sessionData)
+        loadCharacterFixtures(session)
 
         // Act
         val characterStand = characterStandProcess.createStandFromSession(session)
@@ -45,7 +43,7 @@ class CharacterStandProcessTest {
     @Test
     fun `create stand from unauthenticated session`() {
         // Arrange
-        val session = NISession()
+        val session = LoginSessionFactory.buildSession()
 
         // Assert
         Assertions.assertThrows(UnauthenticatedSessionException::class.java) {
@@ -54,7 +52,7 @@ class CharacterStandProcessTest {
         }
     }
 
-    private fun loadCharacterFixtures(sessionData: LoginSessionData) {
+    private fun loadCharacterFixtures(session: LoginSession) {
         val characters = ArrayList<CharacterProtos.Character>()
 
         characters.add(
@@ -73,6 +71,6 @@ class CharacterStandProcessTest {
                 .build()
         )
 
-        sessionData.characters = characters
+        session.characters = characters
     }
 }

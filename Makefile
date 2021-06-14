@@ -34,6 +34,7 @@ MIGRATOR_SEED_NAME=
 MIGRATOR_DB=
 ##< Migrator
 
+CLI_DIR := cli
 GAME_DIR := servers/game
 LOGIN_DIR := servers/login
 
@@ -54,6 +55,7 @@ PHP_DST_DIR := $(PHP_DIR)/protobuf
 DEBUGGER_SOCKET_PORT := 5005
 DEBUGGER_BUILD_GAME_JAR_PATH := build/libs/game-1.0.jar
 DEBUGGER_BUILD_LOGIN_JAR_PATH := build/libs/login-1.0.jar
+DEBUGGER_BUILD_CLI_JAR_PATH := build/libs/cli-1.0.jar
 ##< Debug
 
 .PHONY: help
@@ -122,6 +124,13 @@ build-debug: build ## Runs the build then start the debugger socket
 .PHONY: build-login-debug
 build-login-debug: build-login
 	$(GRADLE) java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:$(DEBUGGER_SOCKET_PORT) $(LOGIN_DIR)/$(DEBUGGER_BUILD_LOGIN_JAR_PATH)
+
+.PHONY: build-cli
+build-cli: up
+	$(GRADLE_TASK) :cli:build
+
+build-cli-debug: build-cli
+	$(GRADLE) java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:$(DEBUGGER_SOCKET_PORT) $(CLI_DIR)/$(DEBUGGER_BUILD_CLI_JAR_PATH)
 
 .PHONY: build-login
 build-login:

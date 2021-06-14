@@ -7,11 +7,17 @@ abstract class Session {
 
     var isAuthenticated: Boolean = false
     var userId: Int? = null
-    var data: SessionData? = null
+    lateinit var socket: SessionSocketInterface
 
-    abstract fun getIp(): String
-    abstract fun send(packet: Packet)
-    abstract fun close()
+    fun getIp(): String = socket.getIp()
+
+    fun send(packet: Packet) {
+        socket.send(packet)
+    }
+
+    fun close() {
+        socket.close()
+    }
 
     fun isLocal(): Boolean {
         return getIp() == LOCALHOST_IPV4 || getIp() == LOCALHOST_IPV6
