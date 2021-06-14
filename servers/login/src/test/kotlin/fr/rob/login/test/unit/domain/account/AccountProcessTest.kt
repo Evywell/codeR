@@ -16,7 +16,7 @@ class AccountProcessTest {
         val process = AccountProcess(repository)
 
         // Act
-        val account = process.retrieveOrCreate(2)
+        val account = process.retrieveOrCreate(2, "Hello#5678")
 
         // Assert
         assertEquals(2, account.userId)
@@ -30,11 +30,27 @@ class AccountProcessTest {
         val process = AccountProcess(repository)
 
         // Act
-        val account = process.retrieveOrCreate(2)
+        val account = process.retrieveOrCreate(2, "Hello#5678")
 
         // Assert
         assertEquals(2, account.userId)
         assertEquals(3, account.id)
+    }
+
+    @Test
+    fun `retrieve an account with a different account name`() {
+        // Arrange
+        val repository = AccountProcess_AccountRepository2()
+        val process = AccountProcess(repository)
+        val newAccountName = "TheNewOne#1111"
+
+        // Act
+        val account = process.retrieveOrCreate(2, newAccountName)
+
+        // Assert
+        assertEquals(2, account.userId)
+        assertEquals(2, account.id)
+        assertEquals(newAccountName, account.name)
     }
 
     @Test

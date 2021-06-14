@@ -3,16 +3,26 @@ package fr.rob.core
 import fr.rob.core.config.Config
 import fr.rob.core.config.ConfigLoaderInterface
 import fr.rob.core.config.commons.configuration2.ConfigLoader
+import fr.rob.core.exception.ExceptionManager
 import fr.rob.core.initiator.Initiator
+import fr.rob.core.log.LoggerInterface
+import fr.rob.core.network.Server
 import java.io.File
 import java.util.ArrayList
 
-abstract class BaseApplication(open val env: String, private val configLoader: ConfigLoaderInterface = ConfigLoader()) {
+abstract class BaseApplication(
+    open val env: String,
+    logger: LoggerInterface,
+    private val configLoader: ConfigLoaderInterface = ConfigLoader()
+) {
 
     private val modules: MutableList<AbstractModule> = ArrayList()
     var config: Config? = null
+    var server: Server? = null
 
     protected val initiator = Initiator()
+
+    protected val exceptionManager = ExceptionManager(logger)
 
     protected abstract fun registerModules(modules: MutableList<AbstractModule>)
 
@@ -20,7 +30,11 @@ abstract class BaseApplication(open val env: String, private val configLoader: C
 
     protected abstract fun registerConfigHandlers(config: Config)
 
+    abstract fun createServer(): Server?
+
     open fun run() {
+        exceptionManager.catchExceptions()
+
         // Config
         config?.let { registerConfigHandlers(it) }
 
@@ -33,6 +47,8 @@ abstract class BaseApplication(open val env: String, private val configLoader: C
 
         // Loading tasks
         registerInitiatorTasks(initiator)
+
+        server = createServer()
     }
 
     open fun loadConfig(file: File): Config {

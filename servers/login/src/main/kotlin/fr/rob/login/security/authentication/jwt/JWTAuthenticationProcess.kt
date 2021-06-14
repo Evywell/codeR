@@ -17,11 +17,13 @@ class JWTAuthenticationProcess(private val jwtDecoder: JWTDecoderInterface) : Au
 
         return try {
             val result = jwtDecoder.decode(token)
+            val accountName = result.get(JWT_AUTH_RESULT_ACCOUNT_NAME)
 
             // Not a valid ticket
             if (
                 result.get(JWT_AUTH_RESULT_EMAIL) == null
                 || result.get(JWT_AUTH_RESULT_USER_ID) == null
+                || accountName == null
             ) {
                 return errorState
             }
@@ -36,7 +38,7 @@ class JWTAuthenticationProcess(private val jwtDecoder: JWTDecoderInterface) : Au
 
             val userId = (result.get(JWT_AUTH_RESULT_USER_ID) as String).toInt()
 
-            AuthenticationState(true, userId)
+            AuthenticationState(true, userId, accountName = accountName as String)
         } catch (e: Exception) {
             errorState
         }
@@ -44,6 +46,7 @@ class JWTAuthenticationProcess(private val jwtDecoder: JWTDecoderInterface) : Au
 }
 
 const val JWT_AUTH_RESULT_EMAIL = "email"
+const val JWT_AUTH_RESULT_ACCOUNT_NAME = "account"
 const val JWT_AUTH_RESULT_USER_ID = "sub" // JWT standard
 const val JWT_AUTH_RESULT_GAME = "game"
 const val JWT_AUTH_RESULT_GAME_SLUG = "rob"

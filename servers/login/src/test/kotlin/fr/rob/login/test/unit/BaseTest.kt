@@ -8,6 +8,7 @@ import fr.rob.login.game.character.stand.CharacterStandProcess
 import fr.rob.login.security.account.AccountProcess
 import fr.rob.login.security.authentication.AuthenticationProcess
 import fr.rob.login.security.authentication.dev.DevAuthenticationProcess
+import fr.rob.login.security.strategy.StrategyProcess
 import fr.rob.login.test.unit.sandbox.game.account.AccountProcess_AccountRepository
 import fr.rob.login.test.unit.sandbox.game.character.stand.CharacterCreateProcess_CharacterRepository
 import fr.rob.login.test.unit.sandbox.game.character.stand.CharacterStandProcess_CharacterStandRepository
@@ -40,5 +41,13 @@ open class BaseTest : CoreBaseTest() {
                 processManager.getOrMakeProcess(AccountProcess::class)
             )
         }
+
+        processManager.registerProcess(StrategyProcess::class) {
+            StrategyProcess(server)
+        }
+    }
+
+    companion object {
+        const val ACCOUNT_NAME_1 = "Evywell#1234"
     }
 }

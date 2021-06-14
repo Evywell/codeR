@@ -26,6 +26,7 @@ abstract class AuthenticationProcess {
     data class AuthenticationState(
         var isAuthenticated: Boolean,
         var userId: Int? = null,
-        var error: String? = null
+        var error: String? = null,
+        var accountName: String? = null
     )
 }

@@ -9,6 +9,7 @@ import fr.rob.core.process.ProcessManager
 import fr.rob.core.test.unit.sandbox.NIApplication
 import fr.rob.core.test.unit.sandbox.log.NILogger
 import fr.rob.core.test.unit.sandbox.log.NILoggerFactory
+import fr.rob.core.test.unit.sandbox.network.NIServer
 import fr.rob.core.test.unit.sandbox.opcode.NIOpcodeHandler
 import java.net.URL
 
@@ -19,6 +20,7 @@ open class BaseTest {
     val app: BaseApplication = NIApplication()
     val opcodeHandler: OpcodeHandler = NIOpcodeHandler(logger)
     val processManager: ProcessManager = ProcessManager()
+    var server: Server = NIServer()
 
     fun getResourceURL(resourcePath: String): URL? = BaseTest::class.java.classLoader.getResource(resourcePath)
 

@@ -2,6 +2,7 @@ package fr.rob.core.network.netty
 
 import fr.rob.core.log.LoggerInterface
 import fr.rob.core.network.Server
+import fr.rob.core.network.session.Session
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.ChannelFuture
 import io.netty.channel.ChannelOption
@@ -37,4 +38,5 @@ abstract class NettyServer(
     }
 
     abstract fun handler(): NettyServerHandler
+    abstract fun createSession(): Session
 }

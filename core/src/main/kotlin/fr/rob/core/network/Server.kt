@@ -2,8 +2,10 @@ package fr.rob.core.network
 
 import fr.rob.core.network.session.Session
 import fr.rob.core.network.session.exception.SessionNotFoundException
+import fr.rob.core.network.strategy.NullServerStrategy
+import fr.rob.core.network.strategy.ServerStrategyInterface
 
-open class Server {
+open class Server(var serverStrategy: ServerStrategyInterface = NullServerStrategy()) {
 
     private val sessions: MutableMap<Int, Session> = HashMap()
 

@@ -1,6 +1,6 @@
 package fr.rob.login.test.cucumber.context
 
-import com.nhaarman.mockitokotlin2.doNothing
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.spy
 import fr.rob.core.ENV_DEV
 import fr.rob.core.log.LoggerFactory
@@ -15,26 +15,27 @@ import fr.rob.core.test.cucumber.AbstractContext as BaseAbstractContext
 abstract class AbstractContext : BaseAbstractContext() {
 
     private val clients = HashMap<String, LoginClient>()
-    private val server: Server
+    private var server: Server
     protected val app: LoginApplication = spy(LoginApplication(LoggerFactory, ENV_DEV))
 
     init {
         // Initialize app
-        doNothing().`when`(app).runServer()
-
         val config = createConfig()
 
         app.config = config
-
-        app.run()
 
         val logger = NILogger()
 
         // Initialize opcode handler
         val opcodeHandler = LoginOpcodeHandler(ENV_DEV, app.processManager, logger)
 
-        // Initialize login server
         server = Server(opcodeHandler)
+
+        doReturn(server).`when`(app).createServer()
+
+        app.run()
+
+        opcodeHandler.initialize()
 
         // Initialize the main client
         val mainClient = LoginClient(app)

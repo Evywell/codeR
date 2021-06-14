@@ -5,6 +5,7 @@ import fr.rob.core.network.session.Session
 import fr.rob.core.opcode.ProtobufOpcodeFunction
 import fr.rob.entities.AuthenticationProto
 import fr.rob.login.game.SessionInitializerProcess
+import fr.rob.login.network.LoginSession
 import fr.rob.login.opcode.ServerOpcodeLogin
 
 abstract class AuthenticationOpcode(
@@ -14,13 +15,14 @@ abstract class AuthenticationOpcode(
     ProtobufOpcodeFunction(false) {
 
     override fun call(session: Session, message: Any) {
+        session as LoginSession
 
         val authenticationResult = AuthenticationProto.AuthenticationResult.newBuilder()
         val authState = authenticationProcess.authenticate(session, message)
 
         if (authState.isAuthenticated) {
             // Load the session data
-            sessionInitializerProcess.execute(session)
+            sessionInitializerProcess.execute(session, authState.accountName!!)
 
             authenticationResult.result = AUTHENTICATION_RESULT_SUCCESS
         } else {

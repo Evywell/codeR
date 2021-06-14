@@ -21,16 +21,19 @@ class AccountSeeder extends AbstractSeed
             [
                 'id' => 1,
                 'user_id' => 1,
+                'name' => 'Evywell#1234',
                 'is_administrator' => false
             ],
             [
                 'id' => 2,
                 'user_id' => 2,
+                'name' => 'Hello#5678',
                 'is_administrator' => false
             ],
             [
                 'id' => 3,
                 'user_id' => 3,
+                'name' => 'Hey#1452',
                 'is_administrator' => false
             ],
             // We skip the account 4
