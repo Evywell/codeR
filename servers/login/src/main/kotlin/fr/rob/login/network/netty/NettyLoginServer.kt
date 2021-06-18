@@ -21,5 +21,5 @@ class NettyLoginServer(app: LoginApplication, loggerFactory: LoggerFactoryInterf
 
     override fun handler(): NettyServerHandler = NettyLoginServerHandler(this)
 
-    override fun createSession(): Session = LoginSession(logger)
+    override fun createSession(): Session = LoginSession()
 }
