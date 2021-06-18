@@ -22,7 +22,7 @@ abstract class NettyServerHandler(private val nettyServer: NettyServer) : Channe
             if (exception is LoggableException) {
                 exception.message?.let { exception.logger.error(it) }
             } else {
-                println(exception.message)
+                exception.message?.let { nettyServer.logger.error(it) }
             }
 
             if (ctx.channel().isOpen) {

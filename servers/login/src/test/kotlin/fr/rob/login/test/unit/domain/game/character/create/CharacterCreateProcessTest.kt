@@ -1,6 +1,5 @@
 package fr.rob.login.test.unit.domain.game.character.create
 
-import fr.rob.entities.AccountProto.Account
 import fr.rob.entities.CharacterCreateProtos
 import fr.rob.login.game.character.create.CharacterCreateProcess
 import fr.rob.login.game.character.create.CharacterCreateProcess.Companion.ERR_CHARACTER_NAME_ALREADY_TAKEN
@@ -8,6 +7,7 @@ import fr.rob.login.game.character.create.CharacterCreateProcess.Companion.ERR_C
 import fr.rob.login.game.character.create.CharacterCreateProcess.Companion.ERR_CHARACTER_NAME_TOO_SMALL
 import fr.rob.login.game.character.create.CharacterCreateProcess.Companion.ERR_INVALID_CHARACTER_NAME
 import fr.rob.login.game.character.create.CharacterCreateProcess.Companion.ERR_MAX_CHARACTERS_PER_USER
+import fr.rob.login.security.account.Account
 import fr.rob.login.test.unit.sandbox.game.character.create.CharacterCreateProcess_CharacterRepository
 import fr.rob.login.test.unit.sandbox.game.character.create.CharacterCreateProcess_CharactersHolder
 import fr.rob.login.test.unit.sandbox.game.character.create.CharacterCreateProcess_CharactersHolder2
@@ -28,16 +28,14 @@ class CharacterCreateProcessTest {
         val process = CharacterCreateProcess(repository)
         val session = LoginSessionFactory.buildAuthenticatedSession()
 
-        session.account = Account.newBuilder()
-            .setId(1)
-            .build()
+        session.account = Account(1)
 
         val characterCreateRequest = CharacterCreateProtos.CharacterCreate.newBuilder()
             .setName("Chris")
             .build()
 
         // Act
-        val character = process.create(session.account.id, characterCreateRequest)
+        val character = process.create(session.account.id!!, characterCreateRequest)
 
         // Assert
         assertEquals("Chris", character.name)

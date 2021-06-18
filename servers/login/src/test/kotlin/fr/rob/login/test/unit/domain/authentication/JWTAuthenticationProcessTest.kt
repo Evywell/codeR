@@ -1,6 +1,5 @@
 package fr.rob.login.test.unit.domain.authentication
 
-import com.nhaarman.mockitokotlin2.mock
 import fr.rob.core.auth.jwt.JWTDecoderInterface
 import fr.rob.core.process.ProcessManager
 import fr.rob.core.test.unit.sandbox.network.NISession
@@ -12,6 +11,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mock
 
 class JWTAuthenticationProcessTest : JWTBaseTest() {
 
@@ -45,7 +45,7 @@ class JWTAuthenticationProcessTest : JWTBaseTest() {
     @Test
     fun `check authentication with empty token`() {
         // Arrange
-        val jwtDecoderMock = mock<JWTDecoderInterface> {}
+        val jwtDecoderMock = mock(JWTDecoderInterface::class.java) {}
 
         val authenticationProcess = JWTAuthenticationProcess(jwtDecoderMock)
         val message = AuthenticationProto.JWTAuthentication.getDefaultInstance()

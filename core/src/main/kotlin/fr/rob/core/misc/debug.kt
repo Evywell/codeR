@@ -26,6 +26,8 @@ private fun dumpList(list: List<*>, sb: StringBuilder, tabs: Int) {
 private fun dumpVar(variable: Any?, sb: StringBuilder, tabs: Int = 0) {
     if (variable == null) {
         sb.append("null\n")
+    } else if (variable is String) {
+        sb.append(variable)
     } else if (variable is List<*>) {
         dumpList(variable, sb, tabs)
     } else {
@@ -37,8 +39,16 @@ private fun dumpObject(variable: Any, sb: StringBuilder, tabs: Int = 0) {
     sb.append(tabs(tabs) + variable::class.qualifiedName + " {")
 
     val fields = variable::class.java.declaredFields
+    val parentFields = variable::class.java.superclass.declaredFields
 
     for (field in fields) {
+        field.isAccessible = true
+        val value = field.get(variable) ?: "null"
+
+        sb.append("\n" + tabs(tabs + 1) + field.name + ": " + value.toString())
+    }
+
+    for (field in parentFields) {
         field.isAccessible = true
         val value = field.get(variable) ?: "null"
 

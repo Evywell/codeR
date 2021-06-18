@@ -19,7 +19,7 @@ class SessionInitializerProcess(
 
         session.account = account
 
-        initSessionCharacters(account.id, session)
+        initSessionCharacters(account.id!!, session)
     }
 
     private fun initSessionCharacters(accountId: Int, session: LoginSession) {

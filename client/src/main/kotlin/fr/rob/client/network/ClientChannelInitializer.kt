@@ -11,13 +11,7 @@ class ClientChannelInitializer(private val client: Client) : ChannelInitializer<
 
     override fun initChannel(ch: SocketChannel) {
         ch.pipeline().addLast(
-            LengthFieldBasedFrameDecoder(
-                1048576,
-                0,
-                4,
-                0,
-                4
-            )
+            LengthFieldBasedFrameDecoder(1048576, 0, 4, 0, 4)
         )
 
         ch.pipeline().addLast(ByteArrayDecoder())

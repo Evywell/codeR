@@ -1,14 +1,18 @@
 package fr.rob.login.test.unit.domain.game
 
-import fr.rob.entities.CharacterProtos
 import fr.rob.login.game.SessionInitializerProcess
+import fr.rob.login.game.character.Character
+import fr.rob.login.security.account.Account
 import fr.rob.login.security.account.AccountProcess
 import fr.rob.login.test.unit.BaseTest
-import fr.rob.login.test.unit.sandbox.game.account.AccountProcess_AccountRepository
 import fr.rob.login.test.unit.sandbox.game.character.stand.SessionInitializerProcess_CharacterRepository
 import fr.rob.login.test.unit.sandbox.network.LoginSessionFactory
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mockito.`when`
+import org.mockito.kotlin.mock
 
 class SessionInitializerProcessTest : BaseTest() {
 
@@ -16,7 +20,8 @@ class SessionInitializerProcessTest : BaseTest() {
     fun `initialize an authenticated session`() {
         // Arrange
         val characterRepository = SessionInitializerProcess_CharacterRepository(getCharactersFixtures())
-        val accountProcess = AccountProcess(AccountProcess_AccountRepository())
+        val accountProcess = mock<AccountProcess>()
+        `when`(accountProcess.retrieveOrCreate(anyInt(), anyString())).thenReturn(Account(1, 1, false))
         val sessionInitializerProcess = SessionInitializerProcess(characterRepository, accountProcess)
 
         val session = LoginSessionFactory.buildAuthenticatedSession()
@@ -34,23 +39,15 @@ class SessionInitializerProcessTest : BaseTest() {
         assertEquals(56, session.characters[1].level)
     }
 
-    private fun getCharactersFixtures(): MutableList<CharacterProtos.Character> {
-        val characters = ArrayList<CharacterProtos.Character>()
+    private fun getCharactersFixtures(): MutableList<Character> {
+        val characters = ArrayList<Character>()
 
         characters.add(
-            CharacterProtos.Character.newBuilder()
-                .setId(52)
-                .setName("Evyy")
-                .setLevel(60)
-                .build()
+            Character(52, 60, "Evyy")
         )
 
         characters.add(
-            CharacterProtos.Character.newBuilder()
-                .setId(54)
-                .setName("Moonlight")
-                .setLevel(56)
-                .build()
+            Character(54, 56, "Moonlight")
         )
 
         return characters

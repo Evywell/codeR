@@ -2,7 +2,6 @@ package fr.rob.login.security.account
 
 import fr.rob.core.database.Connection
 import fr.rob.core.database.exception.InsertException
-import fr.rob.entities.AccountProto.Account
 
 class AccountRepository(private val db: Connection) : AccountRepositoryInterface {
 
@@ -18,13 +17,13 @@ class AccountRepository(private val db: Connection) : AccountRepositoryInterface
             return null
         }
 
-        return AccountBuilder.build(rs.getInt(1), rs.getInt(2), rs.getBoolean(3), rs.getString(4))
+        return Account(rs.getInt(1), rs.getInt(2), rs.getBoolean(3), rs.getString(4))
     }
 
     override fun insert(accountSkeleton: Account): Account {
         val stmt = db.getPreparedStatement(INS_ACCOUNT, true)
 
-        stmt.setInt(1, accountSkeleton.userId)
+        stmt.setInt(1, accountSkeleton.userId!!)
         stmt.setBoolean(2, accountSkeleton.isAdministrator)
         stmt.setString(3, accountSkeleton.name)
 
@@ -36,18 +35,19 @@ class AccountRepository(private val db: Connection) : AccountRepositoryInterface
             throw InsertException("Cannot insert account $accountSkeleton")
         }
 
-        return Account.newBuilder()
-            .setId(generatedKeys.getInt(1))
-            .setIsAdministrator(accountSkeleton.isAdministrator)
-            .setUserId(accountSkeleton.userId)
-            .build()
+        return Account(
+            generatedKeys.getInt(1),
+            accountSkeleton.userId,
+            accountSkeleton.isAdministrator,
+            accountSkeleton.name
+        )
     }
 
     override fun updateName(account: Account, accountName: String) {
         val stmt = db.getPreparedStatement(UPDATE_ACCOUNT_NAME)
 
         stmt.setString(1, accountName)
-        stmt.setInt(2, account.id)
+        stmt.setInt(2, account.id!!)
 
         stmt.execute()
     }

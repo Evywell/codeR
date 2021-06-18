@@ -1,8 +1,6 @@
 package fr.rob.login.test.unit
 
-import com.nhaarman.mockitokotlin2.mock
 import fr.rob.login.game.SessionInitializerProcess
-import fr.rob.login.game.character.CharacterRepositoryInterface
 import fr.rob.login.game.character.create.CharacterCreateProcess
 import fr.rob.login.game.character.stand.CharacterStandProcess
 import fr.rob.login.security.account.AccountProcess
@@ -13,6 +11,10 @@ import fr.rob.login.test.unit.sandbox.game.account.AccountProcess_AccountReposit
 import fr.rob.login.test.unit.sandbox.game.character.stand.CharacterCreateProcess_CharacterRepository
 import fr.rob.login.test.unit.sandbox.game.character.stand.CharacterStandProcess_CharacterStandRepository
 import org.junit.jupiter.api.BeforeEach
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mockito.`when`
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
 import fr.rob.core.test.unit.BaseTest as CoreBaseTest
 
 open class BaseTest : CoreBaseTest() {
@@ -37,7 +39,7 @@ open class BaseTest : CoreBaseTest() {
 
         processManager.registerProcess(SessionInitializerProcess::class) {
             SessionInitializerProcess(
-                mock<CharacterRepositoryInterface>(),
+                mock(),
                 processManager.getOrMakeProcess(AccountProcess::class)
             )
         }
@@ -45,6 +47,13 @@ open class BaseTest : CoreBaseTest() {
         processManager.registerProcess(StrategyProcess::class) {
             StrategyProcess(server)
         }
+    }
+
+    protected fun getSessionInitializerProcessMock(): SessionInitializerProcess {
+        val sessionInitializerProcess = mock<SessionInitializerProcess>()
+        `when`(sessionInitializerProcess.execute(any(), anyString())).then { }
+
+        return sessionInitializerProcess
     }
 
     companion object {

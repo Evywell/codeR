@@ -1,7 +1,6 @@
 package fr.rob.login.game.character
 
 import fr.rob.entities.CharacterCreateProtos
-import fr.rob.entities.CharacterProtos.Character
 
 interface CharacterRepositoryInterface {
 

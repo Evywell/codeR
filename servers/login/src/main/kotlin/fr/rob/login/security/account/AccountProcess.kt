@@ -1,7 +1,5 @@
 package fr.rob.login.security.account
 
-import fr.rob.entities.AccountProto.Account
-
 class AccountProcess(private val accountRepository: AccountRepositoryInterface) {
 
     fun retrieveOrCreate(userId: Int, accountName: String): Account {
@@ -11,17 +9,13 @@ class AccountProcess(private val accountRepository: AccountRepositoryInterface) 
             if (account.name != accountName) {
                 accountRepository.updateName(account, accountName)
 
-                return AccountBuilder.build(account.id, account.userId, account.isAdministrator, accountName)
+                account.name = accountName
             }
 
             return account
         }
 
-        val skeleton = Account.newBuilder()
-            .setUserId(userId)
-            .setIsAdministrator(false)
-            .setName(accountName)
-            .build()
+        val skeleton = Account(userId = userId, isAdministrator = false, name = accountName)
 
         return create(skeleton)
     }
