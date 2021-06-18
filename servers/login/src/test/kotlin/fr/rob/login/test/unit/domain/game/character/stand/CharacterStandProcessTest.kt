@@ -1,7 +1,7 @@
 package fr.rob.login.test.unit.domain.game.character.stand
 
 import fr.rob.core.network.session.exception.UnauthenticatedSessionException
-import fr.rob.entities.CharacterProtos
+import fr.rob.login.game.character.Character
 import fr.rob.login.game.character.stand.CharacterStandProcess
 import fr.rob.login.network.LoginSession
 import fr.rob.login.test.unit.sandbox.game.character.stand.CharacterStandProcess_CharacterStandRepository
@@ -53,22 +53,14 @@ class CharacterStandProcessTest {
     }
 
     private fun loadCharacterFixtures(session: LoginSession) {
-        val characters = ArrayList<CharacterProtos.Character>()
+        val characters = ArrayList<Character>()
 
         characters.add(
-            CharacterProtos.Character.newBuilder()
-                .setId(13)
-                .setName("T101")
-                .setLevel(60)
-                .build()
+            Character(13, 60, "T101")
         )
 
         characters.add(
-            CharacterProtos.Character.newBuilder()
-                .setId(22)
-                .setName("T102")
-                .setLevel(54)
-                .build()
+            Character(22, 54, "T102")
         )
 
         session.characters = characters

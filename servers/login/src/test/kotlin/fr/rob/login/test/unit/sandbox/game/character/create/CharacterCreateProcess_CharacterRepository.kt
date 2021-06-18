@@ -1,7 +1,7 @@
 package fr.rob.login.test.unit.sandbox.game.character.create
 
 import fr.rob.entities.CharacterCreateProtos
-import fr.rob.entities.CharacterProtos
+import fr.rob.login.game.character.Character
 import fr.rob.login.game.character.CharacterRepositoryInterface
 
 class CharacterCreateProcess_CharacterRepository : CharacterRepositoryInterface {
@@ -14,14 +14,11 @@ class CharacterCreateProcess_CharacterRepository : CharacterRepositoryInterface 
         accountId: Int,
         characterSkeleton: CharacterCreateProtos.CharacterCreate,
         level: Int
-    ): CharacterProtos.Character = CharacterProtos.Character.newBuilder()
-        .setLevel(level)
-        .setName(characterSkeleton.name)
-        .build()
+    ): Character = Character(null, level, characterSkeleton.name)
 
-    override fun setCurrentCharacter(character: CharacterProtos.Character) {}
+    override fun setCurrentCharacter(character: Character) {}
 
-    override fun allByAccountId(accountId: Int): MutableList<CharacterProtos.Character> {
+    override fun allByAccountId(accountId: Int): MutableList<Character> {
         TODO("Not yet implemented")
     }
 }

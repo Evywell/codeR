@@ -5,7 +5,6 @@ import fr.rob.core.database.exception.InsertException
 import fr.rob.core.database.getSQLNow
 import fr.rob.core.database.hasNextAndClose
 import fr.rob.entities.CharacterCreateProtos
-import fr.rob.entities.CharacterProtos
 
 class CharacterRepository(private val db: Connection) : CharacterRepositoryInterface {
 
@@ -22,7 +21,7 @@ class CharacterRepository(private val db: Connection) : CharacterRepositoryInter
         accountId: Int,
         characterSkeleton: CharacterCreateProtos.CharacterCreate,
         level: Int
-    ): CharacterProtos.Character {
+    ): Character {
         val stmt = db.getPreparedStatement(INS_NEW_CHARACTER, true)
 
         stmt.setInt(1, accountId)
@@ -37,20 +36,20 @@ class CharacterRepository(private val db: Connection) : CharacterRepositoryInter
             throw InsertException("Cannot insert character $characterSkeleton")
         }
 
-        return buildCharacter(generatedKeys.getInt(1), characterSkeleton.name, level)
+        return Character(generatedKeys.getInt(1), level, characterSkeleton.name)
     }
 
-    override fun setCurrentCharacter(character: CharacterProtos.Character) {
+    override fun setCurrentCharacter(character: Character) {
         val stmt = db.getPreparedStatement(UPD_LAST_SELECTED_AT)
 
         stmt.setTimestamp(1, getSQLNow())
-        stmt.setInt(2, character.id)
+        stmt.setInt(2, character.id!!)
 
         stmt.execute()
     }
 
-    override fun allByAccountId(accountId: Int): MutableList<CharacterProtos.Character> {
-        val characters = ArrayList<CharacterProtos.Character>()
+    override fun allByAccountId(accountId: Int): MutableList<Character> {
+        val characters = ArrayList<Character>()
         val stmt = db.getPreparedStatement(SEL_CHARACTERS_BY_USER_ID)
 
         stmt.setInt(1, accountId)
@@ -60,11 +59,7 @@ class CharacterRepository(private val db: Connection) : CharacterRepositoryInter
 
         while (rs.next()) {
             characters.add(
-                CharacterProtos.Character.newBuilder()
-                    .setId(rs.getInt(1))
-                    .setName(rs.getString(2))
-                    .setLevel(rs.getInt(3))
-                    .build()
+                Character(rs.getInt(1), rs.getInt(3), rs.getString(2))
             )
         }
 
@@ -72,13 +67,6 @@ class CharacterRepository(private val db: Connection) : CharacterRepositoryInter
 
         return characters
     }
-
-    private fun buildCharacter(id: Int, name: String, level: Int): CharacterProtos.Character =
-        CharacterProtos.Character.newBuilder()
-            .setId(id)
-            .setName(name)
-            .setLevel(level)
-            .build()
 
     companion object {
         const val SEL_IS_CHARACTER_NAME_TAKEN = "SELECT 1 FROM characters WHERE name = ?"

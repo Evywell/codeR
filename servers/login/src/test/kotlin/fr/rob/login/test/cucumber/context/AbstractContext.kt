@@ -1,7 +1,5 @@
 package fr.rob.login.test.cucumber.context
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.spy
 import fr.rob.core.ENV_DEV
 import fr.rob.core.log.LoggerFactory
 import fr.rob.core.test.cucumber.service.Server
@@ -10,6 +8,8 @@ import fr.rob.login.LoginApplication
 import fr.rob.login.opcode.LoginOpcodeHandler
 import fr.rob.login.test.cucumber.service.LoginClient
 import fr.rob.login.test.cucumber.service.config.Config
+import org.mockito.Mockito.doReturn
+import org.mockito.Mockito.spy
 import fr.rob.core.test.cucumber.AbstractContext as BaseAbstractContext
 
 abstract class AbstractContext : BaseAbstractContext() {

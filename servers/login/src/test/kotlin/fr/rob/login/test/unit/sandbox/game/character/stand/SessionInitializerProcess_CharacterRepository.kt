@@ -1,10 +1,10 @@
 package fr.rob.login.test.unit.sandbox.game.character.stand
 
 import fr.rob.entities.CharacterCreateProtos
-import fr.rob.entities.CharacterProtos
+import fr.rob.login.game.character.Character
 import fr.rob.login.game.character.CharacterRepositoryInterface
 
-class SessionInitializerProcess_CharacterRepository(private val characters: MutableList<CharacterProtos.Character>) :
+class SessionInitializerProcess_CharacterRepository(private val characters: MutableList<Character>) :
     CharacterRepositoryInterface {
 
     override fun isCharacterNameTaken(characterName: String): Boolean {
@@ -15,13 +15,13 @@ class SessionInitializerProcess_CharacterRepository(private val characters: Muta
         accountId: Int,
         characterSkeleton: CharacterCreateProtos.CharacterCreate,
         level: Int
-    ): CharacterProtos.Character {
+    ): Character {
         TODO("Not yet implemented")
     }
 
-    override fun setCurrentCharacter(character: CharacterProtos.Character) {
+    override fun setCurrentCharacter(character: Character) {
         TODO("Not yet implemented")
     }
 
-    override fun allByAccountId(accountId: Int): MutableList<CharacterProtos.Character> = characters
+    override fun allByAccountId(accountId: Int): MutableList<Character> = characters
 }

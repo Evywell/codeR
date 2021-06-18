@@ -1,6 +1,6 @@
 package fr.rob.login.test.unit.domain.account
 
-import fr.rob.entities.AccountProto
+import fr.rob.login.security.account.Account
 import fr.rob.login.security.account.AccountProcess
 import fr.rob.login.test.unit.sandbox.game.account.AccountProcess_AccountRepository2
 import fr.rob.login.test.unit.sandbox.game.account.AccountProcess_AccountRepository3
@@ -60,9 +60,7 @@ class AccountProcessTest {
         val process = AccountProcess(repository)
 
         // Act
-        val skeleton = AccountProto.Account.newBuilder()
-            .setUserId(123)
-            .build()
+        val skeleton = Account(userId = 123)
 
         val account = process.create(skeleton)
 

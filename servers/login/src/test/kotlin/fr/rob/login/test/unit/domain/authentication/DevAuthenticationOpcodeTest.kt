@@ -1,10 +1,6 @@
 package fr.rob.login.test.unit.domain.authentication
 
-import com.nhaarman.mockitokotlin2.mock
 import fr.rob.entities.AuthenticationProto
-import fr.rob.login.game.SessionInitializerProcess
-import fr.rob.login.game.character.CharacterRepositoryInterface
-import fr.rob.login.security.account.AccountProcess
 import fr.rob.login.security.authentication.dev.DevAuthenticationOpcode
 import fr.rob.login.security.authentication.dev.DevAuthenticationProcess
 import fr.rob.login.test.unit.BaseTest
@@ -17,10 +13,7 @@ class DevAuthenticationOpcodeTest : BaseTest() {
     @Test
     fun `call the authentication opcode`() {
         // Arrange
-        val sessionInitializerProcess = SessionInitializerProcess(
-            mock<CharacterRepositoryInterface>(),
-            processManager.getOrMakeProcess(AccountProcess::class)
-        )
+        val sessionInitializerProcess = getSessionInitializerProcessMock()
 
         val opcodeFunction = DevAuthenticationOpcode(DevAuthenticationProcess(), sessionInitializerProcess)
         val session = LoginSessionFactory.buildSession()
@@ -31,7 +24,6 @@ class DevAuthenticationOpcodeTest : BaseTest() {
             .build()
 
         // Act
-        opcodeHandler.registerOpcode(1, opcodeFunction)
         opcodeFunction.call(session, message)
 
         // Assert

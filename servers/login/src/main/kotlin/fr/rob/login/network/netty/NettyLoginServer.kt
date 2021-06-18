@@ -13,7 +13,9 @@ class NettyLoginServer(app: LoginApplication, loggerFactory: LoggerFactoryInterf
 
     val opcodeHandler = LoginOpcodeHandler(app.env, app.processManager, loggerFactory.create("opcode"))
 
-    init {
+    override fun start() {
+        super.start()
+
         opcodeHandler.initialize()
     }
 

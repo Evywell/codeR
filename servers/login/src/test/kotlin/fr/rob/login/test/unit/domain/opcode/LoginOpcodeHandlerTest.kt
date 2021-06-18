@@ -1,6 +1,5 @@
 package fr.rob.login.test.unit.domain.opcode
 
-import com.nhaarman.mockitokotlin2.mock
 import fr.rob.core.ENV_DEV
 import fr.rob.core.ENV_TEST
 import fr.rob.core.auth.jwt.JWTDecoderService
@@ -14,6 +13,7 @@ import fr.rob.login.security.authentication.jwt.JWTAuthenticationProcess
 import fr.rob.login.test.unit.BaseTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mock
 
 class LoginOpcodeHandlerTest : BaseTest() {
 
@@ -41,7 +41,7 @@ class LoginOpcodeHandlerTest : BaseTest() {
         val loginOpcode = LoginOpcodeHandler(ENV_TEST, processManager, logger)
 
         processManager.registerProcess(AuthenticationProcess::class) {
-            val decoder = mock<JWTDecoderService>()
+            val decoder = mock(JWTDecoderService::class.java)
 
             JWTAuthenticationProcess(decoder)
         }

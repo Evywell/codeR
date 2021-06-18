@@ -29,14 +29,14 @@ class CharacterCreateOpcode(private val createCharacterProcess: CharacterCreateP
             return
         }
 
-        val newChar = createCharacterProcess.create(session.account.id, message)
+        val newChar = createCharacterProcess.create(session.account.id!!, message)
 
         session.characters.add(newChar)
 
         val characterCreateCharacter = CharacterCreateProtos.CharacterCreateResult.Character.newBuilder()
-            .setId(newChar.id)
+            .setId(newChar.id!!)
             .setName(newChar.name)
-            .setLevel(newChar.level)
+            .setLevel(newChar.level!!)
 
         val result = CharacterCreateProtos.CharacterCreateResult.newBuilder()
             .setResult(RESULT_SUCCESS)

@@ -1,7 +1,7 @@
 package fr.rob.login.game.character.create
 
 import fr.rob.entities.CharacterCreateProtos
-import fr.rob.entities.CharacterProtos
+import fr.rob.login.game.character.Character
 import fr.rob.login.game.character.CharacterRepositoryInterface
 import fr.rob.login.game.character.CharactersHolderInterface
 
@@ -41,7 +41,7 @@ class CharacterCreateProcess(private val characterRepository: CharacterRepositor
 
         // We first check his own characters to avoid a useless query
         if (
-            charactersHolder.getCharacterByName(characterName) is CharacterProtos.Character
+            charactersHolder.getCharacterByName(characterName) is Character
             || characterRepository.isCharacterNameTaken(characterName)
         ) {
             return CreateCharacterState(true, ERR_CHARACTER_NAME_ALREADY_TAKEN)
@@ -53,7 +53,7 @@ class CharacterCreateProcess(private val characterRepository: CharacterRepositor
     /**
      * No checks are made here, please use `canCreate` method
      */
-    fun create(accountId: Int, characterSkeleton: CharacterCreateProtos.CharacterCreate): CharacterProtos.Character {
+    fun create(accountId: Int, characterSkeleton: CharacterCreateProtos.CharacterCreate): Character {
         val character = characterRepository.insert(accountId, characterSkeleton)
 
         // Define the new character as the current one
