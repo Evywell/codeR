@@ -1,0 +1,11 @@
+name: Continuous Integration
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - run: docker-compose up --build -d
+      - run: chmod -R 777
+      - run: docker exec $(docker-compose ps -q gradle) gradle :servers:login:build
