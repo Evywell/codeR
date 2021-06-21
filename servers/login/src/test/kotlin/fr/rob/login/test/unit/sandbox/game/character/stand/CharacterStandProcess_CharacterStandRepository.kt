@@ -16,3 +16,8 @@ class CharacterStandProcess_CharacterStandRepository : CharacterStandRepositoryI
         return characters[0].id
     }
 }
+
+class CharacterStandProcess_CharacterStandRepository2 : CharacterStandRepositoryInterface {
+
+    override fun getCurrentCharacterId(userId: Int): Int = 0
+}

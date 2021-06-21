@@ -22,5 +22,14 @@ class LoginSessionFactory {
 
             return session
         }
+
+        fun buildAuthenticatedSpyingSession(): SpyingLoginSession {
+            val session = SpyingLoginSession()
+
+            session.isAuthenticated = true
+            session.userId = 1
+
+            return session
+        }
     }
 }

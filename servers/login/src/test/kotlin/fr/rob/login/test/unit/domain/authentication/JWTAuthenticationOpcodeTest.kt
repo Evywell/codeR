@@ -7,7 +7,7 @@ import fr.rob.login.security.authentication.jwt.JWTAuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTResultGame
 import fr.rob.login.test.unit.sandbox.network.LoginSessionFactory
 import io.jsonwebtoken.jackson.io.JacksonDeserializer
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions.* // ktlint-disable no-wildcard-imports
 import org.junit.jupiter.api.Test
 
 class JWTAuthenticationOpcodeTest : JWTBaseTest() {
@@ -38,7 +38,8 @@ class JWTAuthenticationOpcodeTest : JWTBaseTest() {
         opcodeFunction.call(session, message)
 
         // Assert
-        Assert.assertEquals(true, session.isAuthenticated)
-        Assert.assertEquals(123456, session.userId)
+        assertEquals(true, session.isAuthenticated)
+        assertEquals(123456, session.userId)
+        assertTrue(opcodeFunction.getMessageType() is AuthenticationProto.JWTAuthentication)
     }
 }

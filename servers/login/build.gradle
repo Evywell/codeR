@@ -34,6 +34,34 @@ configurations {
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                'fr/rob/entities/**',
+                'fr/rob/login/LoginApplication**',
+                'fr/rob/login/Main**',
+                'fr/rob/login/network/netty/**',
+                'fr/rob/login/config/**',
+                'fr/rob/login/**/exception/**'
+            ])
+        }))
+    }
+
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.enabled true
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.7"
 }
 
 task cucumber() {

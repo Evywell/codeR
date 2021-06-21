@@ -4,6 +4,7 @@ import fr.rob.core.database.Connection
 import fr.rob.core.database.exception.InsertException
 import fr.rob.core.database.getSQLNow
 import fr.rob.core.database.hasNextAndClose
+import fr.rob.core.database.returnAndClose
 import fr.rob.entities.CharacterCreateProtos
 
 class CharacterRepository(private val db: Connection) : CharacterRepositoryInterface {
@@ -36,7 +37,7 @@ class CharacterRepository(private val db: Connection) : CharacterRepositoryInter
             throw InsertException("Cannot insert character $characterSkeleton")
         }
 
-        return Character(generatedKeys.getInt(1), level, characterSkeleton.name)
+        return returnAndClose(Character(generatedKeys.getInt(1), level, characterSkeleton.name), generatedKeys)
     }
 
     override fun setCurrentCharacter(character: Character) {
@@ -50,7 +51,7 @@ class CharacterRepository(private val db: Connection) : CharacterRepositoryInter
 
     override fun allByAccountId(accountId: Int): MutableList<Character> {
         val characters = ArrayList<Character>()
-        val stmt = db.getPreparedStatement(SEL_CHARACTERS_BY_USER_ID)
+        val stmt = db.getPreparedStatement(SEL_CHARACTERS_BY_ACCOUNT_ID)
 
         stmt.setInt(1, accountId)
         stmt.execute()
@@ -63,14 +64,12 @@ class CharacterRepository(private val db: Connection) : CharacterRepositoryInter
             )
         }
 
-        rs.close()
-
-        return characters
+        return returnAndClose(characters, rs)
     }
 
     companion object {
         const val SEL_IS_CHARACTER_NAME_TAKEN = "SELECT 1 FROM characters WHERE name = ?"
-        const val SEL_CHARACTERS_BY_USER_ID = "SELECT id, name, level FROM characters WHERE account_id = ?"
+        const val SEL_CHARACTERS_BY_ACCOUNT_ID = "SELECT id, name, level FROM characters WHERE account_id = ?"
 
         const val UPD_LAST_SELECTED_AT = "UPDATE characters SET last_selected_at = ? WHERE id = ?"
 

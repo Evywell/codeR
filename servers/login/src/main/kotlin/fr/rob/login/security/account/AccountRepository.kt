@@ -2,6 +2,7 @@ package fr.rob.login.security.account
 
 import fr.rob.core.database.Connection
 import fr.rob.core.database.exception.InsertException
+import fr.rob.core.database.returnAndClose
 
 class AccountRepository(private val db: Connection) : AccountRepositoryInterface {
 
@@ -14,10 +15,12 @@ class AccountRepository(private val db: Connection) : AccountRepositoryInterface
         val rs = stmt.resultSet
 
         if (!rs.next()) {
+            rs.close()
+
             return null
         }
 
-        return Account(rs.getInt(1), rs.getInt(2), rs.getBoolean(3), rs.getString(4))
+        return returnAndClose(Account(rs.getInt(1), rs.getInt(2), rs.getBoolean(3), rs.getString(4)), rs)
     }
 
     override fun insert(accountSkeleton: Account): Account {
@@ -35,12 +38,12 @@ class AccountRepository(private val db: Connection) : AccountRepositoryInterface
             throw InsertException("Cannot insert account $accountSkeleton")
         }
 
-        return Account(
+        return returnAndClose(Account(
             generatedKeys.getInt(1),
             accountSkeleton.userId,
             accountSkeleton.isAdministrator,
             accountSkeleton.name
-        )
+        ), generatedKeys)
     }
 
     override fun updateName(account: Account, accountName: String) {

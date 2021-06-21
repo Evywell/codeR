@@ -24,3 +24,9 @@ fun getSQLNow(): Timestamp {
 
     return Timestamp(datetime.time)
 }
+
+fun <T : Any> returnAndClose(variable: T, resultSet: ResultSet): T {
+    resultSet.close()
+
+    return variable
+}

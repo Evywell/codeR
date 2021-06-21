@@ -5,10 +5,10 @@ import fr.rob.core.database.getIntAndClose
 
 class CharacterStandRepository(private val db: Connection) : CharacterStandRepositoryInterface {
 
-    override fun getCurrentCharacterId(userId: Int): Int {
+    override fun getCurrentCharacterId(accountId: Int): Int {
         val stmt = db.getPreparedStatement(SEL_LAST_SELECTED_CHARACTER_BY_USER_ID)
 
-        stmt.setInt(1, userId)
+        stmt.setInt(1, accountId)
         stmt.execute()
 
         val rs = stmt.resultSet
@@ -16,6 +16,8 @@ class CharacterStandRepository(private val db: Connection) : CharacterStandRepos
         if (rs.next()) {
             return getIntAndClose(1, rs)
         }
+
+        rs.close()
 
         return 0
     }
