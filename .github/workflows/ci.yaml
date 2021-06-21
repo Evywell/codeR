@@ -7,5 +7,5 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
       - run: USER_ID=$(id -u) GROUP_ID=$(id -g) docker-compose up --build -d
-      - run: docker exec $(docker-compose ps -q gradle) id
+      - run: make build-login-proto
       - run: docker exec $(docker-compose ps -q gradle) gradle :servers:login:build
