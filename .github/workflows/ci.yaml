@@ -7,5 +7,5 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
       - run: docker-compose up --build -d
-      - run: chmod -R 777
+      - run: mkdir ./.gradle && chmod -R 777 ./.gradle
       - run: docker exec $(docker-compose ps -q gradle) gradle :servers:login:build
