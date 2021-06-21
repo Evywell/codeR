@@ -3,6 +3,7 @@ FROM gradle:6.8.2-jdk11 as base
 ARG USER_ID
 ARG GROUP_ID
 
+USER $USER_ID:$GROUP_ID
 WORKDIR /mnt/app
 
 FROM base as dev
