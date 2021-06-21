@@ -1,5 +1,6 @@
 package fr.rob.login.test.unit.domain.game
 
+import fr.rob.core.network.session.exception.UnauthenticatedSessionException
 import fr.rob.login.game.SessionInitializerProcess
 import fr.rob.login.game.character.Character
 import fr.rob.login.security.account.Account
@@ -7,6 +8,7 @@ import fr.rob.login.security.account.AccountProcess
 import fr.rob.login.test.unit.BaseTest
 import fr.rob.login.test.unit.sandbox.game.character.stand.SessionInitializerProcess_CharacterRepository
 import fr.rob.login.test.unit.sandbox.network.LoginSessionFactory
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -37,6 +39,21 @@ class SessionInitializerProcessTest : BaseTest() {
         assertEquals(54, session.characters[1].id)
         assertEquals("Moonlight", session.characters[1].name)
         assertEquals(56, session.characters[1].level)
+    }
+
+    @Test
+    fun `initialize an unauthenticated session`() {
+        // Arrange
+        val characterRepository = SessionInitializerProcess_CharacterRepository(getCharactersFixtures())
+        val accountProcess = mock<AccountProcess>()
+
+        val sessionInitializerProcess = SessionInitializerProcess(characterRepository, accountProcess)
+        val session = LoginSessionFactory.buildSession()
+
+        // Act & Assert
+        Assertions.assertThrows(UnauthenticatedSessionException::class.java) {
+            sessionInitializerProcess.execute(session, "Evywell#0000")
+        }
     }
 
     private fun getCharactersFixtures(): MutableList<Character> {

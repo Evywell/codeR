@@ -27,7 +27,7 @@ class CharacterStandProcess(private val characterRepository: CharacterStandRepos
         val tmpCurrentCharacterId = characterRepository.getCurrentCharacterId(userId)
 
         val currentCharacterId =
-            if (tmpCurrentCharacterId == 0 && characters.isNotEmpty()) characters[0].id else tmpCurrentCharacterId
+            if (tmpCurrentCharacterId == 0) characters[0].id else tmpCurrentCharacterId
 
         return CharacterStand.newBuilder()
             .setNumCharacters(characters.size)

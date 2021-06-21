@@ -11,8 +11,6 @@ class PreparedStatementPool(private val connection: Connection) : HashMap<String
                 ?: throw Exception("Cannot create sql statement: $sql")
 
             this[sql] = stmt
-
-            return stmt
         }
 
         return this[sql]!!
@@ -27,5 +25,4 @@ class PreparedStatementPool(private val connection: Connection) : HashMap<String
             e.printStackTrace()
         }
     }
-
 }

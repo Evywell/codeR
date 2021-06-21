@@ -16,7 +16,7 @@ class AccountProcess_AccountRepository : AccountRepositoryInterface {
 
 class AccountProcess_AccountRepository2 : AccountRepositoryInterface {
 
-    override fun byUserId(userId: Int): Account = Account(id = 2, userId = userId)
+    override fun byUserId(userId: Int): Account = Account(id = 2, userId = userId, name = "Hello#5678")
 
     override fun insert(accountSkeleton: Account): Account {
         TODO("Not yet implemented")

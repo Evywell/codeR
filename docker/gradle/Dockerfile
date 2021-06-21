@@ -1,4 +1,4 @@
-FROM gradle:6.8.2-jdk11 as base
+FROM gradle:6.9.0-jdk11-openj9 as base
 
 ARG USER_ID
 ARG GROUP_ID

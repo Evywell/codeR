@@ -2,7 +2,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.4.20' apply false
+    id 'org.jetbrains.kotlin.jvm' version '1.5.10' apply false
 }
 
 allprojects {
@@ -12,6 +12,15 @@ allprojects {
 }
 subprojects {
     version = '1.0'
+
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+
+        kotlinOptions {
+            jvmTarget = '1.8'
+        }
+    }
 
     // https://stackoverflow.com/a/36130467
     tasks.withType(Test) {

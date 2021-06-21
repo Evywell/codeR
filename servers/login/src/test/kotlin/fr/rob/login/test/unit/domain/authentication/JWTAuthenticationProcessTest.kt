@@ -123,4 +123,51 @@ class JWTAuthenticationProcessTest : JWTBaseTest() {
         // Assert
         assertEquals(false, authenticationProcess.authenticate(NISession(), authMessage).isAuthenticated)
     }
+
+    @Test
+    fun `try authenticate with invalid ticket (account name)`() {
+        // Arrange
+        val processManager = ProcessManager()
+
+        registerJWTProcess(processManager)
+
+        val payload = mapOf<String, Any>("email" to "hello@localhost.com")
+
+        val jwt = generateJWTWithPayload("1", payload)
+
+        val authMessage = AuthenticationProto.JWTAuthentication.newBuilder()
+            .setToken(jwt)
+            .build()
+
+        // Act
+        val authenticationProcess: JWTAuthenticationProcess =
+            processManager.makeProcess(AuthenticationProcess::class) as JWTAuthenticationProcess
+
+        // Assert
+        assertEquals(false, authenticationProcess.authenticate(NISession(), authMessage).isAuthenticated)
+    }
+
+    @Test
+    fun `try authenticate with invalid ticket (wrong slug)`() {
+        // Arrange
+        val processManager = ProcessManager()
+
+        registerJWTProcess(processManager)
+
+        val payload =
+            mapOf("email" to "hello@localhost.com", "account" to ACCOUNT_NAME_1, "game" to JWTResultGame(game = "Rob"))
+
+        val jwt = generateJWTWithPayload("1", payload)
+
+        val authMessage = AuthenticationProto.JWTAuthentication.newBuilder()
+            .setToken(jwt)
+            .build()
+
+        // Act
+        val authenticationProcess: JWTAuthenticationProcess =
+            processManager.makeProcess(AuthenticationProcess::class) as JWTAuthenticationProcess
+
+        // Assert
+        assertEquals(false, authenticationProcess.authenticate(NISession(), authMessage).isAuthenticated)
+    }
 }
