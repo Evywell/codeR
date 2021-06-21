@@ -23,6 +23,7 @@ services:
       args:
         - USER_ID=${USER_ID:-1000}
         - GROUP_ID=${GROUP_ID:-1000}
+    user: $UID:$GID
     volumes:
       - .:/mnt/app
       - gradlecache:/home/gradle/.gradle
