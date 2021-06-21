@@ -1,12 +1,20 @@
 name: Continuous Integration
 on: [push]
 jobs:
-  build:
+  build-login:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
-      - run: USER_ID=$(id -u) GROUP_ID=$(id -g) docker-compose up --build -d
-      - run: make build-login-proto
-      - run: sh servers/login/bin/test/setup.sh
-      - run: docker exec $(docker-compose ps -q gradle) gradle :servers:login:build
+      - name: Runs the docker containers with the current user
+        run: |
+          USER_ID=$(id -u) GROUP_ID=$(id -g) docker-compose up --build -d
+      - name: Builds the protos
+        run: |
+          make build-login-proto
+      - name: Setup the tests
+        run: |
+          sh servers/login/bin/test/setup.sh
+      - name: Builds the login project
+        run: |
+          docker exec $(docker-compose ps -q gradle) gradle :servers:login:build
