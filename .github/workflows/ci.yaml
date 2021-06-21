@@ -6,6 +6,9 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
+      - name: Setup env
+        run: |
+          cp .env.dev .env
       - name: Runs the docker containers with the current user
         run: |
           USER_ID=$(id -u) GROUP_ID=$(id -g) docker-compose up --build -d
@@ -15,6 +18,12 @@ jobs:
       - name: Setup the tests
         run: |
           sh servers/login/bin/test/setup.sh
+          make migrate
       - name: Builds the login project
         run: |
           docker exec $(docker-compose ps -q gradle) gradle :servers:login:build
+      - name: Runs functionnal tests
+        run: |
+          docker-compose run --rm -T migrator migrations/migrator/vendor/bin/phinx seed:run --configuration migrations/migrator/phinx-world.php -e development
+          docker-compose run --rm -T migrator migrations/migrator/vendor/bin/phinx seed:run --configuration migrations/migrator/phinx-players.php -e development
+          docker exec $(docker-compose ps -q gradle) gradle :servers:login:cucumber
