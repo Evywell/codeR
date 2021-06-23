@@ -12,18 +12,12 @@ jobs:
       - name: Runs the docker containers with the current user
         run: |
           USER_ID=$(id -u) GROUP_ID=$(id -g) docker-compose up --build -d
-      - name: Builds the protos
+      - name: Install the ci env
         run: |
-          make build-login-proto
-      - name: Setup the tests
-        run: |
-          sh servers/login/bin/test/setup.sh
-          make migrate
+          make install-ci
       - name: Builds the login project
         run: |
           docker exec $(docker-compose ps -q gradle) gradle :servers:login:build
       - name: Runs functionnal tests
         run: |
-          docker-compose run --rm -T migrator migrations/migrator/vendor/bin/phinx seed:run --configuration migrations/migrator/phinx-world.php -e development
-          docker-compose run --rm -T migrator migrations/migrator/vendor/bin/phinx seed:run --configuration migrations/migrator/phinx-players.php -e development
           docker exec $(docker-compose ps -q gradle) gradle :servers:login:cucumber
