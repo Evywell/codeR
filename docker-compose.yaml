@@ -59,6 +59,6 @@ services:
     networks:
       - gamedb
     environment:
-      MYSQL_USER: testing
+      MYSQL_USER: ${WORLD_MYSQL_USER}
       MYSQL_PASSWORD: ${WORLD_MYSQL_PASSWORD}
       MYSQL_HOST: ${WORLD_MYSQL_HOST}
