@@ -1,7 +1,7 @@
 UNAME := $(shell uname | tr '[:upper:]' '[:lower:]')
 
 ifeq ($(UNAME), darwin)
-    OS = osx
+ 	OS = osx
 else
 	OS = linux
 endif
