@@ -1,9 +1,9 @@
 UNAME := $(shell uname | tr '[:upper:]' '[:lower:]')
 
 ifeq ($(UNAME), darwin)
-    OS := osx
+    OS = osx
 else
-	OS := linux
+	OS = linux
 endif
 
 # @todo: replace this by variables
@@ -14,49 +14,59 @@ ifneq "$(SUPPORTS_MAKE_ARGS)" ""
   $(eval $(COMMAND_ARGS):;@:)
 endif
 
-DOCKER_COMPOSE := docker-compose
-DCR := $(DOCKER_COMPOSE) run --rm
-DCE := $(DOCKER_COMPOSE) exec
+ifdef CI_SERVER
+NO_INTERACTIVE_FLAGS = -T
+else
+NO_INTERACTIVE_FLAGS =
+endif
 
-GRADLE := $(DCE) gradle
-GRADLE_TASK := $(GRADLE) gradle
+DOCKER_COMPOSE = docker-compose
+DCR = $(DOCKER_COMPOSE) run --rm $(NO_INTERACTIVE_FLAGS)
+DCE = $(DOCKER_COMPOSE) exec
 
-PROTOC := $(DCR) protobuf
+GRADLE = $(DCE) gradle
+GRADLE_TASK = $(GRADLE) gradle
+
+PROTOC = $(DCR) protobuf
 
 ##> Migrator
-MIGRATOR := $(DCR) migrator
-PHINX := $(MIGRATOR) migrations/migrator/vendor/bin/phinx
-PHINX_CONFIG_ARG := --configuration migrations/migrator
-PHINX_WORLD_CONFIG_ARG := $(PHINX_CONFIG_ARG)/phinx-world.php
-PHINX_PLAYERS_CONFIG_ARG := $(PHINX_CONFIG_ARG)/phinx-players.php
+MIGRATOR = $(DCR) migrator
+PHINX = $(MIGRATOR) migrations/migrator/vendor/bin/phinx
+PHINX_CONFIG_ARG = --configuration migrations/migrator
+PHINX_WORLD_CONFIG_ARG = $(PHINX_CONFIG_ARG)/phinx-world.php
+PHINX_PLAYERS_CONFIG_ARG = $(PHINX_CONFIG_ARG)/phinx-players.php
 
-MIGRATOR_SEED_NAME=
-MIGRATOR_DB=
+MIGRATOR_SEED_NAME :=
+MIGRATOR_DB :=
 ##< Migrator
 
-CLI_DIR := cli
-GAME_DIR := servers/game
-LOGIN_DIR := servers/login
+CLI_DIR = cli
+GAME_DIR = servers/game
+LOGIN_DIR = servers/login
 
-JAVA_GAME_DIR := ./$(GAME_DIR)
-JAVA_GAME_DST_DIR := $(JAVA_GAME_DIR)/src/main/java
-JAVA_GAME_PROTOS_DIR := $(JAVA_GAME_DIR)/src/main/protos
-JAVA_GAME_TEST_DST_DIR := $(JAVA_GAME_DIR)/src/test/java
-JAVA_GAME_TEST_SRC_DIR := $(JAVA_GAME_DIR)/src/test/protos
+JAVA_GAME_DIR = ./$(GAME_DIR)
+JAVA_GAME_DST_DIR = $(JAVA_GAME_DIR)/src/main/java
+JAVA_GAME_PROTOS_DIR = $(JAVA_GAME_DIR)/src/main/protos
+JAVA_GAME_TEST_DST_DIR = $(JAVA_GAME_DIR)/src/test/java
+JAVA_GAME_TEST_SRC_DIR = $(JAVA_GAME_DIR)/src/test/protos
 
-JAVA_LOGIN_DIR := ./$(LOGIN_DIR)
-JAVA_LOGIN_PROTOS_DIR := $(JAVA_LOGIN_DIR)/src/main/protos
-JAVA_LOGIN_DST_DIR := $(JAVA_LOGIN_DIR)/src/main/java
+JAVA_LOGIN_DIR = ./$(LOGIN_DIR)
+JAVA_LOGIN_PROTOS_DIR = $(JAVA_LOGIN_DIR)/src/main/protos
+JAVA_LOGIN_DST_DIR = $(JAVA_LOGIN_DIR)/src/main/java
 
-PHP_DIR := ./servers/webclient
-PHP_DST_DIR := $(PHP_DIR)/protobuf
+PHP_DIR = ./servers/webclient
+PHP_DST_DIR = $(PHP_DIR)/protobuf
 
 ##> Debug
-DEBUGGER_SOCKET_PORT := 5005
-DEBUGGER_BUILD_GAME_JAR_PATH := build/libs/game-1.0.jar
-DEBUGGER_BUILD_LOGIN_JAR_PATH := build/libs/login-1.0.jar
-DEBUGGER_BUILD_CLI_JAR_PATH := build/libs/cli-1.0.jar
+DEBUGGER_SOCKET_PORT = 5005
+DEBUGGER_BUILD_GAME_JAR_PATH = build/libs/game-1.0.jar
+DEBUGGER_BUILD_LOGIN_JAR_PATH = build/libs/login-1.0.jar
+DEBUGGER_BUILD_CLI_JAR_PATH = build/libs/cli-1.0.jar
 ##< Debug
+
+.PHONY: install-ci
+install-ci: servers/login/src/test/resources/private.pem ## Install the CI environment
+	@$(MAKE) -i CI_SERVER=true build-proto migrate seed
 
 .PHONY: help
 help: ## Outputs this help message
@@ -64,8 +74,8 @@ help: ## Outputs this help message
 
 .PHONY: build-proto
 build-proto: ## Builds protos for java and php
-	@make build-game-proto
-	@make build-login-proto
+	@$(MAKE) build-game-proto
+	@$(MAKE) build-login-proto
 
 .PHONY: build-game-proto
 build-game-proto: ## Builds game protos for java and php
@@ -92,7 +102,7 @@ up: .env ## Runs all the docker containers
 .PHONY: test
 test: build-proto setup-tests ## Runs the :servers:game tests
 	@bash $(GAME_DIR)/bin/test/setup.sh
-	@make task-test
+	@$(MAKE) task-test
 
 .PHONY: task-test
 task-test:
@@ -101,13 +111,12 @@ task-test:
 .PHONY: login-test
 login-test:
 	$(GRADLE_TASK) :servers:login:test
-	@make login-cucumber
+	@$(MAKE) login-cucumber
 
 .PHONY: login-test
 login-cucumber:
-	@make -i seed
+	@$(MAKE) -i seed
 	$(GRADLE_TASK) :servers:login:cucumber
-
 
 .PHONY: setup-tests
 setup-tests: servers/game/src/test/resources/private.pem
@@ -178,6 +187,9 @@ migrations/migrator/vendor/autoload.php: up
 
 servers/game/src/test/resources/private.pem:
 	@bash $(GAME_DIR)/bin/test/setup.sh
+
+servers/login/src/test/resources/private.pem:
+	@bash $(LOGIN_DIR)/bin/test/setup.sh
 
 servers/webclient/vendor/autoload.php: servers/webclient/composer.lock
 	composer install -d servers/webclient
