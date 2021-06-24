@@ -49,7 +49,7 @@ class GlobalStepDefinitions(private val context: LoginContext) {
     private fun getMessageProperty(propertyName: String): Any {
         val message = context.latestMessage.message as Message
 
-        val method = "get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1, propertyName.length)
+        val method = "get" + propertyName.substring(0, 1).uppercase() + propertyName.substring(1, propertyName.length)
 
         return message::class.java.getDeclaredMethod(method).invoke(message)
     }
