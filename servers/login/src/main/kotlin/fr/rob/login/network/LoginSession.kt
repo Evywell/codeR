@@ -31,6 +31,6 @@ open class LoginSession : Session(), CharactersHolderInterface {
 
     fun isOperator(): Boolean =
         isAuthenticated
-                && account.isAdministrator
-                && isLocal()
+            && account.isAdministrator
+            && isLocal()
 }

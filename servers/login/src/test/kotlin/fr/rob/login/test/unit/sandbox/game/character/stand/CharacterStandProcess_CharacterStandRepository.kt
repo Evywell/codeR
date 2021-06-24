@@ -12,12 +12,12 @@ class CharacterStandProcess_CharacterStandRepository : CharacterStandRepositoryI
         characters.add(Character.newBuilder().setId(22).setName("T102").setLevel(54).build())
     }
 
-    override fun getCurrentCharacterId(userId: Int): Int {
+    override fun getCurrentCharacterId(accountId: Int): Int {
         return characters[0].id
     }
 }
 
 class CharacterStandProcess_CharacterStandRepository2 : CharacterStandRepositoryInterface {
 
-    override fun getCurrentCharacterId(userId: Int): Int = 0
+    override fun getCurrentCharacterId(accountId: Int): Int = 0
 }

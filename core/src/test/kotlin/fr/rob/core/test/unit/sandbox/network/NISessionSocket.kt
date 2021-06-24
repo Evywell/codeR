@@ -5,7 +5,7 @@ import fr.rob.core.network.session.SessionSocketInterface
 
 class NISessionSocket : SessionSocketInterface {
 
-    override fun getIp(): String = ""
+    override fun getIp(): String = "127.0.0.1"
 
     override fun send(packet: Packet) { }
 
