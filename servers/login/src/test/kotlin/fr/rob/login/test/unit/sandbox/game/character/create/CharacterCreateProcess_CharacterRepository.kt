@@ -4,7 +4,7 @@ import fr.rob.entities.CharacterCreateProtos
 import fr.rob.login.game.character.Character
 import fr.rob.login.game.character.CharacterRepositoryInterface
 
-open class CharacterCreateProcess_CharacterRepository : CharacterRepositoryInterface {
+class CharacterCreateProcess_CharacterRepository : CharacterRepositoryInterface {
 
     override fun isCharacterNameTaken(characterName: String): Boolean = false
 
@@ -21,7 +21,7 @@ open class CharacterCreateProcess_CharacterRepository : CharacterRepositoryInter
     }
 }
 
-class CharacterCreateProcess_CharacterRepository2 : CharacterCreateProcess_CharacterRepository() {
+class CharacterCreateProcess_CharacterRepository2 : CharacterRepositoryInterface {
 
     override fun isCharacterNameTaken(characterName: String): Boolean = true
 
