@@ -5,8 +5,6 @@ import fr.rob.core.event.EventListenerInterface
 import fr.rob.core.event.EventManagerInterface
 import fr.rob.core.log.LoggerInterface
 import fr.rob.core.network.Server
-import fr.rob.core.network.netty.event.NettyEvent
-import fr.rob.core.network.netty.event.NettyListenerInterface
 import fr.rob.core.network.session.Session
 import fr.rob.core.security.SecurityBanProcess
 import io.netty.bootstrap.ServerBootstrap

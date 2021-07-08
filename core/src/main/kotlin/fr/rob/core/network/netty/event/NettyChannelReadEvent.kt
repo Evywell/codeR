@@ -12,6 +12,6 @@ data class NettyChannelReadEvent(val opcode: Int, val session: Session, val pack
     override fun getName(): String = NETTY_CHANNEL_READ
 
     companion object {
-        const val NETTY_CHANNEL_READ = "NettyChannelRead"
+        const val NETTY_CHANNEL_READ = "NettyChannelReadEvent"
     }
 }

@@ -1,3 +1,17 @@
+# Core project
+## Security
+- **SecurityAttemptProcess**: in charge of verify all the attempts of various subjects.
+  **Parameters**: The constructor takes a `SecurityBanProcess` object to perform bans if necessary
+  **Registered in**: `fr.rob.core.security.attempt.SecurityAttemptProcess`
+  **Examples**:
+```kotlin
+    val securityProcess = SecurityAttemptProcess(...)
+    val context = AuthAttemptContext(session, userId, ...)
+
+    securityProcess.execute(context)
+    // The security process will ban the session and block the user if the maximum of auth fail attempts is reached 
+```
+# Login project
 ## Security
 - **DevAuthenticationProcess**: handle authentication for development purposes.  
   `checkAuthentication` method always returns true. You must specified a `userId` in the message to log as this user.  

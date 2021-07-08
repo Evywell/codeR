@@ -6,10 +6,8 @@ import fr.rob.core.auth.jwt.JWTDecoderService
 import fr.rob.core.network.Server
 import fr.rob.core.network.netty.NettyServer
 import fr.rob.core.network.netty.plugin.security.RequestLimiter
-import fr.rob.core.network.netty.plugin.security.rule.KickLimitRule
 import fr.rob.core.process.ProcessManager
 import fr.rob.core.security.PublicKeyReader
-import fr.rob.core.security.SecurityBanProcess
 import fr.rob.login.ROB_CERTS_API_URL
 import fr.rob.login.opcode.ClientOpcodeLogin.Companion.OPERATOR_CHANGE_STRATEGY
 import fr.rob.login.security.account.AccountProcess
@@ -48,8 +46,7 @@ class SecurityModule(
                     OPERATOR_CHANGE_STRATEGY
                 )
             )
-        )
-        .rule(KickLimitRule(3, processManager.getOrMakeProcess(SecurityBanProcess::class))) as RequestLimiter
+        ) as RequestLimiter
 
     private fun registerAuthenticationProcess() {
         val accountProcess = processManager.getOrMakeProcess(AccountProcess::class)

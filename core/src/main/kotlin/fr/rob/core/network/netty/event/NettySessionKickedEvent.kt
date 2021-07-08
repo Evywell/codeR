@@ -8,6 +8,6 @@ class NettySessionKickedEvent(val session: Session) : Event() {
     override fun getName(): String = NETTY_SESSION_KICKED
 
     companion object {
-        const val NETTY_SESSION_KICKED = "NettySessionKicked"
+        const val NETTY_SESSION_KICKED = "NettySessionKickedEvent"
     }
 }
