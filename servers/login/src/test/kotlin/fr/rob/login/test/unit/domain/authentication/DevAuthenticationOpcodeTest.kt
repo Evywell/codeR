@@ -1,6 +1,7 @@
 package fr.rob.login.test.unit.domain.authentication
 
 import fr.rob.entities.AuthenticationProto
+import fr.rob.login.security.account.AccountProcess
 import fr.rob.login.security.authentication.AuthenticationProcess
 import fr.rob.login.security.authentication.dev.DevAuthenticationOpcode
 import fr.rob.login.security.authentication.dev.DevAuthenticationProcess
@@ -15,8 +16,10 @@ class DevAuthenticationOpcodeTest : BaseTest() {
     fun `call the authentication opcode`() {
         // Arrange
         val sessionInitializerProcess = getSessionInitializerProcessMock()
+        val accountProcess = processManager.getOrMakeProcess(AccountProcess::class)
 
-        val opcodeFunction = DevAuthenticationOpcode(DevAuthenticationProcess(), sessionInitializerProcess)
+        val opcodeFunction =
+            DevAuthenticationOpcode(DevAuthenticationProcess(accountProcess), sessionInitializerProcess, eventManager)
         val session = LoginSessionFactory.buildSession()
 
         val message = AuthenticationProto.DevAuthentication.newBuilder()
@@ -37,8 +40,10 @@ class DevAuthenticationOpcodeTest : BaseTest() {
     fun `fail the authentication`() {
         // Arrange
         val sessionInitializerProcess = getSessionInitializerProcessMock()
+        val accountProcess = processManager.getOrMakeProcess(AccountProcess::class)
 
-        val opcodeFunction = DevAuthenticationOpcode(DevAuthenticationProcess(), sessionInitializerProcess)
+        val opcodeFunction =
+            DevAuthenticationOpcode(DevAuthenticationProcess(accountProcess), sessionInitializerProcess, eventManager)
         val session = LoginSessionFactory.buildSession()
 
         val message = AuthenticationProto.DevAuthentication.newBuilder()

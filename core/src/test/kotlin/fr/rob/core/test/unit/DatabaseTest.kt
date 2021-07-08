@@ -1,9 +1,9 @@
-package fr.rob.login.test.unit
+package fr.rob.core.test.unit
 
 import fr.rob.core.database.Connection
 import fr.rob.core.infrastructure.database.PreparedStatement
 import org.junit.jupiter.api.BeforeEach
-import org.mockito.Mockito.* // ktlint-disable no-wildcard-imports
+import org.mockito.Mockito.`when`
 import org.mockito.kotlin.mock
 import java.sql.ResultSet
 

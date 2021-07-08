@@ -1,5 +1,6 @@
 package fr.rob.login.security.authentication
 
+import fr.rob.core.event.EventManagerInterface
 import fr.rob.core.network.Packet
 import fr.rob.core.network.session.Session
 import fr.rob.core.opcode.ProtobufOpcodeFunction
@@ -7,10 +8,12 @@ import fr.rob.entities.AuthenticationProto
 import fr.rob.login.game.SessionInitializerProcess
 import fr.rob.login.network.LoginSession
 import fr.rob.login.opcode.ServerOpcodeLogin
+import fr.rob.login.security.authentication.attempt.event.AuthenticationFailAttemptEvent
 
 abstract class AuthenticationOpcode(
     private val authenticationProcess: AuthenticationProcess,
-    private val sessionInitializerProcess: SessionInitializerProcess
+    private val sessionInitializerProcess: SessionInitializerProcess,
+    private val eventManager: EventManagerInterface
 ) :
     ProtobufOpcodeFunction(false) {
 
@@ -28,6 +31,9 @@ abstract class AuthenticationOpcode(
         } else {
             authenticationResult.result = AUTHENTICATION_RESULT_ERROR
             authenticationResult.code = authState.error
+
+            val failAttemptEvent = AuthenticationFailAttemptEvent(session, authState.userId)
+            eventManager.dispatch(failAttemptEvent)
         }
 
         session.send(Packet(ServerOpcodeLogin.AUTHENTICATION_RESULT, authenticationResult.build().toByteArray()))

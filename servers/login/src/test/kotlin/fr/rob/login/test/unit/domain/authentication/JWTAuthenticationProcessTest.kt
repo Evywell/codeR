@@ -1,17 +1,24 @@
 package fr.rob.login.test.unit.domain.authentication
 
 import fr.rob.core.auth.jwt.JWTDecoderInterface
+import fr.rob.core.misc.Time
 import fr.rob.core.process.ProcessManager
 import fr.rob.core.test.unit.sandbox.network.NISession
 import fr.rob.entities.AuthenticationProto
+import fr.rob.login.security.account.Account
+import fr.rob.login.security.account.AccountProcess
 import fr.rob.login.security.authentication.AuthenticationProcess
+import fr.rob.login.security.authentication.AuthenticationProcess.Companion.ERROR_BANNED_ACCOUNT
+import fr.rob.login.security.authentication.AuthenticationProcess.Companion.ERROR_LOCKED_ACCOUNT
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTResultGame
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import java.util.Date
 
 class JWTAuthenticationProcessTest : JWTBaseTest() {
 
@@ -46,8 +53,9 @@ class JWTAuthenticationProcessTest : JWTBaseTest() {
     fun `check authentication with empty token`() {
         // Arrange
         val jwtDecoderMock = mock(JWTDecoderInterface::class.java) {}
+        val accountProcess = processManager.getOrMakeProcess(AccountProcess::class)
 
-        val authenticationProcess = JWTAuthenticationProcess(jwtDecoderMock)
+        val authenticationProcess = JWTAuthenticationProcess(jwtDecoderMock, accountProcess)
         val message = AuthenticationProto.JWTAuthentication.getDefaultInstance()
 
         // Act & Assert
@@ -169,5 +177,69 @@ class JWTAuthenticationProcessTest : JWTBaseTest() {
 
         // Assert
         assertEquals(false, authenticationProcess.authenticate(NISession(), authMessage).isAuthenticated)
+    }
+
+    @Test
+    fun `try authenticate with valid ticket but banned account`() {
+        // Arrange
+        val processManager = ProcessManager()
+
+        val accountProcessMock = registerJWTProcess(processManager)
+
+        val userId = 123456789
+        val jwt = generateJWT(userId, "player@localhost", JWTResultGame("rob", "Rob"), ACCOUNT_NAME_1)
+        val session = NISession()
+        val account = Account().apply {
+            id = 3
+            this.userId = userId
+            bannedAt = Time.addHours(2, Date())
+        }
+        val authMessage = AuthenticationProto.JWTAuthentication.newBuilder()
+            .setToken(jwt)
+            .build()
+
+        `when`(accountProcessMock.retrieve(userId)).thenReturn(account)
+
+        // Act
+        val authenticationProcess: JWTAuthenticationProcess =
+            processManager.makeProcess(AuthenticationProcess::class) as JWTAuthenticationProcess
+
+        val authState = authenticationProcess.authenticate(session, authMessage)
+
+        // Assert
+        assertEquals(false, authState.isAuthenticated)
+        assertEquals(ERROR_BANNED_ACCOUNT, authState.error)
+    }
+
+    @Test
+    fun `try authenticate with valid ticket but locked account`() {
+        // Arrange
+        val processManager = ProcessManager()
+
+        val accountProcessMock = registerJWTProcess(processManager)
+
+        val userId = 123456789
+        val jwt = generateJWT(userId, "player@localhost", JWTResultGame("rob", "Rob"), ACCOUNT_NAME_1)
+        val session = NISession()
+        val account = Account().apply {
+            id = 3
+            this.userId = userId
+            isLocked = true
+        }
+        val authMessage = AuthenticationProto.JWTAuthentication.newBuilder()
+            .setToken(jwt)
+            .build()
+
+        `when`(accountProcessMock.retrieve(userId)).thenReturn(account)
+
+        // Act
+        val authenticationProcess: JWTAuthenticationProcess =
+            processManager.makeProcess(AuthenticationProcess::class) as JWTAuthenticationProcess
+
+        val authState = authenticationProcess.authenticate(session, authMessage)
+
+        // Assert
+        assertEquals(false, authState.isAuthenticated)
+        assertEquals(ERROR_LOCKED_ACCOUNT, authState.error)
     }
 }

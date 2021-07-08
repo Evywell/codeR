@@ -2,6 +2,7 @@ package fr.rob.login.test.unit.domain.authentication
 
 import fr.rob.core.auth.jwt.JWTDecoderService
 import fr.rob.entities.AuthenticationProto
+import fr.rob.login.security.account.AccountProcess
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationOpcode
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTResultGame
@@ -16,15 +17,16 @@ class JWTAuthenticationOpcodeTest : JWTBaseTest() {
     fun `call the authentication opcode`() {
         // Arrange
         val sessionInitializerProcess = getSessionInitializerProcessMock()
+        val accountProcess = processManager.getOrMakeProcess(AccountProcess::class)
 
         val mapping = HashMap<String, Class<*>>()
         mapping["game"] = JWTResultGame::class.java
 
         val jwtService = JWTDecoderService(getPublicKey(), JacksonDeserializer(mapping))
 
-        val authProcess = JWTAuthenticationProcess(jwtService)
+        val authProcess = JWTAuthenticationProcess(jwtService, accountProcess)
 
-        val opcodeFunction = JWTAuthenticationOpcode(authProcess, sessionInitializerProcess)
+        val opcodeFunction = JWTAuthenticationOpcode(authProcess, sessionInitializerProcess, eventManager)
         val session = LoginSessionFactory.buildSession()
 
         val jwt = generateJWT(123456, "player@localhost", JWTResultGame("rob", "Rob"), ACCOUNT_NAME_1)

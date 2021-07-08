@@ -1,6 +1,7 @@
 package fr.rob.login.test.cucumber.context
 
 import fr.rob.core.ENV_DEV
+import fr.rob.core.event.EventManager
 import fr.rob.core.log.LoggerFactory
 import fr.rob.core.test.cucumber.service.Server
 import fr.rob.core.test.unit.sandbox.log.NILogger
@@ -16,6 +17,7 @@ abstract class AbstractContext : BaseAbstractContext() {
 
     private val clients = HashMap<String, LoginClient>()
     private var server: Server
+    private val eventManager = EventManager()
     protected val app: LoginApplication = spy(LoginApplication(LoggerFactory, ENV_DEV))
 
     init {
@@ -27,7 +29,7 @@ abstract class AbstractContext : BaseAbstractContext() {
         val logger = NILogger()
 
         // Initialize opcode handler
-        val opcodeHandler = LoginOpcodeHandler(ENV_DEV, app.processManager, logger)
+        val opcodeHandler = LoginOpcodeHandler(ENV_DEV, app.processManager, eventManager, logger)
 
         server = Server(opcodeHandler)
 

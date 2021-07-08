@@ -1,6 +1,7 @@
 package fr.rob.core.infrastructure.database;
 
 import fr.rob.core.database.event.AfterSQLReqExecutedEvent;
+import fr.rob.core.database.exception.InsertException;
 import fr.rob.core.misc.clock.StopWatch;
 
 import java.io.InputStream;
@@ -25,6 +26,26 @@ public class PreparedStatement implements java.sql.PreparedStatement {
         this.connection = connection;
         this.sql = sql;
         this.stmt = stmt;
+    }
+
+    public int executeInsertOrThrow(String exceptionMessage) throws InsertException {
+        try {
+            int res = this.executeUpdate();
+
+            ResultSet rs = this.getGeneratedKeys();
+
+            if (!rs.next()) {
+                rs.close();
+
+                throw new InsertException(exceptionMessage);
+            }
+
+            rs.close();
+
+            return res;
+        } catch (SQLException e) {
+            throw new InsertException(e.getMessage());
+        }
     }
 
     @Override

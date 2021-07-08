@@ -12,7 +12,7 @@ abstract class ClientHandler(private val client: Client) : ChannelInboundHandler
 
     override fun channelActive(ctx: ChannelHandlerContext) {
         client.session = ClientSession()
-        client.session.socket = NettySessionSocket(ctx.channel())
+        client.session.socket = NettySessionSocket(ctx.channel(), client.session, client)
     }
 
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {

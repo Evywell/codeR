@@ -1,8 +1,8 @@
 package fr.rob.login.test.unit.domain.game.character.stand
 
+import fr.rob.core.test.unit.DatabaseTest
 import fr.rob.login.game.character.stand.CharacterStandRepository
 import fr.rob.login.game.character.stand.CharacterStandRepository.Companion.SEL_LAST_SELECTED_CHARACTER_BY_USER_ID
-import fr.rob.login.test.unit.DatabaseTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest

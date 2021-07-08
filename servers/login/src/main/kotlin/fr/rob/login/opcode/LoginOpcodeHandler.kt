@@ -1,6 +1,7 @@
 package fr.rob.login.opcode
 
 import fr.rob.core.ENV_DEV
+import fr.rob.core.event.EventManagerInterface
 import fr.rob.core.log.LoggerInterface
 import fr.rob.core.opcode.AdvancedOpcodeHandlerInterface
 import fr.rob.core.opcode.OpcodeHandler
@@ -16,6 +17,7 @@ import fr.rob.login.security.strategy.ChangeStrategyOpcode
 class LoginOpcodeHandler(
     private val env: String,
     override var processManager: ProcessManager,
+    private val eventManager: EventManagerInterface,
     logger: LoggerInterface
 ) :
     OpcodeHandler(logger), AdvancedOpcodeHandlerInterface {
@@ -36,9 +38,9 @@ class LoginOpcodeHandler(
         registerOpcode(
             ClientOpcodeLogin.AUTHENTICATE_SESSION,
             if (env == ENV_DEV)
-                DevAuthenticationOpcode(authenticationProcess, sessionInitializerProcess)
+                DevAuthenticationOpcode(authenticationProcess, sessionInitializerProcess, eventManager)
             else
-                JWTAuthenticationOpcode(authenticationProcess, sessionInitializerProcess)
+                JWTAuthenticationOpcode(authenticationProcess, sessionInitializerProcess, eventManager)
         )
     }
 }
