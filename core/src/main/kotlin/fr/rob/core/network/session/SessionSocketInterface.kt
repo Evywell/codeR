@@ -7,4 +7,7 @@ interface SessionSocketInterface {
     fun getIp(): String
     fun send(packet: Packet)
     fun close()
+    fun kick() {
+        close()
+    }
 }

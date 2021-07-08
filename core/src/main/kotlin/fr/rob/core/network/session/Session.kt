@@ -19,6 +19,10 @@ abstract class Session {
         socket.close()
     }
 
+    fun kick() {
+        socket.kick()
+    }
+
     fun isLocal(): Boolean {
         return getIp() == LOCALHOST_IPV4 || getIp() == LOCALHOST_IPV6
     }

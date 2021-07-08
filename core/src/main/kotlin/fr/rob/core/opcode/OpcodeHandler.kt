@@ -16,7 +16,7 @@ abstract class OpcodeHandler(private val logger: LoggerInterface) : OpcodeHandle
         val function = opcodeTable[opcode] ?: throw Exception("Cannot find opcode $opcode")
 
         if (function.authenticationNeeded && !session.isAuthenticated) {
-            session.close()
+            session.kick()
 
             throw UnauthenticatedException(
                 "The session MUST be authenticated for opcode $opcode, session closed",

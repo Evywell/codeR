@@ -26,12 +26,13 @@ final class InitialStructure extends AbstractMigration
             ->addColumn('is_administrator', 'boolean')
             ->addColumn('name', 'string')
             ->addColumn('banned_at', 'datetime', ['null' => true])
+            ->addColumn('is_locked', 'boolean', ['default' => false])
             ->addTimestamps()
             ->addIndex('user_id', ['unique' => true])
             ->create();
 
         $this
-            ->table('characters')
+            ->table('characters', ['signed' => false])
             ->addColumn('account_id', 'integer', ['signed' => false, 'null' => true])
             ->addColumn('name', 'string')
             ->addColumn('level', 'integer', ['limit' => MysqlAdapter::INT_TINY, 'signed' => false])

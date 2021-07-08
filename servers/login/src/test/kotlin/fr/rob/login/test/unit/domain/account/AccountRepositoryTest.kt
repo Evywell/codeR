@@ -1,12 +1,13 @@
 package fr.rob.login.test.unit.domain.account
 
 import fr.rob.core.database.exception.InsertException
+import fr.rob.core.test.unit.DatabaseTest
 import fr.rob.login.security.account.Account
 import fr.rob.login.security.account.AccountRepository
 import fr.rob.login.security.account.AccountRepository.Companion.INS_ACCOUNT
 import fr.rob.login.security.account.AccountRepository.Companion.SEL_ACCOUNT_BY_USER_ID
-import fr.rob.login.security.account.AccountRepository.Companion.UPDATE_ACCOUNT_NAME
-import fr.rob.login.test.unit.DatabaseTest
+import fr.rob.login.security.account.AccountRepository.Companion.UPD_ACCOUNT_LOCK
+import fr.rob.login.security.account.AccountRepository.Companion.UPD_ACCOUNT_NAME
 import org.junit.jupiter.api.Assertions.* // ktlint-disable no-wildcard-imports
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -36,6 +37,7 @@ class AccountRepositoryTest : DatabaseTest() {
         `when`(rsMock.getInt(2)).thenReturn(userId)
         `when`(rsMock.getBoolean(3)).thenReturn(isAdministrator)
         `when`(rsMock.getString(4)).thenReturn(name)
+        `when`(rsMock.getDate(5)).thenReturn(null)
 
         val repository = AccountRepository(dbMock)
 
@@ -77,7 +79,7 @@ class AccountRepositoryTest : DatabaseTest() {
     @Test
     fun `update account name`() {
         // Arrange
-        `when`(dbMock.getPreparedStatement(UPDATE_ACCOUNT_NAME)).thenReturn(stmtMock)
+        `when`(dbMock.getPreparedStatement(UPD_ACCOUNT_NAME)).thenReturn(stmtMock)
 
         val account = Account(6)
         val accountName = "Evy#0000"
@@ -89,6 +91,23 @@ class AccountRepositoryTest : DatabaseTest() {
         // Assert
         verify(stmtMock, times(1)).setString(1, accountName)
         verify(stmtMock, times(1)).setInt(2, account.id!!)
+        verify(stmtMock, times(1)).execute()
+    }
+
+    @Test
+    fun `lock an account`() {
+        // Arrange
+        `when`(dbMock.getPreparedStatement(UPD_ACCOUNT_LOCK)).thenReturn(stmtMock)
+
+        val accountId = 3
+        val repository = AccountRepository(dbMock)
+
+        // Act
+        repository.lock(accountId)
+
+        // Assert
+        verify(stmtMock, times(1)).setBoolean(1, true)
+        verify(stmtMock, times(1)).setInt(2, accountId)
         verify(stmtMock, times(1)).execute()
     }
 

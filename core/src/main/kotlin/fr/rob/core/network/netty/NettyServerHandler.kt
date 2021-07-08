@@ -2,6 +2,7 @@ package fr.rob.core.network.netty
 
 import fr.rob.core.log.LoggableException
 import fr.rob.core.network.Packet
+import fr.rob.core.network.netty.event.NettyChannelReadEvent
 import fr.rob.core.network.session.Session
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
@@ -17,7 +18,12 @@ abstract class NettyServerHandler(private val nettyServer: NettyServer) : Channe
             val packet = NettyPacket.fromByteArray(msg as ByteArray)
             val opcode = packet.readOpcode()
 
-            processPacket(opcode, session, packet)
+            val event = NettyChannelReadEvent(opcode, session, packet)
+            nettyServer.triggerEvent(event)
+
+            if (event.shouldProcessPacket) {
+                processPacket(opcode, session, packet)
+            }
         } catch (exception: Exception) {
             if (exception is LoggableException) {
                 exception.message?.let { exception.logger.error(it) }
@@ -41,7 +47,16 @@ abstract class NettyServerHandler(private val nettyServer: NettyServer) : Channe
         }
 
         val session = nettyServer.createSession()
-        session.socket = NettySessionSocket(ctx.channel())
+
+        // Security check
+        if (nettyServer.securityBanProcess.isSessionIpBanned(session)) {
+            nettyServer.logger.info("Banned session tried to open a socket: ${session.getIp()}")
+            session.close()
+
+            return
+        }
+
+        session.socket = NettySessionSocket(ctx.channel(), session, this)
 
         nettyServer.registerSession(ctx.channel().hashCode(), session)
     }

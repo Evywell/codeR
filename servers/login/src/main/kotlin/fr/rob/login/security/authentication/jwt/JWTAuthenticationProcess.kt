@@ -2,9 +2,11 @@ package fr.rob.login.security.authentication.jwt
 
 import fr.rob.core.auth.jwt.JWTDecoderInterface
 import fr.rob.entities.AuthenticationProto
+import fr.rob.login.security.account.AccountProcess
 import fr.rob.login.security.authentication.AuthenticationProcess
 
-class JWTAuthenticationProcess(private val jwtDecoder: JWTDecoderInterface) : AuthenticationProcess() {
+class JWTAuthenticationProcess(private val jwtDecoder: JWTDecoderInterface, accountProcess: AccountProcess) :
+    AuthenticationProcess(accountProcess) {
 
     override fun checkAuthentication(authMessage: Any): AuthenticationState {
         val token = (authMessage as AuthenticationProto.JWTAuthentication).token
@@ -19,10 +21,17 @@ class JWTAuthenticationProcess(private val jwtDecoder: JWTDecoderInterface) : Au
             val result = jwtDecoder.decode(token)
             val accountName = result.get(JWT_AUTH_RESULT_ACCOUNT_NAME)
 
+            if (result.get(JWT_AUTH_RESULT_USER_ID) == null) {
+                return errorState
+            }
+
+            val userId = (result.get(JWT_AUTH_RESULT_USER_ID) as String).toInt()
+
+            errorState.userId = userId
+
             // Not a valid ticket
             if (
                 result.get(JWT_AUTH_RESULT_EMAIL) == null
-                || result.get(JWT_AUTH_RESULT_USER_ID) == null
                 || accountName == null
             ) {
                 return errorState
@@ -35,8 +44,6 @@ class JWTAuthenticationProcess(private val jwtDecoder: JWTDecoderInterface) : Au
             if (!game.slug.equals(JWT_AUTH_RESULT_GAME_SLUG)) {
                 return errorState
             }
-
-            val userId = (result.get(JWT_AUTH_RESULT_USER_ID) as String).toInt()
 
             AuthenticationState(true, userId, accountName = accountName as String)
         } catch (e: Exception) {

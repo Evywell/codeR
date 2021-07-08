@@ -1,12 +1,14 @@
 package fr.rob.core.test.unit
 
 import fr.rob.core.BaseApplication
+import fr.rob.core.event.EventManagerInterface
 import fr.rob.core.log.LoggerFactoryInterface
 import fr.rob.core.log.LoggerInterface
 import fr.rob.core.network.Server
 import fr.rob.core.opcode.OpcodeHandler
 import fr.rob.core.process.ProcessManager
 import fr.rob.core.test.unit.sandbox.NIApplication
+import fr.rob.core.test.unit.sandbox.event.NIEventManager
 import fr.rob.core.test.unit.sandbox.log.NILogger
 import fr.rob.core.test.unit.sandbox.log.NILoggerFactory
 import fr.rob.core.test.unit.sandbox.network.NIServer
@@ -21,6 +23,7 @@ open class BaseTest {
     val opcodeHandler: OpcodeHandler = NIOpcodeHandler(logger)
     val processManager: ProcessManager = ProcessManager()
     var server: Server = NIServer()
+    val eventManager: EventManagerInterface = NIEventManager()
 
     fun getResourceURL(resourcePath: String): URL? = BaseTest::class.java.classLoader.getResource(resourcePath)
 

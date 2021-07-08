@@ -21,20 +21,20 @@ open class BaseTest : CoreBaseTest() {
 
     @BeforeEach
     fun setUp() {
+        processManager.registerProcess(AccountProcess::class) {
+            AccountProcess(AccountProcess_AccountRepository())
+        }
+
         processManager.registerProcess(CharacterCreateProcess::class) {
             CharacterCreateProcess(CharacterCreateProcess_CharacterRepository())
         }
 
         processManager.registerProcess(AuthenticationProcess::class) {
-            DevAuthenticationProcess()
+            DevAuthenticationProcess(processManager.getOrMakeProcess(AccountProcess::class))
         }
 
         processManager.registerProcess(CharacterStandProcess::class) {
             CharacterStandProcess(CharacterStandProcess_CharacterStandRepository())
-        }
-
-        processManager.registerProcess(AccountProcess::class) {
-            AccountProcess(AccountProcess_AccountRepository())
         }
 
         processManager.registerProcess(SessionInitializerProcess::class) {

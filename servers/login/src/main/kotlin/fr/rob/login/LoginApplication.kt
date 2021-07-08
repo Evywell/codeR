@@ -9,6 +9,9 @@ import fr.rob.core.initiator.Initiator
 import fr.rob.core.log.LoggerFactoryInterface
 import fr.rob.core.network.Server
 import fr.rob.core.process.ProcessManager
+import fr.rob.core.security.SecurityBanProcess
+import fr.rob.core.security.SecurityBanRepository
+import fr.rob.core.security.attempt.SecurityAttemptProcess
 import fr.rob.login.config.DatabaseConfigHandler
 import fr.rob.login.game.SessionInitializerProcess
 import fr.rob.login.game.character.CharacterRepository
@@ -28,13 +31,14 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
     val connectionManager = ConnectionManager(eventManager)
     val processManager = ProcessManager()
 
-    override fun run() {
-        super.run()
+    override fun initDependencies() {
+        super.initDependencies()
 
         config!!.retrieveConfig(CONFIG_KEY_DATABASES)
 
         val characterRepository = CharacterRepository(connectionManager.getConnection(DB_PLAYERS)!!)
         val accountRepository = AccountRepository(connectionManager.getConnection(DB_PLAYERS)!!)
+        val securityBanRepository = SecurityBanRepository(connectionManager.getConnection(DB_PLAYERS)!!)
 
         processManager.registerProcess(CharacterStandProcess::class) {
             CharacterStandProcess(CharacterStandRepository(connectionManager.getConnection(DB_PLAYERS)!!))
@@ -52,6 +56,18 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
             SessionInitializerProcess(characterRepository, processManager.getOrMakeProcess(AccountProcess::class))
         }
 
+        processManager.registerProcess(SecurityBanProcess::class) {
+            SecurityBanProcess(securityBanRepository)
+        }
+
+        processManager.registerProcess(SecurityAttemptProcess::class) {
+            SecurityAttemptProcess(processManager.getOrMakeProcess(SecurityBanProcess::class))
+        }
+    }
+
+    override fun run() {
+        super.run()
+
         processManager.registerProcess(StrategyProcess::class) {
             StrategyProcess(server!!)
         }
@@ -60,7 +76,7 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
     }
 
     override fun registerModules(modules: MutableList<AbstractModule>) {
-        modules.add(SecurityModule(env, processManager))
+        modules.add(SecurityModule(env, processManager, server!!))
     }
 
     override fun registerInitiatorTasks(initiator: Initiator) {}
@@ -71,8 +87,11 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
     }
 
     override fun createServer(): Server = NettyLoginServer(
-            this, loggerFactory,
-            LOGIN_SERVER_PORT,
-            LOGIN_SERVER_ENABLE_SSL
-        )
+        this,
+        eventManager,
+        processManager.getOrMakeProcess(SecurityBanProcess::class),
+        loggerFactory,
+        LOGIN_SERVER_PORT,
+        LOGIN_SERVER_ENABLE_SSL
+    )
 }

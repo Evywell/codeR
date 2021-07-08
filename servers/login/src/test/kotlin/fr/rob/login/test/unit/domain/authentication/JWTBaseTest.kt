@@ -3,6 +3,7 @@ package fr.rob.login.test.unit.domain.authentication
 import fr.rob.core.auth.jwt.JWTDecoderService
 import fr.rob.core.process.ProcessManager
 import fr.rob.core.security.PublicKeyReader
+import fr.rob.login.security.account.AccountProcess
 import fr.rob.login.security.authentication.AuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTResultGame
@@ -10,6 +11,7 @@ import fr.rob.login.test.unit.BaseTest
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.jackson.io.JacksonDeserializer
 import org.bouncycastle.util.io.pem.PemReader
+import org.mockito.kotlin.mock
 import java.io.File
 import java.io.FileReader
 import java.security.KeyFactory
@@ -23,15 +25,19 @@ import kotlin.collections.HashMap
 
 open class JWTBaseTest : BaseTest() {
 
-    fun registerJWTProcess(processManager: ProcessManager) {
+    fun registerJWTProcess(processManager: ProcessManager): AccountProcess {
+        val accountProcess = mock<AccountProcess>()
+
         processManager.registerProcess(AuthenticationProcess::class) {
             val mapping = HashMap<String, Class<*>>()
             mapping["game"] = JWTResultGame::class.java
 
             val jwtService = JWTDecoderService(getPublicKey(), JacksonDeserializer(mapping))
 
-            JWTAuthenticationProcess(jwtService)
+            JWTAuthenticationProcess(jwtService, accountProcess)
         }
+
+        return accountProcess
     }
 
     protected fun generateJWT(userId: Int, email: String, game: JWTResultGame, accountName: String): String {

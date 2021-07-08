@@ -1,6 +1,7 @@
 package fr.rob.login.test.unit.domain.game.character
 
 import fr.rob.core.database.exception.InsertException
+import fr.rob.core.test.unit.DatabaseTest
 import fr.rob.entities.CharacterCreateProtos
 import fr.rob.login.game.character.Character
 import fr.rob.login.game.character.CharacterRepository
@@ -8,7 +9,6 @@ import fr.rob.login.game.character.CharacterRepository.Companion.INS_NEW_CHARACT
 import fr.rob.login.game.character.CharacterRepository.Companion.SEL_CHARACTERS_BY_ACCOUNT_ID
 import fr.rob.login.game.character.CharacterRepository.Companion.SEL_IS_CHARACTER_NAME_TAKEN
 import fr.rob.login.game.character.CharacterRepository.Companion.UPD_LAST_SELECTED_AT
-import fr.rob.login.test.unit.DatabaseTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test

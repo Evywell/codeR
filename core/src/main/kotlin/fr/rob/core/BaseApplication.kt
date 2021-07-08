@@ -32,11 +32,15 @@ abstract class BaseApplication(
 
     abstract fun createServer(): Server?
 
-    open fun run() {
-        exceptionManager.catchExceptions()
-
+    protected open fun initDependencies() {
         // Config
         config?.let { registerConfigHandlers(it) }
+    }
+
+    open fun run() {
+        initDependencies()
+        server = createServer()
+        exceptionManager.catchExceptions()
 
         // Modules
         registerModules(modules)
@@ -47,8 +51,6 @@ abstract class BaseApplication(
 
         // Loading tasks
         registerInitiatorTasks(initiator)
-
-        server = createServer()
     }
 
     open fun loadConfig(file: File): Config {
