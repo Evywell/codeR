@@ -26,6 +26,8 @@ class SecurityBanRepository(private val db: Connection) : SecurityBanRepositoryI
         val rs = stmt.resultSet
 
         if (!rs.next()) {
+            rs.close()
+
             return null
         }
 
