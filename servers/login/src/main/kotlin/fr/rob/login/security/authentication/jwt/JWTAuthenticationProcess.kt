@@ -15,7 +15,7 @@ class JWTAuthenticationProcess(private val jwtDecoder: JWTDecoderInterface, acco
             throw Exception("You MUST specify a value for the token")
         }
 
-        val errorState = AuthenticationState(false, error = ERROR_BAD_CREDENTIALS)
+        val errorState = LoginAuthenticationState(false, error = ERROR_BAD_CREDENTIALS)
 
         return try {
             val result = jwtDecoder.decode(token)
@@ -45,7 +45,7 @@ class JWTAuthenticationProcess(private val jwtDecoder: JWTDecoderInterface, acco
                 return errorState
             }
 
-            AuthenticationState(true, userId, accountName = accountName as String)
+            LoginAuthenticationState(true, userId, accountName = accountName as String)
         } catch (e: Exception) {
             errorState
         }

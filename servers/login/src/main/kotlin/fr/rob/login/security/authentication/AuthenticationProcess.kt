@@ -2,13 +2,12 @@ package fr.rob.login.security.authentication
 
 import fr.rob.core.network.session.Session
 import fr.rob.login.security.account.AccountProcess
+import fr.rob.core.security.authentication.AuthenticationProcess as BaseAuthenticationProcess
 
-abstract class AuthenticationProcess(private val accountProcess: AccountProcess) {
+abstract class AuthenticationProcess(private val accountProcess: AccountProcess) : BaseAuthenticationProcess() {
 
-    protected abstract fun checkAuthentication(authMessage: Any): AuthenticationState
-
-    fun authenticate(session: Session, authMessage: Any): AuthenticationState {
-        val state = checkAuthentication(authMessage)
+    override fun authenticate(session: Session, authMessage: Any): LoginAuthenticationState {
+        val state = checkAuthentication(authMessage) as LoginAuthenticationState
 
         if (!state.isAuthenticated) {
             return state
@@ -22,7 +21,10 @@ abstract class AuthenticationProcess(private val accountProcess: AccountProcess)
             val isLocked = account.isLocked
 
             if (isBanned || isLocked) {
-                return AuthenticationState(false, error = if (isBanned) ERROR_BANNED_ACCOUNT else ERROR_LOCKED_ACCOUNT)
+                return LoginAuthenticationState(
+                    false,
+                    error = if (isBanned) ERROR_BANNED_ACCOUNT else ERROR_LOCKED_ACCOUNT
+                )
             }
         }
 
@@ -33,15 +35,14 @@ abstract class AuthenticationProcess(private val accountProcess: AccountProcess)
     }
 
     companion object {
-        const val ERROR_BAD_CREDENTIALS = "bad_credentials"
         const val ERROR_BANNED_ACCOUNT = "err_banned_account"
         const val ERROR_LOCKED_ACCOUNT = "err_locked_account"
     }
 
-    data class AuthenticationState(
-        var isAuthenticated: Boolean,
+    data class LoginAuthenticationState(
+        override var isAuthenticated: Boolean,
         var userId: Int? = null,
-        var error: String? = null,
+        override var error: String? = null,
         var accountName: String? = null
-    )
+    ) : AuthenticationState
 }

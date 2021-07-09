@@ -2,7 +2,7 @@ package fr.rob.login.test.unit.domain.authentication
 
 import fr.rob.entities.AuthenticationProto
 import fr.rob.login.security.account.AccountProcess
-import fr.rob.login.security.authentication.AuthenticationProcess
+import fr.rob.login.security.authentication.AuthenticationProcess.LoginAuthenticationState
 import fr.rob.login.security.authentication.dev.DevAuthenticationOpcode
 import fr.rob.login.security.authentication.dev.DevAuthenticationProcess
 import fr.rob.login.test.unit.BaseTest
@@ -60,7 +60,7 @@ class DevAuthenticationOpcodeTest : BaseTest() {
 
     @Test
     fun `getters and setters`() {
-        val state = AuthenticationProcess.AuthenticationState(false).apply {
+        val state = LoginAuthenticationState(false).apply {
             userId = 123
             error = "test"
             accountName = "Evywell#0000"
