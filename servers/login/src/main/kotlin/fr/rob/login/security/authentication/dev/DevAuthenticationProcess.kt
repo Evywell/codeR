@@ -13,9 +13,9 @@ class DevAuthenticationProcess(accountProcess: AccountProcess) : AuthenticationP
         val accountName = authMessage.accountName
 
         if (userId == 0) {
-            return AuthenticationState(false, userId, error = ERROR_BAD_CREDENTIALS)
+            return LoginAuthenticationState(false, userId, error = ERROR_BAD_CREDENTIALS)
         }
 
-        return AuthenticationState(true, userId, accountName = accountName)
+        return LoginAuthenticationState(true, userId, accountName = accountName)
     }
 }

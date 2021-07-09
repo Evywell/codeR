@@ -4,7 +4,6 @@ import fr.rob.core.network.Packet
 import fr.rob.entities.AuthenticationProto
 import fr.rob.login.opcode.ClientOpcodeLogin
 import fr.rob.login.security.authentication.AuthenticationOpcode
-import fr.rob.login.security.authentication.AuthenticationProcess
 import fr.rob.login.test.cucumber.context.LoginContext
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
@@ -12,6 +11,7 @@ import io.cucumber.java.en.When
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
+import fr.rob.core.security.authentication.AuthenticationProcess as BaseAuthenticationProcess
 
 class AuthenticationStepDefinitions(private val context: LoginContext) {
 
@@ -47,7 +47,7 @@ class AuthenticationStepDefinitions(private val context: LoginContext) {
         val authResult = message.message as AuthenticationProto.AuthenticationResult
 
         assertEquals(AuthenticationOpcode.AUTHENTICATION_RESULT_ERROR, authResult.result)
-        assertEquals(AuthenticationProcess.ERROR_BAD_CREDENTIALS, authResult.code)
+        assertEquals(BaseAuthenticationProcess.ERROR_BAD_CREDENTIALS, authResult.code)
     }
 
     @Given("the user {int} does not have an account")

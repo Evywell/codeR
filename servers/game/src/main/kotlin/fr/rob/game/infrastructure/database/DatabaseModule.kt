@@ -1,14 +1,14 @@
 package fr.rob.game.infrastructure.database
 
 import fr.rob.core.AbstractModule
-import fr.rob.core.event.EventInterface
-import fr.rob.core.event.EventListenerInterface
-import fr.rob.core.event.EventManagerInterface
-import fr.rob.core.log.LoggerInterface
 import fr.rob.core.database.event.AfterCreatePreparedStatementEvent
 import fr.rob.core.database.event.AfterSQLReqExecutedEvent
 import fr.rob.core.database.event.DatabaseEvent
+import fr.rob.core.event.EventInterface
+import fr.rob.core.event.EventListenerInterface
+import fr.rob.core.event.EventManagerInterface
 import fr.rob.core.log.LoggerFactory
+import fr.rob.core.log.LoggerInterface
 
 class DatabaseModule(private val eventManager: EventManagerInterface) : AbstractModule() {
 
