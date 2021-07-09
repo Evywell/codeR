@@ -48,6 +48,13 @@ abstract class NettyServerHandler(private val nettyServer: NettyServer) : Channe
 
         val session = nettyServer.createSession()
 
+        if (!nettyServer.serverStrategy.authorizeSession(session)) {
+            // We kick the session to trigger the Attempt security process
+            session.kick()
+
+            return
+        }
+
         // Security check
         if (nettyServer.securityBanProcess.isSessionIpBanned(session)) {
             nettyServer.logger.info("Banned session tried to open a socket: ${session.getIp()}")
