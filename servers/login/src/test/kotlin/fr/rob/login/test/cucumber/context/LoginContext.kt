@@ -4,9 +4,13 @@ import fr.rob.core.database.Connection
 import fr.rob.core.test.cucumber.service.Message
 import fr.rob.login.DB_PLAYERS
 
-class LoginContext : AbstractContext() {
+class LoginContext(private val orchestratorContext: OrchestratorContext) : AbstractContext() {
 
     lateinit var latestMessage: Message
+
+    init {
+        orchestratorContext
+    }
 
     fun authAs(userId: Int) {
         getMainClient().authenticateToServerAs(userId)

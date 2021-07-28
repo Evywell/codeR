@@ -1,8 +1,8 @@
-package fr.rob.login.test.cucumber.service.config
+package fr.rob.core.config.hashmap
 
 import fr.rob.core.config.Config
 
-class Config : Config() {
+class HashMapConfig : Config() {
 
     val properties = HashMap<String, Any>()
 

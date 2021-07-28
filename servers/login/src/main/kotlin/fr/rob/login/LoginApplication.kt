@@ -1,8 +1,10 @@
 package fr.rob.login
 
 import fr.rob.core.AbstractModule
-import fr.rob.core.BaseApplication
+import fr.rob.core.DB_CONFIG
+import fr.rob.core.SingleServerApplication
 import fr.rob.core.config.Config
+import fr.rob.core.config.commons.configuration2.ConfigLoader
 import fr.rob.core.database.ConnectionManager
 import fr.rob.core.event.EventManager
 import fr.rob.core.initiator.Initiator
@@ -19,29 +21,39 @@ import fr.rob.login.game.character.create.CharacterCreateProcess
 import fr.rob.login.game.character.stand.CharacterStandProcess
 import fr.rob.login.game.character.stand.CharacterStandRepository
 import fr.rob.login.network.netty.NettyLoginServer
+import fr.rob.login.security.OrchestratorModule
 import fr.rob.login.security.SecurityModule
 import fr.rob.login.security.account.AccountProcess
 import fr.rob.login.security.account.AccountRepository
 import fr.rob.login.security.strategy.StrategyProcess
+import fr.rob.orchestrator.agent.AbstractAgent
+import fr.rob.shared.orchestrator.OrchestratorRepository
+import fr.rob.shared.orchestrator.OrchestratorRepositoryInterface
+import fr.rob.shared.orchestrator.config.OrchestratorConfigHandler
 
 open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, env: String) :
-    BaseApplication(env, loggerFactory.create("login")) {
+    SingleServerApplication(env, loggerFactory.create("login"), ConfigLoader(), EventManager()) {
 
-    private val eventManager = EventManager()
     val connectionManager = ConnectionManager(eventManager)
     val processManager = ProcessManager()
+
+    private lateinit var orchestratorRepository: OrchestratorRepositoryInterface
 
     override fun initDependencies() {
         super.initDependencies()
 
         config!!.retrieveConfig(CONFIG_KEY_DATABASES)
 
-        val characterRepository = CharacterRepository(connectionManager.getConnection(DB_PLAYERS)!!)
-        val accountRepository = AccountRepository(connectionManager.getConnection(DB_PLAYERS)!!)
-        val securityBanRepository = SecurityBanRepository(connectionManager.getConnection(DB_PLAYERS)!!)
+        val dbPlayers = connectionManager.getConnection(DB_PLAYERS)!!
+        val dbConfig = connectionManager.getConnection(DB_CONFIG)!!
+
+        val characterRepository = CharacterRepository(dbPlayers)
+        val accountRepository = AccountRepository(dbPlayers)
+        val securityBanRepository = SecurityBanRepository(dbPlayers)
+        orchestratorRepository = OrchestratorRepository(dbConfig)
 
         processManager.registerProcess(CharacterStandProcess::class) {
-            CharacterStandProcess(CharacterStandRepository(connectionManager.getConnection(DB_PLAYERS)!!))
+            CharacterStandProcess(CharacterStandRepository(dbPlayers))
         }
 
         processManager.registerProcess(CharacterCreateProcess::class) {
@@ -65,18 +77,26 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
         }
     }
 
-    override fun run() {
-        super.run()
-
+    override fun afterRun() {
         processManager.registerProcess(StrategyProcess::class) {
-            StrategyProcess(server!!)
+            StrategyProcess(server)
         }
 
-        server!!.start()
+        val agent = processManager.getOrMakeProcess(AbstractAgent::class)
+        agent.authenticate()
+
+        server.start()
     }
 
     override fun registerModules(modules: MutableList<AbstractModule>) {
-        modules.add(SecurityModule(env, processManager, server!!))
+        modules.add(SecurityModule(env, processManager, server))
+        modules.add(
+            OrchestratorModule(
+                orchestratorRepository,
+                config!!.retrieveConfig("orchestrator") as OrchestratorConfigHandler.OrchestratorConfig,
+                processManager
+            )
+        )
     }
 
     override fun registerInitiatorTasks(initiator: Initiator) {}
@@ -84,12 +104,13 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
     override fun registerConfigHandlers(config: Config) {
         config
             .addHandler(DatabaseConfigHandler(connectionManager))
+            .addHandler(OrchestratorConfigHandler())
     }
 
     override fun createServer(): Server = NettyLoginServer(
         this,
         eventManager,
-        processManager.getOrMakeProcess(SecurityBanProcess::class),
+        null,
         loggerFactory,
         LOGIN_SERVER_PORT,
         LOGIN_SERVER_ENABLE_SSL

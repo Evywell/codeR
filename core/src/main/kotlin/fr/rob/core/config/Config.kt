@@ -35,6 +35,7 @@ abstract class Config {
 
     /**
      * Creates a custom configuration object using a config handler and store it in the cache
+     *
      * Returns the cache result if exists
      */
     fun retrieveConfig(configKey: String): Any? {

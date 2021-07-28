@@ -1,0 +1,13 @@
+syntax = "proto3";
+import "google/protobuf/any.proto";
+
+package fr.rob.entities.orchestrator;
+
+option java_outer_classname = "RequestProto";
+option php_namespace = "Rob\\Protos";
+option php_metadata_namespace = "Rob\\Protos\\Meta";
+
+message Request {
+  string id = 1;
+  google.protobuf.Any data = 2;
+}

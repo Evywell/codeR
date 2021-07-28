@@ -56,7 +56,7 @@ abstract class NettyServerHandler(private val nettyServer: NettyServer) : Channe
         }
 
         // Security check
-        if (nettyServer.securityBanProcess.isSessionIpBanned(session)) {
+        if (nettyServer.securityBanProcess?.isSessionIpBanned(session) == true) {
             nettyServer.logger.info("Banned session tried to open a socket: ${session.getIp()}")
             session.close()
 

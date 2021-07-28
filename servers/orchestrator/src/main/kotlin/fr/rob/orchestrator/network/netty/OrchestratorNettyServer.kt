@@ -14,12 +14,18 @@ class OrchestratorNettyServer(
     port: Int,
     ssl: Boolean,
     eventManager: EventManagerInterface,
-    securityBanProcess: SecurityBanProcess,
+    securityBanProcess: SecurityBanProcess?,
     loggerFactory: LoggerFactoryInterface,
     processManager: ProcessManager
 ) : NettyServer(port, ssl, eventManager, securityBanProcess, loggerFactory.create("orchestrator")) {
 
     val opcodeHandler = OrchestratorOpcodeHandler(processManager, loggerFactory.create("opcode"))
+
+    override fun start() {
+        super.start()
+
+        opcodeHandler.initialize()
+    }
 
     override fun handler(): NettyServerHandler = OrchestratorServerHandler(this)
 

@@ -6,9 +6,14 @@ plugins {
 }
 
 dependencies {
+    evaluationDependsOn(":servers:orchestrator")
+
     compile project(':core')
     compile project(':shared')
+    compile project(':servers:orchestrator')
+
     testCompile project(':core').sourceSets.test.output
+    testCompile project(':servers:orchestrator').sourceSets.test.output
 }
 
 jacocoTestReport {

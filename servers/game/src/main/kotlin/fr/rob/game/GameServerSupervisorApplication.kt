@@ -1,8 +1,9 @@
 package fr.rob.game
 
 import fr.rob.core.AbstractModule
-import fr.rob.core.BaseApplication
+import fr.rob.core.MultiServerApplication
 import fr.rob.core.config.Config
+import fr.rob.core.config.commons.configuration2.ConfigLoader
 import fr.rob.core.database.ConnectionManager
 import fr.rob.core.event.EventManager
 import fr.rob.core.initiator.Initiator
@@ -21,17 +22,15 @@ import fr.rob.game.infrastructure.database.DatabaseModule
 
 class GameServerSupervisorApplication(
     env: String,
-    private val eventManager: EventManager,
+    eventManager: EventManager,
     private val connectionManager: ConnectionManager
-) : BaseApplication(env, LoggerFactory.create("game")) {
+) : MultiServerApplication(env, LoggerFactory.create("game"), ConfigLoader(), eventManager) {
 
     private val processManager = ProcessManager()
 
     lateinit var servers: Array<Server>
 
-    override fun run() {
-        super.run()
-
+    override fun afterRun() {
         initiator
             .runTask(TASK_LOAD_SERVER_CONFIG) // Store server info
 
@@ -63,8 +62,6 @@ class GameServerSupervisorApplication(
             .addHandler(DatabaseConfigHandler(connectionManager))
             .addHandler(ServerConfigHandler())
     }
-
-    override fun createServer(): fr.rob.core.network.Server? = null
 
     override fun registerModules(modules: MutableList<AbstractModule>) {
         modules.add(DatabaseModule(eventManager))
