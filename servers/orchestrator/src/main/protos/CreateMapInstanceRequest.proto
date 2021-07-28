@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package fr.rob.entities.orchestrator;
+
+option java_outer_classname = "CreateMapInstanceRequestProto";
+option php_namespace = "Rob\\Protos";
+option php_metadata_namespace = "Rob\\Protos\\Meta";
+
+message CreateMapInstanceRequest {
+  int32 mapId = 1;
+}

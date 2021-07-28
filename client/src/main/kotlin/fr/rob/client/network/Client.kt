@@ -16,6 +16,7 @@ class Client(private val hostname: String, private val port: Int) {
     val logger = LoggerFactory.create("client")
     lateinit var session: Session
     lateinit var clientHandler: ClientHandler
+    var isOpen: Boolean = false
 
     fun open() {
         Thread(ClientProcess(this)).start()
@@ -40,6 +41,7 @@ class Client(private val hostname: String, private val port: Int) {
 
                 val channelFuture: ChannelFuture = clientBootstrap.connect().sync()
 
+                client.isOpen = true
                 channelFuture.channel().closeFuture().sync()
             } finally {
                 group.shutdownGracefully().sync()

@@ -6,7 +6,7 @@ import fr.rob.core.network.netty.NettySessionSocket
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
 
-abstract class ClientHandler(private val client: Client) : ChannelInboundHandlerAdapter() {
+abstract class ClientHandler(protected val client: Client) : ChannelInboundHandlerAdapter() {
 
     abstract fun processPacket(opcode: Int, packet: Packet)
 

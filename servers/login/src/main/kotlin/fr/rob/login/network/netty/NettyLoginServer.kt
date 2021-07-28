@@ -14,7 +14,7 @@ import fr.rob.login.opcode.LoginOpcodeHandler
 class NettyLoginServer(
     app: LoginApplication,
     eventManager: EventManagerInterface,
-    securityBanProcess: SecurityBanProcess,
+    securityBanProcess: SecurityBanProcess?,
     loggerFactory: LoggerFactoryInterface,
     port: Int,
     ssl: Boolean

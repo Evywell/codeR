@@ -5,7 +5,7 @@ import fr.rob.core.event.EventManagerInterface
 
 class ConnectionManager(private val eventManager: EventManagerInterface) {
 
-    private val connections: MutableMap<String, Connection> = hashMapOf()
+    private val connections: MutableMap<String, Connection> = HashMap()
 
     fun getConnection(connectionName: String): Connection? = connections[connectionName]
 

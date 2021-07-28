@@ -5,6 +5,7 @@ import fr.rob.entities.AuthenticationProto
 import fr.rob.login.opcode.ClientOpcodeLogin
 import fr.rob.login.security.authentication.AuthenticationOpcode
 import fr.rob.login.test.cucumber.context.LoginContext
+import io.cucumber.java.After
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
@@ -67,5 +68,10 @@ class AuthenticationStepDefinitions(private val context: LoginContext) {
         stmt.execute()
 
         return stmt.resultSet.next()
+    }
+
+    @After
+    fun cleanAccounts() {
+        context.getPlayersDatabase().executeStatement("DELETE FROM accounts WHERE user_id IN (4);")
     }
 }

@@ -23,7 +23,7 @@ services:
       args:
         - USER_ID=${USER_ID:-1000}
         - GROUP_ID=${GROUP_ID:-1000}
-    user: $USER_ID:$GROUP_ID
+    user: '$USER_ID:$GROUP_ID'
     volumes:
       - .:/mnt/app
       - gradlecache:/home/gradle/.gradle
@@ -31,6 +31,7 @@ services:
       - '5005:5005'
       - '5006:5006'
       - '5007:5007'
+      - '55599:55599'
     networks:
       - gamedb
 

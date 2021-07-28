@@ -5,6 +5,7 @@ import fr.rob.core.event.EventListenerInterface
 import fr.rob.core.event.EventManagerInterface
 import fr.rob.core.log.LoggerInterface
 import fr.rob.core.network.Server
+import fr.rob.core.network.netty.event.NettyServerStartedEvent
 import fr.rob.core.network.session.Session
 import fr.rob.core.security.SecurityBanProcess
 import io.netty.bootstrap.ServerBootstrap
@@ -19,12 +20,13 @@ abstract class NettyServer(
     protected val port: Int,
     private val ssl: Boolean,
     private val eventManager: EventManagerInterface,
-    val securityBanProcess: SecurityBanProcess,
+    val securityBanProcess: SecurityBanProcess? = null,
     val logger: LoggerInterface
 ) : Server() {
 
     private val bootstrap: ServerBootstrap = ServerBootstrap()
     private val plugins = ArrayList<NettyPlugin>()
+    private lateinit var channel: ChannelFuture
 
     override fun start() {
         loadPlugins()
@@ -39,9 +41,10 @@ abstract class NettyServer(
         // Our handler
         bootstrap.childHandler(NettyServerInitializer(this, ssl))
 
-        val channel: ChannelFuture = bootstrap.bind(port).sync()
+        channel = bootstrap.bind(port).sync()
 
         thread(start = true) {
+            eventManager.dispatch(NettyServerStartedEvent())
             channel.channel().closeFuture().sync()
         }
     }

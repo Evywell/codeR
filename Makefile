@@ -7,7 +7,7 @@ else
 endif
 
 # @todo: replace this by variables
-SUPPORTED_COMMANDS := migration-players-create seed-create
+SUPPORTED_COMMANDS := migration-players-create migration-world-create migration-config-create seed-create
 SUPPORTS_MAKE_ARGS := $(findstring $(firstword $(MAKECMDGOALS)), $(SUPPORTED_COMMANDS))
 ifneq "$(SUPPORTS_MAKE_ARGS)" ""
   COMMAND_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
@@ -35,6 +35,7 @@ PHINX = $(MIGRATOR) migrations/migrator/vendor/bin/phinx
 PHINX_CONFIG_ARG = --configuration migrations/migrator
 PHINX_WORLD_CONFIG_ARG = $(PHINX_CONFIG_ARG)/phinx-world.php
 PHINX_PLAYERS_CONFIG_ARG = $(PHINX_CONFIG_ARG)/phinx-players.php
+PHINX_CONFIG_CONFIG_ARG = $(PHINX_CONFIG_ARG)/phinx-config.php
 
 MIGRATOR_SEED_NAME :=
 MIGRATOR_DB :=
@@ -175,6 +176,7 @@ composer: servers/webclient/vendor/autoload.php ## Launches a composer install
 migrate: migrations/migrator/vendor/autoload.php
 	$(PHINX) migrate $(PHINX_WORLD_CONFIG_ARG) -e development
 	$(PHINX) migrate $(PHINX_PLAYERS_CONFIG_ARG) -e development
+	$(PHINX) migrate $(PHINX_CONFIG_CONFIG_ARG) -e development
 
 .PHONY: seed
 seed: migrations/migrator/vendor/autoload.php
@@ -184,6 +186,10 @@ seed: migrations/migrator/vendor/autoload.php
 .PHONY: migration-create
 migration-players-create: migrations/migrator/vendor/autoload.php
 	$(PHINX) create $(COMMAND_ARGS) $(PHINX_PLAYERS_CONFIG_ARG)
+
+.PHONY: migration-create
+migration-config-create: migrations/migrator/vendor/autoload.php
+	$(PHINX) create $(COMMAND_ARGS) $(PHINX_CONFIG_CONFIG_ARG)
 
 .PHONY: seed-create
 seed-create: migrations/migrator/vendor/autoload.php

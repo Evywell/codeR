@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package fr.rob.entities;
+package fr.rob.entities.orchestrator;
 
 option java_outer_classname = "AuthenticationAgentProto";
 option php_namespace = "Rob\\Protos";
@@ -8,4 +8,13 @@ option php_metadata_namespace = "Rob\\Protos\\Meta";
 
 message Authentication {
   string token = 1;
+  enum AgentType {
+    SINGLE_JOB = 0;
+    NODE = 1;
+  }
+  AgentType type = 2;
+}
+
+message AuthenticationResult {
+  bool result = 1;
 }

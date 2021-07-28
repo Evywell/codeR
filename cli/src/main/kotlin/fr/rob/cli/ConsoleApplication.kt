@@ -18,7 +18,7 @@ class ConsoleApplication(private val input: InputHandler, val output: OutputHand
 
     private val handlers = ArrayList<CommandHandlerInterface>()
     private val opcodeHandler = CliOpcodeHandler(this, LoggerFactory.create("opcode"))
-    private val client = Client("localhost", LOGIN_SERVER_PORT)
+    private val client = Client("host.docker.internal", LOGIN_SERVER_PORT)
 
     init {
         registerProcesses()
