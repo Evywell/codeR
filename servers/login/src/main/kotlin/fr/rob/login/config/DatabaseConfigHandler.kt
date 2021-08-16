@@ -4,7 +4,6 @@ import fr.rob.core.DB_CONFIG
 import fr.rob.core.config.Config
 import fr.rob.core.config.database.AbstractDatabaseConfigHandler
 import fr.rob.core.database.ConnectionManager
-import fr.rob.core.misc.dump
 import fr.rob.login.CONFIG_KEY_DATABASES
 import fr.rob.login.DB_PLAYERS
 

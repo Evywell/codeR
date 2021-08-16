@@ -6,6 +6,7 @@ import fr.rob.core.log.LoggerFactoryInterface
 import fr.rob.core.network.netty.event.NettyServerStartedEvent.Companion.NETTY_SERVER_STARTED
 import fr.rob.orchestrator.OrchestratorApplication
 import fr.rob.orchestrator.test.cucumber.event.OrchestratorNodeStartedListener
+import fr.rob.core.helper.Thread as ThreadHelper
 
 class OrchestratorNode(private val loggerFactory: LoggerFactoryInterface, private val config: Config) {
 
@@ -20,6 +21,11 @@ class OrchestratorNode(private val loggerFactory: LoggerFactoryInterface, privat
         app.eventManager.addEventListener(NETTY_SERVER_STARTED, OrchestratorNodeStartedListener(this))
 
         app.run()
+
+        // Wait for the server fully loaded
+        ThreadHelper.waitFor {
+            isFullyLoaded
+        }
     }
 
     fun stop() {

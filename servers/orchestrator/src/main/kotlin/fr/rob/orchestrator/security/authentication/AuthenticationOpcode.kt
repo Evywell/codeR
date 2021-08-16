@@ -1,11 +1,10 @@
 package fr.rob.orchestrator.security.authentication
 
 import com.google.protobuf.Message
-import fr.rob.core.network.Packet
+import fr.rob.core.network.message.RequestProtobufOpcodeFunction
+import fr.rob.core.network.message.ResponseMessage
 import fr.rob.core.network.session.Session
-import fr.rob.core.opcode.ProtobufOpcodeFunction
 import fr.rob.entities.orchestrator.AuthenticationAgentProto
-import fr.rob.entities.orchestrator.AuthenticationAgentProto.Authentication
 import fr.rob.orchestrator.agent.AgentManagerProcess
 import fr.rob.orchestrator.network.OrchestratorSession
 import fr.rob.orchestrator.opcode.AgentOpcodeOrchestrator.Companion.AUTHENTICATE_SESSION_RESULT
@@ -13,12 +12,12 @@ import fr.rob.orchestrator.opcode.AgentOpcodeOrchestrator.Companion.AUTHENTICATE
 class AuthenticationOpcode(
     private val authenticationProcess: AuthenticationProcess,
     private val agentManagerProcess: AgentManagerProcess
-) : ProtobufOpcodeFunction() {
+) : RequestProtobufOpcodeFunction(false) {
 
-    override fun getMessageType(): Message = Authentication.getDefaultInstance()
+    override fun getDataType(): Message = AuthenticationAgentProto.Authentication.getDefaultInstance()
 
-    override fun call(session: Session, message: Any) {
-        message as Authentication
+    override fun callWithResponse(session: Session, message: Message): ResponseMessage {
+        message as AuthenticationAgentProto.Authentication
         session as OrchestratorSession
 
         val state = authenticationProcess.authenticate(session, message)
@@ -31,6 +30,6 @@ class AuthenticationOpcode(
             .setResult(state.isAuthenticated)
             .build()
 
-        session.send(Packet(AUTHENTICATE_SESSION_RESULT, result.toByteArray()))
+        return ResponseMessage(AUTHENTICATE_SESSION_RESULT, result)
     }
 }
