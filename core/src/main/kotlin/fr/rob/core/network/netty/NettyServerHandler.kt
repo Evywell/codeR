@@ -31,6 +31,8 @@ abstract class NettyServerHandler(private val nettyServer: NettyServer) : Channe
                 exception.message?.let { nettyServer.logger.error(it) }
             }
 
+            exception.printStackTrace()
+
             if (ctx.channel().isOpen) {
                 ctx.channel().close()
             }

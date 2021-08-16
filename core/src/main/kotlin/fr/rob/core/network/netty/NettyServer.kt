@@ -14,7 +14,6 @@ import io.netty.channel.ChannelOption
 import io.netty.channel.EventLoopGroup
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioServerSocketChannel
-import kotlin.concurrent.thread
 
 abstract class NettyServer(
     protected val port: Int,
@@ -26,7 +25,7 @@ abstract class NettyServer(
 
     private val bootstrap: ServerBootstrap = ServerBootstrap()
     private val plugins = ArrayList<NettyPlugin>()
-    private lateinit var channel: ChannelFuture
+    private lateinit var channelFuture: ChannelFuture
 
     override fun start() {
         loadPlugins()
@@ -41,12 +40,10 @@ abstract class NettyServer(
         // Our handler
         bootstrap.childHandler(NettyServerInitializer(this, ssl))
 
-        channel = bootstrap.bind(port).sync()
+        // Wait for the server to launch
+        channelFuture = bootstrap.bind(port).sync()
 
-        thread(start = true) {
-            eventManager.dispatch(NettyServerStartedEvent())
-            channel.channel().closeFuture().sync()
-        }
+        eventManager.dispatch(NettyServerStartedEvent())
     }
 
     abstract fun handler(): NettyServerHandler

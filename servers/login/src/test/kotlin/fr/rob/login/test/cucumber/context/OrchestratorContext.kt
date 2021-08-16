@@ -31,11 +31,7 @@ class OrchestratorContext {
 
             // Creating the orchestrator
             val orchestratorNodeInstance = OrchestratorNode(NILoggerFactory(), config)
-            orchestratorNodeInstance.start()
-
-            while (!orchestratorNodeInstance.isFullyLoaded) {
-                Thread.sleep(100)
-            }
+            orchestratorNodeInstance.start() // Thread blocking while the server is not fully started
 
             instance = orchestratorNodeInstance
         }

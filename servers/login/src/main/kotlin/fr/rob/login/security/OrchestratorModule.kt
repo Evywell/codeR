@@ -20,7 +20,7 @@ class OrchestratorModule(
         val address = Network.getIpAndPort(orchestrator!!.address)
 
         processManager.registerProcess(AbstractAgent::class) {
-            SingleJobAgent(Client(address.ip, address.port), orchestrator.token, "login")
+            SingleJobAgent(Client(address.ip, address.port), orchestrator.token)
         }
     }
 }

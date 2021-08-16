@@ -42,9 +42,11 @@ MIGRATOR_DB :=
 ##< Migrator
 
 CLI_DIR = cli
+CORE_DIR = core
 GAME_DIR = servers/game
 LOGIN_DIR = servers/login
 ORCHESTRATOR_DIR = servers/orchestrator
+CLIENT_DIR = client
 
 JAVA_GAME_DIR = ./$(GAME_DIR)
 JAVA_GAME_DST_DIR = $(JAVA_GAME_DIR)/src/main/java
@@ -59,6 +61,14 @@ JAVA_LOGIN_DST_DIR = $(JAVA_LOGIN_DIR)/src/main/java
 JAVA_ORCHESTRATOR_DIR = ./$(ORCHESTRATOR_DIR)
 JAVA_ORCHESTRATOR_PROTOS_DIR = $(JAVA_ORCHESTRATOR_DIR)/src/main/protos
 JAVA_ORCHESTRATOR_DST_DIR = $(JAVA_ORCHESTRATOR_DIR)/src/main/java
+
+JAVA_CORE_DIR = ./$(CORE_DIR)
+JAVA_CORE_PROTOS_DIR = $(JAVA_CORE_DIR)/src/main/protos
+JAVA_CORE_DST_DIR = $(JAVA_CORE_DIR)/src/main/java
+
+JAVA_CLIENT_DIR = ./$(CLIENT_DIR)
+JAVA_CLIENT_PROTOS_DIR = $(JAVA_CLIENT_DIR)/src/main/protos
+JAVA_CLIENT_DST_DIR = $(JAVA_CLIENT_DIR)/src/main/java
 
 PHP_DIR = ./servers/webclient
 PHP_DST_DIR = $(PHP_DIR)/protobuf
@@ -80,9 +90,18 @@ help: ## Outputs this help message
 
 .PHONY: build-proto
 build-proto: ## Builds protos for java and php
-	@$(MAKE) build-game-proto
-	@$(MAKE) build-login-proto
-	@$(MAKE) build-orchestrator-proto
+	@$(MAKE) -i build-core-proto
+	@$(MAKE) -i build-game-proto
+	@$(MAKE) -i build-login-proto
+	@$(MAKE) -i build-orchestrator-proto
+
+.PHONY: build-core-proto
+build-core-proto:
+	@echo "Generating java protos" && $(PROTOC) -I=$(JAVA_CORE_PROTOS_DIR) --java_out=$(JAVA_CORE_DST_DIR) $(JAVA_CORE_PROTOS_DIR)/*.proto
+
+.PHONY: build-client-proto
+build-client-proto:
+	@echo "Generating java protos" && $(PROTOC) -I=$(JAVA_CLIENT_PROTOS_DIR) --java_out=$(JAVA_CLIENT_DST_DIR) $(JAVA_CLIENT_PROTOS_DIR)/*.proto
 
 .PHONY: build-game-proto
 build-game-proto: ## Builds game protos for java and php
