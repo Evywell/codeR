@@ -18,5 +18,4 @@ interface ConfigHandlerInterface {
      * ````
      */
     fun handle(config: Config): Any?
-
 }

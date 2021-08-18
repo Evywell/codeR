@@ -10,5 +10,4 @@ class MapManager(private val loader: MapLoaderInterface) {
 
         return map
     }
-
 }

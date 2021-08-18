@@ -126,13 +126,13 @@ build: up ## Builds the :servers:game and :servers:client projects
 	$(GRADLE_TASK) :servers:game:build
 	$(GRADLE_TASK) :servers:web:build
 
-.PHONY: build-debug
-build-debug: build ## Runs the build then start the debugger socket
+.PHONY: build-game-debug
+build-game-debug: build ## Runs the build then start the debugger socket
 	$(GRADLE) java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:$(DEBUGGER_SOCKET_PORT) $(GAME_DIR)/$(DEBUGGER_BUILD_GAME_JAR_PATH)
 
 .PHONY: build-login-debug
-build-login-debug: build-login
-	$(GRADLE) java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:$(DEBUGGER_SOCKET_PORT) $(LOGIN_DIR)/$(DEBUGGER_BUILD_LOGIN_JAR_PATH)
+build-login-debug:
+	$(GRADLE_TASK) :servers:login:run -Ddebug_mode="true"
 
 .PHONY: build-cli
 build-cli: up

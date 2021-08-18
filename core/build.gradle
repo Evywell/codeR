@@ -1,6 +1,6 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm'
-    id 'java'
+    id 'coder.code-quality'
+    id 'coder.global'
 }
 
 dependencies {
@@ -11,27 +11,6 @@ dependencies {
             'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
     compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.68'
-    compile group: 'io.netty', name: 'netty-all', version: '4.1.50.Final'
-
-    compile group: 'com.google.protobuf', name: 'protobuf-java', version: '3.8.0'
-    compile group: 'com.google.protobuf', name: 'protobuf-java-util', version: '3.14.0'
-
-    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.0'
-    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.0'
-
-    implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
-    compile 'org.apache.commons:commons-configuration2:2.7'
 
     compile 'com.xenomachina:kotlin-argparser:2.0.7'
-
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
-    testImplementation "org.mockito.kotlin:mockito-kotlin:3.2.0"
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
-}
-
-test {
-    useJUnitPlatform()
-}
-repositories {
-    mavenCentral()
 }

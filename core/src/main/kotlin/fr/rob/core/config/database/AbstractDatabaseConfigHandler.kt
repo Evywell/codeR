@@ -14,6 +14,5 @@ abstract class AbstractDatabaseConfigHandler : ConfigHandlerInterface {
             config.getString(getDatabaseKey("$prefixKey.database"))!!
         )
 
-
     protected fun getDatabaseKey(key: String): String = getConfigKey() + '.' + key
 }

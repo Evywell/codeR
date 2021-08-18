@@ -2,10 +2,6 @@ package fr.rob.shared.ticket
 
 import fr.rob.core.misc.Time
 import org.apache.commons.lang3.RandomStringUtils
-import java.time.Duration
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.temporal.ChronoUnit
 import java.util.Date
 
 class TicketProcess(private val ticketRepository: TicketRepositoryInterface) {

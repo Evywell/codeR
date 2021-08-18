@@ -1,6 +1,6 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm'
-    id 'java'
+    id 'coder.code-quality'
+    id 'coder.global'
     id 'application'
 }
 

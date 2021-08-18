@@ -35,7 +35,7 @@ class GameServerSupervisorApplication(
         initiator
             .runTask(TASK_LOAD_SERVER_CONFIG) // Store server info
 
-        val serverManager = GameServerManager(NettyGameServerFactory(this, processManager))
+        val serverManager = GameServerManager(NettyGameServerFactory(this, processManager, eventManager))
 
         serverManager.buildGameServers(servers)
     }

@@ -34,6 +34,6 @@ class World {
 
     companion object {
         private const val WORLD_UPDATE_PER_SECOND = 50
-        const val WORLD_UPDATE_INTERVAL = 1000/WORLD_UPDATE_PER_SECOND
+        const val WORLD_UPDATE_INTERVAL = 1000 / WORLD_UPDATE_PER_SECOND
     }
 }

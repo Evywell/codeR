@@ -19,5 +19,4 @@ class IntervalTimer(private var interval: Int, var localTime: Int = 0) {
             localTime %= interval
         }
     }
-
 }

@@ -1,7 +1,11 @@
 package fr.rob.game.test.unit.domain.process
 
 import fr.rob.core.process.ProcessManager
-import fr.rob.game.test.unit.sandbox.process.*
+import fr.rob.game.test.unit.sandbox.process.CreateProcessWithArgumentsProcess
+import fr.rob.game.test.unit.sandbox.process.CreateProcessWithInterfaceInterface
+import fr.rob.game.test.unit.sandbox.process.CreateProcessWithInterfaceProcess
+import fr.rob.game.test.unit.sandbox.process.GetSameProcessProcess
+import fr.rob.game.test.unit.sandbox.process.ProcessShouldBeIndependentProcess
 import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -28,8 +32,7 @@ class ProcessManagerTest {
     fun `create process with arguments`() {
         // Arrange
         val pm = ProcessManager()
-        pm.registerProcess(CreateProcessWithArgumentsProcess::class)
-        { args -> CreateProcessWithArgumentsProcess(args!![0] as DependencyClass) }
+        pm.registerProcess(CreateProcessWithArgumentsProcess::class) { args -> CreateProcessWithArgumentsProcess(args!![0] as DependencyClass) }
 
         // Act
         val process = pm.makeProcess(CreateProcessWithArgumentsProcess::class, arrayOf(DependencyClass()))

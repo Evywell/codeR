@@ -7,7 +7,10 @@ import io.netty.channel.ChannelOption
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
-import io.netty.handler.codec.http.*
+import io.netty.handler.codec.http.HttpMethod
+import io.netty.handler.codec.http.HttpObjectAggregator
+import io.netty.handler.codec.http.HttpRequestDecoder
+import io.netty.handler.codec.http.HttpResponseEncoder
 
 class HttpServer(private val port: Int) {
 
@@ -49,8 +52,7 @@ class HttpServer(private val port: Int) {
     }
 }
 
-
-class HttpInitializer(private val router: Router): ChannelInitializer<SocketChannel>() {
+class HttpInitializer(private val router: Router) : ChannelInitializer<SocketChannel>() {
 
     override fun initChannel(ch: SocketChannel) {
         val p = ch.pipeline()
@@ -59,5 +61,4 @@ class HttpInitializer(private val router: Router): ChannelInitializer<SocketChan
         p.addLast("encoder", HttpResponseEncoder())
         p.addLast("handler", HttpServerHandler(router))
     }
-
 }
