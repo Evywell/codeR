@@ -122,28 +122,27 @@ login-cucumber:
 setup-tests: servers/game/src/test/resources/private.pem
 
 .PHONY: build
-build: up ## Builds the :servers:game and :servers:client projects
-	$(GRADLE_TASK) :servers:game:build
-	$(GRADLE_TASK) :servers:web:build
+build: up ## Builds all the projects
+	$(GRADLE_TASK) build
 
 .PHONY: build-game-debug
-build-game-debug: build ## Runs the build then start the debugger socket
-	$(GRADLE) java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:$(DEBUGGER_SOCKET_PORT) $(GAME_DIR)/$(DEBUGGER_BUILD_GAME_JAR_PATH)
+build-game-debug: ## Runs the build of the game project then start the debugger socket
+	$(GRADLE_TASK) :servers:game:run -Ddebug_mode="true"
+
+.PHONY: build-login
+build-login:
+	$(GRADLE_TASK) :servers:login:build
 
 .PHONY: build-login-debug
-build-login-debug:
+build-login-debug: ## Runs the build of the login project then start the debugger socket
 	$(GRADLE_TASK) :servers:login:run -Ddebug_mode="true"
 
 .PHONY: build-cli
 build-cli: up
 	$(GRADLE_TASK) :cli:build
 
-build-cli-debug: build-cli
-	$(GRADLE) java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:$(DEBUGGER_SOCKET_PORT) $(CLI_DIR)/$(DEBUGGER_BUILD_CLI_JAR_PATH)
-
-.PHONY: build-login
-build-login:
-	$(GRADLE_TASK) :servers:login:build
+build-cli-debug:  ## Runs the build of the cli project then start the debugger socket
+	$(GRADLE_TASK) :cli:run -Ddebug_mode="true"
 
 .PHONY: server
 server: ## Launches the game server
