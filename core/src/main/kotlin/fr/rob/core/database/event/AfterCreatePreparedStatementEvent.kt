@@ -7,5 +7,4 @@ class AfterCreatePreparedStatementEvent(sql: String, time: Long) : DatabaseEvent
     companion object {
         const val AFTER_CREATE_PREPARED_STATEMENT = "AfterCreatePreparedStatementEvent"
     }
-
 }

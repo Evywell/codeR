@@ -1,15 +1,14 @@
 package fr.rob.game
 
 import com.xenomachina.argparser.ArgParser
-import fr.rob.core.config.Config
 import fr.rob.core.ENV_DEV
-import fr.rob.game.domain.args.GameServerArgs
+import fr.rob.core.config.Config
 import fr.rob.core.database.ConnectionManager
 import fr.rob.core.event.EventManager
+import fr.rob.game.domain.args.GameServerArgs
 import java.io.File
 import java.io.InputStream
 import java.nio.file.Paths
-
 
 class Main {
 

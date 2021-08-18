@@ -2,9 +2,9 @@ package fr.rob.game.infrastructure.config.database
 
 import fr.rob.core.config.Config
 import fr.rob.core.config.database.AbstractDatabaseConfigHandler
+import fr.rob.core.database.ConnectionManager
 import fr.rob.game.DATABASE
 import fr.rob.game.DB_CONFIG
-import fr.rob.core.database.ConnectionManager
 
 class DatabaseConfigHandler(private val connectionManager: ConnectionManager) : AbstractDatabaseConfigHandler() {
 

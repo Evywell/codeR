@@ -1,0 +1,19 @@
+plugins {
+    id 'jacoco'
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.5.10"
+    compile group: 'io.netty', name: 'netty-all', version: '4.1.50.Final'
+
+    compile group: 'com.google.protobuf', name: 'protobuf-java', version: '3.8.0'
+    compile group: 'com.google.protobuf', name: 'protobuf-java-util', version: '3.14.0'
+
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.0'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.0'
+
+    implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
+    compile 'org.apache.commons:commons-configuration2:2.7'
+}

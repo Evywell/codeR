@@ -1,48 +1,9 @@
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
+buildscript {
+    ext.kotlin_version = '1.5.20'
+}
 
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.5.10' apply false
-}
-
-allprojects {
-    repositories {
-        mavenCentral()
-    }
-}
-subprojects {
-    version = '1.0'
-
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-
-        kotlinOptions {
-            jvmTarget = '1.8'
-        }
-    }
-
-    // https://stackoverflow.com/a/36130467
-    tasks.withType(Test) {
-        testLogging {
-            // set options for log level LIFECYCLE
-            events TestLogEvent.FAILED,
-                    TestLogEvent.PASSED,
-                    TestLogEvent.SKIPPED,
-                    TestLogEvent.STANDARD_OUT
-            exceptionFormat TestExceptionFormat.FULL
-            showExceptions true
-            showCauses true
-            showStackTraces true
-
-            afterSuite { desc, result ->
-                if (!desc.parent) { // will match the outermost suite
-                    def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)"
-                    def startItem = '|  ', endItem = '  |'
-                    def repeatLength = startItem.length() + output.length() + endItem.length()
-                    println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
-                }
-            }
-        }
-    }
+    id 'org.jlleitschuh.gradle.ktlint' version '10.0.0' apply false
+    id 'java'
 }

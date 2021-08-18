@@ -1,0 +1,10 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+run {
+    if (System.properties.getProperty("debug_mode", "false") == "true") {
+        jvmArgs '-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005'
+    }
+}

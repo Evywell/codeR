@@ -18,7 +18,7 @@ class EventManager : EventManagerInterface {
 
         for (listener in listeners[eventName]!!) {
             if (event.isPropagationStopped()) {
-                break;
+                break
             }
 
             listener.process(event)

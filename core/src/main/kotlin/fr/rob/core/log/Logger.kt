@@ -1,6 +1,5 @@
 package fr.rob.core.log
 
-import fr.rob.core.log.LoggerInterface
 import org.apache.logging.log4j.Logger
 
 class Logger(val logger: Logger) : LoggerInterface {

@@ -41,5 +41,4 @@ class Config(file: File) : Config() {
     override fun getStringArray(configurationKey: String): Array<String>? = config.getStringArray(configurationKey)
 
     override fun get(configurationKey: String): Any? = config.getProperty(configurationKey)
-
 }

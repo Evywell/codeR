@@ -1,14 +1,14 @@
 package fr.rob.game.test.unit.domain.opcode
 
-import fr.rob.core.test.unit.BaseTest
 import fr.rob.core.network.Packet
-import fr.rob.core.test.unit.sandbox.network.NISession
 import fr.rob.core.security.authentication.UnauthenticatedException
+import fr.rob.core.test.unit.BaseTest
+import fr.rob.core.test.unit.sandbox.network.NISession
 import fr.rob.game.sandbox.SandboxProtos
-import fr.rob.game.test.unit.sandbox.opcode.HandlingOpcodeWithProtoAsMessageOpcode
 import fr.rob.game.test.unit.sandbox.network.EmptyPacket
 import fr.rob.game.test.unit.sandbox.opcode.DoNothingAuthenticatedOpcodeFunction
 import fr.rob.game.test.unit.sandbox.opcode.DoNothingOpcodeFunction
+import fr.rob.game.test.unit.sandbox.opcode.HandlingOpcodeWithProtoAsMessageOpcode
 import fr.rob.game.test.unit.sandbox.opcode.TransformToSarahConnorOpcodeFunction
 import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.Assertions
@@ -47,7 +47,7 @@ class OpcodeHandlerTest : BaseTest() {
         // Arrange
         val opcode = 1
         val session = NISession()
-        
+
         val subject = SandboxProtos.Subject.newBuilder()
             .setFirstName("John")
             .setLastName("Connor")
@@ -103,7 +103,7 @@ class OpcodeHandlerTest : BaseTest() {
         opcodeHandler.registerOpcode(1, opcodeFunction)
 
         // Act & Assert
-        assertEquals(opcodeFunction, opcodeHandler.getOpcodeFunction(1));
+        assertEquals(opcodeFunction, opcodeHandler.getOpcodeFunction(1))
     }
 }
 

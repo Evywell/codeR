@@ -3,7 +3,6 @@ package fr.rob.web.network
 import io.netty.handler.codec.http.FullHttpRequest
 import io.netty.util.CharsetUtil
 
-
 class Request(val request: FullHttpRequest) {
 
     var routeParameters: RouteParameters? = null
