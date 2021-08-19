@@ -23,7 +23,7 @@ class OrchestratorSeeder extends AbstractSeed
         $this->truncateAndInsert('orchestrators', [
             [
                 'id'      => 1,
-                'address' => '127.0.0.1:55599',
+                'address' => 'gradle:55599',
                 'token'   => 'thisisasecrettoken'
             ]
         ]);
