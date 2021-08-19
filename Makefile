@@ -127,7 +127,7 @@ build: up ## Builds all the projects
 
 .PHONY: build-game-debug
 build-game-debug: ## Runs the build of the game project then start the debugger socket
-	$(GRADLE_TASK) :servers:game:run -Ddebug_mode="true"
+	$(GRADLE_TASK) :servers:game:run -Ddebug_mode="true" -Ddebug_port="5006"
 
 .PHONY: build-login
 build-login:
@@ -142,7 +142,7 @@ build-cli: up
 	$(GRADLE_TASK) :cli:build
 
 build-cli-debug:  ## Runs the build of the cli project then start the debugger socket
-	$(GRADLE_TASK) :cli:run -Ddebug_mode="true"
+	$(GRADLE_TASK) :cli:run -Ddebug_mode="true" -Ddebug_port="5007"
 
 .PHONY: server
 server: ## Launches the game server
