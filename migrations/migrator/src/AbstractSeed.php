@@ -14,6 +14,7 @@ use Phinx\Seed\AbstractSeed as BaseAbstractSeed;
  */
 class AbstractSeed extends BaseAbstractSeed
 {
+    private const ENV_CI = 'ci';
 
     /**
      * Truncate a table and persist data
@@ -34,5 +35,16 @@ class AbstractSeed extends BaseAbstractSeed
              ->save();
 
         $this->execute("SET FOREIGN_KEY_CHECKS=1;");
+    }
+
+    /**
+     * Returns true if the current environment is CI
+     *
+     * @return bool
+     * @author Axel LEDUC
+     */
+    protected function isEnvCI(): bool
+    {
+        return ($_ENV['APP_ENV'] ?? '') === self::ENV_CI;
     }
 }
