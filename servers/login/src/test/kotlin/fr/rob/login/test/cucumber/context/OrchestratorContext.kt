@@ -1,7 +1,6 @@
 package fr.rob.login.test.cucumber.context
 
 import fr.rob.core.config.hashmap.HashMapConfig
-import fr.rob.core.log.LoggerFactory
 import fr.rob.core.test.unit.sandbox.log.NILoggerFactory
 import fr.rob.orchestrator.test.cucumber.service.OrchestratorNode
 
