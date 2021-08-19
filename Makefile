@@ -80,6 +80,10 @@ DEBUGGER_BUILD_LOGIN_JAR_PATH = build/libs/login-1.0.jar
 DEBUGGER_BUILD_CLI_JAR_PATH = build/libs/cli-1.0.jar
 ##< Debug
 
+.PHONY: lint-fix
+lint-fix: up
+	$(GRADLE_TASK) ktlintFormat
+
 .PHONY: install-ci
 install-ci: servers/login/src/test/resources/private.pem ## Install the CI environment
 	@$(MAKE) -i CI_SERVER=true build-proto migrate seed
