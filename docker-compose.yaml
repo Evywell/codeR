@@ -28,7 +28,9 @@ services:
       - .:/mnt/app
       - gradlecache:/home/gradle/.gradle
     ports:
-      - 5005:5005
+      - '5005:5005'
+      - '5006:5006'
+      - '5007:5007'
     networks:
       - gamedb
 

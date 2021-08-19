@@ -5,6 +5,7 @@ plugins {
 
 run {
     if (System.properties.getProperty("debug_mode", "false") == "true") {
-        jvmArgs '-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005'
+        def port = System.properties.getProperty("debug_port", "5005")
+        jvmArgs '-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:' + port
     }
 }
