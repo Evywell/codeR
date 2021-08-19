@@ -9,7 +9,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup env
         run: |
-          cp .env.dev .env
+          cp .env.ci .env
       - name: Runs the docker containers with the current user
         run: |
           USER_ID=$(id -u) GROUP_ID=$(id -g) docker-compose up --build -d

@@ -205,6 +205,7 @@ migrate: migrations/migrator/vendor/autoload.php
 seed: migrations/migrator/vendor/autoload.php
 	$(PHINX) seed:run $(PHINX_WORLD_CONFIG_ARG) -e development
 	$(PHINX) seed:run $(PHINX_PLAYERS_CONFIG_ARG) -e development
+	$(PHINX) seed:run $(PHINX_CONFIG_CONFIG_ARG) -e development
 
 .PHONY: migration-create
 migration-players-create: migrations/migrator/vendor/autoload.php
