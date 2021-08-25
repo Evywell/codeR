@@ -1,6 +1,5 @@
 package fr.rob.client.network
 
-import com.google.protobuf.Message
 import fr.rob.core.entities.NetworkProto
 import fr.rob.core.log.LoggerFactory
 import fr.rob.core.network.Packet
@@ -17,20 +16,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.apache.commons.lang3.RandomStringUtils
 import java.net.InetSocketAddress
-import com.google.protobuf.Any as ProtoAny
 import fr.rob.core.helper.Thread.Companion as ThreadHelper
 
-class Client(private val hostname: String, private val port: Int) {
+class Client(private val hostname: String, private val port: Int) : ClientInterface {
 
-    val responseStack: ResponseStackInterface = ResponseStack()
+    override val responseStack: ResponseStackInterface = ResponseStack()
     val logger = LoggerFactory.create("client")
     lateinit var session: Session
     lateinit var clientHandler: ClientHandler
     var isOpen: Boolean = false
 
-    fun open() {
+    override fun open() {
         val client = this
 
         // Running the client thread
@@ -49,35 +46,14 @@ class Client(private val hostname: String, private val port: Int) {
         ClientRunner(client).run()
     }
 
-    fun send(packet: Packet) {
+    override fun send(packet: Packet) {
         session.send(packet)
     }
 
-    fun sendSync(opcode: Int, request: NetworkProto.Request): Any? {
+    override fun sendSync(opcode: Int, request: NetworkProto.Request): Any? {
         send(Packet(opcode, request.toByteArray()))
 
-        return responseStack.getResponse(request.id)
-    }
-
-    fun createRequest(message: Message): NetworkProto.Request {
-        val id = generateRequestId()
-        val data = ProtoAny.pack(message)
-
-        return NetworkProto.Request.newBuilder()
-            .setId(id)
-            .setData(data)
-            .build()
-    }
-
-    private fun generateRequestId(): String {
-        return getIncrement().toString() + "-" + RandomStringUtils.randomAlphanumeric(ID_LENGTH)
-    }
-
-    companion object {
-        private var INTERNAL_INCREMENT = 0
-        const val ID_LENGTH = 8
-
-        private fun getIncrement(): Int = ++INTERNAL_INCREMENT
+        return responseStack.getResponse(request)
     }
 
     class ClientRunner(private val client: Client) {

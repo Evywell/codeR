@@ -1,19 +1,20 @@
 package fr.rob.core.network.message
 
+import fr.rob.core.entities.NetworkProto
 import fr.rob.core.helper.Thread
 
 class ResponseStack : ResponseStackInterface {
 
     private val stack = HashMap<String, Any?>()
 
-    override fun getResponse(requestId: String, timeoutMS: Long): Any? {
+    override fun getResponse(request: NetworkProto.Request, timeoutMS: Long): Any? {
         Thread.waitFor(timeoutMS) {
-            stack.containsKey(requestId)
+            stack.containsKey(request.id)
         }
 
-        val value = stack[requestId]
+        val value = stack[request.id]
 
-        stack.remove(requestId)
+        stack.remove(request.id)
 
         return value
     }

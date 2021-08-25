@@ -1,38 +1,35 @@
 package fr.rob.orchestrator.agent
 
 import com.google.protobuf.Message
-import fr.rob.client.network.Client
+import fr.rob.client.network.ClientInterface
+import fr.rob.core.log.LoggerInterface
 import fr.rob.entities.orchestrator.AuthenticationAgentProto
 import fr.rob.entities.orchestrator.AuthenticationAgentProto.Authentication.AgentType
-import fr.rob.entities.orchestrator.CreateMapInstanceRequestProto.CreateMapInstanceRequest
 import fr.rob.orchestrator.agent.exception.OrchestratorAgentException
-import fr.rob.orchestrator.agent.network.ClientHandler
 import fr.rob.orchestrator.agent.opcode.AgentOpcodeHandler
 import fr.rob.orchestrator.opcode.ServerOpcodeOrchestrator.Companion.AUTHENTICATE_SESSION
 
 abstract class AbstractAgent(
-    protected val client: Client,
+    protected val client: ClientInterface,
     private val token: String,
-    private val agentType: AgentType
+    private val agentType: AgentType,
+    logger: LoggerInterface
 ) {
 
-    init {
-        val opcodeHandler = AgentOpcodeHandler(client, client.logger)
-        opcodeHandler.initialize()
+    val opcodeHandler = AgentOpcodeHandler(client.responseStack, logger)
 
-        client.clientHandler = ClientHandler(client, opcodeHandler)
+    init {
+        opcodeHandler.initialize()
     }
 
-    fun authenticate() {
+    fun authenticate(): Boolean {
         client.open()
 
         if (!(sendSyncMessage(AUTHENTICATE_SESSION, createAuthMessage(token)) as Boolean)) {
             throw OrchestratorAgentException("Cannot authenticate to orchestrator")
         }
-    }
 
-    fun sendCreateMapInstanceRequest(request: CreateMapInstanceRequest) {
-        // sendSyncMessage(CREATE_MAP_INSTANCE, request)
+        return true
     }
 
     private fun sendSyncMessage(opcode: Int, message: Message): Any? {

@@ -29,6 +29,12 @@ jacocoTestReport {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
                 'fr/rob/entities/**',
+                'fr/rob/orchestrator/OrchestratorApplication**',
+                'fr/rob/orchestrator/Main**',
+                'fr/rob/orchestrator/config/DatabaseConfigHandler**',
+                'fr/rob/orchestrator/security/SecurityModule**',
+                'fr/rob/orchestrator/network/netty/**',
+                'fr/rob/orchestrator/agent/network/ClientHandler**'
             ])
         }))
     }
