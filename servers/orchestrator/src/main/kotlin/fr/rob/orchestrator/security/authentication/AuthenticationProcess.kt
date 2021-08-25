@@ -12,7 +12,14 @@ class AuthenticationProcess(private val orchestrator: Orchestrator) :
     override fun checkAuthentication(authMessage: Any): AuthenticationState {
         authMessage as Authentication
 
-        return OrchestratorAuthenticationState(orchestrator.token == authMessage.token)
+        val isAuthenticated = orchestrator.token == authMessage.token
+        var error: String? = null
+
+        if (!isAuthenticated) {
+            error = ERR_WRONG_TOKEN
+        }
+
+        return OrchestratorAuthenticationState(isAuthenticated, error)
     }
 
     override fun authenticate(session: Session, authMessage: Any): AuthenticationState {
@@ -28,6 +35,10 @@ class AuthenticationProcess(private val orchestrator: Orchestrator) :
         session.agentType = authMessage.type
 
         return state
+    }
+
+    companion object {
+        const val ERR_WRONG_TOKEN = "err_wrong_token"
     }
 
     data class OrchestratorAuthenticationState(

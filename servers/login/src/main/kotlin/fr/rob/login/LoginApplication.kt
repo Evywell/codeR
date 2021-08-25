@@ -94,7 +94,8 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
             OrchestratorModule(
                 orchestratorRepository,
                 config!!.retrieveConfig("orchestrator") as OrchestratorConfigHandler.OrchestratorConfig,
-                processManager
+                processManager,
+                loggerFactory
             )
         )
     }
