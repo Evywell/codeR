@@ -16,6 +16,7 @@ class AuthenticationOpcodeTest {
 
     @Test
     fun `try to authenticate with valid token`() {
+        // Arrange
         val token = "T1isIsAT0k3en"
         val session = OrchestratorSession()
         val orchestrator = Orchestrator(1, "localhost", token)
@@ -26,8 +27,11 @@ class AuthenticationOpcodeTest {
             .build()
 
         val authOpcode = AuthenticationOpcode(authProcess, agentManagerProcess)
+
+        // Act
         val response = authOpcode.callWithResponse(session, authMessage)
 
+        // Assert
         assertTrue(authOpcode.getDataType() is AuthenticationAgentProto.Authentication)
         assertEquals(AUTHENTICATE_SESSION_RESULT, response.opcode)
         assertTrue((response.message as AuthenticationAgentProto.AuthenticationResult).result)
@@ -35,6 +39,7 @@ class AuthenticationOpcodeTest {
 
     @Test
     fun `try to authenticate with invalid token`() {
+        // Arrange
         val token = "T1isIsAT0k3en"
         val session = OrchestratorSession()
         val orchestrator = Orchestrator(1, "localhost", token)
@@ -45,8 +50,11 @@ class AuthenticationOpcodeTest {
             .build()
 
         val authOpcode = AuthenticationOpcode(authProcess, agentManagerProcess)
+
+        // Act
         val response = authOpcode.callWithResponse(session, authMessage)
 
+        // Assert
         assertEquals(AUTHENTICATE_SESSION_RESULT, response.opcode)
         assertFalse((response.message as AuthenticationAgentProto.AuthenticationResult).result)
     }
