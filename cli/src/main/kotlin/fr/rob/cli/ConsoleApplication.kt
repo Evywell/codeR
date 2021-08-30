@@ -6,6 +6,7 @@ import fr.rob.cli.opcode.CliOpcodeHandler
 import fr.rob.cli.security.auth.AuthenticationProcess
 import fr.rob.cli.security.strategy.StrategyProcess
 import fr.rob.client.network.Client
+import fr.rob.core.helper.env
 import fr.rob.core.log.LoggerFactory
 import fr.rob.core.process.ProcessManager
 import fr.rob.login.LOGIN_SERVER_PORT
@@ -18,7 +19,7 @@ class ConsoleApplication(private val input: InputHandler, val output: OutputHand
 
     private val handlers = ArrayList<CommandHandlerInterface>()
     private val opcodeHandler = CliOpcodeHandler(this, LoggerFactory.create("opcode"))
-    private val client = Client("host.docker.internal", LOGIN_SERVER_PORT)
+    private val client = Client(env("DOCKER_HOST", "localhost") as String, LOGIN_SERVER_PORT)
 
     init {
         registerProcesses()

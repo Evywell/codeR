@@ -17,10 +17,11 @@ class Thread {
 
         private suspend fun waitForCallback(callback: () -> Boolean) {
             while (!callback()) {
-                delay(50)
+                delay(TIME_BETWEEN_LOOPS)
             }
         }
 
-        private const val DEFAULT_TIMEOUT = 500L
+        private const val TIME_BETWEEN_LOOPS = 50L
+        const val DEFAULT_TIMEOUT = 500L
     }
 }

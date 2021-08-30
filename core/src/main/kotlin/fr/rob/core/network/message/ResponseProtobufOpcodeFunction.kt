@@ -8,8 +8,7 @@ import fr.rob.core.opcode.ProtobufOpcodeFunction
 abstract class ResponseProtobufOpcodeFunction(
     private val responseStack: ResponseStackInterface,
     authenticationNeeded: Boolean = true
-) :
-    ProtobufOpcodeFunction(authenticationNeeded) {
+) : ProtobufOpcodeFunction(authenticationNeeded) {
 
     abstract fun getDataType(): Message
     abstract fun handleResponse(session: Session, response: Message?): Any?

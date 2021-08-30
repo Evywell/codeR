@@ -53,6 +53,7 @@ class Client(private val hostname: String, private val port: Int) : ClientInterf
     override fun sendSync(opcode: Int, request: NetworkProto.Request): Any? {
         send(Packet(opcode, request.toByteArray()))
 
+        // The thread is blocked until the response is received or a timeout
         return responseStack.getResponse(request)
     }
 
@@ -73,7 +74,7 @@ class Client(private val hostname: String, private val port: Int) : ClientInterf
 
                 client.isOpen = true
 
-                // We wait for the close signal to avoid the end of thread
+                // We wait for the close signal to avoid the end of the thread
                 channelFuture.channel().closeFuture().sync()
             } finally {
                 group.shutdownGracefully().sync()
