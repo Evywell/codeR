@@ -16,6 +16,7 @@ class AuthenticationProcessTest {
 
     @Test
     fun `try to authenticate with valid token`() {
+        // Arrange
         val token = "T1isIsAT0k3en"
         val session = OrchestratorSession()
         val orchestrator = Orchestrator(1, "localhost", token)
@@ -26,8 +27,11 @@ class AuthenticationProcessTest {
             .build()
 
         val process = AuthenticationProcess(orchestrator)
+
+        // Act
         val authState = process.authenticate(session, authMessage)
 
+        // Assert
         assertTrue(authState.isAuthenticated)
         assertNull(authState.error)
         assertEquals(AuthenticationAgentProto.Authentication.AgentType.SINGLE_JOB, session.agentType)
@@ -35,6 +39,7 @@ class AuthenticationProcessTest {
 
     @Test
     fun `try to authenticate with invalid token`() {
+        // Arrange
         val token = "T1isIsAT0k3en"
         val session = OrchestratorSession()
         val orchestrator = Orchestrator(1, "localhost", token)
@@ -45,8 +50,11 @@ class AuthenticationProcessTest {
             .build()
 
         val process = AuthenticationProcess(orchestrator)
+
+        // Act
         val authState = process.authenticate(session, authMessage)
 
+        // Assert
         assertFalse(authState.isAuthenticated)
         assertEquals(ERR_WRONG_TOKEN, authState.error)
     }
