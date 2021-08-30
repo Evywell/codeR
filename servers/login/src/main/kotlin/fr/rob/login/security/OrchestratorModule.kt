@@ -19,7 +19,7 @@ class OrchestratorModule(
     override fun boot() {
         val orchestrator = orchestratorRepository.getOrchestratorById(orchestratorConfig.id)
         val agentFactory = AgentFactory(orchestrator!!, loggerFactory.create("agent"))
-        val address = Network.getIpAndPort(orchestrator.address)
+        val address = Network.getAddress(orchestrator.address)
 
         processManager.registerProcess(AbstractAgent::class) {
             agentFactory.createSingleJobAgent(address.ip, address.port)

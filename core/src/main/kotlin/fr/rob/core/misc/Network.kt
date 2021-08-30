@@ -3,7 +3,8 @@ package fr.rob.core.misc
 class Network {
 
     companion object {
-        fun getIpAndPort(address: String): NetworkAddress {
+
+        fun getAddress(address: String): NetworkAddress {
             val parts = address.split(':')
 
             return NetworkAddress(parts[0], parts[1].toInt())

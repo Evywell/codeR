@@ -5,7 +5,6 @@ import fr.rob.core.event.EventListenerInterface
 import fr.rob.core.event.EventManagerInterface
 import fr.rob.core.log.LoggerInterface
 import fr.rob.core.network.Server
-import fr.rob.core.network.netty.event.NettyServerStartedEvent
 import fr.rob.core.network.session.Session
 import fr.rob.core.security.SecurityBanProcess
 import io.netty.bootstrap.ServerBootstrap
@@ -42,8 +41,6 @@ abstract class NettyServer(
 
         // Wait for the server to launch
         channelFuture = bootstrap.bind(port).sync()
-
-        eventManager.dispatch(NettyServerStartedEvent())
     }
 
     abstract fun handler(): NettyServerHandler

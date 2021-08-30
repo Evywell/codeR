@@ -30,7 +30,7 @@ interface ClientInterface {
 
     companion object {
         private var INTERNAL_INCREMENT = 0
-        const val ID_LENGTH = 8
+        private const val ID_LENGTH = 8
 
         private fun getIncrement(): Int = ++INTERNAL_INCREMENT
     }

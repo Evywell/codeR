@@ -25,13 +25,13 @@ abstract class NettyServerHandler(private val nettyServer: NettyServer) : Channe
                 processPacket(opcode, session, packet)
             }
         } catch (exception: Exception) {
-            if (exception is LoggableException) {
-                exception.message?.let { exception.logger.error(it) }
-            } else {
-                exception.message?.let { nettyServer.logger.error(it) }
-            }
+            val stackTrace = exception.stackTraceToString()
 
-            exception.printStackTrace()
+            if (exception is LoggableException) {
+                exception.logger.error(stackTrace)
+            } else {
+                nettyServer.logger.error(stackTrace)
+            }
 
             if (ctx.channel().isOpen) {
                 ctx.channel().close()

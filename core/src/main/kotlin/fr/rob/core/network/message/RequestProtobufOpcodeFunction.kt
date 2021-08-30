@@ -5,6 +5,7 @@ import fr.rob.core.entities.NetworkProto
 import fr.rob.core.network.Packet
 import fr.rob.core.network.session.Session
 import fr.rob.core.opcode.ProtobufOpcodeFunction
+import com.google.protobuf.Any as ProtoAny
 
 abstract class RequestProtobufOpcodeFunction(
     authenticationNeeded: Boolean = true
@@ -23,7 +24,7 @@ abstract class RequestProtobufOpcodeFunction(
         val responseData = callWithResponse(session, data)
 
         val response = NetworkProto.Response.newBuilder()
-            .setData(com.google.protobuf.Any.pack(responseData.message))
+            .setData(ProtoAny.pack(responseData.message))
             .setRequestId(message.id)
             .build()
 
