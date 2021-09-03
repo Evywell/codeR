@@ -6,14 +6,8 @@ import java.sql.SQLException
 class PreparedStatementPool(private val connection: Connection) : HashMap<String, PreparedStatement>() {
 
     fun getPreparedStatement(sql: String, returnKeys: Boolean): PreparedStatement {
-        if (!this.containsKey(sql)) {
-            val stmt: PreparedStatement = connection.createPreparedStatement(sql, returnKeys)
-                ?: throw Exception("Cannot create sql statement: $sql")
-
-            this[sql] = stmt
-        }
-
-        return this[sql]!!
+        return connection.createPreparedStatement(sql, returnKeys)
+            ?: throw Exception("Cannot create sql statement: $sql")
     }
 
     fun close() {
