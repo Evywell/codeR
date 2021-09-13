@@ -62,7 +62,7 @@ class AuthenticationStepDefinitions(private val context: LoginContext) {
     }
 
     private fun hasUserAnAccount(userId: Int): Boolean {
-        val stmt = context.getPlayersDatabase().getPreparedStatement("SELECT 1 FROM accounts WHERE user_id = ?")
+        val stmt = context.getPlayersDatabase().createPreparedStatement("SELECT 1 FROM accounts WHERE user_id = ?")!!
 
         stmt.setInt(1, userId)
         stmt.execute()

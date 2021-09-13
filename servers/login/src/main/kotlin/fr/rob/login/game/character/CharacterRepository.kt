@@ -1,6 +1,7 @@
 package fr.rob.login.game.character
 
 import fr.rob.core.database.Connection
+import fr.rob.core.database.closeCursor
 import fr.rob.core.database.exception.InsertException
 import fr.rob.core.database.getSQLNow
 import fr.rob.core.database.hasNextAndClose
@@ -10,12 +11,12 @@ import fr.rob.entities.CharacterCreateProtos
 class CharacterRepository(private val db: Connection) : CharacterRepositoryInterface {
 
     override fun isCharacterNameTaken(characterName: String): Boolean {
-        val stmt = db.getPreparedStatement(SEL_IS_CHARACTER_NAME_TAKEN)
+        val stmt = db.createPreparedStatement(SEL_IS_CHARACTER_NAME_TAKEN)!!
 
         stmt.setString(1, characterName)
         stmt.execute()
 
-        return hasNextAndClose(stmt.resultSet)
+        return hasNextAndClose(stmt.resultSet, stmt)
     }
 
     override fun insert(
@@ -23,7 +24,7 @@ class CharacterRepository(private val db: Connection) : CharacterRepositoryInter
         characterSkeleton: CharacterCreateProtos.CharacterCreate,
         level: Int
     ): Character {
-        val stmt = db.getPreparedStatement(INS_NEW_CHARACTER, true)
+        val stmt = db.createPreparedStatement(INS_NEW_CHARACTER, true)!!
 
         stmt.setInt(1, accountId)
         stmt.setString(2, characterSkeleton.name)
@@ -34,24 +35,27 @@ class CharacterRepository(private val db: Connection) : CharacterRepositoryInter
         val generatedKeys = stmt.generatedKeys
 
         if (!generatedKeys.next()) {
+            closeCursor(generatedKeys, stmt)
+
             throw InsertException("Cannot insert character $characterSkeleton")
         }
 
-        return returnAndClose(Character(generatedKeys.getInt(1), level, characterSkeleton.name), generatedKeys)
+        return returnAndClose(Character(generatedKeys.getInt(1), level, characterSkeleton.name), generatedKeys, stmt)
     }
 
     override fun setCurrentCharacter(character: Character) {
-        val stmt = db.getPreparedStatement(UPD_LAST_SELECTED_AT)
+        val stmt = db.createPreparedStatement(UPD_LAST_SELECTED_AT)!!
 
         stmt.setTimestamp(1, getSQLNow())
         stmt.setInt(2, character.id!!)
 
         stmt.execute()
+        stmt.close()
     }
 
     override fun allByAccountId(accountId: Int): MutableList<Character> {
         val characters = ArrayList<Character>()
-        val stmt = db.getPreparedStatement(SEL_CHARACTERS_BY_ACCOUNT_ID)
+        val stmt = db.createPreparedStatement(SEL_CHARACTERS_BY_ACCOUNT_ID)!!
 
         stmt.setInt(1, accountId)
         stmt.execute()
@@ -64,7 +68,7 @@ class CharacterRepository(private val db: Connection) : CharacterRepositoryInter
             )
         }
 
-        return returnAndClose(characters, rs)
+        return returnAndClose(characters, rs, stmt)
     }
 
     companion object {

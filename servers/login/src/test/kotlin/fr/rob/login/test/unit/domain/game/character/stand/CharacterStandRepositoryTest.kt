@@ -17,7 +17,7 @@ class CharacterStandRepositoryTest : DatabaseTest() {
         // Arrange
         val currentCharacterId = accountId + 3
 
-        `when`(dbMock.getPreparedStatement(SEL_LAST_SELECTED_CHARACTER_BY_USER_ID)).thenReturn(stmtMock)
+        `when`(dbMock.createPreparedStatement(SEL_LAST_SELECTED_CHARACTER_BY_USER_ID)).thenReturn(stmtMock)
 
         `when`(rsMock.next()).thenReturn(true)
         `when`(rsMock.getInt(1)).thenReturn(currentCharacterId)
@@ -32,7 +32,7 @@ class CharacterStandRepositoryTest : DatabaseTest() {
 
         // Assert
         assertEquals(currentCharacterId, currentId)
-        verify(dbMock, times(1)).getPreparedStatement(SEL_LAST_SELECTED_CHARACTER_BY_USER_ID)
+        verify(dbMock, times(1)).createPreparedStatement(SEL_LAST_SELECTED_CHARACTER_BY_USER_ID)
         verify(stmtMock, times(1)).setInt(1, accountId)
         verify(stmtMock, times(1)).execute()
         verify(rsMock, times(1)).next()
@@ -42,7 +42,7 @@ class CharacterStandRepositoryTest : DatabaseTest() {
     @Test
     fun `retrieve current character from account with no characters`() {
         // Arrange
-        `when`(dbMock.getPreparedStatement(SEL_LAST_SELECTED_CHARACTER_BY_USER_ID)).thenReturn(stmtMock)
+        `when`(dbMock.createPreparedStatement(SEL_LAST_SELECTED_CHARACTER_BY_USER_ID)).thenReturn(stmtMock)
 
         `when`(rsMock.next()).thenReturn(false)
 
@@ -55,7 +55,7 @@ class CharacterStandRepositoryTest : DatabaseTest() {
 
         // Assert
         assertEquals(0, currentId)
-        verify(dbMock, times(1)).getPreparedStatement(SEL_LAST_SELECTED_CHARACTER_BY_USER_ID)
+        verify(dbMock, times(1)).createPreparedStatement(SEL_LAST_SELECTED_CHARACTER_BY_USER_ID)
         verify(stmtMock, times(1)).setInt(1, 1)
         verify(stmtMock, times(1)).execute()
         verify(rsMock, times(1)).next()

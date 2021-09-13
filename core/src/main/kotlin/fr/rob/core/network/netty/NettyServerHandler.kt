@@ -14,7 +14,7 @@ abstract class NettyServerHandler(private val nettyServer: NettyServer) : Channe
 
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
         try {
-            val session: Session = nettyServer.sessionFromIdentifier(ctx.channel().hashCode())
+            val session: Session = nettyServer.sessionFromIdentifier(ctx.channel().id().toString())
             val packet = NettyPacket.fromByteArray(msg as ByteArray)
             val opcode = packet.readOpcode()
 
@@ -67,7 +67,7 @@ abstract class NettyServerHandler(private val nettyServer: NettyServer) : Channe
 
         session.socket = NettySessionSocket(ctx.channel(), session, this)
 
-        nettyServer.registerSession(ctx.channel().hashCode(), session)
+        nettyServer.registerSession(ctx.channel().id().toString(), session)
     }
 
     // @todo: Add channelInactive and destroy the session

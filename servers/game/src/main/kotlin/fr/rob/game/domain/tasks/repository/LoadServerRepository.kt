@@ -1,18 +1,18 @@
 package fr.rob.game.domain.tasks.repository
 
 import fr.rob.core.database.Connection
-import fr.rob.core.infrastructure.database.PreparedStatement
+import fr.rob.core.database.closeCursor
+import fr.rob.core.database.returnAndCloseWithCallback
 import fr.rob.game.domain.network.Server
 import fr.rob.game.domain.network.Zone
 import org.codehaus.jackson.map.ObjectMapper
 import java.lang.RuntimeException
 
-class LoadServerRepository(connection: Connection) : LoadServerRepositoryInterface {
-
-    private val serverInfoStatement: PreparedStatement =
-        connection.getPreparedStatement(STMT_CONFIG_SEL_SERVER_INSTANCES)
+class LoadServerRepository(private val connection: Connection) : LoadServerRepositoryInterface {
 
     override fun getServerInfo(server: Server): ServerInfo {
+        val serverInfoStatement = connection.createPreparedStatement(STMT_CONFIG_SEL_SERVER_INSTANCES)!!
+
         serverInfoStatement.setString(1, server.serverName)
         serverInfoStatement.execute()
 
@@ -21,6 +21,7 @@ class LoadServerRepository(connection: Connection) : LoadServerRepositoryInterfa
         val rs = serverInfoStatement.resultSet
 
         if (!rs.next()) {
+            closeCursor(rs, serverInfoStatement)
             throw RuntimeException("Cannot retrieve server information: ${server.serverName}")
         }
 
@@ -34,7 +35,9 @@ class LoadServerRepository(connection: Connection) : LoadServerRepositoryInterfa
             zones.add(zone)
         } while (rs.next())
 
-        return ServerInfo(serverName, serverAddress, zones)
+        return returnAndCloseWithCallback(rs, serverInfoStatement) {
+            ServerInfo(serverName, serverAddress, zones)
+        }
     }
 
     companion object {

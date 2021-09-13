@@ -31,7 +31,7 @@ class AccountRepositoryTest : DatabaseTest() {
         retrieveAccount: Boolean
     ) {
         // Arrange
-        `when`(dbMock.getPreparedStatement(SEL_ACCOUNT_BY_USER_ID)).thenReturn(stmtMock)
+        `when`(dbMock.createPreparedStatement(SEL_ACCOUNT_BY_USER_ID)).thenReturn(stmtMock)
         `when`(rsMock.next()).thenReturn(retrieveAccount)
         `when`(rsMock.getInt(1)).thenReturn(accountId)
         `when`(rsMock.getInt(2)).thenReturn(userId)
@@ -79,7 +79,7 @@ class AccountRepositoryTest : DatabaseTest() {
     @Test
     fun `update account name`() {
         // Arrange
-        `when`(dbMock.getPreparedStatement(UPD_ACCOUNT_NAME)).thenReturn(stmtMock)
+        `when`(dbMock.createPreparedStatement(UPD_ACCOUNT_NAME)).thenReturn(stmtMock)
 
         val account = Account(6)
         val accountName = "Evy#0000"
@@ -97,7 +97,7 @@ class AccountRepositoryTest : DatabaseTest() {
     @Test
     fun `lock an account`() {
         // Arrange
-        `when`(dbMock.getPreparedStatement(UPD_ACCOUNT_LOCK)).thenReturn(stmtMock)
+        `when`(dbMock.createPreparedStatement(UPD_ACCOUNT_LOCK)).thenReturn(stmtMock)
 
         val accountId = 3
         val repository = AccountRepository(dbMock)
@@ -114,7 +114,7 @@ class AccountRepositoryTest : DatabaseTest() {
     @Test
     fun `insert new account`() {
         // Arrange
-        `when`(dbMock.getPreparedStatement(INS_ACCOUNT, true)).thenReturn(stmtMock)
+        `when`(dbMock.createPreparedStatement(INS_ACCOUNT, true)).thenReturn(stmtMock)
         `when`(rsMock.next()).thenReturn(true)
         `when`(rsMock.getInt(1)).thenReturn(18)
 
@@ -139,7 +139,7 @@ class AccountRepositoryTest : DatabaseTest() {
     @Test
     fun `fail to insert an account`() {
         // Arrange
-        `when`(dbMock.getPreparedStatement(INS_ACCOUNT, true)).thenReturn(stmtMock)
+        `when`(dbMock.createPreparedStatement(INS_ACCOUNT, true)).thenReturn(stmtMock)
         `when`(rsMock.next()).thenReturn(false)
 
         val accountSkeleton = Account(userId = 3, isAdministrator = false, name = "Hey#1234")

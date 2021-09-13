@@ -28,3 +28,13 @@ FROM base AS dev
 COPY --chown=mysql:mysql conf/my.dev.cnf /etc/mysql/conf.d/mysql.cnf
 
 ENTRYPOINT ["entrypoint.sh"]
+
+
+#### UNIT TEST IMAGE
+FROM base AS unit
+
+COPY --chown=mysql:mysql conf/my.dev.cnf /etc/mysql/conf.d/mysql.cnf
+
+RUN chmod -R go-rwx /etc/mysql/conf.d/*
+
+ENTRYPOINT ["entrypoint.sh"]

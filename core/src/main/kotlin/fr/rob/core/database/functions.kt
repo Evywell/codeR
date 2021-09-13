@@ -1,34 +1,31 @@
 package fr.rob.core.database
 
+import fr.rob.core.infrastructure.database.PreparedStatement
 import java.sql.ResultSet
 import java.sql.Timestamp
 import java.util.Date
 
-fun getIntAndClose(index: Int, resultSet: ResultSet): Int {
-    val value = resultSet.getInt(index)
+fun getIntAndClose(index: Int, resultSet: ResultSet, stmt: PreparedStatement? = null): Int =
+    returnAndClose(resultSet.getInt(index), resultSet, stmt)
 
-    resultSet.close()
-
-    return value
-}
-
-fun hasNextAndClose(resultSet: ResultSet): Boolean {
-    val value = resultSet.next()
-
-    resultSet.close()
-
-    return value
-}
+fun hasNextAndClose(resultSet: ResultSet, stmt: PreparedStatement? = null): Boolean =
+    returnAndClose(resultSet.next(), resultSet, stmt)
 
 fun getSQLNow(): Timestamp = dateToTimestamp(Date())
 
 fun dateToTimestamp(date: Date): Timestamp = Timestamp(date.time)
 
-fun <T : Any> returnAndClose(variable: T, resultSet: ResultSet): T {
-    resultSet.close()
+fun <T : Any?> returnAndClose(variable: T, resultSet: ResultSet, stmt: PreparedStatement? = null): T {
+    closeCursor(resultSet, stmt)
 
     return variable
 }
+
+fun <T : Any> returnAndCloseWithCallback(
+    resultSet: ResultSet,
+    preparedStatement: PreparedStatement,
+    callable: () -> T
+): T = returnAndClose(callable.invoke(), resultSet, preparedStatement)
 
 fun getIntOrNull(resultSet: ResultSet, columnIndex: Int): Int? {
     val value = resultSet.getInt(columnIndex)
@@ -48,4 +45,9 @@ fun getDateOrNull(resultSet: ResultSet, columnIndex: Int): Date? {
     }
 
     return value
+}
+
+fun closeCursor(resultSet: ResultSet, stmt: PreparedStatement? = null) {
+    resultSet.close()
+    stmt?.close()
 }
