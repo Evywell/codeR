@@ -1,14 +1,16 @@
 package fr.rob.login.security.account
 
 import fr.rob.core.database.Connection
+import fr.rob.core.database.closeCursor
 import fr.rob.core.database.exception.InsertException
 import fr.rob.core.database.getDateOrNull
 import fr.rob.core.database.returnAndClose
+import fr.rob.core.database.returnAndCloseWithCallback
 
 class AccountRepository(private val db: Connection) : AccountRepositoryInterface {
 
     override fun byUserId(userId: Int): Account? {
-        val stmt = db.getPreparedStatement(SEL_ACCOUNT_BY_USER_ID)
+        val stmt = db.createPreparedStatement(SEL_ACCOUNT_BY_USER_ID)!!
 
         stmt.setInt(1, userId)
         stmt.execute()
@@ -16,19 +18,23 @@ class AccountRepository(private val db: Connection) : AccountRepositoryInterface
         val rs = stmt.resultSet
 
         if (!rs.next()) {
-            rs.close()
-
-            return null
+            return returnAndClose(null, rs, stmt)
         }
 
-        return returnAndClose(
-            Account(rs.getInt(1), rs.getInt(2), rs.getBoolean(3), rs.getString(4), getDateOrNull(rs, 5), rs.getBoolean(6)),
-            rs
-        )
+        return returnAndCloseWithCallback(rs, stmt) {
+            Account(
+                rs.getInt(1),
+                rs.getInt(2),
+                rs.getBoolean(3),
+                rs.getString(4),
+                getDateOrNull(rs, 5),
+                rs.getBoolean(6)
+            )
+        }
     }
 
     override fun insert(accountSkeleton: Account): Account {
-        val stmt = db.getPreparedStatement(INS_ACCOUNT, true)
+        val stmt = db.createPreparedStatement(INS_ACCOUNT, true)!!
 
         stmt.setInt(1, accountSkeleton.userId!!)
         stmt.setBoolean(2, accountSkeleton.isAdministrator)
@@ -39,35 +45,39 @@ class AccountRepository(private val db: Connection) : AccountRepositoryInterface
         val generatedKeys = stmt.generatedKeys
 
         if (!generatedKeys.next()) {
+            closeCursor(generatedKeys, stmt)
+
             throw InsertException("Cannot insert account $accountSkeleton")
         }
 
-        return returnAndClose(
+        return returnAndCloseWithCallback(generatedKeys, stmt) {
             Account(
                 generatedKeys.getInt(1),
                 accountSkeleton.userId,
                 accountSkeleton.isAdministrator,
                 accountSkeleton.name
-            ), generatedKeys
-        )
+            )
+        }
     }
 
     override fun updateName(account: Account, accountName: String) {
-        val stmt = db.getPreparedStatement(UPD_ACCOUNT_NAME)
+        val stmt = db.createPreparedStatement(UPD_ACCOUNT_NAME)!!
 
         stmt.setString(1, accountName)
         stmt.setInt(2, account.id!!)
 
         stmt.execute()
+        stmt.close()
     }
 
     override fun lock(accountId: Int) {
-        val stmt = db.getPreparedStatement(UPD_ACCOUNT_LOCK)
+        val stmt = db.createPreparedStatement(UPD_ACCOUNT_LOCK)!!
 
         stmt.setBoolean(1, true)
         stmt.setInt(2, accountId)
 
         stmt.execute()
+        stmt.close()
     }
 
     companion object {

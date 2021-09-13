@@ -21,27 +21,45 @@ class Connection(
     lateinit var connection: Connection
 
     var connected: Boolean = false
-    var pool = PreparedStatementPool(this)
 
     var eventManager: EventManagerInterface? = null
 
     constructor(dbname: String, user: String, password: String) :
             this("localhost", 3306, user, password, dbname)
 
+    fun transaction(callable: () -> Unit) {
+        val defaultAutoCommit = connection.autoCommit
+
+        connection.autoCommit = false
+
+        try {
+            callable.invoke()
+            connection.commit()
+        } catch (e: SQLException) {
+            connection.rollback()
+            throw e
+        } finally {
+            connection.autoCommit = defaultAutoCommit
+        }
+    }
+
     fun executeStatement(sql: String): Statement? {
         connect()
+
         try {
             val st = connection.createStatement()
+
             if (st.execute(sql)) {
                 return st
             }
         } catch (e: SQLException) {
             e.printStackTrace()
         }
+
         return null
     }
 
-    fun createPreparedStatement(sql: String, returnKeys: Boolean): PreparedStatement? {
+    fun createPreparedStatement(sql: String, returnKeys: Boolean = false): PreparedStatement? {
         connect()
 
         try {
@@ -64,10 +82,6 @@ class Connection(
         }
 
         return null
-    }
-
-    fun getPreparedStatement(sql: String, returnKeys: Boolean = false): PreparedStatement {
-        return pool.getPreparedStatement(sql, returnKeys)
     }
 
     fun triggerEvent(eventName: String, event: EventInterface) {
@@ -99,7 +113,6 @@ class Connection(
     }
 
     fun disconnect() {
-        pool.close()
         try {
             this.connection.close()
         } catch (e: SQLException) {

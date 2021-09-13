@@ -2,9 +2,11 @@ version: '3.7'
 
 networks:
   gamedb:
+  tests:
 
 volumes:
   mysqldata:
+  mysqlunitdata:
   gradlecache:
 
 services:
@@ -34,6 +36,7 @@ services:
       - '55599:55599'
     networks:
       - gamedb
+      - tests
 
   migrator:
     build:
@@ -45,6 +48,7 @@ services:
       - .:/mnt/app
     networks:
       - gamedb
+      - tests
 
   mysql_game:
     build:
@@ -58,10 +62,27 @@ services:
       - mysqldata:/mnt/data
       - ./logs/mysql:/mnt/log
     ports:
-      - 33060:3306
+      - '33060:3306'
     networks:
       - gamedb
     environment:
       MYSQL_USER: ${WORLD_MYSQL_USER}
       MYSQL_PASSWORD: ${WORLD_MYSQL_PASSWORD}
       MYSQL_HOST: ${WORLD_MYSQL_HOST}
+
+  mysql_unit:
+    build:
+      context: docker/mysql
+      target: unit
+      args:
+        - USER_ID=${USER_ID:-1000}
+        - GROUP_ID=${GROUP_ID:-1000}
+    volumes:
+      - mysqlunitdata:/mnt/data
+      - ./logs/mysql_unit:/mnt/log
+    networks:
+      - tests
+    environment:
+      MYSQL_USER: ${UNIT_MYSQL_USER}
+      MYSQL_PASSWORD: ${UNIT_MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${UNIT_MYSQL_DATABASE}

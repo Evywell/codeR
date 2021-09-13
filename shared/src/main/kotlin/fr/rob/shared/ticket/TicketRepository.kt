@@ -12,7 +12,7 @@ import java.util.Date
 class TicketRepository(private val playersDb: Connection) : TicketRepositoryInterface {
 
     override fun byToken(token: String): Ticket? {
-        val stmt = playersDb.getPreparedStatement(SEL_TICKET_BY_TOKEN)
+        val stmt = playersDb.createPreparedStatement(SEL_TICKET_BY_TOKEN)!!
 
         stmt.setString(1, token)
         stmt.execute()
@@ -20,16 +20,14 @@ class TicketRepository(private val playersDb: Connection) : TicketRepositoryInte
         val rs = stmt.resultSet
 
         if (!rs.next()) {
-            rs.close()
-
-            return null
+            return returnAndClose(null, rs, stmt)
         }
 
-        return returnAndClose(ticketFromResultSet(rs), rs)
+        return returnAndClose(ticketFromResultSet(rs), rs, stmt)
     }
 
     override fun byAccountId(accountId: Int): Ticket? {
-        val stmt = playersDb.getPreparedStatement(SEL_TICKET_BY_ACCOUNT_ID)
+        val stmt = playersDb.createPreparedStatement(SEL_TICKET_BY_ACCOUNT_ID)!!
 
         stmt.setInt(1, accountId)
         stmt.execute()
@@ -37,19 +35,18 @@ class TicketRepository(private val playersDb: Connection) : TicketRepositoryInte
         val rs = stmt.resultSet
 
         if (!rs.next()) {
-            rs.close()
-
-            return null
+            return returnAndClose(null, rs, stmt)
         }
 
-        return returnAndClose(ticketFromResultSet(rs), rs)
+        return returnAndClose(ticketFromResultSet(rs), rs, stmt)
     }
 
     override fun removeByAccountId(accountId: Int) {
-        val stmt = playersDb.getPreparedStatement(DEL_TICKET_BY_ACCOUNT_ID)
+        val stmt = playersDb.createPreparedStatement(DEL_TICKET_BY_ACCOUNT_ID)!!
 
         stmt.setInt(1, accountId)
         stmt.execute()
+        stmt.close()
     }
 
     override fun insert(
@@ -60,7 +57,7 @@ class TicketRepository(private val playersDb: Connection) : TicketRepositoryInte
         targetId: Int,
         expireAt: Date
     ): Ticket {
-        val stmt = playersDb.getPreparedStatement(INS_TICKET)
+        val stmt = playersDb.createPreparedStatement(INS_TICKET)!!
 
         stmt.setString(1, token)
         stmt.setInt(2, accountId)
@@ -76,8 +73,12 @@ class TicketRepository(private val playersDb: Connection) : TicketRepositoryInte
         }
 
         if (!stmt.execute()) {
+            stmt.close()
+
             throw InsertException("Cannot insert ticket")
         }
+
+        stmt.close()
 
         return Ticket(
             token,
@@ -91,10 +92,11 @@ class TicketRepository(private val playersDb: Connection) : TicketRepositoryInte
     }
 
     override fun punch(ticket: Ticket) {
-        val stmt = playersDb.getPreparedStatement(UPD_TICKET_PUNCH)
+        val stmt = playersDb.createPreparedStatement(UPD_TICKET_PUNCH)!!
 
         stmt.setString(1, ticket.token)
         stmt.execute()
+        stmt.close()
 
         ticket.isPunched = true
     }

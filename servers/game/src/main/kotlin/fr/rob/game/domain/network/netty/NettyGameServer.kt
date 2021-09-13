@@ -29,7 +29,7 @@ class NettyGameServer(
 
     override fun createSession(): Session = GameSession()
 
-    override fun registerSession(identifier: Int, session: Session) {
+    override fun registerSession(identifier: String, session: Session) {
         super.registerSession(identifier, session)
 
         sessionPoolManager.addSession(session)

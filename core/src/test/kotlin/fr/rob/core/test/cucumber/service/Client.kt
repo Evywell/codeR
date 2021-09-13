@@ -26,7 +26,7 @@ abstract class Client {
         session = createSession()
 
         server = serverToConnect
-        server.registerSession(session.hashCode(), session)
+        server.registerSession(session.hashCode().toString(), session)
     }
 
     fun send(packet: Packet) {

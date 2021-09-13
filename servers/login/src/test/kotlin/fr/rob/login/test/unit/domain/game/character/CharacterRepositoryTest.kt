@@ -22,7 +22,7 @@ class CharacterRepositoryTest : DatabaseTest() {
     @ValueSource(booleans = [true, false])
     fun `is character name already taken`(isTaken: Boolean) {
         // Arrange
-        `when`(dbMock.getPreparedStatement(SEL_IS_CHARACTER_NAME_TAKEN)).thenReturn(stmtMock)
+        `when`(dbMock.createPreparedStatement(SEL_IS_CHARACTER_NAME_TAKEN)).thenReturn(stmtMock)
         `when`(rsMock.next()).thenReturn(isTaken)
 
         val characterName = "Helios"
@@ -40,7 +40,7 @@ class CharacterRepositoryTest : DatabaseTest() {
     @Test
     fun `set current character`() {
         // Arrange
-        `when`(dbMock.getPreparedStatement(UPD_LAST_SELECTED_AT)).thenReturn(stmtMock)
+        `when`(dbMock.createPreparedStatement(UPD_LAST_SELECTED_AT)).thenReturn(stmtMock)
 
         val characterRepository = CharacterRepository(dbMock)
         val currentCharacter = Character(1, 2, "Helios")
@@ -56,7 +56,7 @@ class CharacterRepositoryTest : DatabaseTest() {
     @Test
     fun `insert a character`() {
         // Arrange
-        `when`(dbMock.getPreparedStatement(INS_NEW_CHARACTER, true)).thenReturn(stmtMock)
+        `when`(dbMock.createPreparedStatement(INS_NEW_CHARACTER, true)).thenReturn(stmtMock)
         `when`(stmtMock.executeUpdate()).thenReturn(1)
         `when`(rsMock.next()).thenReturn(true)
         `when`(rsMock.getInt(1)).thenReturn(13)
@@ -78,7 +78,7 @@ class CharacterRepositoryTest : DatabaseTest() {
     @Test
     fun `fail to insert a character`() {
         // Arrange
-        `when`(dbMock.getPreparedStatement(INS_NEW_CHARACTER, true)).thenReturn(stmtMock)
+        `when`(dbMock.createPreparedStatement(INS_NEW_CHARACTER, true)).thenReturn(stmtMock)
         `when`(stmtMock.executeUpdate()).thenReturn(1)
         `when`(rsMock.next()).thenReturn(false)
 
@@ -96,7 +96,7 @@ class CharacterRepositoryTest : DatabaseTest() {
     @Test
     fun `retrieve all characters by account id`() {
         // Arrange
-        `when`(dbMock.getPreparedStatement(SEL_CHARACTERS_BY_ACCOUNT_ID)).thenReturn(stmtMock)
+        `when`(dbMock.createPreparedStatement(SEL_CHARACTERS_BY_ACCOUNT_ID)).thenReturn(stmtMock)
         `when`(stmtMock.execute()).thenReturn(true)
         `when`(rsMock.next()).thenReturn(true, true, true, false) // 3 characters
         `when`(rsMock.getInt(1)).thenReturn(1, 2, 3)
