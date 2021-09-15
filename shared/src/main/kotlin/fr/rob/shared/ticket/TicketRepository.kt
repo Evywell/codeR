@@ -15,7 +15,7 @@ class TicketRepository(private val playersDb: Connection) : TicketRepositoryInte
         val stmt = playersDb.createPreparedStatement(SEL_TICKET_BY_TOKEN)!!
 
         stmt.setString(1, token)
-        stmt.execute()
+        playersDb.execute(stmt)
 
         val rs = stmt.resultSet
 
@@ -30,7 +30,7 @@ class TicketRepository(private val playersDb: Connection) : TicketRepositoryInte
         val stmt = playersDb.createPreparedStatement(SEL_TICKET_BY_ACCOUNT_ID)!!
 
         stmt.setInt(1, accountId)
-        stmt.execute()
+        playersDb.execute(stmt)
 
         val rs = stmt.resultSet
 
@@ -45,7 +45,7 @@ class TicketRepository(private val playersDb: Connection) : TicketRepositoryInte
         val stmt = playersDb.createPreparedStatement(DEL_TICKET_BY_ACCOUNT_ID)!!
 
         stmt.setInt(1, accountId)
-        stmt.execute()
+        playersDb.execute(stmt)
         stmt.close()
     }
 
@@ -72,7 +72,7 @@ class TicketRepository(private val playersDb: Connection) : TicketRepositoryInte
             stmt.setInt(4, sourceId)
         }
 
-        if (!stmt.execute()) {
+        if (!playersDb.execute(stmt)) {
             stmt.close()
 
             throw InsertException("Cannot insert ticket")
@@ -95,7 +95,7 @@ class TicketRepository(private val playersDb: Connection) : TicketRepositoryInte
         val stmt = playersDb.createPreparedStatement(UPD_TICKET_PUNCH)!!
 
         stmt.setString(1, ticket.token)
-        stmt.execute()
+        playersDb.execute(stmt)
         stmt.close()
 
         ticket.isPunched = true

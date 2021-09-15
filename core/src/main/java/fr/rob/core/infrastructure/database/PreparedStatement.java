@@ -19,9 +19,9 @@ public class PreparedStatement implements java.sql.PreparedStatement {
     private String sql;
 
     public PreparedStatement(
-            fr.rob.core.database.Connection connection,
-            String sql,
-            java.sql.PreparedStatement stmt
+        fr.rob.core.database.Connection connection,
+        String sql,
+        java.sql.PreparedStatement stmt
     ) {
         this.connection = connection;
         this.sql = sql;
