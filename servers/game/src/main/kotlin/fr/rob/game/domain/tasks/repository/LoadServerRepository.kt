@@ -22,6 +22,7 @@ class LoadServerRepository(private val connection: Connection) : LoadServerRepos
 
         if (!rs.next()) {
             closeCursor(rs, serverInfoStatement)
+
             throw RuntimeException("Cannot retrieve server information: ${server.serverName}")
         }
 
