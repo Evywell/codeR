@@ -10,7 +10,7 @@ class CharacterStandRepository(private val db: Connection) : CharacterStandRepos
         val stmt = db.createPreparedStatement(SEL_LAST_SELECTED_CHARACTER_BY_USER_ID)!!
 
         stmt.setInt(1, accountId)
-        stmt.execute()
+        db.execute(stmt)
 
         val rs = stmt.resultSet
 

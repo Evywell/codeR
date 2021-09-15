@@ -14,7 +14,7 @@ class LoadServerRepository(private val connection: Connection) : LoadServerRepos
         val serverInfoStatement = connection.createPreparedStatement(STMT_CONFIG_SEL_SERVER_INSTANCES)!!
 
         serverInfoStatement.setString(1, server.serverName)
-        serverInfoStatement.execute()
+        connection.execute(serverInfoStatement)
 
         val om = ObjectMapper()
         val zones = ArrayList<Zone>()

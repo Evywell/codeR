@@ -2,9 +2,8 @@
 
 sql_mode                   = NO_ENGINE_SUBSTITUTION
 datadir                    = /mnt/data
-general_log                = 0
+general_log                = on
 general_log_file           = /mnt/log/mysql.log
-slow_query_log             = 0
 log_error                  = /mnt/log/error.log
 long_query_time            = 2
 slow_query_log             = on

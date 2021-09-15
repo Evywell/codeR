@@ -50,7 +50,7 @@ class CharacterRepositoryTest : DatabaseTest() {
 
         // Assert
         verify(stmtMock, times(1)).setInt(2, currentCharacter.id!!)
-        verify(stmtMock, times(1)).execute()
+        verify(dbMock, times(1)).execute(stmtMock)
     }
 
     @Test
@@ -79,7 +79,7 @@ class CharacterRepositoryTest : DatabaseTest() {
     fun `fail to insert a character`() {
         // Arrange
         `when`(dbMock.createPreparedStatement(INS_NEW_CHARACTER, true)).thenReturn(stmtMock)
-        `when`(stmtMock.executeUpdate()).thenReturn(1)
+        `when`(dbMock.executeUpdate(stmtMock)).thenReturn(1)
         `when`(rsMock.next()).thenReturn(false)
 
         val repository = CharacterRepository(dbMock)
@@ -97,7 +97,7 @@ class CharacterRepositoryTest : DatabaseTest() {
     fun `retrieve all characters by account id`() {
         // Arrange
         `when`(dbMock.createPreparedStatement(SEL_CHARACTERS_BY_ACCOUNT_ID)).thenReturn(stmtMock)
-        `when`(stmtMock.execute()).thenReturn(true)
+        `when`(dbMock.execute(stmtMock)).thenReturn(true)
         `when`(rsMock.next()).thenReturn(true, true, true, false) // 3 characters
         `when`(rsMock.getInt(1)).thenReturn(1, 2, 3)
         `when`(rsMock.getInt(3)).thenReturn(1, 1, 2)

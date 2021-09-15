@@ -13,7 +13,7 @@ class AccountRepository(private val db: Connection) : AccountRepositoryInterface
         val stmt = db.createPreparedStatement(SEL_ACCOUNT_BY_USER_ID)!!
 
         stmt.setInt(1, userId)
-        stmt.execute()
+        db.execute(stmt)
 
         val rs = stmt.resultSet
 
@@ -40,7 +40,7 @@ class AccountRepository(private val db: Connection) : AccountRepositoryInterface
         stmt.setBoolean(2, accountSkeleton.isAdministrator)
         stmt.setString(3, accountSkeleton.name)
 
-        stmt.executeUpdate()
+        db.executeUpdate(stmt)
 
         val generatedKeys = stmt.generatedKeys
 
@@ -66,7 +66,7 @@ class AccountRepository(private val db: Connection) : AccountRepositoryInterface
         stmt.setString(1, accountName)
         stmt.setInt(2, account.id!!)
 
-        stmt.execute()
+        db.execute(stmt)
         stmt.close()
     }
 
@@ -76,7 +76,7 @@ class AccountRepository(private val db: Connection) : AccountRepositoryInterface
         stmt.setBoolean(1, true)
         stmt.setInt(2, accountId)
 
-        stmt.execute()
+        db.execute(stmt)
         stmt.close()
     }
 

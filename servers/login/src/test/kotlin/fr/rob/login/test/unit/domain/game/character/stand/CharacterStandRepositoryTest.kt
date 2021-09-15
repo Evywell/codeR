@@ -34,7 +34,7 @@ class CharacterStandRepositoryTest : DatabaseTest() {
         assertEquals(currentCharacterId, currentId)
         verify(dbMock, times(1)).createPreparedStatement(SEL_LAST_SELECTED_CHARACTER_BY_USER_ID)
         verify(stmtMock, times(1)).setInt(1, accountId)
-        verify(stmtMock, times(1)).execute()
+        verify(dbMock, times(1)).execute(stmtMock)
         verify(rsMock, times(1)).next()
         verify(rsMock, times(1)).getInt(1)
     }
@@ -57,7 +57,7 @@ class CharacterStandRepositoryTest : DatabaseTest() {
         assertEquals(0, currentId)
         verify(dbMock, times(1)).createPreparedStatement(SEL_LAST_SELECTED_CHARACTER_BY_USER_ID)
         verify(stmtMock, times(1)).setInt(1, 1)
-        verify(stmtMock, times(1)).execute()
+        verify(dbMock, times(1)).execute(stmtMock)
         verify(rsMock, times(1)).next()
         verify(rsMock, times(0)).getInt(1)
     }

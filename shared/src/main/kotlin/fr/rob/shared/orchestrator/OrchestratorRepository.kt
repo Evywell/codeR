@@ -10,7 +10,7 @@ class OrchestratorRepository(private val db: Connection) : OrchestratorRepositor
         val stmt = db.createPreparedStatement(SEL_BY_ID)!!
         stmt.setInt(1, id)
 
-        stmt.execute()
+        db.execute(stmt)
 
         val rs = stmt.resultSet
 

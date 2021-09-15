@@ -1,6 +1,10 @@
 package fr.rob.core.database
 
 import fr.rob.core.database.event.AfterCreatePreparedStatementEvent
+import fr.rob.core.database.runner.InsertStatementCommand
+import fr.rob.core.database.runner.QueryRunner
+import fr.rob.core.database.runner.StatementCommand
+import fr.rob.core.database.runner.TransactionCommand
 import fr.rob.core.event.EventInterface
 import fr.rob.core.event.EventManagerInterface
 import fr.rob.core.infrastructure.database.PreparedStatement
@@ -17,30 +21,24 @@ class Connection(
     var password: String,
     var dbname: String
 ) {
+    private val queryRunner = QueryRunner()
 
     lateinit var connection: Connection
-
     var connected: Boolean = false
-
     var eventManager: EventManagerInterface? = null
 
     constructor(dbname: String, user: String, password: String) :
             this("localhost", 3306, user, password, dbname)
 
-    fun transaction(callable: () -> Unit) {
-        val defaultAutoCommit = connection.autoCommit
+    /**
+     * Returns true if the transaction is a success
+     *
+     * @throws SQLException otherwise
+     */
+    fun transaction(callable: () -> Unit): Boolean {
+        connect()
 
-        connection.autoCommit = false
-
-        try {
-            callable.invoke()
-            connection.commit()
-        } catch (e: SQLException) {
-            connection.rollback()
-            throw e
-        } finally {
-            connection.autoCommit = defaultAutoCommit
-        }
+        return queryRunner.executeCommand(TransactionCommand(callable, this)) as Boolean
     }
 
     fun executeStatement(sql: String): Statement? {
@@ -82,6 +80,24 @@ class Connection(
         }
 
         return null
+    }
+
+    fun execute(stmt: PreparedStatement): Boolean {
+        connect()
+
+        return queryRunner.executeCommand(StatementCommand(stmt)) as Boolean
+    }
+
+    fun executeUpdate(stmt: PreparedStatement): Int {
+        connect()
+
+        return queryRunner.executeCommand(StatementCommand(stmt, true)) as Int
+    }
+
+    fun executeInsertOrThrow(stmt: PreparedStatement, message: String): Int {
+        connect()
+
+        return queryRunner.executeCommand(InsertStatementCommand(stmt, message)) as Int
     }
 
     fun triggerEvent(eventName: String, event: EventInterface) {

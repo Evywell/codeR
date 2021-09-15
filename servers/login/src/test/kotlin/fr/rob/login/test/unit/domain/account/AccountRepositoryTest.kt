@@ -46,7 +46,7 @@ class AccountRepositoryTest : DatabaseTest() {
 
         // Assert
         verify(stmtMock, times(1)).setInt(1, userId)
-        verify(stmtMock, times(1)).execute()
+        verify(dbMock, times(1)).execute(stmtMock)
         verify(rsMock, times(1)).next()
 
         if (retrieveAccount) {
@@ -91,7 +91,7 @@ class AccountRepositoryTest : DatabaseTest() {
         // Assert
         verify(stmtMock, times(1)).setString(1, accountName)
         verify(stmtMock, times(1)).setInt(2, account.id!!)
-        verify(stmtMock, times(1)).execute()
+        verify(dbMock, times(1)).execute(stmtMock)
     }
 
     @Test
@@ -108,7 +108,7 @@ class AccountRepositoryTest : DatabaseTest() {
         // Assert
         verify(stmtMock, times(1)).setBoolean(1, true)
         verify(stmtMock, times(1)).setInt(2, accountId)
-        verify(stmtMock, times(1)).execute()
+        verify(dbMock, times(1)).execute(stmtMock)
     }
 
     @Test
@@ -128,7 +128,7 @@ class AccountRepositoryTest : DatabaseTest() {
         verify(stmtMock, times(1)).setInt(1, accountSkeleton.userId!!)
         verify(stmtMock, times(1)).setBoolean(2, accountSkeleton.isAdministrator)
         verify(stmtMock, times(1)).setString(3, accountSkeleton.name)
-        verify(stmtMock, times(1)).executeUpdate()
+        verify(dbMock, times(1)).executeUpdate(stmtMock)
 
         assertEquals(18, result.id)
         assertEquals(3, result.userId)

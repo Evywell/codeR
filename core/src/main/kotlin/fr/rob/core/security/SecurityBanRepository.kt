@@ -16,7 +16,7 @@ class SecurityBanRepository(private val db: Connection) : SecurityBanRepositoryI
         stmt.setTimestamp(3, dateToTimestamp(endAt))
         stmt.setString(4, reason)
 
-        stmt.executeInsertOrThrow("Cannot insert security ban")
+        db.executeInsertOrThrow(stmt, "Cannot insert security ban")
 	    stmt.close()
     }
 
@@ -24,7 +24,7 @@ class SecurityBanRepository(private val db: Connection) : SecurityBanRepositoryI
         val stmt = db.createPreparedStatement(SEL_BAN_BY_IP)!!
 
         stmt.setString(1, ip)
-        stmt.execute()
+        db.execute(stmt)
 
         val rs = stmt.resultSet
 

@@ -14,7 +14,7 @@ class CharacterRepository(private val db: Connection) : CharacterRepositoryInter
         val stmt = db.createPreparedStatement(SEL_IS_CHARACTER_NAME_TAKEN)!!
 
         stmt.setString(1, characterName)
-        stmt.execute()
+        db.execute(stmt)
 
         return hasNextAndClose(stmt.resultSet, stmt)
     }
@@ -30,7 +30,7 @@ class CharacterRepository(private val db: Connection) : CharacterRepositoryInter
         stmt.setString(2, characterSkeleton.name)
         stmt.setInt(3, level)
         stmt.setTimestamp(4, getSQLNow())
-        stmt.executeUpdate()
+        db.executeUpdate(stmt)
 
         val generatedKeys = stmt.generatedKeys
 
@@ -49,7 +49,7 @@ class CharacterRepository(private val db: Connection) : CharacterRepositoryInter
         stmt.setTimestamp(1, getSQLNow())
         stmt.setInt(2, character.id!!)
 
-        stmt.execute()
+        db.execute(stmt)
         stmt.close()
     }
 
@@ -58,7 +58,7 @@ class CharacterRepository(private val db: Connection) : CharacterRepositoryInter
         val stmt = db.createPreparedStatement(SEL_CHARACTERS_BY_ACCOUNT_ID)!!
 
         stmt.setInt(1, accountId)
-        stmt.execute()
+        db.execute(stmt)
 
         val rs = stmt.resultSet
 
