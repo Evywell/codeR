@@ -13,6 +13,7 @@ class LoginContext(orchestratorContext: OrchestratorContext) : AbstractContext()
     }
 
     fun getPlayersDatabase(): Connection {
-        return app.connectionManager.getConnection(DB_PLAYERS) ?: throw Exception("Cannot retrieve players database")
+        return (app.connectionPoolManager.getPool(DB_PLAYERS) ?: throw Exception("Cannot retrieve players database pool"))
+            .getNextConnection(0)
     }
 }
