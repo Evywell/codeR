@@ -3,11 +3,12 @@ package fr.rob.login.config
 import fr.rob.core.DB_CONFIG
 import fr.rob.core.config.Config
 import fr.rob.core.config.database.AbstractDatabaseConfigHandler
-import fr.rob.core.database.ConnectionManager
+import fr.rob.core.database.pool.ConnectionPoolManager
 import fr.rob.login.CONFIG_KEY_DATABASES
 import fr.rob.login.DB_PLAYERS
 
-class DatabaseConfigHandler(private val connectionManager: ConnectionManager) : AbstractDatabaseConfigHandler() {
+class DatabaseConfigHandler(private val connectionPoolManager: ConnectionPoolManager) :
+    AbstractDatabaseConfigHandler() {
 
     override fun getConfigKey(): String = CONFIG_KEY_DATABASES
 
@@ -15,7 +16,7 @@ class DatabaseConfigHandler(private val connectionManager: ConnectionManager) : 
         loadPlayersDatabase(config)
         loadConfigDatabase(config)
 
-        return connectionManager
+        return connectionPoolManager
     }
 
     private fun loadPlayersDatabase(config: Config) {
@@ -23,7 +24,7 @@ class DatabaseConfigHandler(private val connectionManager: ConnectionManager) : 
             return
         }
 
-        connectionManager.newConnection(DB_PLAYERS, getDatabaseConfig(config, "players"))
+        connectionPoolManager.createPool(DB_PLAYERS, getDatabaseConfig(config, "players"))
     }
 
     private fun loadConfigDatabase(config: Config) {
@@ -31,6 +32,6 @@ class DatabaseConfigHandler(private val connectionManager: ConnectionManager) : 
             return
         }
 
-        connectionManager.newConnection(DB_CONFIG, getDatabaseConfig(config, "config"))
+        connectionPoolManager.createPool(DB_CONFIG, getDatabaseConfig(config, "config"))
     }
 }

@@ -6,6 +6,7 @@ import fr.rob.core.SingleServerApplication
 import fr.rob.core.config.Config
 import fr.rob.core.config.commons.configuration2.ConfigLoader
 import fr.rob.core.database.ConnectionManager
+import fr.rob.core.database.pool.ConnectionPoolManager
 import fr.rob.core.event.EventManager
 import fr.rob.core.initiator.Initiator
 import fr.rob.core.log.LoggerFactoryInterface
@@ -35,6 +36,7 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
     SingleServerApplication(env, loggerFactory.create("login"), ConfigLoader(), EventManager()) {
 
     val connectionManager = ConnectionManager(eventManager)
+    var connectionPoolManager = ConnectionPoolManager(4, connectionManager)
     val processManager = ProcessManager()
 
     private lateinit var orchestratorRepository: OrchestratorRepositoryInterface
@@ -44,16 +46,16 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
 
         config!!.retrieveConfig(CONFIG_KEY_DATABASES)
 
-        val dbPlayers = connectionManager.getConnection(DB_PLAYERS)!!
-        val dbConfig = connectionManager.getConnection(DB_CONFIG)!!
+        val dbPlayersPool = connectionPoolManager.getPool(DB_PLAYERS)!!
+        val dbConfigPool = connectionPoolManager.getPool(DB_CONFIG)!!
 
-        val characterRepository = CharacterRepository(dbPlayers)
-        val accountRepository = AccountRepository(dbPlayers)
-        val securityBanRepository = SecurityBanRepository(dbPlayers)
-        orchestratorRepository = OrchestratorRepository(dbConfig)
+        val characterRepository = CharacterRepository(dbPlayersPool.getNextConnection())
+        val accountRepository = AccountRepository(dbPlayersPool.getNextConnection())
+        val securityBanRepository = SecurityBanRepository(dbPlayersPool.getNextConnection())
+        orchestratorRepository = OrchestratorRepository(dbConfigPool.getNextConnection())
 
         processManager.registerProcess(CharacterStandProcess::class) {
-            CharacterStandProcess(CharacterStandRepository(dbPlayers))
+            CharacterStandProcess(CharacterStandRepository(dbPlayersPool.getNextConnection()))
         }
 
         processManager.registerProcess(CharacterCreateProcess::class) {
@@ -104,7 +106,7 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
 
     override fun registerConfigHandlers(config: Config) {
         config
-            .addHandler(DatabaseConfigHandler(connectionManager))
+            .addHandler(DatabaseConfigHandler(connectionPoolManager))
             .addHandler(OrchestratorConfigHandler())
     }
 

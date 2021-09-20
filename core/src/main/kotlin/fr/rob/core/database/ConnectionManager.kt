@@ -9,7 +9,7 @@ class ConnectionManager(private val eventManager: EventManagerInterface) {
 
     fun getConnection(connectionName: String): Connection? = connections[connectionName]
 
-    fun newConnection(connectionName: String, databaseConfig: DatabaseConfig) {
+    fun newConnection(connectionName: String, databaseConfig: DatabaseConfig): Connection {
         val connection = Connection(
             dbname = databaseConfig.dbname,
             port = databaseConfig.port,
@@ -20,5 +20,7 @@ class ConnectionManager(private val eventManager: EventManagerInterface) {
 
         connection.eventManager = eventManager
         connections[connectionName] = connection
+
+        return connection
     }
 }
