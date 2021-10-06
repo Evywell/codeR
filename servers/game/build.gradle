@@ -7,6 +7,7 @@ plugins {
 
 dependencies {
     compile project(':core')
+    compile project(':servers:orchestrator')
 
     testCompile project(':core').sourceSets.test.output
 }
@@ -35,7 +36,7 @@ jacocoTestReport {
 }
 
 jacoco {
-    toolVersion = "0.8.6"
+    toolVersion = "0.8.7"
 }
 
 jar {

@@ -40,4 +40,15 @@ jacocoTestReport {
     }
 }
 
+task cucumber() {
+    dependsOn assemble, testClasses
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--glue', 'fr.rob.orchestrator.test.cucumber', 'src/test/kotlin']
+        }
+    }
+}
+
 mainClassName = 'fr.rob.orchestrator.Main'

@@ -1,6 +1,7 @@
 package fr.rob.login.test.cucumber.context
 
 import fr.rob.core.config.hashmap.HashMapConfig
+import fr.rob.core.log.LoggerFactory
 import fr.rob.core.test.unit.sandbox.log.NILoggerFactory
 import fr.rob.orchestrator.test.cucumber.service.OrchestratorNode
 
@@ -26,10 +27,16 @@ class OrchestratorContext {
             config.properties["databases.config.password"] = "passwordtesting"
             config.properties["databases.config.database"] = "config"
 
+            config.properties["databases.players.host"] = "mysql_game"
+            config.properties["databases.players.port"] = 3306L
+            config.properties["databases.players.user"] = "testing"
+            config.properties["databases.players.password"] = "passwordtesting"
+            config.properties["databases.players.database"] = "players"
+
             config.properties["orchestrator.id"] = 1
 
             // Creating the orchestrator
-            val orchestratorNodeInstance = OrchestratorNode(NILoggerFactory(), config)
+            val orchestratorNodeInstance = OrchestratorNode(LoggerFactory, config)
             orchestratorNodeInstance.start() // Thread blocking while the server is not fully started
 
             instance = orchestratorNodeInstance

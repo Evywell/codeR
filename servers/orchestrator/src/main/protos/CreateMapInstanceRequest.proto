@@ -7,5 +7,8 @@ option php_namespace = "Rob\\Protos";
 option php_metadata_namespace = "Rob\\Protos\\Meta";
 
 message CreateMapInstanceRequest {
-  int32 mapId = 1;
+  string requestId = 1;
+  int32 instanceId = 2;
+  int32 mapId = 3;
+  int32 zoneId = 4;
 }

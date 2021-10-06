@@ -1,9 +1,9 @@
 package fr.rob.game.test.unit.sandbox.tasks
 
-import fr.rob.game.domain.network.Server
-import fr.rob.game.domain.network.Zone
-import fr.rob.game.domain.tasks.repository.LoadServerRepositoryInterface
-import fr.rob.game.domain.tasks.repository.ServerInfo
+import fr.rob.game.network.Server
+import fr.rob.game.network.Zone
+import fr.rob.game.tasks.repository.LoadServerRepositoryInterface
+import fr.rob.game.tasks.repository.ServerInfo
 
 class LoadServerRepository :
     LoadServerRepositoryInterface {

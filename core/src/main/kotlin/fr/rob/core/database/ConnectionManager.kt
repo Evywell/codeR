@@ -7,7 +7,13 @@ class ConnectionManager(private val eventManager: EventManagerInterface) {
 
     private val connections: MutableMap<String, Connection> = HashMap()
 
-    fun getConnection(connectionName: String): Connection? = connections[connectionName]
+    fun getConnection(connectionName: String): Connection {
+        if (!connections.containsKey(connectionName)) {
+            throw RuntimeException("The connection name `$connectionName` is not defined")
+        }
+
+        return connections[connectionName]!!
+    }
 
     fun newConnection(connectionName: String, databaseConfig: DatabaseConfig): Connection {
         val connection = Connection(

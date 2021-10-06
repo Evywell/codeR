@@ -10,16 +10,16 @@ import fr.rob.core.security.SecurityBanProcess
 import fr.rob.orchestrator.network.OrchestratorSession
 import fr.rob.orchestrator.opcode.OrchestratorOpcodeHandler
 
-class OrchestratorNettyServer(
+open class OrchestratorNettyServer(
     port: Int,
     ssl: Boolean,
     eventManager: EventManagerInterface,
     securityBanProcess: SecurityBanProcess?,
     loggerFactory: LoggerFactoryInterface,
     processManager: ProcessManager
-) : NettyServer(port, ssl, eventManager, securityBanProcess, loggerFactory.create("orchestrator")) {
+) : NettyServer(port, ssl, eventManager, securityBanProcess, loggerFactory.create("orchestrator server")) {
 
-    val opcodeHandler = OrchestratorOpcodeHandler(processManager, loggerFactory.create("opcode"))
+    val opcodeHandler = OrchestratorOpcodeHandler(processManager, loggerFactory.create("orchestrator opcode"))
 
     override fun start() {
         super.start()

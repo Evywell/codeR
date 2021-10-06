@@ -12,3 +12,5 @@ const val SERVER = "servers"
 const val SSL_ENABLED = false
 
 const val CONFIG_FILE = "config.properties"
+
+const val DEFAULT_MAX_NODES = 1

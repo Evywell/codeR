@@ -207,13 +207,17 @@ seed: migrations/migrator/vendor/autoload.php
 	$(PHINX) seed:run $(PHINX_PLAYERS_CONFIG_ARG) -e development
 	$(PHINX) seed:run $(PHINX_CONFIG_CONFIG_ARG) -e development
 
-.PHONY: migration-create
+.PHONY: migration-players-create
 migration-players-create: migrations/migrator/vendor/autoload.php
 	$(PHINX) create $(COMMAND_ARGS) $(PHINX_PLAYERS_CONFIG_ARG)
 
-.PHONY: migration-create
+.PHONY: migration-config-create
 migration-config-create: migrations/migrator/vendor/autoload.php
 	$(PHINX) create $(COMMAND_ARGS) $(PHINX_CONFIG_CONFIG_ARG)
+
+.PHONY: migration-world-create
+migration-world-create: migrations/migrator/vendor/autoload.php
+	$(PHINX) create $(COMMAND_ARGS) $(PHINX_WORLD_CONFIG_ARG)
 
 .PHONY: seed-create
 seed-create: migrations/migrator/vendor/autoload.php
