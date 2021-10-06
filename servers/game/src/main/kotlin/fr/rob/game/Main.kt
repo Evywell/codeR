@@ -3,9 +3,8 @@ package fr.rob.game
 import com.xenomachina.argparser.ArgParser
 import fr.rob.core.ENV_DEV
 import fr.rob.core.config.Config
-import fr.rob.core.database.ConnectionManager
-import fr.rob.core.event.EventManager
-import fr.rob.game.domain.args.GameServerArgs
+import fr.rob.core.log.LoggerFactory
+import fr.rob.game.args.GameServerArgs
 import java.io.File
 import java.io.InputStream
 import java.nio.file.Paths
@@ -23,10 +22,7 @@ class Main {
                 // configFileName = "$config"
             }
 
-            val eventManager = EventManager()
-            val connectionManager = ConnectionManager(eventManager)
-
-            val app = GameServerSupervisorApplication(ENV_DEV, eventManager, connectionManager)
+            val app = GameServerSupervisorApplication(ENV_DEV, LoggerFactory)
             app.config = app.loadConfig(getConfigFile(configFileName))
 
             app.run()

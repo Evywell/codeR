@@ -15,7 +15,7 @@ import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioServerSocketChannel
 
 abstract class NettyServer(
-    protected val port: Int,
+    private val port: Int,
     private val ssl: Boolean,
     private val eventManager: EventManagerInterface,
     val securityBanProcess: SecurityBanProcess? = null,
@@ -57,6 +57,8 @@ abstract class NettyServer(
     fun triggerEvent(event: EventInterface) {
         eventManager.dispatch(event)
     }
+
+    fun getPort(): Int = port
 
     private fun loadPlugins() {
         for (plugin in plugins) {

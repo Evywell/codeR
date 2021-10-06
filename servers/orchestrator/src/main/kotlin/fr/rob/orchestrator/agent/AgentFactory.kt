@@ -15,4 +15,13 @@ class AgentFactory(private val orchestrator: Orchestrator, private var logger: L
 
         return agent
     }
+
+    fun createNodeAgent(ip: String, port: Int): NodeAgent {
+        val client = Client(ip, port)
+        val agent = NodeAgent(client, orchestrator.token, logger)
+
+        client.clientHandler = ClientHandler(client, agent.opcodeHandler)
+
+        return agent
+    }
 }

@@ -37,7 +37,7 @@ class Client(private val hostname: String, private val port: Int) : ClientInterf
         }
 
         // Waiting for the client open
-        ThreadHelper.waitFor {
+        ThreadHelper.waitFor(6000) {
             isOpen
         }
     }
@@ -76,6 +76,8 @@ class Client(private val hostname: String, private val port: Int) : ClientInterf
 
                 // We wait for the close signal to avoid the end of the thread
                 channelFuture.channel().closeFuture().sync()
+            } catch (e: Exception) {
+                e.printStackTrace()
             } finally {
                 group.shutdownGracefully().sync()
             }

@@ -3,6 +3,7 @@ package fr.rob.core.test.cucumber
 import fr.rob.core.misc.clock.IntervalTimer
 import fr.rob.core.test.cucumber.service.Client
 import fr.rob.core.test.cucumber.service.Message
+import fr.rob.core.test.cucumber.service.MessageHolderInterface
 import fr.rob.core.test.cucumber.service.checker.CheckerInterface
 import fr.rob.core.test.cucumber.service.checker.UnresolvedCheckerTimeoutException
 
@@ -11,7 +12,7 @@ abstract class AbstractContext {
     /**
      * Try to resolve a checker. If it did not succeed after {timeout} ms, an exception is thrown
      */
-    fun resolveChecker(checker: CheckerInterface, client: Client, timeout: Int = TIMEOUT_MS): Message? {
+    fun resolveChecker(checker: CheckerInterface, messageHolder: MessageHolderInterface, timeout: Int = TIMEOUT_MS): Message? {
         val timer = IntervalTimer(timeout)
         var result = false
 
@@ -24,7 +25,7 @@ abstract class AbstractContext {
             currentTime = System.currentTimeMillis()
             deltaTime = (currentTime - previousTime).toInt()
 
-            for (message in client.messages) {
+            for (message in messageHolder.getMessages()) {
                 result = checker.resolve(message)
 
                 if (result) {

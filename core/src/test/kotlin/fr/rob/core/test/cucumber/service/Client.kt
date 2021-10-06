@@ -6,7 +6,7 @@ import fr.rob.core.test.cucumber.service.network.MessageReceiverInterface
 import fr.rob.core.test.cucumber.service.stack.ClientStack
 import fr.rob.core.test.cucumber.service.stack.StackItem
 
-abstract class Client {
+abstract class Client : MessageHolderInterface {
 
     lateinit var server: Server
     lateinit var session: Session
@@ -41,6 +41,8 @@ abstract class Client {
         messages.clear()
         stack.shutdown()
     }
+
+    override fun getMessages(): List<Message> = messages
 
     protected abstract fun createMessageReceiver(): MessageReceiverInterface
 

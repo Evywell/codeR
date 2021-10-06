@@ -27,8 +27,12 @@ abstract class Config {
     abstract fun getStringArray(configurationKey: String): Array<String>?
     abstract fun get(configurationKey: String): Any?
 
-    fun addHandler(handler: ConfigHandlerInterface): Config {
+    fun addHandler(handler: ConfigHandlerInterface, lazyLoad: Boolean = true): Config {
         handlers.add(handler)
+
+        if (!lazyLoad) {
+            retrieveConfig(handler.getConfigKey())
+        }
 
         return this
     }

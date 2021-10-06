@@ -10,8 +10,17 @@ class DatabaseConfigHandler(private val connectionManager: ConnectionManager) : 
 
     override fun handle(config: Config): Any {
         loadConfigDatabase(config)
+        loadPlayersDatabase(config)
 
         return connectionManager
+    }
+
+    private fun loadPlayersDatabase(config: Config) {
+        if (config.getString(getDatabaseKey("players.database"), null) == null) {
+            return
+        }
+
+        connectionManager.newConnection(DB_PLAYERS, getDatabaseConfig(config, "players"))
     }
 
     private fun loadConfigDatabase(config: Config) {
@@ -26,5 +35,6 @@ class DatabaseConfigHandler(private val connectionManager: ConnectionManager) : 
         const val CONFIG_KEY_DATABASES = "databases"
 
         const val DB_CONFIG = "config"
+        const val DB_PLAYERS = "players"
     }
 }

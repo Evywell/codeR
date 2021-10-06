@@ -8,7 +8,9 @@ import fr.rob.cli.security.strategy.StrategyProcess
 import fr.rob.client.network.Client
 import fr.rob.core.helper.env
 import fr.rob.core.log.LoggerFactory
+import fr.rob.core.network.Packet
 import fr.rob.core.process.ProcessManager
+import fr.rob.entities.AuthenticationProto
 import fr.rob.login.LOGIN_SERVER_PORT
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -25,12 +27,34 @@ class ConsoleApplication(private val input: InputHandler, val output: OutputHand
         registerProcesses()
         opcodeHandler.initialize()
         client.clientHandler = CliClientHandler(opcodeHandler, client)
-        client.open()
+        // client.open()
     }
 
     fun run() {
         input.start(this)
         output.start()
+
+        val client1 = Client("localhost", LOGIN_SERVER_PORT)
+        client1.clientHandler = CliClientHandler(opcodeHandler, client1)
+
+        val client2 = Client("localhost", LOGIN_SERVER_PORT)
+        client2.clientHandler = CliClientHandler(opcodeHandler, client2)
+
+        client1.open()
+        client2.open()
+
+        val auth1 = AuthenticationProto.DevAuthentication.newBuilder()
+            .setUserId(1)
+            .build()
+            .toByteArray()
+
+        val auth2 = AuthenticationProto.DevAuthentication.newBuilder()
+            .setUserId(2)
+            .build()
+            .toByteArray()
+
+        client1.send(Packet(0, auth1))
+        client2.send(Packet(0, auth2))
     }
 
     fun registerCommand(handler: CommandHandlerInterface) {

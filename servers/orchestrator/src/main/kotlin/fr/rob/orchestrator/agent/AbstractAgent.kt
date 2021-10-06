@@ -32,7 +32,7 @@ abstract class AbstractAgent(
         return true
     }
 
-    private fun sendSyncMessage(opcode: Int, message: Message): Any? {
+    fun sendSyncMessage(opcode: Int, message: Message): Any? {
         val request = client.createRequest(message)
 
         return client.sendSync(opcode, request)
