@@ -6,6 +6,9 @@ import fr.rob.core.network.Packet
 import fr.rob.core.network.message.ResponseStackInterface
 import org.apache.commons.lang3.RandomStringUtils
 
+/**
+ * @todo to be moved in core OR refactor
+ */
 interface ClientInterface {
 
     val responseStack: ResponseStackInterface

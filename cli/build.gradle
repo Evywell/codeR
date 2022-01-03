@@ -5,6 +5,8 @@ plugins {
     id 'application'
 }
 
+applicationDefaultJvmArgs = ["-Dcom.sun.management.jmxremote", "-Dcom.sun.management.jmxremote.port=9010", "-Dcom.sun.management.jmxremote.local.only=false", "-Dcom.sun.management.jmxremote.authenticate=false", "-Dcom.sun.management.jmxremote.ssl=false"]
+
 dependencies {
     compile project(':core')
     implementation project(':client')

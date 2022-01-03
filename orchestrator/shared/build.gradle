@@ -1,0 +1,9 @@
+plugins {
+    id 'coder.code-quality'
+    id 'coder.global'
+    id 'java'
+}
+
+dependencies {
+    implementation project(':core')
+}

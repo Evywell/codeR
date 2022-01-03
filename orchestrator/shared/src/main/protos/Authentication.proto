@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package fr.rob.orchestrator.shared.entities;
+
+option java_outer_classname = "AuthenticationProto";
+option php_namespace = "Rob\\Protos";
+option php_metadata_namespace = "Rob\\Protos\\Meta";
+
+message Authentication {
+  string token = 1;
+  enum ClientType {
+    ROOT = 0;
+    GAME_NODE = 1;
+  }
+  ClientType type = 2;
+}
+
+message AuthenticationResult {
+  bool result = 1;
+}

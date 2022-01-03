@@ -9,6 +9,8 @@ import fr.rob.core.test.cucumber.service.checker.UnresolvedCheckerTimeoutExcepti
 
 abstract class AbstractContext {
 
+    lateinit var latestMessage: Message
+
     /**
      * Try to resolve a checker. If it did not succeed after {timeout} ms, an exception is thrown
      */

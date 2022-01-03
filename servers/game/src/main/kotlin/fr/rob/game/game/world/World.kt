@@ -1,6 +1,8 @@
 package fr.rob.game.game.world
 
-class World {
+import fr.rob.core.opcode.queue.OpcodeQueue
+
+class World(private val opcodeQueue: OpcodeQueue) {
 
     private var isRunning: Boolean = false
 
@@ -30,7 +32,9 @@ class World {
         }
     }
 
-    private fun update(deltaTime: Int) { }
+    private fun update(deltaTime: Int) {
+        opcodeQueue.processQueue()
+    }
 
     companion object {
         private const val WORLD_UPDATE_PER_SECOND = 50

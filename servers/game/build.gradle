@@ -7,7 +7,7 @@ plugins {
 
 dependencies {
     compile project(':core')
-    compile project(':servers:orchestrator')
+    implementation project(':orchestrator:agent')
 
     testCompile project(':core').sourceSets.test.output
 }

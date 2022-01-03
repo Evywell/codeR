@@ -5,15 +5,14 @@ plugins {
     id 'application'
 }
 
-dependencies {
-    evaluationDependsOn(":servers:orchestrator")
+applicationDefaultJvmArgs = ["-Dcom.sun.management.jmxremote", "-Dcom.sun.management.jmxremote.port=9010", "-Dcom.sun.management.jmxremote.local.only=false", "-Dcom.sun.management.jmxremote.authenticate=false", "-Dcom.sun.management.jmxremote.ssl=false"]
 
+dependencies {
     compile project(':core')
-    compile project(':shared')
-    compile project(':servers:orchestrator')
+    compile project(':orchestrator:agent')
+    compile project(':orchestrator:shared')
 
     testCompile project(':core').sourceSets.test.output
-    testCompile project(':servers:orchestrator').sourceSets.test.output
 }
 
 jacocoTestReport {
