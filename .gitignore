@@ -9,7 +9,8 @@ logs/
 # Ignore Gradle build output directory
 build
 
-gradle/
+gradle
+!/*/gradle
 gradlew*
 
 # Public key certificates
