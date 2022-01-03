@@ -10,6 +10,7 @@ import fr.rob.core.event.EventManager
 import fr.rob.core.initiator.Initiator
 import fr.rob.core.log.LoggerFactory
 import fr.rob.core.log.LoggerFactoryInterface
+import fr.rob.core.network.v2.netty.client.NettyClient
 import fr.rob.core.process.ProcessManager
 import fr.rob.game.config.EnvConfigHandler
 import fr.rob.game.config.database.DatabaseConfigHandler
@@ -17,20 +18,13 @@ import fr.rob.game.config.server.NodesConfig
 import fr.rob.game.config.server.NodesConfigHandler
 import fr.rob.game.config.server.ServerConfigHandler
 import fr.rob.game.database.DatabaseModule
-import fr.rob.game.network.GameNodeManager
+import fr.rob.game.network.node.GameNodeManager
 import fr.rob.game.network.Server
-import fr.rob.game.network.event.GameNodeStarted
-import fr.rob.game.network.event.NewGameNodeForOrchestratorListener
-import fr.rob.game.network.netty.NettyGameServerFactory
-import fr.rob.game.security.OrchestratorModule
 import fr.rob.game.tasks.TaskLoadServerConfig
 import fr.rob.game.tasks.repository.LoadServerRepository
 import fr.rob.game.tasks.repository.LoadServerRepositoryInterface
-import fr.rob.orchestrator.agent.AbstractAgent
 import fr.rob.orchestrator.agent.NodeAgent
-import fr.rob.shared.orchestrator.OrchestratorRepository
-import fr.rob.shared.orchestrator.OrchestratorRepositoryInterface
-import fr.rob.shared.orchestrator.config.OrchestratorConfigHandler
+import fr.rob.orchestrator.agent.network.AgentClient
 
 class GameServerSupervisorApplication(
     env: String,
@@ -44,38 +38,34 @@ class GameServerSupervisorApplication(
     lateinit var servers: Array<Server>
     lateinit var agent: NodeAgent
 
-    lateinit var orchestratorRepository: OrchestratorRepositoryInterface
-
-    override fun initDependencies() {
-        super.initDependencies()
-
-        val dbConfigPool = connectionPoolManager.getPool(fr.rob.core.DB_CONFIG)!!
-
-        orchestratorRepository = OrchestratorRepository(dbConfigPool.getNextConnection())
-    }
-
     override fun afterRun() {
+        /*
         initiator
             .runTask(TASK_LOAD_SERVER_CONFIG) // Store server info
-
-        // Launch the orchestrator agent
-        agent = processManager.getOrMakeProcess(NodeAgent::class)
-        agent.authenticate()
-
-        eventManager.addEventListener(
-            GameNodeStarted.GAME_NODE_STARTED_EVENT,
-            NewGameNodeForOrchestratorListener(this)
-        )
+        */
+        val nodesConfig = config?.retrieveConfig("nodes")
 
         val nodeManager = GameNodeManager(
-            config?.get("nodes")!! as NodesConfig,
-            NettyGameServerFactory(this, processManager, eventManager)
+            nodesConfig!! as NodesConfig,
+            loggerFactory
         )
-        nodeManager.buildNodes()
-    }
 
-    fun notifyOrchestratorForNewGameNode(name: String, port: Int) {
-        agent.registerNewGameNode(name, port)
+        val adapter = NodeAgentAdapter(nodeManager)
+
+        // Launch the orchestrator agent
+        val agentLogger = LoggerFactory.create("agent")
+        val client = AgentClient(adapter, agentLogger)
+        val process = NettyClient("orchestrator", 12345, client)
+
+        agent = NodeAgent(client, process)
+        agent.authenticate("azert")
+
+        val nodes = nodeManager.buildNodes()
+
+        for (node in nodes) {
+            println("Register node ${node.info.name}")
+            agent.registerNewGameNode(node.info.name, node.info.port)
+        }
     }
 
     override fun registerInitiatorTasks(initiator: Initiator) {
@@ -85,6 +75,7 @@ class GameServerSupervisorApplication(
         // Trigger the handle() of the database config handler
         config!!.retrieveConfig(DATABASE)
 
+        /*
         val loadServerRepository: LoadServerRepositoryInterface =
             LoadServerRepository(
                 (connectionPoolManager.getPool(DB_CONFIG) ?: throw Exception("Cannot get connection $DB_CONFIG"))
@@ -93,6 +84,7 @@ class GameServerSupervisorApplication(
 
         initiator
             .addTask(TASK_LOAD_SERVER_CONFIG, TaskLoadServerConfig(servers, loadServerRepository))
+         */
     }
 
     override fun registerConfigHandlers(config: Config) {
@@ -101,16 +93,9 @@ class GameServerSupervisorApplication(
             .addHandler(DatabaseConfigHandler(connectionPoolManager))
             .addHandler(ServerConfigHandler())
             .addHandler(NodesConfigHandler())
-            .addHandler(OrchestratorConfigHandler())
     }
 
     override fun registerModules(modules: MutableList<AbstractModule>) {
         modules.add(DatabaseModule(eventManager))
-        modules.add(OrchestratorModule(
-            orchestratorRepository,
-            config!!.retrieveConfig("orchestrator") as OrchestratorConfigHandler.OrchestratorConfig,
-            processManager,
-            loggerFactory
-        ))
     }
 }

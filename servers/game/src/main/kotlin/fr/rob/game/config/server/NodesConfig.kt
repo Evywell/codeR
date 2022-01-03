@@ -9,7 +9,7 @@ class NodesConfigHandler : ConfigHandlerInterface {
 
     override fun handle(config: Config): Any? {
         val maxNodes = config.getInteger("nodes.maxnodes", DEFAULT_MAX_NODES)
-        val labels = config.getStringArray("nodes.label") ?: emptyArray()
+        val labels = config.getStringArray("nodes.labels") ?: emptyArray()
 
         val nodes = ArrayList<NodeConfig>()
 

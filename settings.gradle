@@ -9,8 +9,11 @@
 
 rootProject.name = 'codeR'
 include 'core'
-include 'shared'
-include 'servers:orchestrator'
+// include 'shared'
+include 'orchestrator:shared'
+include 'orchestrator:api'
+include 'orchestrator:agent'
+// include 'servers:orchestrator'
 include 'servers:login'
 include 'servers:game'
 include 'client'

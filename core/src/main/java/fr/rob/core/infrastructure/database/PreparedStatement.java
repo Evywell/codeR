@@ -179,6 +179,7 @@ public class PreparedStatement implements java.sql.PreparedStatement {
             return this.stmt.execute();
         } catch (SQLException e) {
             System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQL Query: " + this.sql);
             System.out.println("SQLState: " + e.getSQLState());
             System.out.println("VendorError: " + e.getErrorCode());
             e.printStackTrace();

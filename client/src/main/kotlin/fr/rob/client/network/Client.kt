@@ -70,8 +70,9 @@ class Client(private val hostname: String, private val port: Int) : ClientInterf
                 clientBootstrap.remoteAddress(InetSocketAddress(client.hostname, client.port))
                 clientBootstrap.handler(ClientChannelInitializer(client))
 
+                println("Before sync")
                 val channelFuture = clientBootstrap.connect().sync()
-
+                println("After sync")
                 client.isOpen = true
 
                 // We wait for the close signal to avoid the end of the thread

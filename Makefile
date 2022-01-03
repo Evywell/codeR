@@ -45,7 +45,7 @@ CLI_DIR = cli
 CORE_DIR = core
 GAME_DIR = servers/game
 LOGIN_DIR = servers/login
-ORCHESTRATOR_DIR = servers/orchestrator
+ORCHESTRATOR_DIR = orchestrator
 CLIENT_DIR = client
 
 JAVA_GAME_DIR = ./$(GAME_DIR)
@@ -59,8 +59,8 @@ JAVA_LOGIN_PROTOS_DIR = $(JAVA_LOGIN_DIR)/src/main/protos
 JAVA_LOGIN_DST_DIR = $(JAVA_LOGIN_DIR)/src/main/java
 
 JAVA_ORCHESTRATOR_DIR = ./$(ORCHESTRATOR_DIR)
-JAVA_ORCHESTRATOR_PROTOS_DIR = $(JAVA_ORCHESTRATOR_DIR)/src/main/protos
-JAVA_ORCHESTRATOR_DST_DIR = $(JAVA_ORCHESTRATOR_DIR)/src/main/java
+JAVA_ORCHESTRATOR_SHARED_PROTOS_DIR = $(JAVA_ORCHESTRATOR_DIR)/shared/src/main/protos
+JAVA_ORCHESTRATOR_SHARED_DST_DIR = $(JAVA_ORCHESTRATOR_DIR)/shared/src/main/java
 
 JAVA_CORE_DIR = ./$(CORE_DIR)
 JAVA_CORE_PROTOS_DIR = $(JAVA_CORE_DIR)/src/main/protos
@@ -99,30 +99,37 @@ build-proto: ## Builds protos for java and php
 	@$(MAKE) -i build-login-proto
 	@$(MAKE) -i build-orchestrator-proto
 
+.PHONY: build-java-proto
+build-java-proto:
+	$(PROTOC) -I=./$(ARGS)/src/main/protos --java_out=./$(ARGS)/src/main/java ./$(ARGS)/src/main/protos/*.proto
+
+.PHONY: build-test-proto
+build-test-proto:
+	$(PROTOC) -I=./$(ARGS)/src/test/protos --java_out=./$(ARGS)/src/test/java ./$(ARGS)/src/test/protos/*.proto
+
 .PHONY: build-core-proto
 build-core-proto:
-	@echo "Generating java protos" && $(PROTOC) -I=$(JAVA_CORE_PROTOS_DIR) --java_out=$(JAVA_CORE_DST_DIR) $(JAVA_CORE_PROTOS_DIR)/*.proto
+	@echo "Generating java protos" && $(MAKE) build-java-proto ARGS="core"
 
 .PHONY: build-client-proto
 build-client-proto:
-	@echo "Generating java protos" && $(PROTOC) -I=$(JAVA_CLIENT_PROTOS_DIR) --java_out=$(JAVA_CLIENT_DST_DIR) $(JAVA_CLIENT_PROTOS_DIR)/*.proto
+	@echo "Generating java protos" && $(MAKE) build-java-proto ARGS="client"
 
 .PHONY: build-game-proto
 build-game-proto: ## Builds game protos for java and php
-	@echo "Generating game java protos" && $(PROTOC) -I=$(JAVA_GAME_PROTOS_DIR) --java_out=$(JAVA_GAME_DST_DIR) $(JAVA_GAME_PROTOS_DIR)/*.proto
-	@echo "Generating test java protos" && $(PROTOC) -I=$(JAVA_GAME_TEST_SRC_DIR) --java_out=$(JAVA_GAME_TEST_DST_DIR) $(JAVA_GAME_TEST_SRC_DIR)/*.proto
+	@echo "Generating game java protos" && $(MAKE) build-java-proto ARGS="servers/game"
+	@echo "Generating test java protos" && $(MAKE) build-test-proto ARGS="servers/game"
 	@echo "Generating php protos" && $(PROTOC) -I=$(JAVA_GAME_PROTOS_DIR) --php_out=$(PHP_DST_DIR) $(JAVA_GAME_PROTOS_DIR)/*.proto
 
 .PHONY: build-login-proto
 build-login-proto: ## Builds login protos for java and php
-	@echo "Generating login java protos" && $(PROTOC) -I=$(JAVA_LOGIN_PROTOS_DIR) --java_out=$(JAVA_LOGIN_DST_DIR) $(JAVA_LOGIN_PROTOS_DIR)/*.proto
+	@echo "Generating login java protos" && $(MAKE) build-java-proto ARGS="servers/login"
 	@echo "Generating php protos" && $(PROTOC) -I=$(JAVA_LOGIN_PROTOS_DIR) --php_out=$(PHP_DST_DIR) $(JAVA_LOGIN_PROTOS_DIR)/*.proto
 
-
 .PHONY: build-orchestrator-proto
-build-orchestrator-proto: ## Builds orchestrator protos for java and php
-	@echo "Generating java protos" && $(PROTOC) -I=$(JAVA_ORCHESTRATOR_PROTOS_DIR) --java_out=$(JAVA_ORCHESTRATOR_DST_DIR) $(JAVA_ORCHESTRATOR_PROTOS_DIR)/*.proto
-	@echo "Generating php protos" && $(PROTOC) -I=$(JAVA_ORCHESTRATOR_PROTOS_DIR) --php_out=$(PHP_DST_DIR) $(JAVA_ORCHESTRATOR_PROTOS_DIR)/*.proto
+build-orchestrator-proto: ## Builds orchestrator protos for java
+	@echo "Generating shared protos" && $(PROTOC) -I=$(JAVA_ORCHESTRATOR_SHARED_PROTOS_DIR) --java_out=$(JAVA_ORCHESTRATOR_SHARED_DST_DIR) $(JAVA_ORCHESTRATOR_SHARED_PROTOS_DIR)/*.proto
+	@echo "Generating shared protos" && $(PROTOC) -I=./servers/orchestrator/src/main/protos --java_out=./servers/orchestrator/src/main/java ./servers/orchestrator/src/main/protos/*.proto
 
 .PHONY: bp
 bp: build-proto ## alias of build-proto

@@ -22,15 +22,10 @@ import fr.rob.login.game.character.create.CharacterCreateProcess
 import fr.rob.login.game.character.stand.CharacterStandProcess
 import fr.rob.login.game.character.stand.CharacterStandRepository
 import fr.rob.login.network.netty.NettyLoginServer
-import fr.rob.login.security.OrchestratorModule
 import fr.rob.login.security.SecurityModule
 import fr.rob.login.security.account.AccountProcess
 import fr.rob.login.security.account.AccountRepository
 import fr.rob.login.security.strategy.StrategyProcess
-import fr.rob.orchestrator.agent.AbstractAgent
-import fr.rob.shared.orchestrator.OrchestratorRepository
-import fr.rob.shared.orchestrator.OrchestratorRepositoryInterface
-import fr.rob.shared.orchestrator.config.OrchestratorConfigHandler
 
 open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, env: String) :
     SingleServerApplication(env, loggerFactory.create("login"), ConfigLoader(), EventManager()) {
@@ -38,8 +33,6 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
     val connectionManager = ConnectionManager(eventManager)
     var connectionPoolManager = ConnectionPoolManager(4, connectionManager)
     val processManager = ProcessManager()
-
-    private lateinit var orchestratorRepository: OrchestratorRepositoryInterface
 
     override fun initDependencies() {
         super.initDependencies()
@@ -52,7 +45,6 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
         val characterRepository = CharacterRepository(dbPlayersPool.getNextConnection())
         val accountRepository = AccountRepository(dbPlayersPool.getNextConnection())
         val securityBanRepository = SecurityBanRepository(dbPlayersPool.getNextConnection())
-        orchestratorRepository = OrchestratorRepository(dbConfigPool.getNextConnection())
 
         processManager.registerProcess(CharacterStandProcess::class) {
             CharacterStandProcess(CharacterStandRepository(dbPlayersPool.getNextConnection()))
@@ -84,22 +76,11 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
             StrategyProcess(server)
         }
 
-        val agent = processManager.getOrMakeProcess(AbstractAgent::class)
-        agent.authenticate()
-
         server.start()
     }
 
     override fun registerModules(modules: MutableList<AbstractModule>) {
         modules.add(SecurityModule(env, processManager, server))
-        modules.add(
-            OrchestratorModule(
-                orchestratorRepository,
-                config!!.retrieveConfig("orchestrator") as OrchestratorConfigHandler.OrchestratorConfig,
-                processManager,
-                loggerFactory
-            )
-        )
     }
 
     override fun registerInitiatorTasks(initiator: Initiator) {}
@@ -107,7 +88,6 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
     override fun registerConfigHandlers(config: Config) {
         config
             .addHandler(DatabaseConfigHandler(connectionPoolManager))
-            .addHandler(OrchestratorConfigHandler())
     }
 
     override fun createServer(): Server = NettyLoginServer(

@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 open class Server(var serverStrategy: ServerStrategyInterface = NullServerStrategy()) {
 
-    private val sessions: MutableMap<String, Session> = ConcurrentHashMap()
+    protected val sessions: MutableMap<String, Session> = ConcurrentHashMap()
 
     fun sessionFromIdentifier(identifier: String): Session {
         if (!sessions.containsKey(identifier)) {
@@ -27,4 +27,9 @@ open class Server(var serverStrategy: ServerStrategyInterface = NullServerStrate
     }
 
     open fun start() {}
+
+    /**
+     * Returns the readonly session map
+     */
+    fun getAllSessions(): Map<String, Session> = sessions
 }

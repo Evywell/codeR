@@ -5,10 +5,8 @@ import fr.rob.core.config.Config
 import fr.rob.core.config.hashmap.HashMapConfig
 import fr.rob.core.event.EventManager
 import fr.rob.core.log.LoggerFactory
-import fr.rob.core.misc.dump
 import fr.rob.core.test.cucumber.service.Server
 import fr.rob.core.test.unit.sandbox.log.NILogger
-import fr.rob.core.test.unit.sandbox.log.NILoggerFactory
 import fr.rob.login.LoginApplication
 import fr.rob.login.opcode.LoginOpcodeHandler
 import fr.rob.login.test.cucumber.service.LoginClient

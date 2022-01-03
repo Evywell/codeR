@@ -3,7 +3,7 @@ package fr.rob.core.network.session
 import fr.rob.core.network.Packet
 import fr.rob.core.network.session.exception.UnauthenticatedSessionException
 
-abstract class Session {
+open class Session {
 
     var isAuthenticated: Boolean = false
     var userId: Int? = null
