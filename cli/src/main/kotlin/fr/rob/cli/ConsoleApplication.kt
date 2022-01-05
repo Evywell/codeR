@@ -25,7 +25,7 @@ class ConsoleApplication(private val input: InputHandler, val output: OutputHand
         registerProcesses()
         opcodeHandler.initialize()
         client.clientHandler = CliClientHandler(opcodeHandler, client)
-        // client.open()
+        client.open()
     }
 
     fun run() {
