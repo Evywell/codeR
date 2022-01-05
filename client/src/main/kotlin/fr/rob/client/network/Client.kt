@@ -37,7 +37,7 @@ class Client(private val hostname: String, private val port: Int) : ClientInterf
         }
 
         // Waiting for the client open
-        ThreadHelper.waitFor(6000) {
+        ThreadHelper.waitFor {
             isOpen
         }
     }

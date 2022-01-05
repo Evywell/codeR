@@ -1,7 +1,6 @@
 package fr.rob.game.network.session
 
 import fr.rob.core.network.session.Session
-import java.util.ArrayList
 
 class SessionPool(private val maxSessions: Int = DEFAULT_MAX_SESSIONS) {
 

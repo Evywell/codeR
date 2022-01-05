@@ -18,13 +18,10 @@ import fr.rob.game.config.server.NodesConfig
 import fr.rob.game.config.server.NodesConfigHandler
 import fr.rob.game.config.server.ServerConfigHandler
 import fr.rob.game.database.DatabaseModule
-import fr.rob.game.network.node.GameNodeManager
 import fr.rob.game.network.Server
-import fr.rob.game.tasks.TaskLoadServerConfig
-import fr.rob.game.tasks.repository.LoadServerRepository
-import fr.rob.game.tasks.repository.LoadServerRepositoryInterface
+import fr.rob.game.network.node.GameNodeManager
 import fr.rob.orchestrator.agent.NodeAgent
-import fr.rob.orchestrator.agent.network.AgentClient
+import fr.rob.orchestrator.agent.network.NodeAgentClient
 
 class GameServerSupervisorApplication(
     env: String,
@@ -54,7 +51,7 @@ class GameServerSupervisorApplication(
 
         // Launch the orchestrator agent
         val agentLogger = LoggerFactory.create("agent")
-        val client = AgentClient(adapter, agentLogger)
+        val client = NodeAgentClient(adapter, agentLogger)
         val process = NettyClient("orchestrator", 12345, client)
 
         agent = NodeAgent(client, process)

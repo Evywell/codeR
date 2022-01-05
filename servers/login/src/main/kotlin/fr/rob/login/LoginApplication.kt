@@ -80,7 +80,7 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
     }
 
     override fun registerModules(modules: MutableList<AbstractModule>) {
-        modules.add(SecurityModule(env, processManager, server))
+        modules.add(SecurityModule(env, processManager))
     }
 
     override fun registerInitiatorTasks(initiator: Initiator) {}

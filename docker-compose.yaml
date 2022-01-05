@@ -3,15 +3,11 @@ version: '3.7'
 networks:
   gamedb:
   tests:
-  orchestrator:
-  login:
 
 volumes:
   mysqldata:
   mysqlunitdata:
   gradlecache:
-  orchestratorcache:
-  logincache:
 
 services:
   protobuf:
@@ -34,47 +30,12 @@ services:
       - .:/mnt/app
       - gradlecache:/home/gradle/.gradle
     ports:
-      - '9010:9010'
       - '5005:5005'
       - '5006:5006'
       - '5007:5007'
-      - '55599:55599'
     networks:
       - gamedb
       - tests
-
-  orchestrator:
-    build:
-      context: docker/gradle
-      target: dev
-      args:
-        - USER_ID=${USER_ID:-1000}
-        - GROUP_ID=${GROUP_ID:-1000}
-    user: '$USER_ID:$GROUP_ID'
-    volumes:
-      - .:/mnt/app
-      - orchestratorcache:/home/gradle/.gradle
-      - /mnt/app/.gradle
-    networks:
-      - gamedb
-      - orchestrator
-
-  login:
-    build:
-      context: docker/gradle
-      target: dev
-      args:
-        - USER_ID=${USER_ID:-1000}
-        - GROUP_ID=${GROUP_ID:-1000}
-    user: '$USER_ID:$GROUP_ID'
-    volumes:
-      - .:/mnt/app
-      - logincache:/home/gradle/.gradle
-      - /mnt/app/.gradle
-    networks:
-      - gamedb
-      - orchestrator
-      - login
 
   migrator:
     build:
