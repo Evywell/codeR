@@ -19,6 +19,6 @@ jobs:
       - name: Builds the projects
         run: |
           docker exec $(docker-compose ps -q gradle) gradle build
-      - name: Runs functionnal tests
-        run: |
-          docker exec $(docker-compose ps -q gradle) gradle :servers:login:cucumber
+      #- name: Runs functional tests
+      #  run: |
+      #    docker exec $(docker-compose ps -q gradle) gradle :servers:login:cucumber
