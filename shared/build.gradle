@@ -1,9 +1,0 @@
-plugins {
-    id 'coder.code-quality'
-    id 'coder.global'
-}
-
-dependencies {
-    implementation project(':core')
-    testCompile project(':core').sourceSets.test.output
-}

@@ -1,33 +1,33 @@
 package fr.rob.login.security
 
 import fr.rob.core.AbstractModule
-import fr.rob.core.network.Server
-import fr.rob.core.network.netty.NettyServer
+import fr.rob.core.ENV_DEV
+import fr.rob.core.auth.jwt.JWTDecoderService
 import fr.rob.core.process.ProcessManager
+import fr.rob.core.security.PublicKeyReader
+import fr.rob.core.security.authentication.AuthenticationProcess
+import fr.rob.login.ROB_CERTS_API_URL
+import fr.rob.login.security.account.AccountProcess
+import fr.rob.login.security.authentication.dev.DevAuthenticationProcess
+import fr.rob.login.security.authentication.jwt.JWTAuthenticationProcess
+import io.jsonwebtoken.jackson.io.JacksonDeserializer
+import org.codehaus.jackson.map.ObjectMapper
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
+import java.security.PublicKey
+import java.util.Base64
 
 class SecurityModule(
     private val env: String,
-    private val processManager: ProcessManager,
-    private val server: Server
+    private val processManager: ProcessManager
 ) : AbstractModule() {
 
     override fun boot() {
         // Registering the authentication process
-        // registerAuthenticationProcess()
-
-        if (server is NettyServer) {
-            // server.registerPlugin(getRequestLimiterPlugin())
-        }
+        registerAuthenticationProcess()
     }
-/*
-    private fun getRequestLimiterPlugin(): RequestLimiter = RequestLimiter()
-        .rule(
-            CheckOperatorRule(
-                arrayOf(
-                    OPERATOR_CHANGE_STRATEGY
-                )
-            )
-        ) as RequestLimiter
 
     private fun registerAuthenticationProcess() {
         val accountProcess = processManager.getOrMakeProcess(AccountProcess::class)
@@ -62,7 +62,6 @@ class SecurityModule(
 
         return PublicKeyReader.fromString(String(Base64.getDecoder().decode(certs.publicKey)))
     }
-    */
 }
 
 data class CertsResponse(var publicKey: String = "", var signer: String = "")
