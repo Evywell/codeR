@@ -18,7 +18,6 @@ import fr.rob.orchestrator.shared.Orchestrator
 import io.grpc.ManagedChannelBuilder
 import io.grpc.Metadata
 import io.grpc.ServerBuilder
-import io.grpc.stub.MetadataUtils
 import io.grpc.stub.MetadataUtils.newAttachHeadersInterceptor
 
 class Main {
