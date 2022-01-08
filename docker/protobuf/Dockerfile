@@ -2,6 +2,7 @@
 FROM alpine:3.7
 
 ARG PROTOBUF_VERSION
+ARG GRPC_JAVA_VERSION
 
 ENV GLIBC_VERSION=2.32-r0
 RUN apk --no-cache add wget curl \
@@ -10,10 +11,13 @@ RUN apk --no-cache add wget curl \
     && apk add glibc.apk \
     && rm /etc/apk/keys/sgerrand.rsa.pub glibc.apk
 
+RUN apk update && apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community grpc-java
+
 RUN curl https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOBUF_VERSION}/protoc-${PROTOBUF_VERSION}-linux-x86_64.zip -Lo protoc.zip \
     && unzip protoc.zip -d /usr/local \
-    && rm protoc.zip \
-    && apk del curl wget
+    && rm protoc.zip
+
+RUN apk del curl wget
 
 WORKDIR /mnt/app
 

@@ -17,4 +17,9 @@ dependencies {
 
     implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
     compile 'org.apache.commons:commons-configuration2:2.7'
+
+    runtimeOnly 'io.grpc:grpc-netty-shaded:1.43.1'
+    implementation 'io.grpc:grpc-protobuf:1.43.1'
+    implementation 'io.grpc:grpc-stub:1.43.1'
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
 }

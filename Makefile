@@ -107,6 +107,10 @@ build-java-proto:
 build-test-proto:
 	$(PROTOC) -I=./$(ARGS)/src/test/protos --java_out=./$(ARGS)/src/test/java ./$(ARGS)/src/test/protos/*.proto
 
+.PHONY: grpc
+grpc:
+	$(PROTOC) --plugin=protoc-gen-grpc-java=/usr/bin/protoc-gen-grpc-java -I=orchestrator/api/src/main/protos/rpc --java_out=orchestrator/api/src/main/java --grpc-java_out=orchestrator/api/src/main/java orchestrator/api/src/main/protos/rpc/*.proto
+
 .PHONY: build-core-proto
 build-core-proto:
 	@echo "Generating java protos" && $(MAKE) build-java-proto ARGS="core"
