@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
 
-final class InitialStructure extends AbstractMigration
+final class Creatures extends AbstractMigration
 {
     /**
      * Change Method.
@@ -19,23 +19,16 @@ final class InitialStructure extends AbstractMigration
     public function change(): void
     {
         $this
-            ->table('servers')
+            ->table('creature_templates', ['signed' => false])
             ->addColumn('name', 'string')
-            ->addColumn('address', 'string')
+            ->addTimestamps()
             ->create();
 
         $this
-            ->table('zones')
-            ->addColumn('map_id', 'integer')
-            ->addColumn('positions', 'string')
-            ->create();
-
-        $this
-            ->table('servers_zones', ['id' => false, 'primary_key' => ['server_id', 'zone_id']])
-            ->addColumn('server_id', 'integer')
-            ->addColumn('zone_id', 'integer')
-            ->addForeignKey('server_id', 'servers', 'id')
-            ->addForeignKey('zone_id', 'zones', 'id')
+            ->table('creatures', ['signed' => false])
+            ->addColumn('object_id', 'integer', ['signed' => false, 'null' => true])
+            ->addTimestamps()
+            ->addForeignKey('object_id', 'objects', 'id', ['delete' => 'SET_NULL'])
             ->create();
     }
 }

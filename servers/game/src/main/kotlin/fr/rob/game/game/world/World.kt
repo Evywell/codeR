@@ -1,10 +1,12 @@
 package fr.rob.game.game.world
 
 import fr.rob.core.opcode.queue.OpcodeQueue
+import fr.rob.game.game.world.instance.InstanceManager
 
 class World(private val opcodeQueue: OpcodeQueue) {
 
     private var isRunning: Boolean = false
+    private val instanceManager = InstanceManager()
 
     fun initialize() {
         isRunning = true
@@ -34,6 +36,7 @@ class World(private val opcodeQueue: OpcodeQueue) {
 
     private fun update(deltaTime: Int) {
         opcodeQueue.processQueue()
+        instanceManager.update(deltaTime)
     }
 
     companion object {

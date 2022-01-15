@@ -9,6 +9,8 @@ dependencies {
     compile project(':core')
     implementation project(':orchestrator:agent')
 
+    implementation 'com.google.guava:guava:31.0.1-jre'
+
     testCompile project(':core').sourceSets.test.output
 }
 

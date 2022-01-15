@@ -7,6 +7,7 @@ const val ROB_CERTS_API_URL = "http://192.168.1.19:8888/certs/rob"
 
 const val DATABASE = "databases"
 const val DB_CONFIG = "config"
+const val DB_WORLD = "world"
 const val SERVER = "servers"
 
 const val SSL_ENABLED = false
