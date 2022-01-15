@@ -18,6 +18,11 @@ import fr.rob.game.config.server.NodesConfig
 import fr.rob.game.config.server.NodesConfigHandler
 import fr.rob.game.config.server.ServerConfigHandler
 import fr.rob.game.database.DatabaseModule
+import fr.rob.game.game.world.map.MapManager
+import fr.rob.game.game.world.map.loader.DatabaseMapLoader
+import fr.rob.game.game.world.map.loader.MapRepository
+import fr.rob.game.game.world.map.loader.creature.CreatureLoader
+import fr.rob.game.game.world.map.loader.creature.CreatureRepository
 import fr.rob.game.network.Server
 import fr.rob.game.network.node.GameNodeManager
 import fr.rob.orchestrator.agent.NodeAgent
@@ -47,7 +52,8 @@ class GameServerSupervisorApplication(
             loggerFactory
         )
 
-        val adapter = NodeAgentAdapter(nodeManager)
+        val mapManager = getMapManager()
+        val adapter = NodeAgentAdapter(nodeManager, mapManager)
 
         // Launch the orchestrator agent
         val agentLogger = LoggerFactory.create("agent")
@@ -94,5 +100,17 @@ class GameServerSupervisorApplication(
 
     override fun registerModules(modules: MutableList<AbstractModule>) {
         modules.add(DatabaseModule(eventManager))
+    }
+
+    private fun getMapManager(): MapManager {
+        val dbPool = connectionPoolManager.getPool(DB_WORLD)!!
+
+        val mapRepository = MapRepository(dbPool.getNextConnection())
+        val mapLoader = DatabaseMapLoader(mapRepository)
+
+        val creatureRepository = CreatureRepository(dbPool.getNextConnection())
+        val creatureLoader = CreatureLoader(creatureRepository)
+
+        return MapManager(mapLoader, creatureLoader)
     }
 }
