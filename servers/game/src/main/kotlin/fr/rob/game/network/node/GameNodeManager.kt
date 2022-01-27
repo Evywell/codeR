@@ -2,25 +2,24 @@ package fr.rob.game.network.node
 
 import fr.rob.core.log.LoggerFactoryInterface
 import fr.rob.core.network.v2.netty.NettyServer
-import fr.rob.game.config.server.NodesConfig
 import fr.rob.game.game.world.instance.InstanceManager
 import fr.rob.game.network.GameNodeServer
 import kotlin.concurrent.thread
 
 class GameNodeManager(
-    private val nodesConfig: NodesConfig,
+    private val maxNodes: Int,
     private val loggerFactory: LoggerFactoryInterface
 ) {
 
     private val nodes = ArrayList<GameNode>()
 
-    fun buildNodes(): List<GameNode> {
-        for (nodeConfig in nodesConfig.nodes) {
-            buildNode(nodeConfig.port, nodeConfig.label, false)
-        }
+    fun buildNodes(nodeConfigs: Array<NodeConfig>): List<GameNode> {
+        for (nodeConfig in nodeConfigs) {
+            if (nodes.size >= maxNodes) {
+                return nodes
+            }
 
-        if (nodesConfig.nodes.size >= nodesConfig.maxNodes) {
-            return nodes
+            buildNode(nodeConfig.port, nodeConfig.label, false)
         }
 
         // @todo loop over all remain server (nodesConfig.maxNodes - nodesConfig.nodes.size)
@@ -72,4 +71,6 @@ class GameNodeManager(
 
         return Pair(server, process)
     }
+
+    data class NodeConfig(val label: String, val port: Int)
 }

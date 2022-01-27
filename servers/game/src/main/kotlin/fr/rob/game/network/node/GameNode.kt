@@ -10,8 +10,8 @@ class GameNode(val info: GameNodeInfo, private val server: GameNodeServer, val i
         for (instance in instanceManager.getAllInstances()) {
             if (
                 instance.id == instanceId
-                && instance.mapId == mapId
-                && instance.zoneId == zoneId
+                && instance.map.id == mapId
+                && instance.map.zoneId == zoneId
             ) {
                 return instance
             }
