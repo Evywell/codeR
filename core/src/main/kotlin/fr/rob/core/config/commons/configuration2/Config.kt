@@ -5,6 +5,7 @@ import org.apache.commons.configuration2.FileBasedConfiguration
 import org.apache.commons.configuration2.PropertiesConfiguration
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder
 import org.apache.commons.configuration2.builder.fluent.Parameters
+import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler
 import java.io.File
 
 class Config(file: File) : Config() {
@@ -15,7 +16,9 @@ class Config(file: File) : Config() {
         val params = Parameters()
         val properties = params.properties()
 
-        properties.setFile(file)
+        properties
+            .setFile(file)
+            .setListDelimiterHandler(DefaultListDelimiterHandler(','))
 
         val builder = FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration::class.java)
 

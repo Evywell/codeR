@@ -188,7 +188,7 @@ build-cli-debug:  ## Runs the build of the cli project then start the debugger s
 	$(GRADLE_TASK) :cli:run -Ddebug_mode="true" -Ddebug_port="5007"
 
 .PHONY: server
-server: ## Launches the game server
+run-game: ## Launches the game server
 	$(GRADLE_TASK) :servers:game:run
 
 .PHONY: login
