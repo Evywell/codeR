@@ -27,7 +27,7 @@ class GameNodeManager(
         return nodes
     }
 
-    fun retrieveNodeWithInstanceInfo(instanceId: Int, mapId: Int, zoneId: Int?): GameNode? {
+    fun retrieveNodeWithInstanceInfo(instanceId: Int, mapId: Int, zoneId: Int): GameNode? {
         for (node in nodes) {
             if (node.retrieveInstanceWithInfo(instanceId, mapId, zoneId) != null) {
                 return node

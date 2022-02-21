@@ -7,6 +7,9 @@ import fr.rob.core.event.EventManager
 import fr.rob.core.event.EventManagerInterface
 import fr.rob.core.log.LoggerFactory
 import fr.rob.core.log.LoggerFactoryInterface
+import fr.rob.core.log.LoggerInterface
+import fr.rob.core.messaging.rabbitmq.AMQPConfig
+import fr.rob.core.messaging.rabbitmq.AMQPConnection
 import fr.rob.game.DB_WORLD
 import fr.rob.game.game.world.entity.template.Creature
 import fr.rob.game.game.world.map.MapManager
@@ -42,4 +45,14 @@ val mapModule = module {
     single<WorldObjectsLoaderInterface<Creature>> { CreatureLoader(get()) }
 
     single<MapManager> { MapManager(get(), get()) }
+}
+
+val queueModule = module {
+    single<LoggerInterface>(named("QUEUE_LOGGER")) { get<LoggerFactoryInterface>().create("queue") }
+    single<AMQPConnection> { params ->
+        AMQPConnection(
+            params.get(),
+            get(named("QUEUE_LOGGER"))
+        )
+    }
 }

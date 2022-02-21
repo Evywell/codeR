@@ -35,7 +35,7 @@ class InstanceManager(private val instancesRepository: InstancesRepositoryInterf
 
             if (!fullMatch) {
                 // We need to create the instance
-                val instance = createInstance(instanceInfo.mapId, instanceInfo.zoneId, instanceInfo.type)
+                val instance = instancesRepository.insert(instanceInfo.mapId, instanceInfo.zoneId, instanceInfo.type)
 
                 instances.add(InstanceContainer(instance, node))
                 instancesToSend.add(instance)
@@ -45,8 +45,5 @@ class InstanceManager(private val instancesRepository: InstancesRepositoryInterf
         return instancesToSend
     }
 
-    private fun createInstance(mapId: Int, zoneId: Int?, type: Int): Instance =
-        instancesRepository.insert(mapId, zoneId, type)
-
-    data class InstanceInfo(val mapId: Int, val zoneId: Int?, val type: Int)
+    data class InstanceInfo(val mapId: Int, val zoneId: Int, val type: Int)
 }

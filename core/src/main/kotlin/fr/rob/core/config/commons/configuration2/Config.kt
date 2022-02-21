@@ -6,6 +6,7 @@ import org.apache.commons.configuration2.PropertiesConfiguration
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder
 import org.apache.commons.configuration2.builder.fluent.Parameters
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler
+import org.apache.commons.configuration2.io.ConfigurationLogger
 import java.io.File
 
 class Config(file: File) : Config() {
@@ -19,6 +20,7 @@ class Config(file: File) : Config() {
         properties
             .setFile(file)
             .setListDelimiterHandler(DefaultListDelimiterHandler(','))
+            .setLogger(ConfigurationLogger.newDummyLogger())
 
         val builder = FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration::class.java)
 

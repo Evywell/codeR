@@ -19,15 +19,9 @@ final class MapStructure extends AbstractMigration
      */
     public function change(): void
     {
-        /*
-         * A map is a 2D rectangle composed by other smaller rectangles called zones
-         * The center of this rectangle is the origin (x=0 ; y=0)
-         */
         $this
             ->table('maps', ['signed' => false])
             ->addColumn('name', 'string')
-            ->addColumn('width', 'integer', ['signed' => false])
-            ->addColumn('height', 'integer', ['signed' => false])
             ->create();
 
         /*

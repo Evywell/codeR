@@ -1,6 +1,6 @@
 package fr.rob.orchestrator.api.instance
 
-data class Instance(val id: Int, val mapId: Int, val zoneId: Int?, var type: Int, var state: Byte = STATE_NOT_INITIALIZED) {
+data class Instance(val id: Int, val mapId: Int, val zoneId: Int, var type: Int, var state: Byte = STATE_NOT_INITIALIZED) {
     companion object {
 
         const val TYPE_GLOBAL = 0

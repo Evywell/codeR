@@ -172,6 +172,10 @@ build: up ## Builds all the projects
 build-game-debug: ## Runs the build of the game project then start the debugger socket
 	$(GRADLE_TASK) :servers:game:run -Ddebug_mode="true" -Ddebug_port="5006"
 
+.PHONY: build-orchestrator-debug
+build-orchestrator-debug: ## Runs the build of the game project then start the debugger socket
+	$(GRADLE_TASK) :orchestrator:api:run -Ddebug_mode="true" -Ddebug_port="5008"
+
 .PHONY: build-login
 build-login:
 	$(GRADLE_TASK) :servers:login:build

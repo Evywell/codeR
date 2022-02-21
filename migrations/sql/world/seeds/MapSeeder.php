@@ -20,8 +20,6 @@ class MapSeeder extends AbstractSeed
             [
                 'id' => 1,
                 'name' => 'Middle Of Nowhere',
-                'width' => 200,
-                'height' => 100,
             ]
         ];
 

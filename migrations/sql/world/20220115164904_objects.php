@@ -29,9 +29,9 @@ final class Objects extends AbstractMigration
                 'comment' => 'Foreign key on *_templates tables']
             )
             ->addColumn('type', 'integer', ['signed' => false, 'limit' => MysqlAdapter::INT_TINY])
-            ->addColumn('position_x', 'float')
-            ->addColumn('position_y', 'float')
-            ->addColumn('position_z', 'float')
+            ->addColumn('position_x', 'float', ['comment' => 'X position on the map (not the zone)'])
+            ->addColumn('position_y', 'float', ['comment' => 'Y position on the map (not the zone)'])
+            ->addColumn('position_z', 'float', ['comment' => 'Z position on the map (not the zone)'])
             ->addColumn('orientation', 'float')
             ->addTimestamps()
             ->addIndex(['type', 'template_id'])

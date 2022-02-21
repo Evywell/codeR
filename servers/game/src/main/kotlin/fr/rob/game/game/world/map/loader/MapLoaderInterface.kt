@@ -4,5 +4,5 @@ import fr.rob.game.game.world.map.Map
 
 interface MapLoaderInterface {
 
-    fun load(mapId: Int, zoneId: Int?): Map
+    fun load(mapId: Int, zoneId: Int): Map
 }

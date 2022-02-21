@@ -41,7 +41,7 @@ class CreatureRepository(private val db: Connection) : CreatureRepositoryInterfa
 
     companion object {
         const val SEL_CREATURES_BY_MAP_ID =
-            "SELECT o.mapId, o.position_x, o.position_y, o.position_z, o.orientation, t.name " +
+            "SELECT o.map_id, o.position_x, o.position_y, o.position_z, o.orientation, t.name " +
                     "FROM objects o " +
                     "INNER JOIN creatures c ON (c.object_id = o.id AND o.type = ?) " +
                     "INNER JOIN creature_templates t ON t.id = o.template_id " +
