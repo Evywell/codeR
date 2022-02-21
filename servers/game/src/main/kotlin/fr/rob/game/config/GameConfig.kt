@@ -2,13 +2,15 @@ package fr.rob.game.config
 
 import fr.rob.core.config.Config
 import fr.rob.core.config.database.DatabaseConfig
+import fr.rob.core.messaging.rabbitmq.AMQPConfig
 import fr.rob.game.DEFAULT_MAX_NODES
 import fr.rob.game.network.node.GameNodeManager.NodeConfig
 
 data class GameConfig(
     val orchestrator: Orchestrator,
     val databases: Databases,
-    val nodesConfig: NodesConfig
+    val nodesConfig: NodesConfig,
+    val rabbitConfig: AMQPConfig,
 )
 
 data class Databases(val configDb: DatabaseConfig, val playersDb: DatabaseConfig, val worldDb: DatabaseConfig)

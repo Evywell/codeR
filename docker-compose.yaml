@@ -3,6 +3,7 @@ version: '3.7'
 networks:
   gamedb:
   tests:
+  messaging:
 
 volumes:
   mysqldata:
@@ -33,9 +34,11 @@ services:
       - '5005:5005'
       - '5006:5006'
       - '5007:5007'
+      - '5008:5008'
     networks:
       - gamedb
       - tests
+      - messaging
 
   migrator:
     build:
@@ -48,6 +51,12 @@ services:
     networks:
       - gamedb
       - tests
+
+  rabbit:
+    build:
+      context: docker/rabbitmq
+    networks:
+      - messaging
 
   mysql_game:
     build:

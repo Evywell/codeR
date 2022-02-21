@@ -1,7 +1,6 @@
 package fr.rob.orchestrator.api.instance
 
 import fr.rob.core.database.Connection
-import fr.rob.core.database.getIntOrNull
 import fr.rob.core.database.returnAndClose
 
 class DefaultInstancesRepository(private val db: Connection) : DefaultInstancesRepositoryInterface {
@@ -17,7 +16,7 @@ class DefaultInstancesRepository(private val db: Connection) : DefaultInstancesR
         val defaultInstances = ArrayList<DefaultInstance>()
 
         while (rs.next()) {
-            defaultInstances.add(DefaultInstance(rs.getInt(1), getIntOrNull(rs, 2), rs.getString(3), rs.getInt(4)))
+            defaultInstances.add(DefaultInstance(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getInt(4)))
         }
 
         return returnAndClose(defaultInstances, rs, stmt)

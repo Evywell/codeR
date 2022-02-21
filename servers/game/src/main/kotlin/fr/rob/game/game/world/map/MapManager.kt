@@ -11,11 +11,11 @@ class MapManager(
 
     private val maps = ArrayList<Map>()
 
-    fun getMap(mapId: Int, zoneId: Int?): Map {
+    fun getMap(mapId: Int, zoneId: Int): Map {
         return retrieveFromInfo(mapId, zoneId) ?: createMap(mapId, zoneId)
     }
 
-    private fun createMap(mapId: Int, zoneId: Int?): Map {
+    private fun createMap(mapId: Int, zoneId: Int): Map {
         val map: Map = loader.load(mapId, zoneId)
 
         map.registerCreatures(creatureLoader)
@@ -25,7 +25,7 @@ class MapManager(
         return map
     }
 
-    private fun retrieveFromInfo(mapId: Int, zoneId: Int?): Map? {
+    private fun retrieveFromInfo(mapId: Int, zoneId: Int): Map? {
         for (map in maps) {
             if (map.id == mapId && map.zoneId == zoneId) {
                 return map

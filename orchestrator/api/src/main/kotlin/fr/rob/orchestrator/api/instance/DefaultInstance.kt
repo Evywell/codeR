@@ -1,6 +1,6 @@
 package fr.rob.orchestrator.api.instance
 
-data class DefaultInstance(val mapId: Int, val zoneId: Int?, val nodeName: String, val type: Int) {
+data class DefaultInstance(val mapId: Int, val zoneId: Int, val nodeName: String, val type: Int) {
 
     companion object {
         fun collectionIntoInstanceInfo(defaultInstances: List<DefaultInstance>): List<InstanceManager.InstanceInfo> {

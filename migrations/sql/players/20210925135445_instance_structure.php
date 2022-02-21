@@ -22,7 +22,7 @@ final class InstanceStructure extends AbstractMigration
         $this
             ->table('instances', ['signed' => false])
             ->addColumn('map_id', 'integer', ['signed' => false])
-            ->addColumn('orchestrator_owner_id', 'integer', ['signed' => false])
+            ->addColumn('zone_id', 'integer', ['signed' => false])
             ->addColumn('type', 'integer', ['signed' => false, 'limit' => MysqlAdapter::INT_TINY])
             ->addColumn('sub_type', 'integer', [
                 'signed' => false,
@@ -30,7 +30,7 @@ final class InstanceStructure extends AbstractMigration
                 'null' => true
             ])
             ->addTimestamps()
-            ->addIndex(['map_id', 'orchestrator_owner_id', 'type'])
+            ->addIndex(['map_id', 'type'])
             ->create();
     }
 }

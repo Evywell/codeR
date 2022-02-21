@@ -6,8 +6,11 @@ class InstanceManager {
 
     private val instances = ArrayList<MapInstance>()
 
-    fun create(id: Int, map: Map) {
-        instances.add(MapInstance(id, map))
+    fun create(id: Int, map: Map): MapInstance {
+        val instance = MapInstance(id, map)
+        instances.add(instance)
+
+        return instance
     }
 
     fun update(deltaTime: Int) {

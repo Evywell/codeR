@@ -10,7 +10,7 @@ data class CreateInstanceRequest(val requestId: String, val instance: Instance, 
         CreateInstanceRequestProto.CreateMapInstanceRequest.newBuilder()
             .setRequestId(requestId)
             .setMapId(instance.mapId)
-            .setZoneId(instance.zoneId ?: 0)
+            .setZoneId(instance.zoneId)
             .setNode(node.info.label)
             .build()
 }

@@ -19,3 +19,14 @@ message ConfirmMapInstanceCreated {
   int32 zoneId = 3;
 }
 
+message CreateMapInstance {
+  int32 mapId = 1;
+  int32 zoneId = 2;
+  string node = 3;
+}
+
+message MapInstanceCreated {
+  int32 mapId = 1;
+  int32 zoneId = 2;
+  string node = 3;
+}

@@ -22,7 +22,7 @@ final class DefaultInstances extends AbstractMigration
         $this
             ->table('default_instances', ['signed' => false])
             ->addColumn('map_id', 'integer', ['signed' => false])
-            ->addColumn('zone_id', 'integer', ['signed' => false, 'null' => true])
+            ->addColumn('zone_id', 'integer', ['signed' => false])
             ->addColumn('node_name', 'string', ['limit' => 255])
             ->addColumn('type', 'integer', ['signed' => false, 'limit' => MysqlAdapter::INT_TINY])
             ->addTimestamps()
