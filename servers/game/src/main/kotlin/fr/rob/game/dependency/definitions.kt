@@ -8,7 +8,6 @@ import fr.rob.core.event.EventManagerInterface
 import fr.rob.core.log.LoggerFactory
 import fr.rob.core.log.LoggerFactoryInterface
 import fr.rob.core.log.LoggerInterface
-import fr.rob.core.messaging.rabbitmq.AMQPConfig
 import fr.rob.core.messaging.rabbitmq.AMQPConnection
 import fr.rob.game.DB_WORLD
 import fr.rob.game.game.world.entity.template.Creature
