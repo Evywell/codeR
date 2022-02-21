@@ -4,7 +4,6 @@ import fr.rob.core.messaging.send.MessageQueueDispatcherInterface
 import fr.rob.game.config.GameConfig
 import fr.rob.game.game.world.map.MapManager
 import fr.rob.game.network.node.GameNodeManager
-import fr.rob.orchestrator.agent.node.NodeAgentAdapterInterface
 import fr.rob.orchestrator.shared.entities.NewGameNodeProto
 
 class App(
