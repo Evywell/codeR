@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package fr.raven.messaging.message;
+
+option java_outer_classname = "MessagingProto";
+
+message Envelope {
+  string eventName = 1;
+  bytes data = 2;
+}

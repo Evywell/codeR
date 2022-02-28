@@ -1,0 +1,53 @@
+plugins {
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+    id 'jacoco'
+}
+
+version = '0.1.0'
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    project.archivesBaseName = 'messaging'
+}
+
+dependencies {
+    implementation 'com.google.protobuf:protobuf-java:3.8.0'
+    implementation 'com.google.protobuf:protobuf-java-util:3.14.0'
+    implementation 'com.rabbitmq:amqp-client:5.14.2'
+    implementation files('../../log/lib/build/libs/log-0.1.0.jar')
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testImplementation "org.mockito.kotlin:mockito-kotlin:3.2.0"
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.enabled true
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                'fr/raven/messaging/message/**'
+            ])
+        }))
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}
