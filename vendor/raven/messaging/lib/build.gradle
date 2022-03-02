@@ -1,10 +1,21 @@
+buildscript {
+    repositories {
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.18'
+    }
+}
+
 plugins {
+    id 'com.google.protobuf' version '0.8.18'
     id 'java-library'
     id 'org.jetbrains.kotlin.jvm' version '1.6.10'
     id 'jacoco'
 }
 
-version = '0.1.0'
+group = 'fr.raven.messaging'
+version = '0.1.1'
 
 repositories {
     mavenCentral()
@@ -18,7 +29,7 @@ dependencies {
     implementation 'com.google.protobuf:protobuf-java:3.8.0'
     implementation 'com.google.protobuf:protobuf-java-util:3.14.0'
     implementation 'com.rabbitmq:amqp-client:5.14.2'
-    implementation files('../../log/lib/build/libs/log-0.1.0.jar')
+    implementation('fr.raven.log:lib:0.1.0')
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testImplementation "org.mockito.kotlin:mockito-kotlin:3.2.0"
@@ -48,6 +59,24 @@ jacocoTestReport {
     }
 }
 
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = 11
+    }
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = 11
+    }
+}
+
 jacoco {
     toolVersion = "0.8.7"
+}
+
+protobuf {
+  protoc {
+    artifact = 'com.google.protobuf:protoc:3.8.0'
+  }
 }

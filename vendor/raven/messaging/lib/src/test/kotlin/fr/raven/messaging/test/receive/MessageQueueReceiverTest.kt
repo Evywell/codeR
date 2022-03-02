@@ -1,7 +1,7 @@
 package fr.raven.messaging.test.receive
 
 import fr.raven.log.NullLogger
-import fr.raven.messaging.message.MessagingProto.Envelope
+import fr.raven.messaging.message.MessagingProto
 import fr.raven.messaging.receive.MessageHandlerInterface
 import fr.raven.messaging.receive.MessageQueueReceiver
 import fr.raven.messaging.receive.MessageQueueReceiverInterface
@@ -18,7 +18,7 @@ class MessageQueueReceiverTest {
         val receiver = MessageQueueReceiver(arrayOf(DummyReceiver()), NullLogger())
         val handler = DummyHandler()
         val handlerSpy = spy(handler)
-        val envelope = Envelope.newBuilder()
+        val envelope = MessagingProto.Envelope.newBuilder()
             .setEventName("event_name")
             .build()
 
@@ -41,7 +41,7 @@ class MessageQueueReceiverTest {
         val handler2 = DummyHandler()
         val handlerSpy2 = spy(handler2)
 
-        val envelope = Envelope.newBuilder()
+        val envelope = MessagingProto.Envelope.newBuilder()
             .setEventName("event_name")
             .build()
 
@@ -61,7 +61,7 @@ class MessageQueueReceiverTest {
         val receiver = MessageQueueReceiver(arrayOf(DummyReceiver()), NullLogger())
         val handler = DummyHandler()
         val handlerSpy = spy(handler)
-        val envelope = Envelope.newBuilder()
+        val envelope = MessagingProto.Envelope.newBuilder()
             .setEventName("event_name")
             .build()
 
@@ -78,6 +78,6 @@ class MessageQueueReceiverTest {
     }
 
     open class DummyHandler : MessageHandlerInterface {
-        override fun handle(envelope: Envelope) {}
+        override fun handle(envelope: MessagingProto.Envelope) {}
     }
 }

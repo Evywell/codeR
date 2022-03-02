@@ -1,7 +1,7 @@
 package fr.rob.login.network.netty
 
+import fr.raven.log.LoggerFactoryInterface
 import fr.rob.core.event.EventManagerInterface
-import fr.rob.core.log.LoggerFactoryInterface
 import fr.rob.core.network.netty.NettyServer
 import fr.rob.core.network.netty.NettyServerHandler
 import fr.rob.core.network.netty.plugin.security.RequestLimiter

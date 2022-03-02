@@ -13,6 +13,8 @@ gradle
 !/*/gradle
 gradlew*
 
+vendor/
+
 # Public key certificates
 *.pem
 

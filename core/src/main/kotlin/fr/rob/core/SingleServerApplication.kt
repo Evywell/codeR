@@ -1,8 +1,8 @@
 package fr.rob.core
 
+import fr.raven.log.LoggerInterface
 import fr.rob.core.config.ConfigLoaderInterface
 import fr.rob.core.event.EventManagerInterface
-import fr.rob.core.log.LoggerInterface
 import fr.rob.core.network.Server
 
 abstract class SingleServerApplication(

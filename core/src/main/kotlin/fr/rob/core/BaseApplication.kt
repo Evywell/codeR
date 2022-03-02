@@ -1,11 +1,11 @@
 package fr.rob.core
 
+import fr.raven.log.LoggerInterface
 import fr.rob.core.config.Config
 import fr.rob.core.config.ConfigLoaderInterface
 import fr.rob.core.event.EventManagerInterface
 import fr.rob.core.exception.ExceptionManager
 import fr.rob.core.initiator.Initiator
-import fr.rob.core.log.LoggerInterface
 import java.io.File
 import java.util.ArrayList
 

@@ -9,8 +9,8 @@ applicationDefaultJvmArgs = ["-Dcom.sun.management.jmxremote", "-Dcom.sun.manage
 
 dependencies {
     compile project(':core')
-    compile project(':orchestrator:agent')
     compile project(':orchestrator:shared')
+    implementation('fr.raven.log:lib:0.1.0')
 
     testCompile project(':core').sourceSets.test.output
 }

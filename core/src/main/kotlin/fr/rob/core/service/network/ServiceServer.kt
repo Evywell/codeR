@@ -1,6 +1,6 @@
 package fr.rob.core.service.network
 
-import fr.rob.core.log.LoggerFactory
+import fr.raven.log.NullLogger
 import fr.rob.core.network.Packet
 import fr.rob.core.network.session.Session
 import fr.rob.core.network.v2.Server
@@ -24,5 +24,5 @@ class ServiceServer(private val actions: Collection<Action>) : Server() {
         return session
     }
 
-    private fun createHandler(): OpcodeHandler = ServiceOpcodeHandler(actions, LoggerFactory.create("session"))
+    private fun createHandler(): OpcodeHandler = ServiceOpcodeHandler(actions, NullLogger())
 }

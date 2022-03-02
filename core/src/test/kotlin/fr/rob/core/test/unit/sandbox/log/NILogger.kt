@@ -1,7 +1,7 @@
 package fr.rob.core.test.unit.sandbox.log
 
-import fr.rob.core.log.LoggerFactoryInterface
-import fr.rob.core.log.LoggerInterface
+import fr.raven.log.LoggerFactoryInterface
+import fr.raven.log.LoggerInterface
 
 class NILogger : LoggerInterface {
 

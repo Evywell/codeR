@@ -9,4 +9,14 @@ class NodeManager {
 
         return Node(info)
     }
+
+    fun getNodeByName(name: String): Node? {
+        for (node in nodes) {
+            if (node.info.label == name) {
+                return node
+            }
+        }
+
+        return null
+    }
 }

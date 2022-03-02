@@ -1,6 +1,6 @@
 package fr.rob.game.network.node
 
-import fr.rob.core.log.LoggerFactoryInterface
+import fr.raven.log.LoggerFactoryInterface
 import fr.rob.core.network.v2.netty.NettyServer
 import fr.rob.game.game.world.instance.InstanceManager
 import fr.rob.game.network.GameNodeServer

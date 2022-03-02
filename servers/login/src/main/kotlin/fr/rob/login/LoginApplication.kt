@@ -1,5 +1,6 @@
 package fr.rob.login
 
+import fr.raven.log.LoggerFactoryInterface
 import fr.rob.core.AbstractModule
 import fr.rob.core.DB_CONFIG
 import fr.rob.core.SingleServerApplication
@@ -9,7 +10,6 @@ import fr.rob.core.database.ConnectionManager
 import fr.rob.core.database.pool.ConnectionPoolManager
 import fr.rob.core.event.EventManager
 import fr.rob.core.initiator.Initiator
-import fr.rob.core.log.LoggerFactoryInterface
 import fr.rob.core.network.Server
 import fr.rob.core.process.ProcessManager
 import fr.rob.core.security.SecurityBanProcess

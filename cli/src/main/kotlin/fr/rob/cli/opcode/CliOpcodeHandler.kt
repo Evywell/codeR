@@ -1,8 +1,8 @@
 package fr.rob.cli.opcode
 
+import fr.raven.log.LoggerInterface
 import fr.rob.cli.ConsoleApplication
 import fr.rob.cli.security.auth.AuthenticationResultOpcode
-import fr.rob.core.log.LoggerInterface
 import fr.rob.core.opcode.OpcodeHandler
 import fr.rob.login.opcode.ServerOpcodeLogin
 

@@ -1,6 +1,6 @@
 package fr.rob.game.network
 
-import fr.rob.core.log.LoggerInterface
+import fr.raven.log.LoggerInterface
 import fr.rob.core.network.Packet
 import fr.rob.core.network.session.Session
 import fr.rob.core.network.v2.Server

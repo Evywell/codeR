@@ -1,10 +1,11 @@
 package fr.rob.orchestrator.api.node
 
-import fr.rob.core.entities.MessagingProto
-import fr.rob.core.messaging.receive.MessageHandlerInterface
-import fr.rob.core.messaging.send.MessageQueueDispatcherInterface
+import fr.raven.messaging.message.MessagingProto
+import fr.raven.messaging.receive.MessageHandlerInterface
+import fr.raven.messaging.send.MessageQueueDispatcherInterface
 import fr.rob.orchestrator.api.instance.DefaultInstance
 import fr.rob.orchestrator.api.instance.DefaultInstancesRepositoryInterface
+import fr.rob.orchestrator.api.instance.Instance
 import fr.rob.orchestrator.api.instance.InstanceManager
 import fr.rob.orchestrator.shared.entities.CreateInstanceRequestProto
 import fr.rob.orchestrator.shared.entities.NewGameNodeProto
@@ -36,6 +37,8 @@ class NewGameNodesHandler(
                         .setNode(node.name)
                         .build()
                 )
+
+                instance.state = Instance.STATE_PENDING
             }
         }
     }
