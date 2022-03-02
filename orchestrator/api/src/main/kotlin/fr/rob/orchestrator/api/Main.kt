@@ -1,15 +1,16 @@
 package fr.rob.orchestrator.api
 
+import fr.raven.log.log4j.LoggerFactory
+import fr.raven.messaging.rabbitmq.AMQPConfig
+import fr.raven.messaging.rabbitmq.AMQPConnection
+import fr.raven.messaging.rabbitmq.AMQPReceiver
+import fr.raven.messaging.rabbitmq.AMQPSender
+import fr.raven.messaging.receive.MessageQueueReceiver
+import fr.raven.messaging.send.MessageQueueDispatcher
+import fr.raven.messaging.send.QueueRouting
+import fr.raven.messaging.send.TransportConfig
 import fr.rob.core.database.Connection
-import fr.rob.core.log.LoggerFactory
-import fr.rob.core.messaging.rabbitmq.AMQPConfig
-import fr.rob.core.messaging.rabbitmq.AMQPConnection
-import fr.rob.core.messaging.rabbitmq.AMQPReceiver
-import fr.rob.core.messaging.rabbitmq.AMQPSender
-import fr.rob.core.messaging.receive.MessageQueueReceiver
-import fr.rob.core.messaging.send.MessageQueueDispatcher
-import fr.rob.core.messaging.send.QueueRouting
-import fr.rob.core.messaging.send.TransportConfig
+import fr.rob.core.misc.dump
 import fr.rob.core.network.v2.netty.NettyServer
 import fr.rob.core.process.ProcessManager
 import fr.rob.orchestrator.api.composer.RequestComposer
@@ -24,6 +25,7 @@ import fr.rob.orchestrator.api.node.NodeManager
 import fr.rob.orchestrator.shared.Orchestrator
 import fr.rob.orchestrator.shared.entities.CreateInstanceRequestProto
 import fr.rob.orchestrator.shared.entities.NewGameNodeProto
+import java.io.File
 
 class Main {
     companion object {
@@ -40,7 +42,8 @@ class Main {
             val nodeManager = NodeManager()
             val defaultInstancesRepository = DefaultInstancesRepository(dbConfig)
             val instanceManager = InstanceManager(InstancesRepository(dbPlayers))
-            val queueLogger = LoggerFactory.create("queue")
+            val loggerFactory = LoggerFactory(File({}.javaClass.classLoader.getResource("log4j.config.xml")!!.path))
+            val queueLogger = loggerFactory.create("queue")
             val amqpConnection =
                 AMQPConnection(AMQPConfig("rabbit", 5672, "guest", "guest", "default_vhost"), queueLogger)
 
@@ -58,7 +61,7 @@ class Main {
 
             queueReceiver.attachHandler(
                 CreateInstanceRequestProto.MapInstanceCreated::class.java.name,
-                GameNodeCreatedHandler()
+                GameNodeCreatedHandler(nodeManager, instanceManager)
             )
 
             processManager.registerProcess(NodeManager::class) {
@@ -78,7 +81,7 @@ class Main {
             }
 
             val orchestrator = Orchestrator(1, "orchestrator:12345", "azert")
-            val server = OrchestratorServer(orchestrator, LoggerFactory.create("server"), processManager)
+            val server = OrchestratorServer(orchestrator, loggerFactory.create("server"), processManager)
             val serverProcess = NettyServer(12345, server, false)
 
             server.start(serverProcess)

@@ -1,8 +1,8 @@
 package fr.rob.login.opcode
 
+import fr.raven.log.LoggerInterface
 import fr.rob.core.ENV_DEV
 import fr.rob.core.event.EventManagerInterface
-import fr.rob.core.log.LoggerInterface
 import fr.rob.core.opcode.AdvancedOpcodeHandlerInterface
 import fr.rob.core.opcode.OpcodeHandler
 import fr.rob.core.process.ProcessManager

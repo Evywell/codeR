@@ -131,6 +131,11 @@ build-orchestrator-proto: ## Builds orchestrator protos for java
 	@echo "Generating shared protos" && $(PROTOC) -I=$(JAVA_ORCHESTRATOR_SHARED_PROTOS_DIR) --java_out=$(JAVA_ORCHESTRATOR_SHARED_DST_DIR) $(JAVA_ORCHESTRATOR_SHARED_PROTOS_DIR)/*.proto
 	@echo "Generating shared protos" && $(PROTOC) -I=./servers/orchestrator/src/main/protos --java_out=./servers/orchestrator/src/main/java ./servers/orchestrator/src/main/protos/*.proto
 
+.PHONY: build-vendor-proto
+build-vendor-proto:
+	$(MAKE) build-java-proto ARGS="vendor/raven/messaging/lib"
+	$(MAKE) build-test-proto ARGS="vendor/raven/messaging/lib"
+
 .PHONY: bp
 bp: build-proto ## alias of build-proto
 

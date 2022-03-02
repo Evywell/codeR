@@ -6,6 +6,19 @@ class InstanceManager(private val instancesRepository: InstancesRepositoryInterf
 
     private val instances = ArrayList<InstanceContainer>()
 
+    fun getInstanceContainer(mapId: Int, zoneId: Int): InstanceContainer? {
+        for (container in instances) {
+            if (
+                container.instance.mapId == mapId
+                && container.instance.zoneId == zoneId
+            ) {
+                return container
+            }
+        }
+
+        return null
+    }
+
     fun createMultipleForNode(node: Node, instanceInfoList: List<InstanceInfo>): List<Instance> {
         // The goal here is to create instances for node when needed, so we need to find if an instance already exists
         // In order to match the exact instance, we need to test the mapId and the zoneId at the same time

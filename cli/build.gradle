@@ -13,6 +13,8 @@ dependencies {
     compile project(':servers:login')
 
     implementation("com.github.ajalt.clikt:clikt:3.2.0")
+
+    implementation files('../vendor/raven/log/lib/build/libs/log-0.1.0.jar')
 }
 
 run {

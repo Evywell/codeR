@@ -8,10 +8,20 @@
  */
 
 rootProject.name = 'codeR'
+
+sourceControl {
+    gitRepository("https://github.com/Evywell/raven-log.git") {
+        producesModule("fr.raven.log:lib")
+    }
+
+    gitRepository("https://github.com/Evywell/raven-messaging.git") {
+        producesModule("fr.raven.messaging:lib")
+    }
+}
+
 include 'core'
 include 'orchestrator:shared'
 include 'orchestrator:api'
-include 'orchestrator:agent'
 include 'servers:login'
 include 'servers:game'
 include 'client'

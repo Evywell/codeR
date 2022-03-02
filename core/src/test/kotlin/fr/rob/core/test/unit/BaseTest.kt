@@ -1,9 +1,9 @@
 package fr.rob.core.test.unit
 
+import fr.raven.log.LoggerFactoryInterface
+import fr.raven.log.LoggerInterface
 import fr.rob.core.BaseApplication
 import fr.rob.core.event.EventManagerInterface
-import fr.rob.core.log.LoggerFactoryInterface
-import fr.rob.core.log.LoggerInterface
 import fr.rob.core.network.Server
 import fr.rob.core.opcode.OpcodeHandler
 import fr.rob.core.process.ProcessManager

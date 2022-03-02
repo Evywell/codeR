@@ -1,6 +1,6 @@
 package fr.rob.orchestrator.api.opcode
 
-import fr.rob.core.log.LoggerInterface
+import fr.raven.log.LoggerInterface
 import fr.rob.core.opcode.OpcodeHandler
 import fr.rob.core.process.ProcessManager
 import fr.rob.orchestrator.api.composer.RequestComposer

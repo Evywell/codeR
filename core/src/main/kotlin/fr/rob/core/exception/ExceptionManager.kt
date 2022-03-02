@@ -1,6 +1,6 @@
 package fr.rob.core.exception
 
-import fr.rob.core.log.LoggerInterface
+import fr.raven.log.LoggerInterface
 
 class ExceptionManager(val defaultLogger: LoggerInterface) {
 
