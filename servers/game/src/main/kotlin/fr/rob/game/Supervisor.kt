@@ -1,6 +1,6 @@
 package fr.rob.game
 
-import fr.rob.core.messaging.send.MessageQueueDispatcherInterface
+import fr.raven.messaging.send.MessageQueueDispatcherInterface
 import fr.rob.game.network.node.GameNodeManager
 import fr.rob.orchestrator.shared.entities.NewGameNodeProto
 

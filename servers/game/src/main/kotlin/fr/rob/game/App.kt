@@ -1,11 +1,11 @@
 package fr.rob.game
 
 import fr.raven.log.LoggerFactoryInterface
+import fr.raven.messaging.rabbitmq.AMQPConnection
+import fr.raven.messaging.receive.MessageQueueReceiver
+import fr.raven.messaging.send.MessageQueueDispatcher
+import fr.raven.messaging.send.QueueRouting
 import fr.rob.core.database.pool.ConnectionPoolManager
-import fr.rob.core.messaging.rabbitmq.AMQPConnection
-import fr.rob.core.messaging.receive.MessageQueueReceiver
-import fr.rob.core.messaging.send.MessageQueueDispatcher
-import fr.rob.core.messaging.send.QueueRouting
 import fr.rob.game.config.GameConfig
 import fr.rob.game.game.world.map.MapManager
 import fr.rob.game.network.node.CreateInstanceHandler
@@ -22,9 +22,9 @@ class App(private val config: GameConfig) : KoinComponent {
     private val loggerFactory: LoggerFactoryInterface by inject()
     private val nodeManager = GameNodeManager(config.nodesConfig.maxNodes, loggerFactory)
     private val mapManager: MapManager by inject()
-    private val amqpConnection: AMQPConnection = get { parametersOf(config.rabbitConfig) }
-    private val messageQueueDispatcher: MessageQueueDispatcher by inject { parametersOf(getQueueRoutingItems()) }
-    private val queueReceiver: MessageQueueReceiver by inject()
+    private val amqpConnection: AMQPConnection by inject { parametersOf(config.rabbitConfig) }
+    private val messageQueueDispatcher: MessageQueueDispatcher by inject { parametersOf(getQueueRoutingItems(), amqpConnection) }
+    private val queueReceiver: MessageQueueReceiver by inject { parametersOf(amqpConnection) }
     private val connectionPoolManager: ConnectionPoolManager by inject { parametersOf(6) } // @todo Change this hard coded value
 
     fun run() {

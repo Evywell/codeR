@@ -1,9 +1,9 @@
 package fr.rob.game
 
+import fr.raven.messaging.rabbitmq.AMQPConfig
 import fr.rob.core.config.Config
 import fr.rob.core.config.commons.configuration2.ConfigLoader
 import fr.rob.core.config.database.DatabaseConfig
-import fr.rob.core.messaging.rabbitmq.AMQPConfig
 import fr.rob.game.config.Databases
 import fr.rob.game.config.GameConfig
 import fr.rob.game.config.NodesConfig
@@ -43,22 +43,22 @@ class Main {
             ),
             Databases(
                 DatabaseConfig(
-                    config.getString("databases.config.host")!!,
-                    config.getLong("databases.config.port")!!,
+                    System.getProperty("mysql_game.host"),
+                    System.getProperty("mysql_game.tcp.3306").toLong(),
                     config.getString("databases.config.user")!!,
                     config.getString("databases.config.password")!!,
                     config.getString("databases.config.database")!!
                 ),
                 DatabaseConfig(
-                    config.getString("databases.players.host")!!,
-                    config.getLong("databases.players.port")!!,
+                    System.getProperty("mysql_game.host"),
+                    System.getProperty("mysql_game.tcp.3306").toLong(),
                     config.getString("databases.players.user")!!,
                     config.getString("databases.players.password")!!,
                     config.getString("databases.players.database")!!
                 ),
                 DatabaseConfig(
-                    config.getString("databases.world.host")!!,
-                    config.getLong("databases.world.port")!!,
+                    System.getProperty("mysql_game.host"),
+                    System.getProperty("mysql_game.tcp.3306").toLong(),
                     config.getString("databases.world.user")!!,
                     config.getString("databases.world.password")!!,
                     config.getString("databases.world.database")!!
@@ -66,8 +66,8 @@ class Main {
             ),
             NodesConfig(config),
             AMQPConfig(
-                config.getString("rabbitmq.hostname")!!,
-                config.getInteger("rabbitmq.port")!!,
+                System.getProperty("rabbit.host"),
+                System.getProperty("rabbit.tcp.5672").toInt(),
                 config.getString("rabbitmq.username")!!,
                 config.getString("rabbitmq.password")!!,
                 config.getString("rabbitmq.vhost")!!

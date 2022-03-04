@@ -15,7 +15,6 @@ import fr.rob.core.database.pool.ConnectionPoolManager
 import fr.rob.core.event.EventManager
 import fr.rob.core.event.EventManagerInterface
 import fr.rob.game.DB_WORLD
-import fr.rob.game.Main
 import fr.rob.game.game.world.entity.template.Creature
 import fr.rob.game.game.world.map.MapManager
 import fr.rob.game.game.world.map.loader.DatabaseMapLoader
@@ -35,7 +34,7 @@ import java.io.File
 val globalModule = module {
     single<EventManagerInterface>(named("EVENT_MANAGER_DATABASE")) { EventManager() }
     single<EventManagerInterface> { EventManager() }
-    singleOf<LoggerFactoryInterface> { LoggerFactory(File(Main::class.java.getResource("log4j.config.xml")!!.path)) }
+    singleOf<LoggerFactoryInterface> { LoggerFactory(File({}.javaClass.classLoader.getResource("log4j.config.xml")!!.path)) }
 }
 
 val databaseModule = module {
@@ -67,11 +66,11 @@ val queueModule = module {
     }
     single<MessageQueueDispatcher> { params ->
         MessageQueueDispatcher(
-            arrayOf(TransportConfig("orchestrator", AMQPSender("orchestrator", get()))),
+            arrayOf(TransportConfig("orchestrator", AMQPSender("orchestrator", params.get()))),
             params.get()
         )
     }
-    single<MessageQueueReceiver> {
-        MessageQueueReceiver(arrayOf(AMQPReceiver("orchestrator", get())), get(named("QUEUE_LOGGER")))
+    single<MessageQueueReceiver> { params ->
+        MessageQueueReceiver(arrayOf(AMQPReceiver("orchestrator", params.get())), get(named("QUEUE_LOGGER")))
     }
 }
