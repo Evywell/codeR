@@ -5,9 +5,9 @@ import fr.rob.core.ENV_DEV
 import fr.rob.core.auth.jwt.JWTDecoderService
 import fr.rob.core.process.ProcessManager
 import fr.rob.core.security.PublicKeyReader
-import fr.rob.core.security.authentication.AuthenticationProcess
 import fr.rob.login.ROB_CERTS_API_URL
 import fr.rob.login.security.account.AccountProcess
+import fr.rob.login.security.authentication.AuthenticationProcess
 import fr.rob.login.security.authentication.dev.DevAuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationProcess
 import io.jsonwebtoken.jackson.io.JacksonDeserializer

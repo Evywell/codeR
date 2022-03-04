@@ -10,7 +10,6 @@ import fr.raven.messaging.send.MessageQueueDispatcher
 import fr.raven.messaging.send.QueueRouting
 import fr.raven.messaging.send.TransportConfig
 import fr.rob.core.database.Connection
-import fr.rob.core.misc.dump
 import fr.rob.core.network.v2.netty.NettyServer
 import fr.rob.core.process.ProcessManager
 import fr.rob.orchestrator.api.composer.RequestComposer
@@ -33,11 +32,16 @@ class Main {
         fun main(args: Array<String>) {
             println("Hello World")
 
+            val rabbitHost = System.getProperty("rabbit.host")
+            val rabbitPort = System.getProperty("rabbit.tcp.5672").toInt()
+            val mysqlHost = System.getProperty("mysql_game.host")
+            val mysqlPort = System.getProperty("mysql_game.tcp.3306").toLong()
+
             val processManager = ProcessManager()
 
             // Dependencies
-            val dbPlayers = Connection("mysql_game", 3306, "testing", "passwordtesting", "players")
-            val dbConfig = Connection("mysql_game", 3306, "testing", "passwordtesting", "config")
+            val dbPlayers = Connection(mysqlHost, mysqlPort, "testing", "passwordtesting", "players")
+            val dbConfig = Connection(mysqlHost, mysqlPort, "testing", "passwordtesting", "config")
 
             val nodeManager = NodeManager()
             val defaultInstancesRepository = DefaultInstancesRepository(dbConfig)
@@ -45,7 +49,7 @@ class Main {
             val loggerFactory = LoggerFactory(File({}.javaClass.classLoader.getResource("log4j.config.xml")!!.path))
             val queueLogger = loggerFactory.create("queue")
             val amqpConnection =
-                AMQPConnection(AMQPConfig("rabbit", 5672, "guest", "guest", "default_vhost"), queueLogger)
+                AMQPConnection(AMQPConfig(rabbitHost, rabbitPort, "guest", "guest", "default_vhost"), queueLogger)
 
             val messageQueue = MessageQueueDispatcher(
                 arrayOf(TransportConfig("orchestrator", AMQPSender("orchestrator", amqpConnection))),

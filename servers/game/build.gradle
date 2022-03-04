@@ -3,6 +3,7 @@ plugins {
     id 'coder.global'
     id 'coder.debug'
     id 'application'
+    id 'com.avast.gradle.docker-compose'
 }
 
 dependencies {
@@ -49,6 +50,14 @@ jacocoTestReport {
 
 jacoco {
     toolVersion = "0.8.7"
+}
+
+dockerCompose.isRequiredBy(run)
+
+dockerCompose {
+    dockerComposeWorkingDirectory = project.rootProject.projectDir
+    projectName = 'coder'
+    removeVolumes = false
 }
 
 mainClassName = 'fr.rob.game.Main'

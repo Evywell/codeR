@@ -1,8 +1,8 @@
 package fr.rob.game.network.node
 
-import fr.rob.core.entities.MessagingProto
-import fr.rob.core.messaging.receive.MessageHandlerInterface
-import fr.rob.core.messaging.send.MessageQueueDispatcher
+import fr.raven.messaging.message.MessagingProto
+import fr.raven.messaging.receive.MessageHandlerInterface
+import fr.raven.messaging.send.MessageQueueDispatcher
 import fr.rob.game.game.world.instance.MapInstance
 import fr.rob.game.game.world.map.MapManager
 import fr.rob.orchestrator.shared.entities.CreateInstanceRequestProto

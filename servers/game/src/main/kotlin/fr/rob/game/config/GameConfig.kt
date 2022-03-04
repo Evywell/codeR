@@ -1,8 +1,8 @@
 package fr.rob.game.config
 
+import fr.raven.messaging.rabbitmq.AMQPConfig
 import fr.rob.core.config.Config
 import fr.rob.core.config.database.DatabaseConfig
-import fr.rob.core.messaging.rabbitmq.AMQPConfig
 import fr.rob.game.DEFAULT_MAX_NODES
 import fr.rob.game.network.node.GameNodeManager.NodeConfig
 

@@ -3,6 +3,7 @@ plugins {
     id 'coder.global'
     id 'coder.debug'
     id 'application'
+    id 'com.avast.gradle.docker-compose'
 }
 
 dependencies {
@@ -39,6 +40,14 @@ task cucumber() {
             args = ['--plugin', 'pretty', '--glue', 'fr.rob.orchestrator.test.cucumber', 'src/test/kotlin']
         }
     }
+}
+
+dockerCompose.isRequiredBy(run)
+
+dockerCompose {
+    dockerComposeWorkingDirectory = project.rootProject.projectDir
+    projectName = 'coder'
+    removeVolumes = false
 }
 
 mainClassName = 'fr.rob.orchestrator.api.Main'

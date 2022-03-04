@@ -8,7 +8,6 @@ networks:
 volumes:
   mysqldata:
   mysqlunitdata:
-  gradlecache:
 
 services:
   protobuf:
@@ -18,27 +17,6 @@ services:
         - PROTOBUF_VERSION=3.14.0
     volumes:
       - .:/mnt/app
-
-  gradle:
-    build:
-      context: docker/gradle
-      target: dev
-      args:
-        - USER_ID=${USER_ID:-1000}
-        - GROUP_ID=${GROUP_ID:-1000}
-    user: '$USER_ID:$GROUP_ID'
-    volumes:
-      - .:/mnt/app
-      - gradlecache:/home/gradle/.gradle
-    ports:
-      - '5005:5005'
-      - '5006:5006'
-      - '5007:5007'
-      - '5008:5008'
-    networks:
-      - gamedb
-      - tests
-      - messaging
 
   migrator:
     build:
@@ -55,6 +33,8 @@ services:
   rabbit:
     build:
       context: docker/rabbitmq
+    ports:
+      - '5672'
     networks:
       - messaging
 
