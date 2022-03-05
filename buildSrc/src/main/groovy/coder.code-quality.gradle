@@ -22,7 +22,7 @@ ktlint {
 }
 
 dependencies {
-    compile group: 'io.cucumber', name: 'cucumber-picocontainer', version: '6.10.4'
+    implementation "io.cucumber:cucumber-picocontainer:6.10.4"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.1"
     testImplementation "org.mockito.kotlin:mockito-kotlin:3.2.0"
@@ -78,5 +78,17 @@ tasks.withType(Test) {
 configurations {
     cucumberRuntime {
         extendsFrom testImplementation
+    }
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = 11
+    }
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = 11
     }
 }
