@@ -1,5 +1,6 @@
 plugins {
     id 'coder.code-quality'
+    id 'coder.global'
     id 'java'
 }
 

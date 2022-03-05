@@ -13,15 +13,15 @@ class Main {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val app = Application()
+            val loggerFactory = LoggerFactory(File(Main::class.java.getResource("log4j.config.xml")!!.path))
+            val logger = loggerFactory.create("web")
+            val app = Application(logger)
             val processManager = ProcessManager()
 
             val client = Client(GAME_CLIENT_IP, GAME_CLIENT_PORT)
             client.open()
 
             val server = HttpServer(HTTP_SERVER_PORT)
-            val loggerFactory = LoggerFactory(File(Main::class.java.getResource("log4j.config.xml")!!.path))
-            val logger = loggerFactory.create("web")
             val opcodeHandler = ClientOpcodeHandler(processManager, logger)
 
             server

@@ -8,28 +8,16 @@ plugins {
 applicationDefaultJvmArgs = ["-Dcom.sun.management.jmxremote", "-Dcom.sun.management.jmxremote.port=9010", "-Dcom.sun.management.jmxremote.local.only=false", "-Dcom.sun.management.jmxremote.authenticate=false", "-Dcom.sun.management.jmxremote.ssl=false"]
 
 dependencies {
-    compile project(':core')
+    implementation project(':core')
     implementation project(':client')
-    compile project(':servers:login')
+    implementation project(':servers:login')
 
+    implementation 'fr.raven.log:lib:0.1.1'
     implementation("com.github.ajalt.clikt:clikt:3.2.0")
-
-    implementation files('../vendor/raven/log/lib/build/libs/log-0.1.0.jar')
 }
 
 run {
     standardInput = System.in
-}
-
-jar {
-    manifest {
-        attributes(
-            'Main-Class': 'fr.rob.cli.Main',
-            'Class-Path': configurations.compile.collect { it.getAbsolutePath() }.join(' ')
-        )
-    }
-
-    from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
 }
 
 mainClassName = 'fr.rob.cli.Main'

@@ -4,19 +4,20 @@ plugins {
 }
 
 dependencies {
-    compile group: 'com.fasterxml', name: 'jackson-module-json-org', version: '0.9.1'
-    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.16'
+    compile 'com.fasterxml:jackson-module-json-org:0.9.1'
+    implementation 'mysql:mysql-connector-java:8.0.25'
+
     compile 'io.jsonwebtoken:jjwt-api:0.11.2'
-    compile 'io.jsonwebtoken:jjwt-impl:0.11.2',
-            'io.jsonwebtoken:jjwt-jackson:0.11.2'
+    compile 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    compile 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
-    compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.68'
+    compile 'org.bouncycastle:bcprov-jdk15on:1.69'
 
-    compile 'com.xenomachina:kotlin-argparser:2.0.7'
+    implementation 'com.xenomachina:kotlin-argparser:2.0.7'
 
-    compile 'com.rabbitmq:amqp-client:5.14.2'
+    implementation 'com.rabbitmq:amqp-client:5.14.2'
     implementation 'org.slf4j:slf4j-api:1.7.36'
     implementation 'org.slf4j:slf4j-log4j12:1.7.36'
 
-    implementation files('../vendor/raven/log/lib/build/libs/log-0.1.0.jar')
+    implementation 'fr.raven.log:lib:0.1.1'
 }

@@ -12,12 +12,12 @@ import fr.rob.login.security.authentication.AuthenticationProcess.Companion.ERRO
 import fr.rob.login.security.authentication.AuthenticationProcess.Companion.ERROR_LOCKED_ACCOUNT
 import fr.rob.login.security.authentication.jwt.JWTAuthenticationProcess
 import fr.rob.login.security.authentication.jwt.JWTResultGame
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
 import java.util.Date
 
 class JWTAuthenticationProcessTest : JWTBaseTest() {
@@ -44,7 +44,7 @@ class JWTAuthenticationProcessTest : JWTBaseTest() {
 
         // Assert
         assertEquals(true, authState.isAuthenticated)
-        assertNull("The state has a wrong value for error", authState.error)
+        assertNull(authState.error, "The state has a wrong value for error")
         assertEquals(true, session.isAuthenticated)
         assertEquals(userId, session.userId)
     }
