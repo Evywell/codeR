@@ -1,9 +1,9 @@
 package fr.rob.core.network
 
-import fr.rob.core.network.session.Session
 import fr.rob.core.network.session.exception.SessionNotFoundException
 import fr.rob.core.network.strategy.NullServerStrategy
 import fr.rob.core.network.strategy.ServerStrategyInterface
+import fr.rob.core.network.v2.session.Session
 import java.util.concurrent.ConcurrentHashMap
 
 open class Server(var serverStrategy: ServerStrategyInterface = NullServerStrategy()) {

@@ -1,16 +1,12 @@
 package fr.rob.core.network.v2.netty
 
-import fr.rob.core.network.v2.ServerInterface
 import io.netty.channel.ChannelInitializer
+import io.netty.channel.ChannelPipeline
 import io.netty.channel.socket.SocketChannel
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder
-import io.netty.handler.codec.LengthFieldPrepender
-import io.netty.handler.codec.bytes.ByteArrayDecoder
-import io.netty.handler.codec.bytes.ByteArrayEncoder
 import io.netty.handler.ssl.SslContextBuilder
 import io.netty.handler.ssl.util.SelfSignedCertificate
 
-class NettyChannelInitializer(private val server: ServerInterface, private val ssl: Boolean = false) :
+abstract class NettyChannelInitializer<T>(protected val ssl: Boolean = false) :
     ChannelInitializer<SocketChannel>() {
 
     override fun initChannel(ch: SocketChannel) {
@@ -24,14 +20,11 @@ class NettyChannelInitializer(private val server: ServerInterface, private val s
             pipeline.addLast(sslCtx.newHandler(ch.alloc()))
         }
 
-        pipeline.addLast(
-            "frameDecoder",
-            LengthFieldBasedFrameDecoder(1048576, 0, 4, 0, 4)
-        )
-
-        pipeline.addLast("decoder", ByteArrayDecoder())
-        pipeline.addLast("frameEncoder", LengthFieldPrepender(4))
-        pipeline.addLast("bytesEncoder", ByteArrayEncoder())
-        pipeline.addLast(NettyChannelHandler(server))
+        registerHandlers(pipeline)
+        pipeline.addLast(channelHandler())
     }
+
+    protected abstract fun registerHandlers(pipeline: ChannelPipeline)
+
+    protected abstract fun channelHandler(): NettyChannelHandler<T>
 }

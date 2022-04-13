@@ -1,6 +1,6 @@
 package fr.rob.login.game.character.stand
 
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 import fr.rob.login.game.character.Character
 import fr.rob.login.network.LoginSession
 import fr.rob.entities.CharacterStandProtos.CharacterStand as CharacterStand

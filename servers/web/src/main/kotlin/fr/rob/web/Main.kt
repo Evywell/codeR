@@ -2,6 +2,7 @@ package fr.rob.web
 
 import fr.raven.log.log4j.LoggerFactory
 import fr.rob.client.network.Client
+import fr.rob.core.network.v2.netty.client.NettyClient
 import fr.rob.core.process.ProcessManager
 import fr.rob.game.opcode.ClientOpcodeHandler
 import fr.rob.web.handler.OpcodeHandler
@@ -18,8 +19,9 @@ class Main {
             val app = Application(logger)
             val processManager = ProcessManager()
 
-            val client = Client(GAME_CLIENT_IP, GAME_CLIENT_PORT)
-            client.open()
+            val client = Client()
+            val process = NettyClient(GAME_CLIENT_IP, GAME_CLIENT_PORT, client)
+            client.open(process)
 
             val server = HttpServer(HTTP_SERVER_PORT)
             val opcodeHandler = ClientOpcodeHandler(processManager, logger)

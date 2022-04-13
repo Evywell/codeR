@@ -1,7 +1,7 @@
 package fr.rob.game.network.node
 
 import fr.raven.log.LoggerFactoryInterface
-import fr.rob.core.network.v2.netty.NettyServer
+import fr.rob.core.network.v2.netty.basic.BasicNettyServer
 import fr.rob.game.game.world.instance.InstanceManager
 import fr.rob.game.network.GameNodeServer
 import kotlin.concurrent.thread
@@ -65,9 +65,9 @@ class GameNodeManager(
         nodes.add(GameNode(info, server, instanceManager))
     }
 
-    private fun createServer(label: String, port: Int, ssl: Boolean): Pair<GameNodeServer, NettyServer> {
+    private fun createServer(label: String, port: Int, ssl: Boolean): Pair<GameNodeServer, BasicNettyServer> {
         val server = GameNodeServer(loggerFactory.create(label))
-        val process = NettyServer(port, server, ssl)
+        val process = BasicNettyServer(port, server, ssl)
 
         return Pair(server, process)
     }

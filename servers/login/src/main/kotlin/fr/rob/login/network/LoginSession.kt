@@ -1,12 +1,13 @@
 package fr.rob.login.network
 
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
+import fr.rob.core.network.v2.session.SessionSocketInterface
 import fr.rob.login.game.character.Character
 import fr.rob.login.game.character.CharactersHolderInterface
 import fr.rob.login.security.account.Account
 import fr.rob.login.security.exception.SessionNotOperatorException
 
-open class LoginSession : Session(), CharactersHolderInterface {
+open class LoginSession(socket: SessionSocketInterface) : Session(socket), CharactersHolderInterface {
 
     lateinit var account: Account
     lateinit var characters: MutableList<Character>

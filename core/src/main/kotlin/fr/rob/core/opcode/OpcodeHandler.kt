@@ -2,7 +2,7 @@ package fr.rob.core.opcode
 
 import fr.raven.log.LoggerInterface
 import fr.rob.core.network.Packet
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 import fr.rob.core.security.authentication.UnauthenticatedException
 
 abstract class OpcodeHandler(private val logger: LoggerInterface) : OpcodeHandlerInterface {

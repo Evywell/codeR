@@ -1,6 +1,6 @@
 package fr.rob.game.test.unit.sandbox.opcode
 
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 import fr.rob.game.test.unit.domain.opcode.BasicSubject
 
 class TransformToSarahConnorOpcodeFunction(private var subject: Any) : OpcodeHandlerTestSubject(subject) {

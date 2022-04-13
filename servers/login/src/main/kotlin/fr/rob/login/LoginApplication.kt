@@ -10,7 +10,9 @@ import fr.rob.core.database.ConnectionManager
 import fr.rob.core.database.pool.ConnectionPoolManager
 import fr.rob.core.event.EventManager
 import fr.rob.core.initiator.Initiator
-import fr.rob.core.network.Server
+import fr.rob.core.network.Packet
+import fr.rob.core.network.v2.Server
+import fr.rob.core.network.v2.netty.basic.BasicNettyServer
 import fr.rob.core.process.ProcessManager
 import fr.rob.core.security.SecurityBanProcess
 import fr.rob.core.security.SecurityBanRepository
@@ -21,14 +23,14 @@ import fr.rob.login.game.character.CharacterRepository
 import fr.rob.login.game.character.create.CharacterCreateProcess
 import fr.rob.login.game.character.stand.CharacterStandProcess
 import fr.rob.login.game.character.stand.CharacterStandRepository
-import fr.rob.login.network.netty.NettyLoginServer
+import fr.rob.login.network.LoginServer
+import fr.rob.login.opcode.LoginOpcodeHandler
 import fr.rob.login.security.SecurityModule
 import fr.rob.login.security.account.AccountProcess
 import fr.rob.login.security.account.AccountRepository
-import fr.rob.login.security.strategy.StrategyProcess
 
 open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, env: String) :
-    SingleServerApplication(env, loggerFactory.create("login"), ConfigLoader(), EventManager()) {
+    SingleServerApplication<Packet>(env, loggerFactory.create("login"), ConfigLoader(), EventManager()) {
 
     val connectionManager = ConnectionManager(eventManager)
     var connectionPoolManager = ConnectionPoolManager(4, connectionManager)
@@ -72,11 +74,8 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
     }
 
     override fun afterRun() {
-        processManager.registerProcess(StrategyProcess::class) {
-            StrategyProcess(server)
-        }
-
-        server.start()
+        val process = BasicNettyServer(LOGIN_SERVER_PORT, server, LOGIN_SERVER_ENABLE_SSL)
+        server.start(process)
     }
 
     override fun registerModules(modules: MutableList<AbstractModule>) {
@@ -90,12 +89,9 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
             .addHandler(DatabaseConfigHandler(connectionPoolManager))
     }
 
-    override fun createServer(): Server = NettyLoginServer(
-        this,
-        eventManager,
-        null,
-        loggerFactory,
-        LOGIN_SERVER_PORT,
-        LOGIN_SERVER_ENABLE_SSL
-    )
+    override fun createServer(): Server<Packet> {
+        val opcodeHandler = LoginOpcodeHandler(env, processManager, eventManager, loggerFactory.create("opcode"))
+
+        return LoginServer(opcodeHandler)
+    }
 }

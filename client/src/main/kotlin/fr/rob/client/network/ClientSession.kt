@@ -1,5 +1,6 @@
 package fr.rob.client.network
 
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
+import fr.rob.core.network.v2.session.SessionSocketInterface
 
-class ClientSession : Session()
+class ClientSession(socket: SessionSocketInterface) : Session(socket)

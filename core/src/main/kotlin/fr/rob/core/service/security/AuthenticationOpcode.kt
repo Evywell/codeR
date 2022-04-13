@@ -3,7 +3,7 @@ package fr.rob.core.service.security
 import com.google.protobuf.Message
 import fr.rob.core.entities.ServiceAuthenticationProto
 import fr.rob.core.network.Packet
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 import fr.rob.core.opcode.ProtobufOpcodeFunction
 import fr.rob.core.service.opcode.SERVICE_AUTHENTICATION_RESULT
 

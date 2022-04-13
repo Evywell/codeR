@@ -3,7 +3,7 @@ package fr.rob.orchestrator.api.security.authentication
 import com.google.protobuf.Message
 import fr.rob.core.network.message.RequestProtobufOpcodeFunction
 import fr.rob.core.network.message.ResponseMessage
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 import fr.rob.orchestrator.api.network.OrchestratorSession
 import fr.rob.orchestrator.shared.opcode.AGENT_AUTHENTICATE_SESSION_RESULT
 import fr.rob.orchestrator.shared.entities.AuthenticationProto.Authentication as AuthenticationMessage

@@ -1,7 +1,7 @@
 package fr.rob.core.opcode
 
 import fr.rob.core.network.Packet
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 
 abstract class OpcodeFunction(val authenticationNeeded: Boolean = true) {
 

@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package fr.rob.gateway.message;
+
+option java_outer_classname = "GatewayProto";
+
+message Version {
+  uint32 majorVersion = 1;
+  uint32 minorVersion = 2;
+  uint32 patchVersion = 3;
+}
+
+message Packet {
+  enum Context {
+    NONE = 0;
+    EAS = 1;
+    ACCOUNT_MANAGEMENT = 2;
+    GAME = 3;
+  }
+
+  Version version = 1;
+  Context context = 2;
+  uint32 opcode = 3;
+  bytes body = 4;
+}
+
+message Passport {}
+
+message Topic {
+  Packet packet = 1;
+  Passport passport = 2;
+}

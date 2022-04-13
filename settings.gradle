@@ -17,6 +17,10 @@ sourceControl {
     gitRepository("https://github.com/Evywell/raven-messaging.git") {
         producesModule("fr.raven.messaging:lib")
     }
+
+    gitRepository("https://github.com/Evywell/raven-eas.git") {
+        producesModule("fr.raven.eas:eas")
+    }
 }
 
 include 'core'
@@ -27,3 +31,4 @@ include 'servers:game'
 include 'client'
 include 'servers:web'
 include 'cli'
+include 'gateway'

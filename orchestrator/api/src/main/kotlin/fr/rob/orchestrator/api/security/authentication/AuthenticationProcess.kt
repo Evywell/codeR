@@ -1,6 +1,6 @@
 package fr.rob.orchestrator.api.security.authentication
 
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 import fr.rob.orchestrator.shared.Orchestrator
 import fr.rob.core.security.authentication.AuthenticationProcess as BaseAuthenticationProcess
 import fr.rob.orchestrator.shared.entities.AuthenticationProto.Authentication as AuthenticationMessage

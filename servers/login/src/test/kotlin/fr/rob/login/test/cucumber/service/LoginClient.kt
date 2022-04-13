@@ -1,6 +1,6 @@
 package fr.rob.login.test.cucumber.service
 
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 import fr.rob.core.test.cucumber.service.Client
 import fr.rob.core.test.cucumber.service.LocalSessionSocket
 import fr.rob.core.test.cucumber.service.network.MessageReceiverInterface
@@ -24,11 +24,5 @@ class LoginClient(private val app: LoginApplication) : Client() {
 
     override fun createMessageReceiver(): MessageReceiverInterface = LoginMessageReceiver()
 
-    override fun createSession(): Session {
-        val session = LoginSession()
-
-        session.socket = LocalSessionSocket(this)
-
-        return session
-    }
+    override fun createSession(): Session = LoginSession(LocalSessionSocket(this))
 }

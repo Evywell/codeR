@@ -1,0 +1,36 @@
+buildscript {
+    repositories {
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.18'
+    }
+}
+
+plugins {
+    id 'coder.code-quality'
+    id 'coder.global'
+    id 'application'
+    id 'com.google.protobuf' version '0.8.18'
+}
+
+dependencies {
+    implementation project(':core')
+    implementation 'fr.raven.eas:eas:0.0.1'
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.8.0'
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'build/generated/source/proto/main/java'
+        }
+    }
+}
+
+mainClassName = 'fr.rob.gateway.Main'

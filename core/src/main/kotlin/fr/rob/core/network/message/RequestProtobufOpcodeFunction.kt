@@ -3,7 +3,7 @@ package fr.rob.core.network.message
 import com.google.protobuf.Message
 import fr.rob.core.entities.NetworkProto
 import fr.rob.core.network.Packet
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 import fr.rob.core.opcode.ProtobufOpcodeFunction
 import com.google.protobuf.Any as ProtoAny
 

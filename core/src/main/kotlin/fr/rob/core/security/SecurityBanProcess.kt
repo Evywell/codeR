@@ -1,6 +1,6 @@
 package fr.rob.core.security
 
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 import java.util.Date
 
 class SecurityBanProcess(private val repository: SecurityBanRepositoryInterface) {

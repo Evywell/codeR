@@ -2,12 +2,13 @@ package fr.rob.game.network.session
 
 import fr.rob.core.network.Filter
 import fr.rob.core.network.Packet
-import fr.rob.core.network.session.Session
 import fr.rob.core.network.thread.LockedQueue
 import fr.rob.core.network.thread.LockedQueueConsumer
+import fr.rob.core.network.v2.session.Session
+import fr.rob.core.network.v2.session.SessionSocketInterface
 import fr.rob.core.opcode.OpcodeHandlerInterface
 
-class GameSession(private val opcodeHandler: OpcodeHandlerInterface) : Session() {
+class GameSession(private val opcodeHandler: OpcodeHandlerInterface, socket: SessionSocketInterface) : Session(socket) {
 
     private val queue = LockedQueue<Packet>()
     private val queueConsumer = LockedQueueConsumer(MAX_PACKET_PROCESSING_ON_UPDATE, queue)

@@ -1,6 +1,6 @@
 package fr.rob.core.network.strategy
 
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 
 interface ServerStrategyInterface {
 

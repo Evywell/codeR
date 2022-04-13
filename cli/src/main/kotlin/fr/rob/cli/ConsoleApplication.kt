@@ -2,12 +2,12 @@ package fr.rob.cli
 
 import fr.raven.log.LoggerFactoryInterface
 import fr.rob.cli.command.CommandHandlerInterface
-import fr.rob.cli.network.netty.CliClientHandler
 import fr.rob.cli.opcode.CliOpcodeHandler
 import fr.rob.cli.security.auth.AuthenticationProcess
 import fr.rob.cli.security.strategy.StrategyProcess
 import fr.rob.client.network.Client
 import fr.rob.core.helper.env
+import fr.rob.core.network.v2.netty.client.NettyClient
 import fr.rob.core.process.ProcessManager
 import fr.rob.login.LOGIN_SERVER_PORT
 import java.util.regex.Matcher
@@ -23,13 +23,14 @@ class ConsoleApplication(
 
     private val handlers = ArrayList<CommandHandlerInterface>()
     private val opcodeHandler = CliOpcodeHandler(this, loggerFactory.create("opcode"))
-    private val client = Client(env("DOCKER_HOST", "localhost") as String, LOGIN_SERVER_PORT)
+    private val client = Client()
 
     init {
         registerProcesses()
         opcodeHandler.initialize()
-        client.clientHandler = CliClientHandler(opcodeHandler, client)
-        client.open()
+
+        val process = NettyClient(env("DOCKER_HOST", "localhost") as String, LOGIN_SERVER_PORT, client)
+        client.open(process)
     }
 
     fun run() {

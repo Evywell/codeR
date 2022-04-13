@@ -1,6 +1,6 @@
 package fr.rob.login.security.authentication.attempt
 
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 import fr.rob.core.security.attempt.SecurityAttemptContextInterface
 import fr.rob.login.security.account.AccountProcess
 

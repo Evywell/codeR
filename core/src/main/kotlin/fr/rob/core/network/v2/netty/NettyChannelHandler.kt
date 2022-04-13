@@ -1,20 +1,24 @@
 package fr.rob.core.network.v2.netty
 
-import fr.rob.core.network.netty.NettyPacket
 import fr.rob.core.network.v2.ServerInterface
+import fr.rob.core.network.v2.session.SessionSocketInterface
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
 import io.netty.util.ReferenceCountUtil
 
-class NettyChannelHandler(private val server: ServerInterface) : ChannelInboundHandlerAdapter() {
+abstract class NettyChannelHandler<T>(
+    protected val server: ServerInterface<T>
+) : ChannelInboundHandlerAdapter() {
+
+    abstract fun createPacketFromMessage(msg: Any): T
+    abstract fun createSessionSocket(ctx: ChannelHandlerContext): SessionSocketInterface
 
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
         try {
             val channelId = getSessionIdentifier(ctx)
             val session = server.sessionFromIdentifier(channelId)
-            val packet = NettyPacket.fromByteArray(msg as ByteArray)
 
-            server.onPacketReceived(session, packet)
+            server.onPacketReceived(session, createPacketFromMessage(msg))
         } catch (exception: Exception) {
             // TODO: use a logger instead
             exception.printStackTrace()
@@ -30,8 +34,7 @@ class NettyChannelHandler(private val server: ServerInterface) : ChannelInboundH
     override fun channelActive(ctx: ChannelHandlerContext) {
         val channelId = getSessionIdentifier(ctx)
 
-        val session = server.createSession()
-        session.socket = NettySessionSocket(ctx.channel())
+        val session = server.createSession(createSessionSocket(ctx))
 
         server.onNewConnection(channelId, session)
     }
@@ -41,5 +44,5 @@ class NettyChannelHandler(private val server: ServerInterface) : ChannelInboundH
     }
 
     private fun getSessionIdentifier(ctx: ChannelHandlerContext): String =
-        ctx.channel().id().toString()
+        ctx.channel().id().asLongText()
 }

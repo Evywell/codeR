@@ -2,7 +2,7 @@ package fr.rob.login.game.character.stand
 
 import com.google.protobuf.Message
 import fr.rob.core.network.Packet
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 import fr.rob.core.opcode.ProtobufOpcodeFunction
 import fr.rob.entities.CharacterStandProtos
 import fr.rob.login.opcode.ServerOpcodeLogin

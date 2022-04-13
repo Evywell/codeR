@@ -10,7 +10,7 @@ import fr.raven.messaging.send.MessageQueueDispatcher
 import fr.raven.messaging.send.QueueRouting
 import fr.raven.messaging.send.TransportConfig
 import fr.rob.core.database.Connection
-import fr.rob.core.network.v2.netty.NettyServer
+import fr.rob.core.network.v2.netty.basic.BasicNettyServer
 import fr.rob.core.process.ProcessManager
 import fr.rob.orchestrator.api.composer.RequestComposer
 import fr.rob.orchestrator.api.instance.DefaultInstancesRepository
@@ -86,7 +86,7 @@ class Main {
 
             val orchestrator = Orchestrator(1, "orchestrator:12345", "azert")
             val server = OrchestratorServer(orchestrator, loggerFactory.create("server"), processManager)
-            val serverProcess = NettyServer(12345, server, false)
+            val serverProcess = BasicNettyServer(12345, server, false)
 
             server.start(serverProcess)
         }
