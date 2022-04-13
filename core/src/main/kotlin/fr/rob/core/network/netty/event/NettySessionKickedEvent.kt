@@ -1,7 +1,7 @@
 package fr.rob.core.network.netty.event
 
 import fr.rob.core.event.Event
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 
 class NettySessionKickedEvent(val session: Session) : Event() {
 

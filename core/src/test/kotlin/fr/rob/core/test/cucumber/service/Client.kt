@@ -1,7 +1,7 @@
 package fr.rob.core.test.cucumber.service
 
 import fr.rob.core.network.Packet
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 import fr.rob.core.test.cucumber.service.network.MessageReceiverInterface
 import fr.rob.core.test.cucumber.service.stack.ClientStack
 import fr.rob.core.test.cucumber.service.stack.StackItem

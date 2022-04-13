@@ -1,14 +1,14 @@
 package fr.rob.core.network.v2
 
-import fr.rob.core.network.Packet
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
+import fr.rob.core.network.v2.session.SessionSocketInterface
 
-interface ServerInterface {
+interface ServerInterface<T> {
 
     fun onNewConnection(id: String, session: Session)
-    fun onPacketReceived(session: Session, packet: Packet)
+    fun onPacketReceived(session: Session, packet: T)
 
-    fun createSession(): Session
+    fun createSession(socket: SessionSocketInterface): Session
     fun sessionFromIdentifier(identifier: String): Session
     fun registerSession(identifier: String, session: Session)
 

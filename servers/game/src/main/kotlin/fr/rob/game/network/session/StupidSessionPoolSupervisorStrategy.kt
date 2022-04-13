@@ -1,6 +1,6 @@
 package fr.rob.game.network.session
 
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 
 class StupidSessionPoolSupervisorStrategy(private val sessionPools: Array<SessionPool>) :
     SessionPoolSupervisorStrategyInterface {

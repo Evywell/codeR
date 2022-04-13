@@ -1,6 +1,6 @@
 package fr.rob.core.security.attempt
 
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 
 interface SecurityAttemptContextInterface {
 

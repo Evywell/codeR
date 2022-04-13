@@ -1,6 +1,5 @@
 package fr.rob.core.network.v2.netty
 
-import fr.rob.core.network.v2.ServerInterface
 import fr.rob.core.network.v2.ServerProcessInterface
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.ChannelFuture
@@ -9,7 +8,10 @@ import io.netty.channel.EventLoopGroup
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioServerSocketChannel
 
-class NettyServer(private val port: Int, private val server: ServerInterface, private val ssl: Boolean) :
+abstract class NettyServer<T>(
+    protected val port: Int,
+    protected val ssl: Boolean
+) :
     ServerProcessInterface {
 
     private val bootstrap: ServerBootstrap = ServerBootstrap()
@@ -24,9 +26,11 @@ class NettyServer(private val port: Int, private val server: ServerInterface, pr
             .childOption(ChannelOption.SO_KEEPALIVE, true)
 
         // Our handler
-        bootstrap.childHandler(NettyChannelInitializer(server, ssl))
+        bootstrap.childHandler(channelInitializer())
 
         // Wait for the server to launch
         channelFuture = bootstrap.bind(port).sync()
     }
+
+    protected abstract fun channelInitializer(): NettyChannelInitializer<T>
 }

@@ -1,7 +1,7 @@
 package fr.rob.game.test.unit.sandbox.opcode
 
 import com.google.protobuf.Message
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 import fr.rob.core.opcode.ProtobufOpcodeFunction
 import fr.rob.game.sandbox.SandboxProtos
 

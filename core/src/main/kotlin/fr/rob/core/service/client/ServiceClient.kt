@@ -1,10 +1,11 @@
 package fr.rob.core.service.client
 
 import fr.rob.core.network.Packet
-import fr.rob.core.network.session.Session
 import fr.rob.core.network.v2.AbstractClient
+import fr.rob.core.network.v2.session.Session
+import fr.rob.core.network.v2.session.SessionSocketInterface
 
-class ServiceClient : AbstractClient() {
+class ServiceClient : AbstractClient<Packet>() {
     override fun onConnectionEstablished(session: Session) {
         this.session = session
     }
@@ -13,7 +14,7 @@ class ServiceClient : AbstractClient() {
         TODO("Not yet implemented")
     }
 
-    override fun createSession(): Session {
+    override fun createSession(socket: SessionSocketInterface): Session {
         TODO("Not yet implemented")
     }
 }

@@ -2,7 +2,7 @@ package fr.rob.login.security.authentication
 
 import fr.rob.core.event.EventManagerInterface
 import fr.rob.core.network.Packet
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 import fr.rob.core.opcode.ProtobufOpcodeFunction
 import fr.rob.entities.AuthenticationProto
 import fr.rob.login.game.SessionInitializerProcess

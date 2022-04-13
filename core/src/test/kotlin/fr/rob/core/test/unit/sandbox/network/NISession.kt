@@ -1,12 +1,8 @@
 package fr.rob.core.test.unit.sandbox.network
 
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 
-class NISession : Session() {
-
-    init {
-        socket = NISessionSocket()
-    }
+class NISession : Session(NISessionSocket()) {
 
     companion object {
         fun buildAuthenticated(): NISession {

@@ -1,5 +1,6 @@
 package fr.rob.login.test.unit.domain.privilege
 
+import fr.rob.core.test.unit.sandbox.network.NISessionSocket
 import fr.rob.login.game.character.Character
 import fr.rob.login.network.LoginSession
 import fr.rob.login.security.account.Account
@@ -64,7 +65,7 @@ class LoginSessionTest {
             Character(1, 18, "Evywell")
         )
 
-        val session = LoginSession()
+        val session = LoginSession(NISessionSocket())
         session.characters = characters
 
         // Act

@@ -1,6 +1,6 @@
 package fr.rob.game.network.session
 
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 import fr.rob.game.network.session.SessionPool.Companion.DEFAULT_MAX_SESSIONS
 
 class SessionPoolManager(private val maxSessionPerPool: Int = DEFAULT_MAX_SESSIONS) {

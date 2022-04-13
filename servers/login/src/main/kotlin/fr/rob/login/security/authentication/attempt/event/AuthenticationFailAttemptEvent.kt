@@ -1,7 +1,7 @@
 package fr.rob.login.security.authentication.attempt.event
 
 import fr.rob.core.event.Event
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 
 class AuthenticationFailAttemptEvent(val session: Session, val userId: Int?) : Event() {
 

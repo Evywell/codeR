@@ -6,13 +6,7 @@ import fr.rob.login.network.LoginSession
 class LoginSessionFactory {
 
     companion object {
-        fun buildSession(): LoginSession {
-            val session = LoginSession()
-
-            session.socket = NISessionSocket()
-
-            return session
-        }
+        fun buildSession(): LoginSession = LoginSession(NISessionSocket())
 
         fun buildAuthenticatedSession(): LoginSession {
             val session = buildSession()
@@ -24,7 +18,7 @@ class LoginSessionFactory {
         }
 
         fun buildAuthenticatedSpyingSession(): SpyingLoginSession {
-            val session = SpyingLoginSession()
+            val session = SpyingLoginSession(SpyingLoginSocket())
 
             session.isAuthenticated = true
             session.userId = 1

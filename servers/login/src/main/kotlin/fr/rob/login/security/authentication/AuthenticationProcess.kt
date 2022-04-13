@@ -1,6 +1,6 @@
 package fr.rob.login.security.authentication
 
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 import fr.rob.login.security.account.AccountProcess
 import fr.rob.core.security.authentication.AuthenticationProcess as BaseAuthenticationProcess
 

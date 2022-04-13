@@ -2,7 +2,7 @@ package fr.rob.cli.security.auth
 
 import com.google.protobuf.Message
 import fr.rob.cli.ConsoleApplication
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 import fr.rob.core.opcode.ProtobufOpcodeFunction
 import fr.rob.entities.AuthenticationProto
 import fr.rob.login.security.authentication.AuthenticationOpcode.Companion.AUTHENTICATION_RESULT_SUCCESS

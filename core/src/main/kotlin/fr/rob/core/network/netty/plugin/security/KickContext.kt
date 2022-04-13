@@ -1,6 +1,6 @@
 package fr.rob.core.network.netty.plugin.security
 
-import fr.rob.core.network.session.Session
+import fr.rob.core.network.v2.session.Session
 import fr.rob.core.security.attempt.SecurityAttemptContextInterface
 
 class KickContext(private val session: Session) : SecurityAttemptContextInterface {

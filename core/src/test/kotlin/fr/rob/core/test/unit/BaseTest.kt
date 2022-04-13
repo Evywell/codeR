@@ -4,7 +4,8 @@ import fr.raven.log.LoggerFactoryInterface
 import fr.raven.log.LoggerInterface
 import fr.rob.core.BaseApplication
 import fr.rob.core.event.EventManagerInterface
-import fr.rob.core.network.Server
+import fr.rob.core.network.Packet
+import fr.rob.core.network.v2.Server
 import fr.rob.core.opcode.OpcodeHandler
 import fr.rob.core.process.ProcessManager
 import fr.rob.core.test.unit.sandbox.NIApplication
@@ -22,10 +23,10 @@ open class BaseTest {
     val app: BaseApplication = NIApplication()
     val opcodeHandler: OpcodeHandler = NIOpcodeHandler(logger)
     val processManager: ProcessManager = ProcessManager()
-    var server: Server = NIServer()
+    var server: Server<Packet> = NIServer()
     val eventManager: EventManagerInterface = NIEventManager()
 
     fun getResourceURL(resourcePath: String): URL? = BaseTest::class.java.classLoader.getResource(resourcePath)
 
-    fun getGameServer(): Server = Server()
+    fun getGameServer(): Server<Packet> = NIServer()
 }
