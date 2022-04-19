@@ -20,8 +20,8 @@ message Packet {
 
   Version version = 1;
   Context context = 2;
-  uint32 opcode = 3;
-  bytes body = 4;
+  bytes body = 3;
+  uint64 createdAt = 4;
 }
 
 message Passport {}

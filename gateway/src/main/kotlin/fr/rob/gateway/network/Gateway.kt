@@ -4,10 +4,10 @@ import fr.rob.core.network.v2.Server
 import fr.rob.core.network.v2.session.Session
 import fr.rob.core.network.v2.session.SessionSocketInterface
 import fr.rob.gateway.extension.game.GameNode
+import fr.rob.gateway.extension.game.GameNodeClient
 import fr.rob.gateway.extension.game.GameNodePacketBuilder
 import fr.rob.gateway.extension.game.GameNodePacketDispatcher
-import fr.rob.gateway.extension.game.network.GameNodeClient
-import fr.rob.gateway.extension.game.network.netty.GameNodeNettyClient
+import fr.rob.gateway.extension.game.network.netty.client.GameNodeNettyClient
 import fr.rob.gateway.message.GatewayProto.Packet
 import fr.rob.gateway.network.dispatcher.PacketDispatcherInterface
 

@@ -1,4 +1,4 @@
-package fr.rob.gateway.extension.game.network.netty
+package fr.rob.gateway.extension.game.network.netty.client
 
 import fr.rob.core.network.v2.ClientInterface
 import fr.rob.core.network.v2.netty.client.NettyChannelHandler

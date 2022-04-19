@@ -8,5 +8,6 @@ message Packet {
   string sender = 1;
   uint32 opcode = 2;
   bytes body = 4;
+  uint64 createdAt = 5; // Unsafe input, change this ?
 }
 

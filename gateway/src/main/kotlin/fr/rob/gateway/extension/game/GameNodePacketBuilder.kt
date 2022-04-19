@@ -8,8 +8,9 @@ class GameNodePacketBuilder {
     fun build(gatewayPacket: Packet, session: GatewaySession): GamePacket {
         return GamePacket.newBuilder()
             .setSender(session.userId.toString())
-            .setOpcode(gatewayPacket.opcode)
             .setBody(gatewayPacket.body)
+            // unsafe input, always set it gateway side
+            .setCreatedAt(gatewayPacket.createdAt)
             .build()
     }
 }
