@@ -1,6 +1,16 @@
+buildscript {
+    repositories {
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.18'
+    }
+}
+
 plugins {
     id 'coder.code-quality'
     id 'coder.global'
+    id 'com.google.protobuf' version '0.8.18'
 }
 
 dependencies {
@@ -20,4 +30,10 @@ dependencies {
     implementation 'org.slf4j:slf4j-log4j12:1.7.36'
 
     implementation 'fr.raven.log:lib:0.1.1'
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.8.0'
+    }
 }

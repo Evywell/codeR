@@ -1,9 +1,8 @@
-package fr.rob.gateway.extension.game.network.netty
+package fr.rob.gateway.extension.game.network.netty.client
 
 import fr.rob.core.network.v2.ClientInterface
 import fr.rob.core.network.v2.netty.client.NettyChannelHandler
 import fr.rob.core.network.v2.netty.client.NettyChannelInitializer
-import fr.rob.gateway.message.GatewayProto
 import fr.rob.gateway.message.extension.game.GameProto
 import io.netty.channel.ChannelPipeline
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder
@@ -22,7 +21,7 @@ class GameNodeNettyChannelInitializer(private val client: ClientInterface<GamePa
         )
         pipeline.addLast(
             "protobufDecoder",
-            ProtobufDecoder(GatewayProto.Packet.getDefaultInstance())
+            ProtobufDecoder(GamePacket.getDefaultInstance())
         )
 
         // Encoders
