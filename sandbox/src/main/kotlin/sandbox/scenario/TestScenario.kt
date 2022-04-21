@@ -2,15 +2,15 @@ package sandbox.scenario
 
 import fr.rob.gateway.message.GatewayProto
 import fr.rob.gateway.network.netty.client.NettyClient
-import fr.rob.gateway.tmp.LeClient
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import sandbox.client.GatewayClient
 
 class TestScenario : ScenarioInterface {
     override fun launch() {
-        val leClient = LeClient()
+        val client = GatewayClient()
         // Connect to the gateway
-        val clientProcess = NettyClient("localhost", 11111, leClient)
+        val clientProcess = NettyClient("localhost", 11111, client)
         clientProcess.start()
 
         val version = GatewayProto.Version.newBuilder()
@@ -28,7 +28,7 @@ class TestScenario : ScenarioInterface {
                         .setCreatedAt(System.currentTimeMillis())
                         .build()
 
-                    leClient.send(message)
+                    client.send(message)
                 }
             }
         }
