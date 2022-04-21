@@ -24,24 +24,6 @@ class Main {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            /*
-            val leClient = LeClient()
-            val clientProcess = NettyClient("localhost", 11111, leClient)
-            // clientProcess.start()
-
-            val version = GatewayProto.Version.newBuilder()
-                .setMajorVersion(0)
-                .setMinorVersion(0)
-                .setPatchVersion(1)
-                .build()
-
-            val message = GatewayProto.Packet.newBuilder()
-                .setVersion(version)
-                .setOpcode(1)
-                .build()
-*/
-            // leClient.send(message)
-
             val configLoader = ConfigLoader()
             val globalConfig = configLoader.loadConfigFromFile(getConfigFile("config.properties"))
             val config = fromGlobal(globalConfig)
