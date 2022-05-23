@@ -1,20 +1,14 @@
-package fr.rob.core.network.v2.netty.protobuf
+package fr.rob.core.network.v2.netty.shard
 
 import com.google.protobuf.MessageLite
-import fr.rob.core.network.v2.ServerInterface
-import fr.rob.core.network.v2.netty.NettyChannelInitializer
+import fr.rob.core.network.v2.netty.builder.shard.PipelineShardInterface
 import io.netty.channel.ChannelPipeline
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder
 import io.netty.handler.codec.LengthFieldPrepender
 import io.netty.handler.codec.protobuf.ProtobufDecoder
 import io.netty.handler.codec.protobuf.ProtobufEncoder
 
-class ProtobufNettyChannelInitializer<T>(private val prototype: MessageLite, private val server: ServerInterface<T>, ssl: Boolean = false) :
-    NettyChannelInitializer<T>(ssl) {
-
-    override fun channelHandler(): fr.rob.core.network.v2.netty.NettyChannelHandler<T> =
-        ProtobufNettyChannelHandler(server)
-
+class ProtobufPipelineShard(private val prototype: MessageLite) : PipelineShardInterface {
     override fun registerHandlers(pipeline: ChannelPipeline) {
         // Decoders
         pipeline.addLast(

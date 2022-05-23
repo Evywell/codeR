@@ -13,6 +13,7 @@ import fr.rob.core.initiator.Initiator
 import fr.rob.core.network.Packet
 import fr.rob.core.network.v2.Server
 import fr.rob.core.network.v2.netty.basic.BasicNettyServer
+import fr.rob.core.network.v2.netty.builder.NettySessionSocketBuilder
 import fr.rob.core.process.ProcessManager
 import fr.rob.core.security.SecurityBanProcess
 import fr.rob.core.security.SecurityBanRepository
@@ -74,7 +75,8 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
     }
 
     override fun afterRun() {
-        val process = BasicNettyServer(LOGIN_SERVER_PORT, server, LOGIN_SERVER_ENABLE_SSL)
+        val socketBuilder = NettySessionSocketBuilder()
+        val process = BasicNettyServer(LOGIN_SERVER_PORT, server, socketBuilder, LOGIN_SERVER_ENABLE_SSL)
         server.start(process)
     }
 

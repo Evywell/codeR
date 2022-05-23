@@ -1,6 +1,7 @@
 package fr.rob.core.service
 
 import fr.rob.core.network.v2.netty.basic.BasicNettyServer
+import fr.rob.core.network.v2.netty.builder.NettySessionSocketBuilder
 import fr.rob.core.opcode.OpcodeFunction
 import fr.rob.core.service.network.ServiceServer
 import fr.rob.core.service.opcode.SERVICE_AUTHENTICATION
@@ -20,7 +21,7 @@ abstract class AbstractService {
         init()
 
         val server = ServiceServer(actions.values)
-        val serverProcess = BasicNettyServer(config.port, server, config.ssl)
+        val serverProcess = BasicNettyServer(config.port, server, NettySessionSocketBuilder(), config.ssl)
 
         server.start(serverProcess)
     }

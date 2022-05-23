@@ -6,8 +6,9 @@ import io.netty.channel.socket.SocketChannel
 import io.netty.handler.ssl.SslContextBuilder
 import io.netty.handler.ssl.util.SelfSignedCertificate
 
-abstract class NettyChannelInitializer<T>(protected val ssl: Boolean = false) :
-    ChannelInitializer<SocketChannel>() {
+abstract class NettyChannelInitializer<T>(
+    protected val ssl: Boolean = false
+) : ChannelInitializer<SocketChannel>() {
 
     override fun initChannel(ch: SocketChannel) {
         val pipeline = ch.pipeline()
