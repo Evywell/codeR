@@ -1,17 +1,17 @@
 package fr.rob.core.network.v2.netty
 
 import fr.rob.core.network.v2.ServerInterface
-import fr.rob.core.network.v2.session.SessionSocketInterface
+import fr.rob.core.network.v2.netty.builder.NettySessionSocketBuilderInterface
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
 import io.netty.util.ReferenceCountUtil
 
 abstract class NettyChannelHandler<T>(
-    protected val server: ServerInterface<T>
+    protected val server: ServerInterface<T>,
+    private val nettySessionSocketBuilder: NettySessionSocketBuilderInterface
 ) : ChannelInboundHandlerAdapter() {
 
     abstract fun createPacketFromMessage(msg: Any): T
-    abstract fun createSessionSocket(ctx: ChannelHandlerContext): SessionSocketInterface
 
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
         try {
@@ -34,7 +34,8 @@ abstract class NettyChannelHandler<T>(
     override fun channelActive(ctx: ChannelHandlerContext) {
         val channelId = getSessionIdentifier(ctx)
 
-        val session = server.createSession(createSessionSocket(ctx))
+        val socket = nettySessionSocketBuilder.build(ctx)
+        val session = server.createSession(socket)
 
         server.onNewConnection(channelId, session)
     }
