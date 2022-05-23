@@ -2,7 +2,6 @@ package sandbox.scenario.benchmark
 
 import fr.rob.core.network.v2.netty.builder.NettyServerBuilder
 import fr.rob.core.network.v2.netty.builder.NettySessionSocketBuilder
-import fr.rob.core.network.v2.netty.shard.EpollConfigShard
 import fr.rob.core.network.v2.netty.shard.NioConfigShard
 import fr.rob.core.network.v2.netty.shard.ProtobufHandlerShard
 import fr.rob.core.network.v2.netty.shard.ProtobufPipelineShard

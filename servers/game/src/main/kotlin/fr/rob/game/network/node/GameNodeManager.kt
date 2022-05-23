@@ -2,7 +2,6 @@ package fr.rob.game.network.node
 
 import fr.raven.log.LoggerFactoryInterface
 import fr.rob.core.network.v2.ServerProcessInterface
-import fr.rob.core.network.v2.netty.NettyServer
 import fr.rob.core.network.v2.netty.builder.NettyBufferedSocketBuilder
 import fr.rob.core.network.v2.netty.builder.NettyServerBuilder
 import fr.rob.core.network.v2.netty.builder.NettySessionSocketBuilderInterface
