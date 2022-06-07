@@ -3,33 +3,37 @@ package fr.rob.game.test.unit.domain.game.world
 import fr.rob.game.game.world.entity.ObjectManager
 import fr.rob.game.game.world.entity.Position
 import fr.rob.game.game.world.entity.exception.OutOfBoundsException
-import fr.rob.game.game.world.entity.template.WorldObjectTemplate
+import fr.rob.game.game.world.entity.guid.ObjectGuid
+import fr.rob.game.game.world.entity.guid.ObjectGuidGenerator
 import fr.rob.game.game.world.instance.MapInstance
 import fr.rob.game.game.world.map.Map
 import fr.rob.game.game.world.map.MapInfo
 import fr.rob.game.game.world.map.ZoneInfo
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ObjectManagerTest {
     @Test
     fun `As OM, I should successfully create an object in a specific instance`() {
         // Arrange
-        val om = ObjectManager()
-        val mapInfo = MapInfo("A testing map")
+        val om = getObjectManager()
+        val mapInfo = MapInfo("A testing map", 200, 200)
         val zoneInfo = ZoneInfo("A testing zone", 100, 100, 0f, 0f)
         val map = Map(1, 1, mapInfo, zoneInfo)
         val instance = MapInstance(13, map)
-        val objTemplate = WorldObjectTemplate(Position(10f, 0f, 15f, 0f))
+        val position = Position(10f, 0f, 15f, 0f)
+        val lowGuid = ObjectGuid.LowGuid(1u, 1u)
 
         // Act
-        val obj = om.spawnObject(objTemplate, instance)
+        val obj = om.spawnObject(lowGuid, position, instance)
 
         // Assert
         assertTrue(obj.isInWorld)
@@ -43,17 +47,16 @@ class ObjectManagerTest {
 
     @ParameterizedTest
     @MethodSource("outOfBoundsDataProvider")
-    fun `I should not be able to create an object if its out of map bounds`(zoneInfo: ZoneInfo, position: Position) {
+    fun `I should not be able to create an object if it's out of bounds of the map`(zoneInfo: ZoneInfo, position: Position) {
         // Arrange
-        val om = ObjectManager()
-        val mapInfo = MapInfo("A testing map")
-        val zoneInfo = ZoneInfo("A testing zone", 100, 100, 0f, 0f)
+        val om = getObjectManager()
+        val mapInfo = MapInfo("A testing map", 200, 200)
         val map = Map(1, 1, mapInfo, zoneInfo)
         val instance = MapInstance(13, map)
-        val objTemplate = WorldObjectTemplate(Position(800f, 0f, 15f, 0f))
+        val lowGuid = ObjectGuid.LowGuid(1u, 1u)
 
         // Act & Assert
-        assertThrows(OutOfBoundsException::class.java) { om.spawnObject(objTemplate, instance) }
+        assertThrows(OutOfBoundsException::class.java) { om.spawnObject(lowGuid, position, instance) }
     }
 
     fun outOfBoundsDataProvider(): Stream<Arguments> = Stream.of(
@@ -73,5 +76,11 @@ class ObjectManagerTest {
             ZoneInfo("A testing zone", 100, 100, 0f, 0f),
             Position(5f, -61f, 15f, 0f) // Negative Y
         ),
+        Arguments.of(
+            ZoneInfo("A testing zone", 100, 100, -100f, 100f),
+            Position(5f, -61f, 15f, 0f) // X too big with offset -100
+        ),
     )
+
+    private fun getObjectManager(): ObjectManager = ObjectManager(ObjectGuidGenerator())
 }

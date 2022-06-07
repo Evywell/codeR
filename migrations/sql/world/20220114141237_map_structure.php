@@ -22,6 +22,8 @@ final class MapStructure extends AbstractMigration
         $this
             ->table('maps', ['signed' => false])
             ->addColumn('name', 'string')
+            ->addColumn('width', 'integer', ['signed' => false])
+            ->addColumn('height', 'integer', ['signed' => false])
             ->create();
 
         /*

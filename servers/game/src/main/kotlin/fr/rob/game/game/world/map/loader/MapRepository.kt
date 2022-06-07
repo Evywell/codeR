@@ -10,7 +10,7 @@ class MapRepository(private val db: Connection) : MapRepositoryInterface {
     override fun getMapInfo(mapId: Int, zoneId: Int): Pair<MapInfo, ZoneInfo?> {
         val query =
             """
-                SELECT m.name, z.name, z.width, z.height, z.offset_x, z.offset_y 
+                SELECT m.name, m.width, m.height z.name, z.width, z.height, z.offset_x, z.offset_y 
                 FROM maps m 
                 INNER JOIN zones z 
                     ON z.map_id = m.id 
@@ -31,14 +31,14 @@ class MapRepository(private val db: Connection) : MapRepositoryInterface {
             throw Exception("Cannot retrieve map info for id $mapId")
         }
 
-        val mapInfo = MapInfo(rs.getString(1))
+        val mapInfo = MapInfo(rs.getString(1), rs.getInt(2), rs.getInt(3))
 
         val zoneInfo = ZoneInfo(
-            rs.getString(2),
-            rs.getInt(3),
-            rs.getInt(4),
-            rs.getFloat(5),
-            rs.getFloat(6)
+            rs.getString(4),
+            rs.getInt(5),
+            rs.getInt(6),
+            rs.getFloat(7),
+            rs.getFloat(8)
         )
 
         return returnAndClose(Pair(mapInfo, zoneInfo), rs, stmt)
