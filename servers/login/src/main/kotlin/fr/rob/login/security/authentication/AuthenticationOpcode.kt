@@ -32,7 +32,7 @@ abstract class AuthenticationOpcode(
             authenticationResult.result = AUTHENTICATION_RESULT_ERROR
             authenticationResult.code = authState.error
 
-            val failAttemptEvent = AuthenticationFailAttemptEvent(session, authState.userId)
+            val failAttemptEvent = AuthenticationFailAttemptEvent(session, authState.accountId)
             eventManager.dispatch(failAttemptEvent)
         }
 

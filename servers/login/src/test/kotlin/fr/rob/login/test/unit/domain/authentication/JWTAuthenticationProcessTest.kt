@@ -29,8 +29,8 @@ class JWTAuthenticationProcessTest : JWTBaseTest() {
 
         registerJWTProcess(processManager)
 
-        val userId = 123456789
-        val jwt = generateJWT(userId, "player@localhost", JWTResultGame("rob", "Rob"), ACCOUNT_NAME_1)
+        val accountId = 123456789
+        val jwt = generateJWT(accountId, "player@localhost", JWTResultGame("rob", "Rob"), ACCOUNT_NAME_1)
         val session = NISession()
         val authMessage = AuthenticationProto.JWTAuthentication.newBuilder()
             .setToken(jwt)
@@ -46,7 +46,7 @@ class JWTAuthenticationProcessTest : JWTBaseTest() {
         assertEquals(true, authState.isAuthenticated)
         assertNull(authState.error, "The state has a wrong value for error")
         assertEquals(true, session.isAuthenticated)
-        assertEquals(userId, session.userId)
+        assertEquals(accountId, session.accountId)
     }
 
     @Test
@@ -186,19 +186,19 @@ class JWTAuthenticationProcessTest : JWTBaseTest() {
 
         val accountProcessMock = registerJWTProcess(processManager)
 
-        val userId = 123456789
-        val jwt = generateJWT(userId, "player@localhost", JWTResultGame("rob", "Rob"), ACCOUNT_NAME_1)
+        val accountId = 123456789
+        val jwt = generateJWT(accountId, "player@localhost", JWTResultGame("rob", "Rob"), ACCOUNT_NAME_1)
         val session = NISession()
         val account = Account().apply {
             id = 3
-            this.userId = userId
+            this.accountGlobalId = accountId
             bannedAt = Time.addHours(2, Date())
         }
         val authMessage = AuthenticationProto.JWTAuthentication.newBuilder()
             .setToken(jwt)
             .build()
 
-        `when`(accountProcessMock.retrieve(userId)).thenReturn(account)
+        `when`(accountProcessMock.retrieve(accountId)).thenReturn(account)
 
         // Act
         val authenticationProcess: JWTAuthenticationProcess =
@@ -218,19 +218,19 @@ class JWTAuthenticationProcessTest : JWTBaseTest() {
 
         val accountProcessMock = registerJWTProcess(processManager)
 
-        val userId = 123456789
-        val jwt = generateJWT(userId, "player@localhost", JWTResultGame("rob", "Rob"), ACCOUNT_NAME_1)
+        val accountId = 123456789
+        val jwt = generateJWT(accountId, "player@localhost", JWTResultGame("rob", "Rob"), ACCOUNT_NAME_1)
         val session = NISession()
         val account = Account().apply {
             id = 3
-            this.userId = userId
+            this.accountGlobalId = accountId
             isLocked = true
         }
         val authMessage = AuthenticationProto.JWTAuthentication.newBuilder()
             .setToken(jwt)
             .build()
 
-        `when`(accountProcessMock.retrieve(userId)).thenReturn(account)
+        `when`(accountProcessMock.retrieve(accountId)).thenReturn(account)
 
         // Act
         val authenticationProcess: JWTAuthenticationProcess =

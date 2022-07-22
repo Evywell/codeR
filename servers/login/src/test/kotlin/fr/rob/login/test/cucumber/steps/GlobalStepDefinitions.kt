@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Assertions.assertEquals
 class GlobalStepDefinitions(private val context: LoginContext) {
 
     @Given("I am logged as user {int}")
-    fun iAmLoggedAsUser(userId: Int) {
-        context.authAs(userId)
+    fun iAmLoggedAsUser(accountId: Int) {
+        context.authAs(accountId)
     }
 
     @Then("I should receive a packet with opcode {int}")

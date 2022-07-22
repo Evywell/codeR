@@ -1,8 +1,8 @@
 package fr.rob.gateway.network.netty.client
 
+import fr.raven.proto.message.gateway.GatewayProto.Packet
 import fr.rob.core.network.v2.ClientInterface
 import fr.rob.core.network.v2.ClientProcessInterface
-import fr.rob.gateway.message.GatewayProto.Packet
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.ChannelOption
 import io.netty.channel.EventLoopGroup
@@ -12,8 +12,11 @@ import java.net.InetSocketAddress
 
 class NettyClient(private val hostname: String, private val port: Int, private val client: ClientInterface<Packet>) :
     ClientProcessInterface {
+
+    lateinit var group: EventLoopGroup
+
     override fun start() {
-        val group: EventLoopGroup = NioEventLoopGroup()
+        group = NioEventLoopGroup()
 
         try {
             val clientBootstrap = Bootstrap()
@@ -28,5 +31,9 @@ class NettyClient(private val hostname: String, private val port: Int, private v
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    fun stop() {
+        group.shutdownGracefully()
     }
 }

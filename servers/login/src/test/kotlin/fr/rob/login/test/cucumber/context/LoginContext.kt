@@ -5,8 +5,8 @@ import fr.rob.login.DB_PLAYERS
 
 class LoginContext : AbstractContext() {
 
-    fun authAs(userId: Int) {
-        getMainClient().authenticateToServerAs(userId)
+    fun authAs(accountId: Int) {
+        getMainClient().authenticateToServerAs(accountId)
     }
 
     fun getPlayersDatabase(): Connection {

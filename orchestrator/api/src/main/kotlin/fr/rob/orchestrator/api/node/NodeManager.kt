@@ -4,10 +4,8 @@ class NodeManager {
 
     private val nodes = ArrayList<Node>()
 
-    fun registerNode(label: String, port: Int): Node {
-        val info = NodeInfo(label, port)
-
-        return Node(info)
+    fun registerNode(node: Node) {
+        nodes.add(node)
     }
 
     fun getNodeByName(name: String): Node? {

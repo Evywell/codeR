@@ -26,13 +26,11 @@ class NettyBufferedSessionSocket(channel: Channel) : AbstractNettySessionSocket(
         return true
     }
 
-    private fun shouldFlushChannelBuffer(packetQueued: Int): Boolean =
-        packetBuffer.isEmpty() ||
-            isPacketQueuedThresholdExceeded(packetQueued)
+    private fun shouldFlushChannelBuffer(packetQueued: Int): Boolean = isPacketQueuedThresholdExceeded(packetQueued)
 
     private fun isPacketQueuedThresholdExceeded(packetQueued: Int): Boolean = packetQueued > MAX_PACKET_SENT_PER_UPDATE
 
     companion object {
-        const val MAX_PACKET_SENT_PER_UPDATE = 10
+        const val MAX_PACKET_SENT_PER_UPDATE = 0
     }
 }

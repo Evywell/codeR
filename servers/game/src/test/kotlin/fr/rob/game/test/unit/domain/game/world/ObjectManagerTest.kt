@@ -1,14 +1,19 @@
 package fr.rob.game.test.unit.domain.game.world
 
-import fr.rob.game.game.world.entity.ObjectManager
-import fr.rob.game.game.world.entity.Position
-import fr.rob.game.game.world.entity.exception.OutOfBoundsException
-import fr.rob.game.game.world.entity.guid.ObjectGuid
-import fr.rob.game.game.world.entity.guid.ObjectGuidGenerator
-import fr.rob.game.game.world.instance.MapInstance
-import fr.rob.game.game.world.map.Map
-import fr.rob.game.game.world.map.MapInfo
-import fr.rob.game.game.world.map.ZoneInfo
+import fr.rob.game.app.state.Store
+import fr.rob.game.domain.entity.ObjectManager
+import fr.rob.game.domain.entity.Position
+import fr.rob.game.domain.entity.PositionNormalizer
+import fr.rob.game.domain.entity.exception.OutOfBoundsException
+import fr.rob.game.domain.entity.guid.ObjectGuid
+import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
+import fr.rob.game.domain.instance.MapInstance
+import fr.rob.game.domain.terrain.grid.Grid
+import fr.rob.game.domain.terrain.grid.GridBuilder
+import fr.rob.game.domain.terrain.grid.GridConstraintChecker
+import fr.rob.game.domain.terrain.map.Map
+import fr.rob.game.domain.terrain.map.MapInfo
+import fr.rob.game.domain.terrain.map.ZoneInfo
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -28,7 +33,9 @@ class ObjectManagerTest {
         val mapInfo = MapInfo("A testing map", 200, 200)
         val zoneInfo = ZoneInfo("A testing zone", 100, 100, 0f, 0f)
         val map = Map(1, 1, mapInfo, zoneInfo)
-        val instance = MapInstance(13, map)
+        val gridBuilder = GridBuilder(GridConstraintChecker())
+        val grid = gridBuilder.buildGrid(10, zoneInfo.width, zoneInfo.height)
+        val instance = MapInstance(13, map, grid)
         val position = Position(10f, 0f, 15f, 0f)
         val lowGuid = ObjectGuid.LowGuid(1u, 1u)
 
@@ -52,7 +59,8 @@ class ObjectManagerTest {
         val om = getObjectManager()
         val mapInfo = MapInfo("A testing map", 200, 200)
         val map = Map(1, 1, mapInfo, zoneInfo)
-        val instance = MapInstance(13, map)
+        val grid = Grid(100, 100, 10, emptyArray())
+        val instance = MapInstance(13, map, grid)
         val lowGuid = ObjectGuid.LowGuid(1u, 1u)
 
         // Act & Assert
@@ -82,5 +90,5 @@ class ObjectManagerTest {
         ),
     )
 
-    private fun getObjectManager(): ObjectManager = ObjectManager(ObjectGuidGenerator())
+    private fun getObjectManager(): ObjectManager = ObjectManager(ObjectGuidGenerator(), PositionNormalizer(), Store())
 }

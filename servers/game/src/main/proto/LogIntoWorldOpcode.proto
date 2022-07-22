@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package fr.rob.game.command.message;
+
+option java_outer_classname = "LogIntoWorldProto";
+
+message LogIntoWorld {
+  uint32 characterId = 1;
+}

@@ -25,7 +25,7 @@ class AccountProcessTest : DatabaseTest() {
         val account = process.retrieveOrCreate(2, "Hello#5678")
 
         // Assert
-        assertEquals(2, account.userId)
+        assertEquals(2, account.accountGlobalId)
         assertEquals(2, account.id)
     }
 
@@ -39,7 +39,7 @@ class AccountProcessTest : DatabaseTest() {
         val account = process.retrieveOrCreate(2, "Hello#5678")
 
         // Assert
-        assertEquals(2, account.userId)
+        assertEquals(2, account.accountGlobalId)
         assertEquals(3, account.id)
     }
 
@@ -54,7 +54,7 @@ class AccountProcessTest : DatabaseTest() {
         val account = process.retrieveOrCreate(2, newAccountName)
 
         // Assert
-        assertEquals(2, account.userId)
+        assertEquals(2, account.accountGlobalId)
         assertEquals(2, account.id)
         assertEquals(newAccountName, account.name)
     }
@@ -66,12 +66,12 @@ class AccountProcessTest : DatabaseTest() {
         val process = AccountProcess(repository)
 
         // Act
-        val skeleton = Account(userId = 123)
+        val skeleton = Account(accountGlobalId = 123)
 
         val account = process.create(skeleton)
 
         // Assert
-        assertEquals(123, account.userId)
+        assertEquals(123, account.accountGlobalId)
         assertEquals(3, account.id)
     }
 
@@ -80,18 +80,14 @@ class AccountProcessTest : DatabaseTest() {
         // Arrange
         val repository = mock<AccountRepository>()
         val process = AccountProcess(repository)
-        val userId = 3
-        val accountId = 8
-        val account = Account(accountId)
+        val accountId = 3
 
-        `when`(repository.byUserId(userId)).thenReturn(account)
         `when`(repository.lock(accountId)).then { }
 
         // Act
-        process.lockByUserId(userId)
+        process.lockByAccountId(accountId)
 
         // Assert
-        verify(repository, times(1)).byUserId(userId)
         verify(repository, times(1)).lock(accountId)
     }
 
@@ -100,15 +96,14 @@ class AccountProcessTest : DatabaseTest() {
         // Arrange
         val repository = mock<AccountRepository>()
         val process = AccountProcess(repository)
-        val userId = 3
+        val accountId = 3
 
-        `when`(repository.byUserId(userId)).thenReturn(null)
+        `when`(repository.byAccountId(accountId)).thenReturn(null)
 
         // Act
-        process.lockByUserId(userId)
+        process.lockByAccountId(accountId)
 
         // Assert
-        verify(repository, times(1)).byUserId(userId)
         verify(repository, times(0)).lock(8)
     }
 }

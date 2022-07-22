@@ -21,6 +21,7 @@ import fr.rob.orchestrator.api.instance.InstancesRepository
 import fr.rob.orchestrator.api.network.OrchestratorServer
 import fr.rob.orchestrator.api.node.GameNodeCreatedHandler
 import fr.rob.orchestrator.api.node.NewGameNodesHandler
+import fr.rob.orchestrator.api.node.NodeBuilder
 import fr.rob.orchestrator.api.node.NodeManager
 import fr.rob.orchestrator.shared.Orchestrator
 import fr.rob.orchestrator.shared.entities.CreateInstanceRequestProto
@@ -60,8 +61,8 @@ class Main {
             val queueReceiver = MessageQueueReceiver(arrayOf(AMQPReceiver("orchestrator", amqpConnection)), queueLogger)
 
             queueReceiver.attachHandler(
-                NewGameNodeProto.NewGameNodes::class.java.name,
-                NewGameNodesHandler(nodeManager, defaultInstancesRepository, instanceManager, messageQueue)
+                NewGameNodeProto.NewGameNode::class.java.name,
+                NewGameNodesHandler(nodeManager, NodeBuilder())
             )
 
             queueReceiver.attachHandler(
@@ -86,7 +87,7 @@ class Main {
             }
 
             val orchestrator = Orchestrator(1, "orchestrator:12345", "azert")
-            val server = OrchestratorServer(orchestrator, loggerFactory.create("server"), processManager)
+            val server = OrchestratorServer(orchestrator, loggerFactory.create("server"))
             val serverProcess = BasicNettyServer(12345, server, NettySessionSocketBuilder(), false)
 
             server.start(serverProcess)

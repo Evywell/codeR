@@ -17,6 +17,7 @@ plugins {
 dependencies {
     api project(':core')
     implementation 'fr.raven.eas:eas:0.0.1'
+    implementation 'fr.raven.proto:lib:latest'
 }
 
 protobuf {

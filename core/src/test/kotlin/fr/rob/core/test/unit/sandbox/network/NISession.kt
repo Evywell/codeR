@@ -9,7 +9,7 @@ class NISession : Session(NISessionSocket()) {
             val session = NISession()
 
             session.isAuthenticated = true
-            session.userId = 1
+            session.accountId = 1
 
             return session
         }

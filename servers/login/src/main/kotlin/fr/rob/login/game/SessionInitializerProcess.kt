@@ -15,7 +15,7 @@ class SessionInitializerProcess(
             throw UnauthenticatedSessionException()
         }
 
-        val account = accountProcess.retrieveOrCreate(session.userId!!, accountName)
+        val account = accountProcess.retrieveOrCreate(session.accountId!!, accountName)
 
         session.account = account
 

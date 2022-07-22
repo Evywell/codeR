@@ -21,6 +21,10 @@ sourceControl {
     gitRepository("https://github.com/Evywell/raven-eas.git") {
         producesModule("fr.raven.eas:eas")
     }
+
+    gitRepository("https://github.com/Evywell/raven-proto.git") {
+        producesModule("fr.raven.proto:lib")
+    }
 }
 
 include 'core'

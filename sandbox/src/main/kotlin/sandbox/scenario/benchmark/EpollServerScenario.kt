@@ -1,12 +1,12 @@
 package sandbox.scenario.benchmark
 
+import fr.raven.proto.message.game.GameProto
 import fr.rob.core.network.v2.netty.builder.NettyServerBuilder
 import fr.rob.core.network.v2.netty.builder.NettySessionSocketBuilder
 import fr.rob.core.network.v2.netty.shard.NioConfigShard
 import fr.rob.core.network.v2.netty.shard.ProtobufHandlerShard
 import fr.rob.core.network.v2.netty.shard.ProtobufPipelineShard
 import fr.rob.core.network.v2.session.Session
-import fr.rob.gateway.message.extension.game.GameProto
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import sandbox.client.GameClient

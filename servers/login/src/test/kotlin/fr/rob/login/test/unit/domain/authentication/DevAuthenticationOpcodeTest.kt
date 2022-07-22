@@ -32,7 +32,7 @@ class DevAuthenticationOpcodeTest : BaseTest() {
 
         // Assert
         assertTrue(session.isAuthenticated)
-        assertEquals(1234, session.userId)
+        assertEquals(1234, session.accountId)
         assertTrue(opcodeFunction.getMessageType() is AuthenticationProto.DevAuthentication)
     }
 
@@ -61,13 +61,13 @@ class DevAuthenticationOpcodeTest : BaseTest() {
     @Test
     fun `getters and setters`() {
         val state = LoginAuthenticationState(false).apply {
-            userId = 123
+            accountId = 123
             error = "test"
             accountName = "Evywell#0000"
         }
 
         assertFalse(state.isAuthenticated)
-        assertEquals(123, state.userId)
+        assertEquals(123, state.accountId)
         assertEquals("test", state.error)
         assertEquals("Evywell#0000", state.accountName)
 

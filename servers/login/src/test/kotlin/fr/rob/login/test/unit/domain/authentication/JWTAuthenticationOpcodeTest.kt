@@ -41,7 +41,7 @@ class JWTAuthenticationOpcodeTest : JWTBaseTest() {
 
         // Assert
         assertEquals(true, session.isAuthenticated)
-        assertEquals(123456, session.userId)
+        assertEquals(123456, session.accountId)
         assertTrue(opcodeFunction.getMessageType() is AuthenticationProto.JWTAuthentication)
     }
 }

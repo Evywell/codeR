@@ -1,6 +1,6 @@
 package sandbox.scenario
 
-import fr.rob.gateway.message.GatewayProto
+import fr.raven.proto.message.gateway.GatewayProto
 import fr.rob.gateway.network.netty.client.NettyClient
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking

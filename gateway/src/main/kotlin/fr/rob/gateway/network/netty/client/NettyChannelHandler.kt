@@ -1,9 +1,9 @@
 package fr.rob.gateway.network.netty.client
 
+import fr.raven.proto.message.gateway.GatewayProto.Packet
 import fr.rob.core.network.v2.ClientInterface
 import fr.rob.core.network.v2.netty.client.NettyChannelHandler
 import fr.rob.core.network.v2.session.SessionSocketInterface
-import fr.rob.gateway.message.GatewayProto.Packet
 import fr.rob.gateway.network.netty.NettySessionSocket
 import io.netty.channel.ChannelHandlerContext
 

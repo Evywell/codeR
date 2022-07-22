@@ -4,7 +4,7 @@ import fr.raven.log.log4j.LoggerFactory
 import fr.rob.client.network.Client
 import fr.rob.core.network.v2.netty.client.NettyClient
 import fr.rob.core.process.ProcessManager
-import fr.rob.game.opcode.ClientOpcodeHandler
+import fr.rob.game.infra.opcode.ClientOpcodeHandler
 import fr.rob.web.handler.OpcodeHandler
 import fr.rob.web.network.HttpServer
 import java.io.File

@@ -1,9 +1,9 @@
 package sandbox.client
 
+import fr.raven.proto.message.game.GameProto
 import fr.rob.core.network.v2.ClientInterface
 import fr.rob.core.network.v2.ClientProcessInterface
 import fr.rob.gateway.extension.game.network.netty.client.GameNodeNettyChannelInitializer
-import fr.rob.gateway.message.extension.game.GameProto
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.ChannelOption
 import io.netty.channel.EventLoopGroup

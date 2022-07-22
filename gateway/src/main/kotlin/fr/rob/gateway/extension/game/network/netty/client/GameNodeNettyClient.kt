@@ -8,7 +8,7 @@ import io.netty.channel.EventLoopGroup
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioSocketChannel
 import java.net.InetSocketAddress
-import fr.rob.gateway.message.extension.game.GameProto.Packet as GamePacket
+import fr.raven.proto.message.game.GameProto.Packet as GamePacket
 
 class GameNodeNettyClient(private val hostname: String, private val port: Int, private val client: ClientInterface<GamePacket>) : ClientProcessInterface {
     override fun start() {
