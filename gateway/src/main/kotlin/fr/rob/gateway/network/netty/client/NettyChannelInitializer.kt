@@ -1,9 +1,9 @@
 package fr.rob.gateway.network.netty.client
 
+import fr.raven.proto.message.gateway.GatewayProto.Packet
 import fr.rob.core.network.v2.ClientInterface
 import fr.rob.core.network.v2.netty.client.NettyChannelHandler
 import fr.rob.core.network.v2.netty.client.NettyChannelInitializer
-import fr.rob.gateway.message.GatewayProto.Packet
 import io.netty.channel.ChannelPipeline
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder
 import io.netty.handler.codec.LengthFieldPrepender

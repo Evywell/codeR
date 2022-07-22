@@ -4,7 +4,7 @@ import fr.rob.core.network.session.exception.UnauthenticatedSessionException
 
 open class Session(val socket: SessionSocketInterface) {
     var isAuthenticated: Boolean = false
-    var userId: Int? = null
+    var accountId: Int? = null
 
     fun getIp(): String = socket.getIp()
 

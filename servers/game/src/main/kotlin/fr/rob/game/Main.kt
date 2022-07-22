@@ -4,14 +4,16 @@ import fr.raven.messaging.rabbitmq.AMQPConfig
 import fr.rob.core.config.Config
 import fr.rob.core.config.commons.configuration2.ConfigLoader
 import fr.rob.core.config.database.DatabaseConfig
-import fr.rob.game.config.Databases
-import fr.rob.game.config.GameConfig
-import fr.rob.game.config.NodesConfig
-import fr.rob.game.config.Orchestrator
-import fr.rob.game.dependency.databaseModule
-import fr.rob.game.dependency.globalModule
-import fr.rob.game.dependency.mapModule
-import fr.rob.game.dependency.queueModule
+import fr.rob.game.infra.App
+import fr.rob.game.infra.config.Databases
+import fr.rob.game.infra.config.GameConfig
+import fr.rob.game.infra.config.NodesConfig
+import fr.rob.game.infra.config.Orchestrator
+import fr.rob.game.infra.dependency.databaseModule
+import fr.rob.game.infra.dependency.globalModule
+import fr.rob.game.infra.dependency.mapModule
+import fr.rob.game.infra.dependency.opcodeModule
+import fr.rob.game.infra.dependency.queueModule
 import org.koin.core.context.startKoin
 import java.io.File
 import java.io.InputStream
@@ -29,7 +31,7 @@ class Main {
             val config = fromGlobal(globalConfig)
 
             startKoin {
-                modules(globalModule, databaseModule, mapModule, queueModule)
+                modules(globalModule, databaseModule, mapModule, queueModule, opcodeModule)
             }
 
             val app = App(config)

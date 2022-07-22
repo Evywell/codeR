@@ -13,7 +13,7 @@ abstract class AuthenticationProcess(private val accountProcess: AccountProcess)
             return state
         }
 
-        val account = accountProcess.retrieve(state.userId!!)
+        val account = accountProcess.retrieve(state.accountId!!)
 
         if (account != null) {
             // Check banned or locked
@@ -29,7 +29,7 @@ abstract class AuthenticationProcess(private val accountProcess: AccountProcess)
         }
 
         session.isAuthenticated = true
-        session.userId = state.userId
+        session.accountId = state.accountId
 
         return state
     }
@@ -41,7 +41,7 @@ abstract class AuthenticationProcess(private val accountProcess: AccountProcess)
 
     data class LoginAuthenticationState(
         override var isAuthenticated: Boolean,
-        var userId: Int? = null,
+        var accountId: Int? = null,
         override var error: String? = null,
         var accountName: String? = null
     ) : AuthenticationState

@@ -12,7 +12,7 @@ class LoginSessionFactory {
             val session = buildSession()
 
             session.isAuthenticated = true
-            session.userId = 1
+            session.accountId = 1
 
             return session
         }
@@ -21,7 +21,7 @@ class LoginSessionFactory {
             val session = SpyingLoginSession(SpyingLoginSocket())
 
             session.isAuthenticated = true
-            session.userId = 1
+            session.accountId = 1
 
             return session
         }

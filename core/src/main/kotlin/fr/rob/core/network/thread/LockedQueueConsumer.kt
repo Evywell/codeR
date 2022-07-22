@@ -10,7 +10,7 @@ class LockedQueueConsumer<T>(private val maxItemToProcess: Int, private val queu
 
         while (nextItm != null) {
             ++itemCount
-           callable(nextItm)
+            callable(nextItm)
 
             if (itemCount > maxItemToProcess) {
                 break

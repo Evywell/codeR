@@ -22,9 +22,9 @@ import java.util.stream.Stream
 class AccountRepositoryTest : DatabaseTest() {
 
     @ParameterizedTest
-    @MethodSource("accountsByUserIdProvider")
-    fun `get account by user id`(
-        userId: Int,
+    @MethodSource("accountsByAccountIdProvider")
+    fun `get account by account global id`(
+        accountGlobalId: Int,
         accountId: Int,
         isAdministrator: Boolean,
         name: String,
@@ -34,7 +34,7 @@ class AccountRepositoryTest : DatabaseTest() {
         `when`(dbMock.createPreparedStatement(SEL_ACCOUNT_BY_USER_ID)).thenReturn(stmtMock)
         `when`(rsMock.next()).thenReturn(retrieveAccount)
         `when`(rsMock.getInt(1)).thenReturn(accountId)
-        `when`(rsMock.getInt(2)).thenReturn(userId)
+        `when`(rsMock.getInt(2)).thenReturn(accountGlobalId)
         `when`(rsMock.getBoolean(3)).thenReturn(isAdministrator)
         `when`(rsMock.getString(4)).thenReturn(name)
         `when`(rsMock.getDate(5)).thenReturn(null)
@@ -42,10 +42,10 @@ class AccountRepositoryTest : DatabaseTest() {
         val repository = AccountRepository(dbMock)
 
         // Act
-        val account = repository.byUserId(userId)
+        val account = repository.byAccountId(accountGlobalId)
 
         // Assert
-        verify(stmtMock, times(1)).setInt(1, userId)
+        verify(stmtMock, times(1)).setInt(1, accountGlobalId)
         verify(dbMock, times(1)).execute(stmtMock)
         verify(rsMock, times(1)).next()
 
@@ -55,7 +55,7 @@ class AccountRepositoryTest : DatabaseTest() {
             verify(rsMock, times(1)).getBoolean(3)
             verify(rsMock, times(1)).getString(4)
 
-            assertEquals(userId, account!!.userId)
+            assertEquals(accountGlobalId, account!!.accountGlobalId)
             assertEquals(accountId, account.id)
             assertEquals(isAdministrator, account.isAdministrator)
             assertEquals(name, account.name)
@@ -69,7 +69,7 @@ class AccountRepositoryTest : DatabaseTest() {
         }
     }
 
-    fun accountsByUserIdProvider(): Stream<Arguments> = Stream.of(
+    fun accountsByAccountIdProvider(): Stream<Arguments> = Stream.of(
         arguments(12, 2, false, "Evy#1234", true),
         arguments(8, 25, true, "Admin#1234", true),
         arguments(6, 44, false, "Nosabes#7845", true),
@@ -118,20 +118,20 @@ class AccountRepositoryTest : DatabaseTest() {
         `when`(rsMock.next()).thenReturn(true)
         `when`(rsMock.getInt(1)).thenReturn(18)
 
-        val accountSkeleton = Account(userId = 3, isAdministrator = false, name = "Hey#1234")
+        val accountSkeleton = Account(accountGlobalId = 3, isAdministrator = false, name = "Hey#1234")
         val repository = AccountRepository(dbMock)
 
         // Act
         val result = repository.insert(accountSkeleton)
 
         // Assert
-        verify(stmtMock, times(1)).setInt(1, accountSkeleton.userId!!)
+        verify(stmtMock, times(1)).setInt(1, accountSkeleton.accountGlobalId!!)
         verify(stmtMock, times(1)).setBoolean(2, accountSkeleton.isAdministrator)
         verify(stmtMock, times(1)).setString(3, accountSkeleton.name)
         verify(dbMock, times(1)).executeUpdate(stmtMock)
 
         assertEquals(18, result.id)
-        assertEquals(3, result.userId)
+        assertEquals(3, result.accountGlobalId)
         assertEquals(false, result.isAdministrator)
         assertEquals("Hey#1234", result.name)
     }
@@ -142,7 +142,7 @@ class AccountRepositoryTest : DatabaseTest() {
         `when`(dbMock.createPreparedStatement(INS_ACCOUNT, true)).thenReturn(stmtMock)
         `when`(rsMock.next()).thenReturn(false)
 
-        val accountSkeleton = Account(userId = 3, isAdministrator = false, name = "Hey#1234")
+        val accountSkeleton = Account(accountGlobalId = 3, isAdministrator = false, name = "Hey#1234")
         val repository = AccountRepository(dbMock)
 
         // Act & Assert

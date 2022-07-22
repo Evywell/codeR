@@ -13,7 +13,7 @@ class CharacterStandProcess(private val characterRepository: CharacterStandRepos
 
         session.isAuthenticatedOrThrowException()
 
-        val userId = session.userId!!
+        val accountId = session.accountId!!
 
         val characters = session.characters
 
@@ -24,7 +24,7 @@ class CharacterStandProcess(private val characterRepository: CharacterStandRepos
                 .build()
         }
 
-        val tmpCurrentCharacterId = characterRepository.getCurrentCharacterId(userId)
+        val tmpCurrentCharacterId = characterRepository.getCurrentCharacterId(accountId)
 
         val currentCharacterId =
             if (tmpCurrentCharacterId == 0) characters[0].id else tmpCurrentCharacterId

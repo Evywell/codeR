@@ -23,7 +23,7 @@ class CharacterStandProcessTest {
         val session = LoginSessionFactory.buildSession()
 
         session.isAuthenticated = true
-        session.userId = 1234
+        session.accountId = 1234
 
         loadCharacterFixtures(session)
 
@@ -49,7 +49,7 @@ class CharacterStandProcessTest {
         val session = LoginSessionFactory.buildSession()
 
         session.isAuthenticated = true
-        session.userId = 1234
+        session.accountId = 1234
         session.characters = ArrayList()
 
         val standRepository = CharacterStandProcess_CharacterStandRepository2()

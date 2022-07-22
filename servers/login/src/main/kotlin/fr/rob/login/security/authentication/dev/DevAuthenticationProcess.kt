@@ -9,13 +9,13 @@ class DevAuthenticationProcess(accountProcess: AccountProcess) : AuthenticationP
     override fun checkAuthentication(authMessage: Any): AuthenticationState {
         authMessage as AuthenticationProto.DevAuthentication
 
-        val userId = authMessage.userId
+        val accountId = authMessage.userId
         val accountName = authMessage.accountName
 
-        if (userId == 0) {
-            return LoginAuthenticationState(false, userId, error = ERROR_BAD_CREDENTIALS)
+        if (accountId == 0) {
+            return LoginAuthenticationState(false, accountId, error = ERROR_BAD_CREDENTIALS)
         }
 
-        return LoginAuthenticationState(true, userId, accountName = accountName)
+        return LoginAuthenticationState(true, accountId, accountName = accountName)
     }
 }

@@ -12,11 +12,11 @@ import fr.rob.login.test.cucumber.service.network.LoginMessageReceiver
 
 class LoginClient(private val app: LoginApplication) : Client() {
 
-    fun authenticateToServerAs(userId: Int) {
-        session.userId = userId
+    fun authenticateToServerAs(accountId: Int) {
+        session.accountId = accountId
         session.isAuthenticated = true
 
-        val accountName = accounts[userId] ?: "Unknown#0000"
+        val accountName = accounts[accountId] ?: "Unknown#0000"
 
         app.processManager.getOrMakeProcess(SessionInitializerProcess::class)
             .execute(session as LoginSession, accountName)

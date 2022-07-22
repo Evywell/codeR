@@ -7,7 +7,11 @@ class SessionSocketUpdater {
     private val sockets = Collections.synchronizedList(ArrayList<NettyBufferedSessionSocket>())
 
     fun run() {
-        update()
+        while (true) {
+            update()
+
+            Thread.sleep(10)
+        }
     }
 
     fun addSocket(socket: NettyBufferedSessionSocket) {
@@ -20,9 +24,5 @@ class SessionSocketUpdater {
 
     fun update() {
         sockets.removeIf { socket -> !socket.update() }
-
-        Thread.sleep(1)
-
-        update()
     }
 }

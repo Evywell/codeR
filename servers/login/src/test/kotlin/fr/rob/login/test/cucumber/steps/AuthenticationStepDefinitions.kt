@@ -17,10 +17,10 @@ import fr.rob.core.security.authentication.AuthenticationProcess as BaseAuthenti
 class AuthenticationStepDefinitions(private val context: LoginContext) {
 
     @When("I send an authentication packet with a user id {int}")
-    fun iSendAnAuthenticationPacketWithAUserId(userId: Int) {
+    fun iSendAnAuthenticationPacketWithAUserId(accountId: Int) {
         val auth = AuthenticationProto.DevAuthentication
             .newBuilder()
-            .setUserId(userId)
+            .setUserId(accountId)
             .build()
 
         val authPacket = Packet(ClientOpcodeLogin.AUTHENTICATE_SESSION, auth.toByteArray())
@@ -52,20 +52,20 @@ class AuthenticationStepDefinitions(private val context: LoginContext) {
     }
 
     @Given("the user {int} does not have an account")
-    fun theUserXDoesNotHaveAnAccount(userId: Int) {
-        assertFalse(hasUserAnAccount(userId))
+    fun theUserXDoesNotHaveAnAccount(accountId: Int) {
+        assertFalse(hasUserAnAccount(accountId))
     }
 
     @Given("the user {int} should have an account")
-    fun theUserXShouldHaveAnAccount(userId: Int) {
-        assertTrue(hasUserAnAccount(userId))
+    fun theUserXShouldHaveAnAccount(accountId: Int) {
+        assertTrue(hasUserAnAccount(accountId))
     }
 
-    private fun hasUserAnAccount(userId: Int): Boolean {
+    private fun hasUserAnAccount(accountId: Int): Boolean {
         val stmt =
             context.getPlayersDatabase().createPreparedStatement("SELECT 1 FROM accounts WHERE user_id = ? LIMIT 1")!!
 
-        stmt.setInt(1, userId)
+        stmt.setInt(1, accountId)
         stmt.execute()
 
         return stmt.resultSet.next()

@@ -25,9 +25,9 @@ class JWTAuthenticationProcess(private val jwtDecoder: JWTDecoderInterface, acco
                 return errorState
             }
 
-            val userId = (result.get(JWT_AUTH_RESULT_USER_ID) as String).toInt()
+            val accountId = (result.get(JWT_AUTH_RESULT_USER_ID) as String).toInt()
 
-            errorState.userId = userId
+            errorState.accountId = accountId
 
             // Not a valid ticket
             if (
@@ -45,7 +45,7 @@ class JWTAuthenticationProcess(private val jwtDecoder: JWTDecoderInterface, acco
                 return errorState
             }
 
-            LoginAuthenticationState(true, userId, accountName = accountName as String)
+            LoginAuthenticationState(true, accountId, accountName = accountName as String)
         } catch (e: Exception) {
             errorState
         }

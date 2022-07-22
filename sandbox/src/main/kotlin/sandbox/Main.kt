@@ -22,7 +22,11 @@ class Main {
                 exitProcess(1)
             }
 
-            scenario.launch()
+            try {
+                scenario.launch()
+            } finally {
+                scenario.terminate()
+            }
             println("=== End of scenario $scenarioName ===")
         }
     }

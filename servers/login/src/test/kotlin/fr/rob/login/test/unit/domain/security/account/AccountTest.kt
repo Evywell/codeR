@@ -12,7 +12,7 @@ class AccountTest {
     fun `getters and setters`() {
         val account = Account().apply {
             id = 456
-            userId = 4785
+            accountGlobalId = 4785
             name = "Evywell#7777"
             isAdministrator = true
             bannedAt = Date()
@@ -20,7 +20,7 @@ class AccountTest {
         }
 
         assertEquals(456, account.id)
-        assertEquals(4785, account.userId)
+        assertEquals(4785, account.accountGlobalId)
         assertEquals("Evywell#7777", account.name)
         assertTrue(account.isAdministrator)
         assertNotNull(account.bannedAt)

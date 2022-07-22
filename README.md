@@ -29,3 +29,9 @@ make seed-create MIGRATOR_SEED_NAME=CharacterSeeder MIGRATOR_DB=players
 ```
  - The parameter `MIGRATOR_SEED_NAME` is used to configure the name of the seeder class.
  - The parameter `MIGRATOR_DB` is used to configure in which database the seed is created for (`players`, `world` or `config`)
+
+## Sandbox
+### Run a scenario
+```shell
+./gradlew :sandbox:run --args="SCENARIO_NAME"
+```

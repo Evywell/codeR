@@ -2,10 +2,10 @@ package fr.rob.login.security.account
 
 class AccountProcess(private val accountRepository: AccountRepositoryInterface) {
 
-    fun retrieve(userId: Int): Account? = accountRepository.byUserId(userId)
+    fun retrieve(accountId: Int): Account? = accountRepository.byAccountId(accountId)
 
-    fun retrieveOrCreate(userId: Int, accountName: String): Account {
-        val account = retrieve(userId)
+    fun retrieveOrCreate(accountId: Int, accountName: String): Account {
+        val account = retrieve(accountId)
 
         if (account != null) {
             if (account.name != accountName) {
@@ -17,7 +17,7 @@ class AccountProcess(private val accountRepository: AccountRepositoryInterface) 
             return account
         }
 
-        val skeleton = Account(userId = userId, isAdministrator = false, name = accountName)
+        val skeleton = Account(accountGlobalId = accountId, isAdministrator = false, name = accountName)
 
         return create(skeleton)
     }
@@ -26,10 +26,8 @@ class AccountProcess(private val accountRepository: AccountRepositoryInterface) 
         return accountRepository.insert(accountSkeleton)
     }
 
-    fun lockByUserId(userId: Int) {
-        val account = accountRepository.byUserId(userId) ?: return
-
-        accountRepository.lock(account.id!!)
+    fun lockByAccountId(accountId: Int) {
+        accountRepository.lock(accountId)
         // @todo use the API to send a mail
     }
 }

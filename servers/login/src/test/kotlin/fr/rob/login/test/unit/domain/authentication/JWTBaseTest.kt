@@ -40,11 +40,11 @@ open class JWTBaseTest : BaseTest() {
         return accountProcess
     }
 
-    protected fun generateJWT(userId: Int, email: String, game: JWTResultGame, accountName: String): String {
+    protected fun generateJWT(accountId: Int, email: String, game: JWTResultGame, accountName: String): String {
         val localDate = LocalDate.now().plusDays(1)
 
         return Jwts.builder()
-            .setSubject(userId.toString())
+            .setSubject(accountId.toString())
             .setId("ad2fdd4c-2df1-44a5-89da-0092f88c1127")
             .setIssuedAt(Date())
             .setExpiration(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))

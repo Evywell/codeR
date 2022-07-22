@@ -9,10 +9,10 @@ import fr.rob.core.database.returnAndCloseWithCallback
 
 class AccountRepository(private val db: Connection) : AccountRepositoryInterface {
 
-    override fun byUserId(userId: Int): Account? {
+    override fun byAccountId(accountId: Int): Account? {
         val stmt = db.createPreparedStatement(SEL_ACCOUNT_BY_USER_ID)!!
 
-        stmt.setInt(1, userId)
+        stmt.setInt(1, accountId)
         db.execute(stmt)
 
         val rs = stmt.resultSet
@@ -36,7 +36,7 @@ class AccountRepository(private val db: Connection) : AccountRepositoryInterface
     override fun insert(accountSkeleton: Account): Account {
         val stmt = db.createPreparedStatement(INS_ACCOUNT, true)!!
 
-        stmt.setInt(1, accountSkeleton.userId!!)
+        stmt.setInt(1, accountSkeleton.accountGlobalId!!)
         stmt.setBoolean(2, accountSkeleton.isAdministrator)
         stmt.setString(3, accountSkeleton.name)
 
@@ -53,7 +53,7 @@ class AccountRepository(private val db: Connection) : AccountRepositoryInterface
         return returnAndCloseWithCallback(generatedKeys, stmt) {
             Account(
                 generatedKeys.getInt(1),
-                accountSkeleton.userId,
+                accountSkeleton.accountGlobalId,
                 accountSkeleton.isAdministrator,
                 accountSkeleton.name
             )
