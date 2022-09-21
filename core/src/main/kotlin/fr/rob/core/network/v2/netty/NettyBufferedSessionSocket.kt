@@ -11,26 +11,11 @@ class NettyBufferedSessionSocket(channel: Channel) : AbstractNettySessionSocket(
     }
 
     fun update(): Boolean {
-        var packetQueued = 0
 
         while (packetBuffer.isNotEmpty()) {
-            channel.write(packetBuffer.poll())
-            packetQueued++
-
-            if (shouldFlushChannelBuffer(packetQueued)) {
-                channel.flush()
-                packetQueued = 0
-            }
+            channel.writeAndFlush(packetBuffer.poll())
         }
 
         return true
-    }
-
-    private fun shouldFlushChannelBuffer(packetQueued: Int): Boolean = isPacketQueuedThresholdExceeded(packetQueued)
-
-    private fun isPacketQueuedThresholdExceeded(packetQueued: Int): Boolean = packetQueued > MAX_PACKET_SENT_PER_UPDATE
-
-    companion object {
-        const val MAX_PACKET_SENT_PER_UPDATE = 0
     }
 }
