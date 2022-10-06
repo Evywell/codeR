@@ -1,24 +1,30 @@
 package fr.rob.gateway.extension.realm
 
+import fr.raven.log.LoggerInterface
 import fr.raven.proto.message.game.GameProto.Packet
 import fr.raven.proto.message.game.setup.InitializeOpcodeProto
 import fr.raven.proto.message.gateway.GatewayProto
 import fr.raven.proto.message.realm.RealmProto.BindCharacterToNode
 import fr.rob.gateway.extension.game.GameNode
 import fr.rob.gateway.extension.game.GameNodePacketDispatcher
+import fr.rob.gateway.extension.game.opcode.GAME_INITIALIZATION
 import fr.rob.gateway.extension.realm.gamenode.GameNodes
 import fr.rob.gateway.network.Gateway
 import fr.rob.gateway.network.GatewaySession
 
-class RealmService(private val gateway: Gateway, private val gameNodePacketDispatcher: GameNodePacketDispatcher) {
+class RealmService(
+    private val gateway: Gateway,
+    private val gameNodePacketDispatcher: GameNodePacketDispatcher,
+    private val logger: LoggerInterface,
+) {
     fun bindCharacterToNode(characterStruct: BindCharacterToNode, gameNodes: GameNodes, actionToInitiate: String) {
         val gameNode = retrieveGameNodeFromLabel(characterStruct.nodeLabel, gameNodes)
         val session = gateway.findSessionByAccountId(characterStruct.userId)
         session.currentGameNode = gameNode
 
-        println("Game node attributed")
+        logger.debug("Game node attributed")
 
-        println("Logging user to game node...")
+        logger.debug("Logging user to game node...")
         logUserToGameNode(session, actionToInitiate)
     }
 
@@ -35,7 +41,7 @@ class RealmService(private val gateway: Gateway, private val gameNodePacketDispa
 
     private fun logUserToGameNode(session: GatewaySession, actionToInitiate: String) {
         val gatewayPacket = GatewayProto.Packet.newBuilder()
-            .setOpcode(0x00)
+            .setOpcode(GAME_INITIALIZATION)
             .setContext(GatewayProto.Packet.Context.GAME)
             .setBody(
                 InitializeOpcodeProto.Initialize.newBuilder()

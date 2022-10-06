@@ -27,6 +27,7 @@ class Main {
             } finally {
                 scenario.terminate()
             }
+
             println("=== End of scenario $scenarioName ===")
         }
     }

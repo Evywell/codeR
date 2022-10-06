@@ -4,6 +4,7 @@ import fr.raven.proto.message.eas.EasProto.EasAuthenticationResult
 import fr.raven.proto.message.eas.EasProto.EasPacket
 import fr.raven.proto.message.gateway.GatewayProto.Packet
 import fr.rob.gateway.extension.eas.authentication.AuthenticationServiceInterface
+import fr.rob.gateway.extension.eas.authentication.exception.UnknownAuthenticationService
 import fr.rob.gateway.network.Gateway
 import fr.rob.gateway.network.GatewaySession
 
@@ -16,31 +17,32 @@ class EasService(private val gateway: Gateway, private val authServices: Array<A
 
         authenticateByDedicatedService(session, packet)
 
-        if (session.isAuthenticated) {
+        val authenticationSucceeded = session.isAuthenticated
+
+        if (authenticationSucceeded) {
             gateway.registerSessionIdentifier(session)
-
-            val authResultPacket = EasAuthenticationResult.newBuilder().setIsAuthenticatedSuccessfully(true).build()
-
-            session.send(
-                Packet.newBuilder()
-                    .setContext(Packet.Context.EAS)
-                    .setOpcode(0x01)
-                    .setBody(authResultPacket.toByteString())
-                    .build()
-            )
         }
+
+        val authResultPacket = EasAuthenticationResult.newBuilder()
+            .setIsAuthenticatedSuccessfully(authenticationSucceeded)
+            .build()
+
+        session.send(
+            Packet.newBuilder()
+                .setContext(Packet.Context.EAS)
+                .setOpcode(EAS_AUTHENTICATION_RESULT)
+                .setBody(authResultPacket.toByteString())
+                .build()
+        )
     }
 
+    /**
+     * @throws UnknownAuthenticationService
+     */
     private fun authenticateByDedicatedService(session: GatewaySession, packet: EasPacket) {
-        try {
-            val authService = retrieveAuthenticateServiceFromPacket(packet)
+        val authService = retrieveAuthenticateServiceFromPacket(packet)
 
-            authService.authenticate(session, packet)
-        } catch (_: RuntimeException) {
-            session.close()
-
-            return
-        }
+        authService.authenticate(session, packet)
     }
 
     private fun retrieveAuthenticateServiceFromPacket(packet: EasPacket): AuthenticationServiceInterface {
@@ -50,6 +52,6 @@ class EasService(private val gateway: Gateway, private val authServices: Array<A
             }
         }
 
-        throw RuntimeException("Cannot find authentication service...")
+        throw UnknownAuthenticationService()
     }
 }

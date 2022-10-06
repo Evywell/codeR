@@ -35,7 +35,7 @@ class Supervisor(
         val socketBuilder = NettyBufferedSocketBuilder(updater)
         val gameSessionUpdater = GameSessionUpdater()
         fakeInstanceBuilder.buildInstance(1, 1, 1)
-        val server = GameNodeServer(gameSessionUpdater, gameNodeOpcodeHandler)
+        val server = GameNodeServer(gameSessionUpdater, gameNodeOpcodeHandler, logger)
         val process = NettyServerBuilder<GameProto.Packet>(node.port, false)
             .build(
                 NioConfigShard(),

@@ -5,10 +5,11 @@ import fr.rob.gateway.network.netty.client.NettyClient
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import sandbox.client.GatewayClient
+import sandbox.log.OutputLogger
 
 class TestScenario : ScenarioInterface {
     override fun launch() {
-        val client = GatewayClient()
+        val client = GatewayClient(OutputLogger())
         // Connect to the gateway
         val clientProcess = NettyClient("localhost", 11111, client)
         clientProcess.start()

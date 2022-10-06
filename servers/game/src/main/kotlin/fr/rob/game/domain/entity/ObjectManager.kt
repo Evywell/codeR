@@ -42,7 +42,16 @@ class ObjectManager(
 
     fun addToGrid(obj: WorldObject) {
         val grid = obj.mapInstance.grid
-        val cellPosition = positionNormalizer.fromMapPositionToGridCellCoordinate(obj.position, obj.mapInstance)
+        val cellPosition = positionNormalizer.fromMapPositionToGridCellCoordinate(
+            PositionNormalizer.MapInfoForPosition(
+                obj.position,
+                obj.mapInstance.map.zoneInfo.width,
+                obj.mapInstance.map.zoneInfo.height,
+                obj.mapInstance.map.zoneInfo.offsetX,
+                obj.mapInstance.map.zoneInfo.offsetY,
+                obj.mapInstance.grid.cellSize,
+            )
+        )
 
         val cell = grid.getCellFromCellPosition(cellPosition)
         grid.addWorldObject(cell, obj)

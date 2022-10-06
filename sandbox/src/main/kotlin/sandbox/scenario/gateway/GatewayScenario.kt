@@ -1,21 +1,28 @@
 package sandbox.scenario.gateway
 
 import com.google.protobuf.Message
+import fr.raven.log.LoggerInterface
 import fr.raven.proto.message.eas.EasProto
 import fr.raven.proto.message.gateway.GatewayProto
 import fr.raven.proto.message.gateway.GatewayProto.Packet
 import fr.rob.gateway.network.netty.client.NettyClient
 import sandbox.checker.CheckerResolver
 import sandbox.client.GatewayClient
+import sandbox.log.OutputLogger
 import sandbox.scenario.ScenarioInterface
 
 abstract class GatewayScenario : ScenarioInterface {
-    protected val gatewayClient = GatewayClient()
+    protected val gatewayClient: GatewayClient
     protected lateinit var checkerResolver: CheckerResolver
 
+    private val gatewayLogger: LoggerInterface = OutputLogger()
     private lateinit var clientProcess: NettyClient
 
-    protected fun connectToGateway(hostname: String = "localhost", port: Int = 11111) {
+    init {
+        gatewayClient = GatewayClient(gatewayLogger)
+    }
+
+    protected fun connectToGateway(hostname: String = GATEWAY_DEFAULT_HOST, port: Int = GATEWAY_DEFAULT_PORT) {
         clientProcess = NettyClient(hostname, port, gatewayClient)
         clientProcess.start()
 

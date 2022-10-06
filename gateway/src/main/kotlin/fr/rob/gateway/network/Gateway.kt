@@ -1,5 +1,6 @@
 package fr.rob.gateway.network
 
+import fr.raven.log.LoggerInterface
 import fr.raven.proto.message.gateway.GatewayProto.Packet
 import fr.rob.core.network.v2.Server
 import fr.rob.core.network.v2.session.Session
@@ -18,17 +19,17 @@ import fr.rob.gateway.extension.realm.RealmService
 import fr.rob.gateway.extension.realm.gamenode.GameNodes
 import fr.rob.gateway.network.dispatcher.PacketDispatcherInterface
 
-class Gateway : Server<Packet>() {
+class Gateway(logger: LoggerInterface) : Server<Packet>() {
 
     private val dispatchers = ArrayList<PacketDispatcherInterface>()
     private val sessionIdentifiers = HashMap<Int, String>()
 
     init {
         // @todo TO REMOVE
-        val client = GameNodeClient(this)
+        val client = GameNodeClient(this, logger)
         val process = GameNodeNettyClient("127.0.0.1", 22222, client)
         val gameNode = GameNode("NODE_LABEL_TEST", client)
-        val gameNodePacketDispatcher = GameNodePacketDispatcher(GameNodePacketBuilder())
+        val gameNodePacketDispatcher = GameNodePacketDispatcher(GameNodePacketBuilder(), logger)
 
         process.start()
 
@@ -36,7 +37,7 @@ class Gateway : Server<Packet>() {
         // @todo Do not add any node at the beginning, we must wait a request from the client
         nodesAggregate.addNode(gameNode)
 
-        val realmService = RealmService(this, gameNodePacketDispatcher)
+        val realmService = RealmService(this, gameNodePacketDispatcher, logger)
 
         val realmClient = RealmClient(nodesAggregate, realmService)
         // val realmProcess = NettyClient("127.0.0.1", 55501, realmClient)

@@ -1,24 +1,26 @@
 package fr.rob.game.domain.entity
 
-import fr.rob.game.domain.instance.MapInstance
 import fr.rob.game.domain.terrain.grid.Cell
 import kotlin.math.ceil
 
 class PositionNormalizer {
 
-    /**
-     * @todo CHANGE MAP INSTANCE INTO TO PARAMS: MAP AND GRID
-     */
-    fun fromMapPositionToGridCellCoordinate(position: Position, mapInstance: MapInstance): Cell.CellPosition {
-        val map = mapInstance.map
-        val grid = mapInstance.grid
+    fun fromMapPositionToGridCellCoordinate(mapInfo: MapInfoForPosition): Cell.CellPosition {
+        val normalizedX = (mapInfo.position.x + mapInfo.mapZoneWidth / 2) - mapInfo.mapZoneOffsetX
+        val normalizedY = (mapInfo.position.y + mapInfo.mapZoneHeight / 2) - mapInfo.mapZoneOffsetY
 
-        val normalizedX = (position.x + map.zoneInfo.width / 2) - map.zoneInfo.offsetX
-        val normalizedY = (position.y + map.zoneInfo.height / 2) - map.zoneInfo.offsetY
-
-        val cellX = ceil(normalizedX / grid.cellSize) - 1
-        val cellY = ceil(normalizedY / grid.cellSize) - 1
+        val cellX = ceil(normalizedX / mapInfo.gridCellSize) - 1
+        val cellY = ceil(normalizedY / mapInfo.gridCellSize) - 1
 
         return Cell.CellPosition(cellX.toInt(), cellY.toInt())
     }
+
+    data class MapInfoForPosition(
+        val position: Position,
+        val mapZoneWidth: Int,
+        val mapZoneHeight: Int,
+        val mapZoneOffsetX: Float,
+        val mapZoneOffsetY: Float,
+        val gridCellSize: Int,
+    )
 }

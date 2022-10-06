@@ -36,9 +36,9 @@ import fr.rob.game.domain.terrain.map.loader.WorldObjectsLoaderInterface
 import fr.rob.game.domain.terrain.map.loader.creature.CreatureLoader
 import fr.rob.game.domain.terrain.map.loader.creature.CreatureRepository
 import fr.rob.game.domain.terrain.map.loader.creature.CreatureRepositoryInterface
+import fr.rob.game.infra.misc.player.FakeInstanceFinder
 import fr.rob.game.infra.mysql.character.MysqlCheckCharacterExist
 import fr.rob.game.infra.mysql.character.MysqlFetchCharacter
-import fr.rob.game.infra.mysql.player.MysqlInstanceFinder
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.withOptions
 import org.koin.core.qualifier.named
@@ -50,7 +50,7 @@ val globalModule = module {
     single<EventManagerInterface> { EventManager() }
     singleOf<LoggerFactoryInterface> { LoggerFactory(File({}.javaClass.classLoader.getResource("log4j.config.xml")!!.path)) }
     single { InstanceManager(GridBuilder(GridConstraintChecker())) }
-    single<InstanceFinderInterface> { MysqlInstanceFinder(get()) }
+    single<InstanceFinderInterface> { FakeInstanceFinder(get()) }
 }
 
 val databaseModule = module {

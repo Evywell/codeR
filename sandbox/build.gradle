@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     api project(':gateway')
+    implementation 'fr.raven.log:lib:0.1.1'
     implementation 'fr.raven.proto:lib:latest'
 }
 

@@ -2,7 +2,6 @@ package fr.rob.game.test.unit.domain.game.world
 
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.PositionNormalizer
-import fr.rob.game.domain.instance.MapInstance
 import fr.rob.game.domain.terrain.grid.GridBuilder
 import fr.rob.game.domain.terrain.grid.GridConstraintChecker
 import fr.rob.game.domain.terrain.map.Map
@@ -22,13 +21,31 @@ class PositionNormalizerTest {
         val map = Map(1, 1, mapInfo, zoneInfo)
         val grid = gridBuilder.buildGrid(100, zoneInfo.width, zoneInfo.height)
 
-        val mapInstance = MapInstance(1, map, grid)
         val positionA = Position(-220f, -100f, 0f, 0f)
         val positionB = Position(90f, 40f, 0f, 0f)
 
         // Act
-        val cellCoordinatesA = normalizer.fromMapPositionToGridCellCoordinate(positionA, mapInstance)
-        val cellCoordinatesB = normalizer.fromMapPositionToGridCellCoordinate(positionB, mapInstance)
+        val cellCoordinatesA = normalizer.fromMapPositionToGridCellCoordinate(
+            PositionNormalizer.MapInfoForPosition(
+                positionA,
+                500,
+                500,
+                -50f,
+                -50f,
+                100
+            )
+        )
+
+        val cellCoordinatesB = normalizer.fromMapPositionToGridCellCoordinate(
+            PositionNormalizer.MapInfoForPosition(
+                positionB,
+                500,
+                500,
+                -50f,
+                -50f,
+                100
+            )
+        )
 
         // Assert
         assertEquals(0, cellCoordinatesA.x)

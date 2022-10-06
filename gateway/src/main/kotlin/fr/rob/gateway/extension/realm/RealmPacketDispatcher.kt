@@ -1,6 +1,7 @@
 package fr.rob.gateway.extension.realm
 
 import fr.raven.proto.message.gateway.GatewayProto.Packet
+import fr.rob.gateway.extension.realm.opcode.CMSG_REALM_JOIN_WORLD
 import fr.rob.gateway.network.GatewaySession
 import fr.rob.gateway.network.dispatcher.PacketDispatcherInterface
 

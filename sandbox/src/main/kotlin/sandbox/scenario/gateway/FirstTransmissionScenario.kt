@@ -2,6 +2,7 @@ package sandbox.scenario.gateway
 
 import fr.raven.proto.message.gateway.GatewayProto.Packet
 import fr.raven.proto.message.realm.RealmProto
+import fr.rob.gateway.extension.realm.opcode.CMSG_REALM_JOIN_WORLD
 
 class FirstTransmissionScenario : GatewayScenario() {
     override fun launch() {
@@ -16,7 +17,7 @@ class FirstTransmissionScenario : GatewayScenario() {
             .setCharacterId(characterId)
             .build()
 
-        val packet = createGatewayPacket(Packet.Context.REALM, joinWorldRequest, 0x03)
+        val packet = createGatewayPacket(Packet.Context.REALM, joinWorldRequest, CMSG_REALM_JOIN_WORLD)
 
         gatewayClient.send(packet)
     }
