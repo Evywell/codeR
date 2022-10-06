@@ -9,6 +9,7 @@ import fr.rob.core.network.v2.session.SessionSocketInterface
 import fr.rob.game.domain.player.session.GameSession
 import fr.rob.game.infra.network.session.exception.GameSessionAlreadyOpenedException
 import fr.rob.game.infra.network.session.exception.GameSessionNotFoundException
+import fr.rob.game.infra.network.session.exception.NotAuthorizedCallException
 import fr.rob.game.infra.network.session.sender.GatewaySessionMessageSender
 import fr.rob.game.infra.opcode.GameNodeOpcodeHandler
 import fr.rob.game.infra.opcode.GameNodeOpcodeHandler.PacketHolder
@@ -32,8 +33,7 @@ class GatewayGameSession(private val opcodeHandler: GameNodeOpcodeHandler, socke
         val function = opcodeHandler.getFunction(packet.opcode)
 
         if (!function.isCallAuthorized(this, packet)) {
-            // Maybe for security purpose, we should throw an exception and kick the user session ?
-            return
+            throw NotAuthorizedCallException(packet.sender)
         }
 
         if (playerGameSessionContainers[packet.sender] == null) {

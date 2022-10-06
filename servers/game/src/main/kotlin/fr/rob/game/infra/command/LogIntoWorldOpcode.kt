@@ -6,11 +6,10 @@ import fr.rob.game.app.player.action.CreatePlayerIntoWorldCommand
 import fr.rob.game.app.player.action.CreatePlayerIntoWorldHandler
 import fr.rob.game.command.message.LogIntoWorldProto.LogIntoWorld
 import fr.rob.game.infra.network.session.GatewayGameSession
-import fr.rob.game.infra.opcode.GameOpcodeFunctionInterface
 
 class LogIntoWorldOpcode(
     private val createPlayerIntoWorldHandler: CreatePlayerIntoWorldHandler,
-) : GameOpcodeFunctionInterface {
+) : AuthorizedOpcode() {
     override fun call(message: Message, session: GatewayGameSession, packet: GameProto.Packet) {
         message as LogIntoWorld
 
@@ -21,7 +20,4 @@ class LogIntoWorldOpcode(
 
     override fun createMessageFromPacket(packet: GameProto.Packet): Message =
         LogIntoWorld.parseFrom(packet.body)
-
-    // @todo Revert this
-    override fun isCallAuthorized(session: GatewayGameSession, packet: GameProto.Packet): Boolean = true
 }

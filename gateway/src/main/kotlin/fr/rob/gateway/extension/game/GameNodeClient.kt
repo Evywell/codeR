@@ -1,60 +1,55 @@
 package fr.rob.gateway.extension.game
 
+import fr.raven.log.LoggerInterface
 import fr.raven.proto.message.game.GameProto.Packet
-import fr.raven.proto.message.game.setup.InitializeOpcodeProto.InitializationSucceed
 import fr.raven.proto.message.gateway.GatewayProto
-import fr.raven.proto.message.realm.RealmProto.JoinTheWorld
 import fr.rob.core.network.v2.AbstractClient
 import fr.rob.core.network.v2.session.Session
 import fr.rob.core.network.v2.session.SessionSocketInterface
+import fr.rob.core.opcode.v2.OpcodeHandler
+import fr.rob.core.opcode.v2.exception.OpcodeFunctionNotFoundException
+import fr.rob.gateway.extension.game.opcode.GameNodeFunctionParameters
+import fr.rob.gateway.extension.game.opcode.GameNodeOpcodeRegistry
 import fr.rob.gateway.network.Gateway
+import fr.rob.gateway.network.GatewaySession
 
-class GameNodeClient(private val gateway: Gateway) : AbstractClient<Packet>() {
+class GameNodeClient(
+    private val gateway: Gateway,
+    private val logger: LoggerInterface,
+) : AbstractClient<Packet>() {
+
+    private val opcodeHandler: OpcodeHandler<GameNodeFunctionParameters> = OpcodeHandler(
+        GameNodeOpcodeRegistry(this)
+    )
+
     override fun onConnectionEstablished(session: Session) {
         this.session = session
     }
 
     override fun onPacketReceived(packet: Packet) {
-        println("Packet received with opcode ${packet.opcode}")
+        logger.debug("Packet received with opcode ${packet.opcode}")
+
         val accountId = packet.sender
-        val session = gateway.findSessionByAccountId(accountId)
+        val gatewaySession = gateway.findSessionByAccountId(accountId)
 
-        when (packet.opcode) {
-            0x99 -> {
-                val message = InitializationSucceed.parseFrom(packet.body)
-                val characterInQueue = session.characterInQueue
-
-                if (message.actionToInitiate == "join-world" && characterInQueue != null) {
-                    proceedJoinWorld(accountId, characterInQueue)
-
-                    return
-                }
-
-                println("No action to initiate or unknown one")
-            }
+        try {
+            opcodeHandler.process(
+                packet.opcode,
+                GameNodeFunctionParameters(packet.opcode, packet, session, gatewaySession)
+            )
+        } catch (_: OpcodeFunctionNotFoundException) {
+            forwardPacketToClient(gatewaySession, packet)
         }
+    }
 
-        session.send(
+    private fun forwardPacketToClient(gatewaySession: GatewaySession, packet: Packet) {
+        gatewaySession.send(
             GatewayProto.Packet.newBuilder()
                 .setContext(GatewayProto.Packet.Context.GAME)
                 .setOpcode(packet.opcode)
                 .setBody(packet.body)
                 .build()
         )
-    }
-
-    private fun proceedJoinWorld(accountId: Int, characterInQueue: Int) {
-        val joinWorldPacket = JoinTheWorld.newBuilder()
-            .setCharacterId(characterInQueue)
-            .build()
-
-        val gamePacket = Packet.newBuilder()
-            .setOpcode(0x01)
-            .setSender(accountId)
-            .setBody(joinWorldPacket.toByteString())
-            .build()
-
-        send(gamePacket)
     }
 
     override fun createSession(socket: SessionSocketInterface): Session = Session(socket)

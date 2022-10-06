@@ -1,16 +1,22 @@
 package fr.rob.gateway.extension.realm
 
-import fr.raven.proto.message.realm.RealmProto
 import fr.rob.core.network.Packet
 import fr.rob.core.network.v2.AbstractClient
 import fr.rob.core.network.v2.session.Session
 import fr.rob.core.network.v2.session.SessionSocketInterface
+import fr.rob.core.opcode.v2.OpcodeHandler
 import fr.rob.gateway.extension.realm.gamenode.GameNodes
+import fr.rob.gateway.extension.realm.opcode.RealmFunctionParameters
+import fr.rob.gateway.extension.realm.opcode.RealmOpcodeRegistry
 
 class RealmClient(
-    private val gameNodes: GameNodes,
-    private val realmService: RealmService
+    gameNodes: GameNodes,
+    realmService: RealmService
 ) : AbstractClient<Packet>() {
+    private val opcodeHandler = OpcodeHandler(
+        RealmOpcodeRegistry(gameNodes, realmService)
+    )
+
     override fun onConnectionEstablished(session: Session) {
         this.session = session
     }
@@ -18,14 +24,7 @@ class RealmClient(
     override fun createSession(socket: SessionSocketInterface): Session = Session(socket)
 
     override fun onPacketReceived(packet: Packet) {
-        when (packet.readOpcode()) {
-            // @todo for the moment I chose a random opcode
-            1 -> {
-                val bindCharacterPacket = RealmProto.BindCharacterToNode.parseFrom(packet.toByteArray())
-                realmService.bindCharacterToNode(bindCharacterPacket, gameNodes, "join-world")
-
-                return
-            }
-        }
+        val opcode = packet.readOpcode()
+        opcodeHandler.process(opcode, RealmFunctionParameters(opcode, packet))
     }
 }
