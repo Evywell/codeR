@@ -1,5 +1,5 @@
 package fr.rob.game.domain.player.session
 
-interface GameSessionUpdaterInterface {
-    fun updateSession(deltaTime: Long)
-}
+import fr.rob.game.domain.world.UpdatableInterface
+
+interface GameSessionUpdaterInterface : UpdatableInterface

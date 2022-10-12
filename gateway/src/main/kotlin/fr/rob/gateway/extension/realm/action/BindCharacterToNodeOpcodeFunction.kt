@@ -10,7 +10,7 @@ import fr.rob.gateway.extension.realm.opcode.RealmOpcodeFunction
 
 class BindCharacterToNodeOpcodeFunction(
     private val gameNodes: GameNodes,
-    private val realmService: RealmService,
+    private val realmService: RealmService
 ) : RealmOpcodeFunction() {
     override fun createMessageFromPacket(packet: Packet): Message =
         RealmProto.BindCharacterToNode.parseFrom(packet.toByteArray())

@@ -5,9 +5,7 @@ import fr.rob.gateway.extension.realm.opcode.CMSG_REALM_JOIN_WORLD
 import fr.rob.gateway.network.GatewaySession
 import fr.rob.gateway.network.dispatcher.PacketDispatcherInterface
 
-class RealmPacketDispatcher(
-    realmClient: RealmClient,
-) : PacketDispatcherInterface {
+class RealmPacketDispatcher(realmClient: RealmClient) : PacketDispatcherInterface {
 
     private val tmpJoinWorldOpcodeHandler = TmpJoinWorldOpcodeHandler(realmClient)
 

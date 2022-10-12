@@ -11,6 +11,7 @@ plugins {
     id 'coder.code-quality'
     id 'coder.global'
     id 'application'
+    id 'coder.grpc'
     id 'com.google.protobuf' version '0.8.18'
 }
 
@@ -19,11 +20,20 @@ dependencies {
     implementation 'fr.raven.eas:eas:0.0.1'
     implementation 'fr.raven.proto:lib:latest'
     implementation 'fr.raven.log:lib:0.1.1'
+    implementation project(':world:public')
 }
 
 protobuf {
     protoc {
         artifact = 'com.google.protobuf:protoc:3.8.0'
+    }
+
+    plugins {
+        grpc { artifact = "io.grpc:protoc-gen-grpc-java:1.50.0" }
+    }
+
+    generateProtoTasks {
+        all()*.plugins { grpc {} }
     }
 }
 
@@ -31,6 +41,7 @@ sourceSets {
     main {
         java {
             srcDirs 'build/generated/source/proto/main/java'
+            srcDirs 'build/generated/source/proto/main/grpc'
         }
     }
 }

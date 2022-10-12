@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package fr.rob.gateway.grpc.character;
+
+option java_multiple_files = true;
+
+service Character {
+  rpc Reserve(ReservationRequest) returns (ReservationStatus) {}
+}
+
+message ReservationRequest {
+  uint32 characterId = 1;
+  string sessionId = 2;
+}
+
+message ReservationStatus {}

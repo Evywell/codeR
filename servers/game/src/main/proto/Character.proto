@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package fr.rob.game.grpc.character;
+
+option java_multiple_files = true;
+
+service Character {
+  rpc Reserve(ReservationRequest) returns (ReservationStatus) {}
+}
+
+message ReservationRequest {
+  uint32 characterId = 1;
+  string accountId = 2;
+  uint32 mapId = 3;
+  uint32 zoneId = 4;
+}
+
+message ReservationStatus {}
