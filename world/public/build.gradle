@@ -1,0 +1,40 @@
+buildscript {
+    repositories {
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.9.1'
+    }
+}
+
+plugins {
+    id 'coder.code-quality'
+    id 'coder.global'
+    id 'coder.grpc'
+    id 'idea'
+    id 'java'
+    id 'com.google.protobuf' version '0.9.1'
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.8.0'
+    }
+
+    plugins {
+        grpc { artifact = "io.grpc:protoc-gen-grpc-java:1.50.0" }
+    }
+
+    generateProtoTasks {
+        all()*.plugins { grpc {} }
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'build/generated/source/proto/main/grpc'
+            srcDirs 'build/generated/source/proto/main/java'
+        }
+    }
+}

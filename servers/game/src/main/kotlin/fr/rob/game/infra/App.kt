@@ -50,7 +50,8 @@ class App(private val config: GameConfig) : KoinComponent {
             messageQueueDispatcher,
             loggerFactory.create("supervisor"),
             GameNodeOpcodeHandler(createPlayerIntoWorldHandler),
-            FakeInstanceBuilder(mapManager, instanceManager)
+            FakeInstanceBuilder(mapManager, instanceManager),
+            instanceManager
         ).run(config.nodesConfig.nodeConfig)
     }
 

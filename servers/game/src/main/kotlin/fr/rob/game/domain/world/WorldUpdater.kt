@@ -1,9 +1,9 @@
 package fr.rob.game.domain.world
 
-import fr.rob.game.domain.player.session.GameSessionUpdaterInterface
-
-class WorldUpdater(private val gameSessionUpdater: GameSessionUpdaterInterface) {
+class WorldUpdater(
+    private val updatableObjects: Array<UpdatableInterface>
+) {
     fun update(deltaTime: Long) {
-        gameSessionUpdater.updateSession(deltaTime)
+        updatableObjects.forEach { it.update(deltaTime) }
     }
 }

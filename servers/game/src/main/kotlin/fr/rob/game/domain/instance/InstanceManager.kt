@@ -2,8 +2,9 @@ package fr.rob.game.domain.instance
 
 import fr.rob.game.domain.terrain.grid.GridBuilder
 import fr.rob.game.domain.terrain.map.Map
+import fr.rob.game.domain.world.UpdatableInterface
 
-class InstanceManager(private val gridBuilder: GridBuilder) {
+class InstanceManager(private val gridBuilder: GridBuilder) : UpdatableInterface {
 
     private val instances = ArrayList<MapInstance>()
 
@@ -28,7 +29,17 @@ class InstanceManager(private val gridBuilder: GridBuilder) {
         throw RuntimeException("Cannot find instance with id $id")
     }
 
-    fun update(deltaTime: Int) {
+    fun retrieveByMap(mapId: Int, zoneId: Int): MapInstance {
+        for (instance in instances) {
+            if (instance.map.id == mapId && instance.map.zoneId == zoneId) {
+                return instance
+            }
+        }
+
+        throw RuntimeException("Cannot retrieve instance for map=$mapId zone=$zoneId")
+    }
+
+    override fun update(deltaTime: Long) {
         for (instance in instances) {
             // instance.update(deltaTime)
         }

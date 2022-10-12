@@ -6,7 +6,7 @@ import fr.rob.game.infra.network.packet.GamePacketFilter
 class GameSessionUpdater : GameSessionUpdaterInterface {
     private val gatewayGameSessions = ArrayList<GatewayGameSession>()
 
-    override fun updateSession(deltaTime: Long) {
+    override fun update(deltaTime: Long) {
         gatewayGameSessions.forEach { it.update(GamePacketFilter(it)) }
     }
 

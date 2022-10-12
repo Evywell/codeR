@@ -3,6 +3,7 @@ plugins {
     id 'coder.global'
     id 'coder.debug'
     id 'application'
+    id 'coder.grpc'
     id 'com.avast.gradle.docker-compose'
 }
 
@@ -48,6 +49,15 @@ dockerCompose {
     dockerComposeWorkingDirectory = project.rootProject.projectDir
     projectName = 'coder'
     removeVolumes = false
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'build/generated/source/proto/main/grpc'
+            srcDirs 'build/generated/source/proto/main/java'
+        }
+    }
 }
 
 mainClassName = 'fr.rob.orchestrator.api.Main'

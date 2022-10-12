@@ -10,14 +10,18 @@ import fr.rob.core.network.v2.netty.shard.ProtobufHandlerShard
 import fr.rob.core.network.v2.netty.shard.ProtobufPipelineShard
 import fr.rob.core.network.v2.session.SessionSocketUpdater
 import fr.rob.game.app.instance.FakeInstanceBuilder
+import fr.rob.game.domain.character.waitingroom.CharacterWaitingRoom
+import fr.rob.game.domain.instance.InstanceManager
 import fr.rob.game.domain.node.NodeBuilder
 import fr.rob.game.domain.node.NodeConfig
 import fr.rob.game.domain.world.World
 import fr.rob.game.domain.world.WorldUpdater
+import fr.rob.game.infra.grpc.CharacterServiceImpl
 import fr.rob.game.infra.network.server.GameNodeServer
 import fr.rob.game.infra.network.session.GameSessionUpdater
 import fr.rob.game.infra.opcode.GameNodeOpcodeHandler
 import fr.rob.orchestrator.shared.entities.NewGameNodeProto
+import io.grpc.ServerBuilder
 import kotlin.concurrent.thread
 
 class Supervisor(
@@ -26,6 +30,7 @@ class Supervisor(
     private val logger: LoggerInterface,
     private val gameNodeOpcodeHandler: GameNodeOpcodeHandler,
     private val fakeInstanceBuilder: FakeInstanceBuilder,
+    private val instanceManager: InstanceManager,
 ) {
 
     fun run(nodeConfig: NodeConfig) {
@@ -43,11 +48,19 @@ class Supervisor(
                 ProtobufHandlerShard(server, socketBuilder)
             )
 
+        val characterWaitingRoom = CharacterWaitingRoom()
+
         server.start(process)
         logger.info("Server started on port ${node.port}")
 
+        val rpcServer = ServerBuilder.forPort(123457)
+            .addService(CharacterServiceImpl(instanceManager, characterWaitingRoom))
+            .build()
+
+        rpcServer.start()
+
         thread(true) {
-            val worldUpdater = WorldUpdater(gameSessionUpdater)
+            val worldUpdater = WorldUpdater(arrayOf(gameSessionUpdater, instanceManager))
             val world = World(worldUpdater)
 
             world.initialize()
