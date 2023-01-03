@@ -1,6 +1,5 @@
 package fr.rob.game.test.unit.domain.game.world
 
-import fr.rob.game.app.state.Store
 import fr.rob.game.domain.entity.ObjectManager
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.PositionNormalizer
@@ -87,8 +86,8 @@ class ObjectManagerTest {
         Arguments.of(
             ZoneInfo("A testing zone", 100, 100, -100f, 100f),
             Position(5f, -61f, 15f, 0f) // X too big with offset -100
-        ),
+        )
     )
 
-    private fun getObjectManager(): ObjectManager = ObjectManager(ObjectGuidGenerator(), PositionNormalizer(), Store())
+    private fun getObjectManager(): ObjectManager = ObjectManager(ObjectGuidGenerator(), PositionNormalizer())
 }

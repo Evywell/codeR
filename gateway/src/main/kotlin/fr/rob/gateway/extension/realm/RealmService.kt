@@ -1,15 +1,12 @@
 package fr.rob.gateway.extension.realm
 
 import fr.raven.log.LoggerInterface
-import fr.raven.proto.message.game.setup.InitializeOpcodeProto
-import fr.raven.proto.message.gateway.GatewayProto
+import fr.raven.proto.message.game.grpc.character.CharacterGrpc
+import fr.raven.proto.message.game.grpc.character.ReservationRequest
 import fr.raven.proto.message.realm.RealmProto.BindCharacterToNode
 import fr.rob.gateway.extension.game.GameNode
 import fr.rob.gateway.extension.game.GameNodeBuilder
-import fr.rob.gateway.extension.game.opcode.GAME_INITIALIZATION
 import fr.rob.gateway.extension.realm.gamenode.GameNodes
-import fr.rob.gateway.grpc.character.CharacterGrpc
-import fr.rob.gateway.grpc.character.ReservationRequest
 import fr.rob.gateway.network.Gateway
 import fr.rob.gateway.network.GatewaySession
 import fr.rob.world.api.grpc.character.CharacterInfo
@@ -27,7 +24,7 @@ class RealmService(
         .usePlaintext()
         .build()
 
-    fun bindCharacterToNode(characterStruct: BindCharacterToNode, gameNodes: GameNodes, actionToInitiate: String) {
+    fun bindCharacterToNode(characterStruct: BindCharacterToNode, gameNodes: GameNodes) {
         val gameNode = retrieveGameNodeFromLabel(characterStruct.nodeLabel, gameNodes).orElse(
             gameNodeBuilder.build(characterStruct.nodeLabel, characterStruct.hostname, characterStruct.port)
         )
@@ -36,9 +33,6 @@ class RealmService(
         session.currentGameNode = gameNode
 
         logger.debug("Game node attributed")
-
-        // logger.debug("Logging user to game node...")
-        // logUserToGameNode(session, actionToInitiate)
     }
 
     private fun retrieveGameNodeFromLabel(nodeLabel: String, gameNodes: GameNodes): Optional<GameNode> {
@@ -51,28 +45,15 @@ class RealmService(
         return Optional.empty()
     }
 
-    private fun logUserToGameNode(session: GatewaySession, actionToInitiate: String) {
-        val gatewayPacket = GatewayProto.Packet.newBuilder()
-            .setOpcode(GAME_INITIALIZATION)
-            .setContext(GatewayProto.Packet.Context.GAME)
-            .setBody(
-                InitializeOpcodeProto.Initialize.newBuilder()
-                    .setActionToInitiate(actionToInitiate)
-                    .build()
-                    .toByteString()
-            )
-            .build()
-
-        // gameNodePacketDispatcher.dispatch(gatewayPacket, session)
-    }
-
     fun reserveCharacterForSession(session: GatewaySession, character: CharacterInfo) {
         val stub = CharacterGrpc.newBlockingStub(gameNodeChannel)
 
-        stub.reserve(
+        val reservationStatus = stub.reserve(
             ReservationRequest.newBuilder()
                 .setCharacterId(character.characterId)
-                .setSessionId(session.id)
+                .setMapId(1)
+                .setZoneId(1)
+                .setAccountId(session.accountId.toString())
                 .build()
         )
     }

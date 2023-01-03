@@ -20,4 +20,6 @@ class EasPacketDispatcher(private val easService: EasService) : PacketDispatcher
             throw InvalidPacketStructure()
         }
     }
+
+    override fun transmitInterruption(session: GatewaySession) {}
 }

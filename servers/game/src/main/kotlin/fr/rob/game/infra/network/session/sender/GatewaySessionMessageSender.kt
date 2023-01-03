@@ -3,7 +3,7 @@ package fr.rob.game.infra.network.session.sender
 import com.google.protobuf.Message
 import fr.raven.proto.message.game.GameProto
 import fr.raven.proto.message.game.NearbyObjectOpcodeProto
-import fr.rob.game.domain.entity.state.NotifyPlayerNearbyGameObjects
+import fr.rob.game.app.player.message.NearbyObjectMessage
 import fr.rob.game.domain.player.session.GameMessageHolder
 import fr.rob.game.domain.player.session.GameSession
 import fr.rob.game.domain.player.session.SessionMessageSenderInterface
@@ -22,7 +22,7 @@ class GatewaySessionMessageSender(private val gatewaySession: GatewayGameSession
         gatewaySession.send(gamePacket)
     }
 
-    private fun fromNearbyObjectMessage(message: NotifyPlayerNearbyGameObjects.NearbyObjectMessage): Message =
+    private fun fromNearbyObjectMessage(message: NearbyObjectMessage): Message =
         NearbyObjectOpcodeProto.NearbyObjectOpcode.newBuilder()
             .setGuid(message.objectId.getRawValue())
             .setPosX(message.position.x)
@@ -32,8 +32,7 @@ class GatewaySessionMessageSender(private val gatewaySession: GatewayGameSession
 
     private fun toProtoMessage(message: Any): Message {
         when (message) {
-            is NotifyPlayerNearbyGameObjects.NearbyObjectMessage ->
-                return fromNearbyObjectMessage(message)
+            is NearbyObjectMessage -> return fromNearbyObjectMessage(message)
         }
 
         throw RuntimeException("No message builder found for ${message.javaClass.name}")

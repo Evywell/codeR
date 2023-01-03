@@ -15,11 +15,11 @@ import fr.rob.gateway.network.GatewaySession
 
 class GameNodeClient(
     private val gateway: Gateway,
-    private val logger: LoggerInterface,
+    private val logger: LoggerInterface
 ) : AbstractClient<Packet>() {
 
     private val opcodeHandler: OpcodeHandler<GameNodeFunctionParameters> = OpcodeHandler(
-        GameNodeOpcodeRegistry(this)
+        GameNodeOpcodeRegistry()
     )
 
     override fun onConnectionEstablished(session: Session) {

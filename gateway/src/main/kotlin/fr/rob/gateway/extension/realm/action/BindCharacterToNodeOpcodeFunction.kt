@@ -18,7 +18,7 @@ class BindCharacterToNodeOpcodeFunction(
     override fun callForMessage(message: Message, functionParameters: RealmFunctionParameters) {
         message as RealmProto.BindCharacterToNode
 
-        realmService.bindCharacterToNode(message, gameNodes, "join-world")
+        realmService.bindCharacterToNode(message, gameNodes)
     }
 
     override fun isCallAuthorized(functionParameters: RealmFunctionParameters): Boolean = true

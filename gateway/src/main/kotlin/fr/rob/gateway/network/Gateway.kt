@@ -39,6 +39,15 @@ class Gateway : Server<Packet>() {
         session.id = id
     }
 
+    override fun onConnectionClosed(session: Session) {
+        super.onConnectionClosed(session)
+        session as GatewaySession
+
+        for (dispatcher in dispatchers) {
+            dispatcher.transmitInterruption(session)
+        }
+    }
+
     override fun createSession(socket: SessionSocketInterface): Session = GatewaySession(socket)
 
     fun findSessionByAccountId(accountId: Int): GatewaySession {

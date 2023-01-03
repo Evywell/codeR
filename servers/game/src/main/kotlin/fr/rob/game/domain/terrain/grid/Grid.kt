@@ -53,8 +53,12 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
         return neighborCells.toTypedArray()
     }
 
-    fun addWorldObject(cell: Cell, obj: WorldObject) {
+    fun addWorldObject(obj: WorldObject) {
         worldObjectContainerList[obj.guid.getType().value].add(obj)
+    }
+
+    fun removeWorldObject(obj: WorldObject) {
+        worldObjectContainerList[obj.guid.getType().value].remove(obj)
     }
 
     private fun isCellInsideMesh(posX: Int, posY: Int): Boolean =

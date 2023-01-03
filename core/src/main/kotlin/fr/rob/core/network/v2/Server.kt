@@ -11,6 +11,8 @@ abstract class Server<T> : ServerInterface<T> {
         registerSession(id, session)
     }
 
+    override fun onConnectionClosed(session: Session) {}
+
     override fun sessionFromIdentifier(identifier: String): Session = sessionHolder.sessionFromIdentifier(identifier)
 
     override fun registerSession(identifier: String, session: Session) {

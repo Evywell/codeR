@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package fr.rob.gateway.grpc.character;
+package fr.raven.proto.message.game.grpc.character;
 
 option java_multiple_files = true;
 
@@ -10,7 +10,9 @@ service Character {
 
 message ReservationRequest {
   uint32 characterId = 1;
-  string sessionId = 2;
+  string accountId = 2;
+  uint32 mapId = 3;
+  uint32 zoneId = 4;
 }
 
 message ReservationStatus {}

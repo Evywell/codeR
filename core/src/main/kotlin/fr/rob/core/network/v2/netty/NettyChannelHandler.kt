@@ -40,6 +40,13 @@ abstract class NettyChannelHandler<T>(
         server.onNewConnection(channelId, session)
     }
 
+    override fun channelInactive(ctx: ChannelHandlerContext) {
+        val channelId = getSessionIdentifier(ctx)
+        val session = server.sessionFromIdentifier(channelId)
+
+        server.onConnectionClosed(session)
+    }
+
     override fun exceptionCaught(ctx: ChannelHandlerContext?, cause: Throwable?) {
         cause?.printStackTrace()
     }

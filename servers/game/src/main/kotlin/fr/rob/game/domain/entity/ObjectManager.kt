@@ -1,18 +1,15 @@
 package fr.rob.game.domain.entity
 
-import fr.rob.game.app.state.Store
 import fr.rob.game.domain.entity.exception.OutOfBoundsException
 import fr.rob.game.domain.entity.guid.ObjectGuid
 import fr.rob.game.domain.entity.guid.ObjectGuid.LowGuid
 import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
-import fr.rob.game.domain.entity.state.ObjectAddedToGrid
 import fr.rob.game.domain.instance.MapInstance
 import fr.rob.game.domain.terrain.map.Map
 
 class ObjectManager(
     private val objectGuidGenerator: ObjectGuidGenerator,
     private val positionNormalizer: PositionNormalizer,
-    private val store: Store,
 ) {
     fun spawnObject(lowGuid: LowGuid, position: Position, instance: MapInstance): WorldObject {
         // Check out of bounds
@@ -54,10 +51,21 @@ class ObjectManager(
         )
 
         val cell = grid.getCellFromCellPosition(cellPosition)
-        grid.addWorldObject(cell, obj)
+        grid.addWorldObject(obj)
         obj.cell = cell
+    }
 
-        store.dispatch(ObjectAddedToGrid(obj))
+    fun removeFromWorld(obj: WorldObject) {
+        obj.isInWorld = false
+
+        removeFromGrid(obj)
+    }
+
+    private fun removeFromGrid(obj: WorldObject) {
+        val grid = obj.mapInstance.grid
+        grid.removeWorldObject(obj)
+
+        obj.cell = null
     }
 
     private fun isInsideMap(map: Map, position: Position): Boolean {
