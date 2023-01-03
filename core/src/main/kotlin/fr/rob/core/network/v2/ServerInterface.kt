@@ -6,6 +6,7 @@ import fr.rob.core.network.v2.session.SessionSocketInterface
 interface ServerInterface<T> {
 
     fun onNewConnection(id: String, session: Session)
+    fun onConnectionClosed(session: Session)
     fun onPacketReceived(session: Session, packet: T)
 
     fun createSession(socket: SessionSocketInterface): Session

@@ -7,7 +7,6 @@ import fr.rob.game.domain.character.FetchCharacterInterface
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
 import fr.rob.game.domain.instance.MapInstance
-import fr.rob.game.domain.player.InstanceFinderInterface
 import fr.rob.game.domain.player.PlayerFactory
 import fr.rob.game.domain.player.session.GameSession
 import fr.rob.game.domain.terrain.grid.Grid
@@ -20,17 +19,9 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class PlayerFactoryTest {
-    lateinit var instanceFinder: InstanceFinderInterface
-
-    @BeforeEach
-    fun setUp() {
-        instanceFinder = DummyInstanceFinder()
-    }
-
     @Test
     fun `As a valid user, I should initialize a character entity with correct data`() {
         // Arrange
@@ -40,12 +31,11 @@ class PlayerFactoryTest {
         val initializer = PlayerFactory(
             characterService,
             SpecificCharacterFetcher(character),
-            ObjectGuidGenerator(),
-            instanceFinder
+            ObjectGuidGenerator()
         )
 
         // Act
-        val result = initializer.createFromGameSession(GameSession(1, NullMessageSender()), 1)
+        val result = initializer.createFromGameSession(GameSession(1, NullMessageSender()), 1, getMapInstance())
 
         // Assert
         assertTrue(result.isSuccess)
@@ -63,15 +53,21 @@ class PlayerFactoryTest {
     fun `As a valid user, I should not initialize a character that does not belong to me`() {
         // Arrange
         val characterService = CharacterService(CharacterNotFoundForUser())
-        val initializer = PlayerFactory(characterService, NullCharacterFetcher(), ObjectGuidGenerator(), instanceFinder)
+        val initializer = PlayerFactory(characterService, NullCharacterFetcher(), ObjectGuidGenerator())
 
         // Act
-        val result = initializer.createFromGameSession(GameSession(1, NullMessageSender()), 1)
+        val result = initializer.createFromGameSession(GameSession(1, NullMessageSender()), 1, getMapInstance())
 
         // Assert
         assertFalse(result.isSuccess)
         assertNull(result.player)
     }
+
+    private fun getMapInstance() = MapInstance(
+        1,
+        Map(1, 2, MapInfo("Map info", 10, 10), ZoneInfo("Zone info", 10, 10, 0f, 0f)),
+        Grid(10, 10, 1, emptyArray())
+    )
 
     class CharacterFoundForUser : CheckCharacterExistInterface {
         override fun characterExistsForAccount(characterId: Int, accountId: Int): Boolean = true
@@ -89,15 +85,5 @@ class PlayerFactoryTest {
 
     class SpecificCharacterFetcher(private val character: Character) : FetchCharacterInterface {
         override fun retrieveCharacter(id: Int): Character = character
-    }
-
-    class DummyInstanceFinder : InstanceFinderInterface {
-        override fun fromCharacterId(characterId: Int): MapInstance {
-            return MapInstance(
-                1,
-                Map(1, 2, MapInfo("Map info", 10, 10), ZoneInfo("Zone info", 10, 10, 0f, 0f)),
-                Grid(10, 10, 1, emptyArray())
-            )
-        }
     }
 }

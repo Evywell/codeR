@@ -7,6 +7,5 @@ import io.grpc.stub.StreamObserver
 
 class InstanceServiceImpl : InstanceGrpc.InstanceImplBase() {
     override fun create(request: InstanceInfo, responseObserver: StreamObserver<InstanceCreationResponse>) {
-
     }
 }

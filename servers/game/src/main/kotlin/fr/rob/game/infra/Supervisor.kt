@@ -31,6 +31,7 @@ class Supervisor(
     private val gameNodeOpcodeHandler: GameNodeOpcodeHandler,
     private val fakeInstanceBuilder: FakeInstanceBuilder,
     private val instanceManager: InstanceManager,
+    private val characterWaitingRoom: CharacterWaitingRoom
 ) {
 
     fun run(nodeConfig: NodeConfig) {
@@ -48,12 +49,10 @@ class Supervisor(
                 ProtobufHandlerShard(server, socketBuilder)
             )
 
-        val characterWaitingRoom = CharacterWaitingRoom()
-
         server.start(process)
         logger.info("Server started on port ${node.port}")
 
-        val rpcServer = ServerBuilder.forPort(123457)
+        val rpcServer = ServerBuilder.forPort(12347)
             .addService(CharacterServiceImpl(instanceManager, characterWaitingRoom))
             .build()
 

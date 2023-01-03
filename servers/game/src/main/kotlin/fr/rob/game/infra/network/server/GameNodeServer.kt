@@ -12,7 +12,7 @@ import fr.rob.game.infra.opcode.GameNodeOpcodeHandler
 class GameNodeServer(
     private val gameSessionUpdater: GameSessionUpdater,
     private val opcodeHandler: GameNodeOpcodeHandler,
-    private val logger: LoggerInterface,
+    private val logger: LoggerInterface
 ) : Server<Packet>() {
 
     override fun onPacketReceived(session: Session, packet: Packet) {

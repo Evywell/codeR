@@ -100,15 +100,13 @@ val opcodeModule = module {
                 MysqlCheckCharacterExist(get<ConnectionPool>(named(DB_REALM)).getNextConnection())
             ),
             MysqlFetchCharacter(get<ConnectionPool>(named(DB_REALM)).getNextConnection()),
-            get(),
-            get(),
+            get()
         )
     }
     single { params ->
         ObjectManager(
             get(),
-            PositionNormalizer(),
-            params.get(),
+            PositionNormalizer()
         )
     }
     single { params -> CreatePlayerIntoWorldHandler(get(), params.get()) }

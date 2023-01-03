@@ -6,6 +6,7 @@ import fr.rob.world.service.packages.characters.domain.character.CharacterReposi
 
 class MySQLCharacterRepository : CharacterRepositoryInterface {
     override fun retrieveById(characterId: CharacterId): Character {
-        TODO("Not yet implemented")
+        // TODO: replace by real data
+        return Character(CharacterId(1), "Evywell", 1, 1, 1)
     }
 }

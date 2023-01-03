@@ -11,6 +11,6 @@ class RealmExtension(private val logger: LoggerInterface) : ExtensionInterface {
         val realmService = RealmService(gateway, logger, GameNodeBuilder(gateway, logger))
         val realmClient = RealmClient(gateway.gameNodes, realmService)
 
-        return RealmPacketDispatcher(realmClient)
+        return RealmPacketDispatcher(realmClient, realmService, gateway.gameNodes)
     }
 }

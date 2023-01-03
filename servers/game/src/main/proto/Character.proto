@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package fr.rob.game.grpc.character;
+package fr.raven.proto.message.game.grpc.character;
 
 option java_multiple_files = true;
 

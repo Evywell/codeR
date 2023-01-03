@@ -51,14 +51,21 @@ class GatewayGameSession(private val opcodeHandler: GameNodeOpcodeHandler, socke
     fun findGameSession(accountId: Int): GameSession = playerGameSessionContainers[accountId]?.session
         ?: throw GameSessionNotFoundException("Cannot find game session with accountId $accountId")
 
-    fun createGameSession(accountId: Int) {
+    fun createGameSession(accountId: Int): GameSession {
         if (playerGameSessionContainers.containsKey(accountId)) {
             throw GameSessionAlreadyOpenedException("The game session is already opened for account $accountId")
         }
 
         val messageSender = GatewaySessionMessageSender(this)
+        val gameSession = GameSession(accountId, messageSender)
 
-        playerGameSessionContainers[accountId] = GameSessionContainer(GameSession(accountId, messageSender), LockedQueue())
+        playerGameSessionContainers[accountId] = GameSessionContainer(gameSession, LockedQueue())
+
+        return gameSession
+    }
+
+    fun removeGameSessionFromAccountId(accountId: Int) {
+        playerGameSessionContainers.remove(accountId)
     }
 
     companion object {

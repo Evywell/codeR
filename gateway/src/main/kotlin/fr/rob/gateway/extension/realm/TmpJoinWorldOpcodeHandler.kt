@@ -21,7 +21,6 @@ class TmpJoinWorldOpcodeHandler(private val realmClient: RealmClient, private va
 
     fun run(packet: GatewayProto.Packet, session: GatewaySession, gameNodes: GameNodes) {
         // Retrieve char info
-        println("Retrieving char info...")
         val charInfo = RealmProto.JoinTheWorld.parseFrom(packet.body)
 
         val character = retrieveCharacter(charInfo)
@@ -37,8 +36,7 @@ class TmpJoinWorldOpcodeHandler(private val realmClient: RealmClient, private va
                 .setPort(22222)
                 .setNodeLabel("NODE_LABEL_TEST")
                 .build(),
-            gameNodes,
-            "nothing"
+            gameNodes
         )
 
         // Pre lock char on game node

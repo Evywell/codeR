@@ -22,7 +22,7 @@ sourceSets {
 }
 
 application {
-    applicationDefaultJvmArgs = ['-Dworld.grpc.port=12345']
+    applicationDefaultJvmArgs = ['-Dworld.grpc.port=12346']
 }
 
 mainClassName = 'fr.rob.world.service.Main'

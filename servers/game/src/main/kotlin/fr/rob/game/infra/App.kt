@@ -10,9 +10,8 @@ import fr.rob.game.DB_REALM
 import fr.rob.game.DB_WORLD
 import fr.rob.game.app.instance.FakeInstanceBuilder
 import fr.rob.game.app.player.action.CreatePlayerIntoWorldHandler
-import fr.rob.game.app.state.Store
+import fr.rob.game.domain.character.waitingroom.CharacterWaitingRoom
 import fr.rob.game.domain.entity.ObjectManager
-import fr.rob.game.domain.entity.state.NotifyPlayerNearbyGameObjects
 import fr.rob.game.domain.instance.InstanceManager
 import fr.rob.game.domain.node.NodeBuilder
 import fr.rob.game.domain.terrain.map.MapManager
@@ -36,27 +35,23 @@ class App(private val config: GameConfig) : KoinComponent {
     private val messageQueueDispatcher: MessageQueueDispatcher by inject { parametersOf(getQueueRoutingItems(), amqpConnection) }
     private val queueReceiver: MessageQueueReceiver by inject { parametersOf(amqpConnection) }
     private val connectionPoolManager: ConnectionPoolManager by inject { parametersOf(6) } // @todo Change this hard coded value
-    private val store = Store()
-    private val objectManager: ObjectManager by inject { parametersOf(store) }
+    private val objectManager: ObjectManager by inject()
     private val createPlayerIntoWorldHandler: CreatePlayerIntoWorldHandler by inject { parametersOf(objectManager) }
+    private val characterWaitingRoom = CharacterWaitingRoom()
 
     fun run() {
         createDatabasePools()
         registerQueueMessageHandlers()
-        registerStateActions()
 
         Supervisor(
             NodeBuilder(),
             messageQueueDispatcher,
             loggerFactory.create("supervisor"),
-            GameNodeOpcodeHandler(createPlayerIntoWorldHandler),
+            GameNodeOpcodeHandler(createPlayerIntoWorldHandler, characterWaitingRoom, objectManager),
             FakeInstanceBuilder(mapManager, instanceManager),
-            instanceManager
+            instanceManager,
+            characterWaitingRoom
         ).run(config.nodesConfig.nodeConfig)
-    }
-
-    private fun registerStateActions() {
-        store.registerHandler(NotifyPlayerNearbyGameObjects())
     }
 
     private fun createDatabasePools() {
