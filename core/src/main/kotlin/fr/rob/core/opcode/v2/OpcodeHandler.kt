@@ -26,6 +26,9 @@ class OpcodeHandler<FunctionParameters>(opcodeRegistry: OpcodeFunctionRegistryIn
         function.call(parameters)
     }
 
+    /**
+     * @throws OpcodeFunctionNotFoundException
+     */
     fun getFunction(opcode: Int): OpcodeFunctionInterface<FunctionParameters> {
         return opcodeFunctions[opcode] ?: throw OpcodeFunctionNotFoundException()
     }
