@@ -5,13 +5,14 @@ import fr.raven.proto.message.game.GameProto.Packet
 import fr.rob.core.network.v2.Server
 import fr.rob.core.network.v2.session.Session
 import fr.rob.core.network.v2.session.SessionSocketInterface
+import fr.rob.core.opcode.v2.OpcodeHandler
 import fr.rob.game.infra.network.session.GameSessionUpdater
 import fr.rob.game.infra.network.session.GatewayGameSession
-import fr.rob.game.infra.opcode.GameNodeOpcodeHandler
+import fr.rob.game.infra.opcode.GameNodeFunctionParameters
 
 class GameNodeServer(
     private val gameSessionUpdater: GameSessionUpdater,
-    private val opcodeHandler: GameNodeOpcodeHandler,
+    private val opcodeHandler: OpcodeHandler<GameNodeFunctionParameters>,
     private val logger: LoggerInterface
 ) : Server<Packet>() {
 

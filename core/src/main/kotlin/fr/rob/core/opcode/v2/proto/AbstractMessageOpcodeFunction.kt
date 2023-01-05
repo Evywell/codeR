@@ -7,7 +7,7 @@ abstract class AbstractMessageOpcodeFunction<FunctionParameters, ProtoMessage> :
     OpcodeFunctionInterface<FunctionParameters> {
 
     abstract fun createMessageFromPacket(packet: ProtoMessage): Message
-    protected abstract fun callForMessage(message: Message, functionParameters: FunctionParameters)
+    abstract fun callForMessage(message: Message, functionParameters: FunctionParameters)
     protected abstract fun getPacketFromParameters(functionParameters: FunctionParameters): ProtoMessage
 
     override fun call(functionParameters: FunctionParameters) {

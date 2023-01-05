@@ -2,7 +2,7 @@ package fr.rob.game.infra.network.packet
 
 import fr.rob.core.network.Filter
 import fr.rob.game.infra.network.session.GatewayGameSession
-import fr.rob.game.infra.opcode.GameNodeOpcodeHandler.PacketHolder
+import fr.rob.game.infra.network.session.GatewayGameSession.PacketHolder
 
 class GamePacketFilter(private val session: GatewayGameSession) : Filter<PacketHolder>() {
 

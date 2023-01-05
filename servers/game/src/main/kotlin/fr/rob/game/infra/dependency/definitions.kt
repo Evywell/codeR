@@ -14,10 +14,13 @@ import fr.rob.core.database.pool.ConnectionPool
 import fr.rob.core.database.pool.ConnectionPoolManager
 import fr.rob.core.event.EventManager
 import fr.rob.core.event.EventManagerInterface
+import fr.rob.core.opcode.v2.OpcodeFunctionRegistryInterface.OpcodeFunctionItem
+import fr.rob.core.opcode.v2.OpcodeHandler
 import fr.rob.game.DB_REALM
 import fr.rob.game.DB_WORLD
 import fr.rob.game.app.player.action.CreatePlayerIntoWorldHandler
 import fr.rob.game.domain.character.CharacterService
+import fr.rob.game.domain.character.waitingroom.CharacterWaitingRoom
 import fr.rob.game.domain.entity.ObjectManager
 import fr.rob.game.domain.entity.PositionNormalizer
 import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
@@ -36,9 +39,14 @@ import fr.rob.game.domain.terrain.map.loader.WorldObjectsLoaderInterface
 import fr.rob.game.domain.terrain.map.loader.creature.CreatureLoader
 import fr.rob.game.domain.terrain.map.loader.creature.CreatureRepository
 import fr.rob.game.domain.terrain.map.loader.creature.CreatureRepositoryInterface
+import fr.rob.game.infra.command.LogIntoWorldOpcodeFunction
+import fr.rob.game.infra.command.RemoveFromWorldOpcodeFunction
 import fr.rob.game.infra.misc.player.FakeInstanceFinder
 import fr.rob.game.infra.mysql.character.MysqlCheckCharacterExist
 import fr.rob.game.infra.mysql.character.MysqlFetchCharacter
+import fr.rob.game.infra.opcode.CMSG_LOG_INTO_WORLD
+import fr.rob.game.infra.opcode.CMSG_REMOVE_FROM_WORLD
+import fr.rob.game.infra.opcode.OpcodeRegistry
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.withOptions
 import org.koin.core.qualifier.named
@@ -103,11 +111,21 @@ val opcodeModule = module {
             get()
         )
     }
-    single { params ->
+    single {
         ObjectManager(
             get(),
             PositionNormalizer()
         )
     }
-    single { params -> CreatePlayerIntoWorldHandler(get(), params.get()) }
+    single { CharacterWaitingRoom() }
+    single { CreatePlayerIntoWorldHandler(get(), get()) }
+
+    single(named("OPCODE_DEFINITIONS")) {
+        arrayOf(
+            OpcodeFunctionItem(CMSG_LOG_INTO_WORLD, LogIntoWorldOpcodeFunction(get(), get())),
+            OpcodeFunctionItem(CMSG_REMOVE_FROM_WORLD, RemoveFromWorldOpcodeFunction(get()))
+        )
+    }
+
+    single { OpcodeHandler(OpcodeRegistry(get(named("OPCODE_DEFINITIONS")))) }
 }
