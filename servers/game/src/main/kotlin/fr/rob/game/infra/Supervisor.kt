@@ -9,6 +9,7 @@ import fr.rob.core.network.v2.netty.shard.NioConfigShard
 import fr.rob.core.network.v2.netty.shard.ProtobufHandlerShard
 import fr.rob.core.network.v2.netty.shard.ProtobufPipelineShard
 import fr.rob.core.network.v2.session.SessionSocketUpdater
+import fr.rob.core.opcode.v2.OpcodeHandler
 import fr.rob.game.app.instance.FakeInstanceBuilder
 import fr.rob.game.domain.character.waitingroom.CharacterWaitingRoom
 import fr.rob.game.domain.instance.InstanceManager
@@ -19,7 +20,7 @@ import fr.rob.game.domain.world.WorldUpdater
 import fr.rob.game.infra.grpc.CharacterServiceImpl
 import fr.rob.game.infra.network.server.GameNodeServer
 import fr.rob.game.infra.network.session.GameSessionUpdater
-import fr.rob.game.infra.opcode.GameNodeOpcodeHandler
+import fr.rob.game.infra.opcode.GameNodeFunctionParameters
 import fr.rob.orchestrator.shared.entities.NewGameNodeProto
 import io.grpc.ServerBuilder
 import kotlin.concurrent.thread
@@ -28,7 +29,7 @@ class Supervisor(
     private val nodeBuilder: NodeBuilder,
     private val messageQueueDispatcher: MessageQueueDispatcherInterface,
     private val logger: LoggerInterface,
-    private val gameNodeOpcodeHandler: GameNodeOpcodeHandler,
+    private val gameNodeOpcodeHandler: OpcodeHandler<GameNodeFunctionParameters>,
     private val fakeInstanceBuilder: FakeInstanceBuilder,
     private val instanceManager: InstanceManager,
     private val characterWaitingRoom: CharacterWaitingRoom

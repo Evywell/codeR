@@ -1,20 +1,25 @@
 package fr.rob.game.infra.network.session
 
+import com.google.protobuf.Message
 import fr.raven.proto.message.game.GameProto.Packet
 import fr.rob.core.network.Filter
 import fr.rob.core.network.thread.LockedQueue
 import fr.rob.core.network.thread.LockedQueueConsumer
 import fr.rob.core.network.v2.session.Session
 import fr.rob.core.network.v2.session.SessionSocketInterface
+import fr.rob.core.opcode.v2.OpcodeHandler
+import fr.rob.core.opcode.v2.exception.OpcodeFunctionCallUnauthorizedException
 import fr.rob.game.domain.player.session.GameSession
 import fr.rob.game.infra.network.session.exception.GameSessionAlreadyOpenedException
 import fr.rob.game.infra.network.session.exception.GameSessionNotFoundException
-import fr.rob.game.infra.network.session.exception.NotAuthorizedCallException
 import fr.rob.game.infra.network.session.sender.GatewaySessionMessageSender
-import fr.rob.game.infra.opcode.GameNodeOpcodeHandler
-import fr.rob.game.infra.opcode.GameNodeOpcodeHandler.PacketHolder
+import fr.rob.game.infra.opcode.GameNodeFunctionParameters
+import fr.rob.game.infra.opcode.GameNodeOpcodeFunction
 
-class GatewayGameSession(private val opcodeHandler: GameNodeOpcodeHandler, socket: SessionSocketInterface) : Session(socket) {
+class GatewayGameSession(
+    private val opcodeHandler: OpcodeHandler<GameNodeFunctionParameters>,
+    socket: SessionSocketInterface
+) : Session(socket) {
 
     private val playerGameSessionContainers = HashMap<Int, GameSessionContainer>()
 
@@ -24,16 +29,17 @@ class GatewayGameSession(private val opcodeHandler: GameNodeOpcodeHandler, socke
             val consumer = LockedQueueConsumer(MAX_PACKET_PROCESSING_ON_UPDATE, queue)
 
             consumer.consume(filter) { item ->
-                opcodeHandler.processFromMessage(item.packet, this, item.message)
+                item.function.callForMessage(item.message, item.functionParameters)
             }
         }
     }
 
     fun putInQueue(packet: Packet) {
-        val function = opcodeHandler.getFunction(packet.opcode)
+        val function = opcodeHandler.getFunction(packet.opcode) as GameNodeOpcodeFunction
+        val functionParameters = GameNodeFunctionParameters(packet.opcode, packet, this)
 
-        if (!function.isCallAuthorized(this, packet)) {
-            throw NotAuthorizedCallException(packet.sender)
+        if (!function.isCallAuthorized(functionParameters)) {
+            throw OpcodeFunctionCallUnauthorizedException()
         }
 
         if (playerGameSessionContainers[packet.sender] == null) {
@@ -42,7 +48,8 @@ class GatewayGameSession(private val opcodeHandler: GameNodeOpcodeHandler, socke
 
         playerGameSessionContainers[packet.sender]?.queue?.addLast(
             PacketHolder(
-                packet,
+                function,
+                functionParameters,
                 function.createMessageFromPacket(packet)
             )
         )
@@ -73,4 +80,9 @@ class GatewayGameSession(private val opcodeHandler: GameNodeOpcodeHandler, socke
     }
 
     data class GameSessionContainer(val session: GameSession, val queue: LockedQueue<PacketHolder>)
+    data class PacketHolder(
+        val function: GameNodeOpcodeFunction,
+        val functionParameters: GameNodeFunctionParameters,
+        val message: Message
+    )
 }
