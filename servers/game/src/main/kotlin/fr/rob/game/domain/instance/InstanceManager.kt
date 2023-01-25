@@ -39,9 +39,9 @@ class InstanceManager(private val gridBuilder: GridBuilder) : UpdatableInterface
         throw RuntimeException("Cannot retrieve instance for map=$mapId zone=$zoneId")
     }
 
-    override fun update(deltaTime: Long) {
+    override fun update(deltaTime: Int) {
         for (instance in instances) {
-            // instance.update(deltaTime)
+            instance.update(deltaTime)
         }
     }
 

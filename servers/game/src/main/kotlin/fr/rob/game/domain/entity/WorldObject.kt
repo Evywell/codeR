@@ -1,12 +1,13 @@
 package fr.rob.game.domain.entity
 
+import fr.rob.game.domain.entity.behavior.BehaviorInterface
 import fr.rob.game.domain.entity.guid.ObjectGuid
 import fr.rob.game.domain.instance.MapInstance
 import fr.rob.game.domain.player.session.GameSession
 import fr.rob.game.domain.terrain.grid.Cell
 
 open class WorldObject(
-    val guid: ObjectGuid,
+    val guid: ObjectGuid
 ) {
     var isInWorld = false
     var cell: Cell? = null
@@ -14,4 +15,10 @@ open class WorldObject(
     lateinit var position: Position
 
     var controlledByGameSession: GameSession? = null
+
+    protected val behaviors = ArrayList<BehaviorInterface>()
+
+    open fun update(deltaTime: Int) {
+        behaviors.forEach { it.update(deltaTime) }
+    }
 }
