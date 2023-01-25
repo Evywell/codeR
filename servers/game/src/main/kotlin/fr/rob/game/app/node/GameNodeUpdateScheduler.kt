@@ -7,13 +7,13 @@ class GameNodeUpdateScheduler(private val instanceManager: InstanceManager) {
     fun loop() {
         var realCurrentTime: Long
         var realPreviousTime = System.currentTimeMillis()
-        var deltaTime: Long
+        var deltaTime: Int
         var executionTime: Long
 
         while (true) {
             realCurrentTime = System.currentTimeMillis()
 
-            deltaTime = realCurrentTime - realPreviousTime
+            deltaTime = (realCurrentTime - realPreviousTime).toInt()
 
             update(deltaTime)
 
@@ -26,7 +26,7 @@ class GameNodeUpdateScheduler(private val instanceManager: InstanceManager) {
         }
     }
 
-    private fun update(deltaTime: Long) {
+    private fun update(deltaTime: Int) {
         instanceManager.update(deltaTime)
     }
 
