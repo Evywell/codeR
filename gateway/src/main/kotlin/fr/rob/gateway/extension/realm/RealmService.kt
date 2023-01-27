@@ -25,14 +25,30 @@ class RealmService(
         .build()
 
     fun bindCharacterToNode(characterStruct: BindCharacterToNode, gameNodes: GameNodes) {
-        val gameNode = retrieveGameNodeFromLabel(characterStruct.nodeLabel, gameNodes).orElse(
-            gameNodeBuilder.build(characterStruct.nodeLabel, characterStruct.hostname, characterStruct.port)
+        val gameNode = retrieveGameNodeOrCreate(
+            characterStruct.nodeLabel,
+            characterStruct.hostname,
+            characterStruct.port,
+            gameNodes
         )
 
         val session = gateway.findSessionByAccountId(characterStruct.userId)
         session.currentGameNode = gameNode
 
         logger.debug("Game node attributed")
+    }
+
+    private fun retrieveGameNodeOrCreate(nodeLabel: String, hostname: String, port: Int, gameNodes: GameNodes): GameNode {
+        val gameNodeContainer = retrieveGameNodeFromLabel(nodeLabel, gameNodes)
+
+        if (gameNodeContainer.isPresent) {
+            return gameNodeContainer.get()
+        }
+
+        val gameNode = gameNodeBuilder.build(nodeLabel, hostname, port)
+        gameNodes.addNode(gameNode)
+
+        return gameNode
     }
 
     private fun retrieveGameNodeFromLabel(nodeLabel: String, gameNodes: GameNodes): Optional<GameNode> {

@@ -11,7 +11,6 @@ class NettyBufferedSessionSocket(channel: Channel) : AbstractNettySessionSocket(
     }
 
     fun update(): Boolean {
-
         while (packetBuffer.isNotEmpty()) {
             channel.writeAndFlush(packetBuffer.poll())
         }
