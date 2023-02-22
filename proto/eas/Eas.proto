@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package fr.raven.proto.message.eas;
+
+option java_outer_classname = "EasProto";
+
+message EasPacket {
+  enum Type {
+    DEV = 0;
+    JWT = 1;
+    OAUTH2 = 2;
+  }
+
+  Type authType = 1;
+  oneof authenticationPacket {
+    DevAuthenticationPacket devAuthPacket = 2;
+  }
+}
+
+message DevAuthenticationPacket {
+  uint32 userId = 1;
+}
+
+message EasAuthenticationResult {
+  bool isAuthenticatedSuccessfully = 1;
+}
+

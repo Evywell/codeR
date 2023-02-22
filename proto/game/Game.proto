@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package fr.raven.proto.message.game;
+
+option java_outer_classname = "GameProto";
+
+message Packet {
+  uint32 sender = 1;
+  uint32 opcode = 2;
+  bytes body = 4;
+  uint64 createdAt = 5; // Unsafe input, change this ?
+}
+
