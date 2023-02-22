@@ -1,13 +1,15 @@
 plugins {
     id 'coder.code-quality'
     id 'coder.global'
+    id 'coder.protobuf'
+    id 'coder.proto-files'
     id 'application'
+    id 'com.google.protobuf' version '0.8.18'
 }
 
 dependencies {
     api project(':gateway')
     implementation 'fr.raven.log:lib:0.1.1'
-    implementation 'fr.raven.proto:lib:latest'
 }
 
 mainClassName = 'sandbox.Main'

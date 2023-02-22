@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package fr.raven.proto.message.realm;
+
+option java_outer_classname = "RealmProto";
+
+message JoinTheWorld {
+  uint32 characterId = 1;
+}
+
+message BindCharacterToNode {
+  string nodeLabel = 1;
+  string hostname = 2;
+  int32 port = 3;
+  int32 userId = 4;
+}

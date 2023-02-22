@@ -1,0 +1,16 @@
+plugins {
+    id 'com.google.protobuf'
+}
+
+tasks.register('copyProtoFiles', Copy) {
+    from rootProject.file("proto")
+    into layout.projectDirectory.file("src/main/proto")
+}
+
+protobuf {
+    generateProtoTasks {
+        all().configureEach { task ->
+            task.dependsOn('copyProtoFiles')
+        }
+    }
+}
