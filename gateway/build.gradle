@@ -1,8 +1,15 @@
+buildscript {
+    repositories {
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.9.1'
+    }
+}
+
 plugins {
     id 'coder.code-quality'
     id 'coder.global'
-    id 'coder.protobuf'
-    id 'coder.proto-files'
     id 'application'
     id 'coder.grpc'
     id 'idea'
@@ -12,8 +19,23 @@ plugins {
 dependencies {
     api project(':core')
     implementation 'fr.raven.eas:eas:0.0.1'
+    implementation 'fr.raven.proto:lib:latest'
     implementation 'fr.raven.log:lib:0.1.1'
     implementation project(':world:public')
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.8.0'
+    }
+
+    plugins {
+        grpc { artifact = "io.grpc:protoc-gen-grpc-java:1.50.0" }
+    }
+
+    generateProtoTasks {
+        all()*.plugins { grpc {} }
+    }
 }
 
 sourceSets {

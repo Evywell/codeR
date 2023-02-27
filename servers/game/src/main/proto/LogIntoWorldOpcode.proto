@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package fr.raven.proto.message.game.setup;
+package fr.rob.game.command.message;
 
 option java_outer_classname = "LogIntoWorldProto";
 
