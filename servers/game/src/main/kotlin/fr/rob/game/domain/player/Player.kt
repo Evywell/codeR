@@ -8,7 +8,7 @@ class Player(
     val ownerGameSession: GameSession,
     guid: ObjectGuid,
     name: String,
-    level: Int
+    level: Int,
 ) : Unit(guid, name, level) {
 
     init {

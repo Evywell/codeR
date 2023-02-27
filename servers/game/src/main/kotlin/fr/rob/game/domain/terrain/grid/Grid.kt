@@ -9,16 +9,6 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
         WorldObjectContainer()
     }
 
-    fun updateGameObjects(deltaTime: Int) {
-        worldObjectContainerList[ObjectGuid.GUID_TYPE.PLAYER.value].forEach {
-            it.update(deltaTime)
-        }
-
-        worldObjectContainerList[ObjectGuid.GUID_TYPE.GAME_OBJECT.value].forEach {
-            it.update(deltaTime)
-        }
-    }
-
     fun getCellFromCellPosition(cellPosition: Cell.CellPosition): Cell {
         val index = cellPosition.x + (height * cellPosition.y)
 
