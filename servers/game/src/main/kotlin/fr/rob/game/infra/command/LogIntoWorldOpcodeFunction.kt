@@ -2,11 +2,11 @@ package fr.rob.game.infra.command
 
 import com.google.protobuf.Message
 import fr.raven.proto.message.game.GameProto
-import fr.raven.proto.message.game.setup.LogIntoWorldProto
 import fr.rob.game.app.player.action.CreatePlayerIntoWorldCommand
 import fr.rob.game.app.player.action.CreatePlayerIntoWorldHandler
 import fr.rob.game.app.player.action.MovementCommand
 import fr.rob.game.app.player.action.MovementHandler
+import fr.rob.game.command.message.LogIntoWorldProto
 import fr.rob.game.domain.character.waitingroom.CharacterWaitingRoom
 import fr.rob.game.domain.entity.Movement
 import fr.rob.game.infra.opcode.GameNodeFunctionParameters
