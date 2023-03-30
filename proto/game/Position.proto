@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package fr.raven.proto.message.game;
+
+option java_outer_classname = "PositionProto";
+
+message Position {
+  float posX = 1;
+  float posY = 2;
+  float posZ = 3;
+  float orientation = 4;
+}

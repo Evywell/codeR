@@ -2,9 +2,8 @@ package fr.rob.game.domain.instance
 
 import fr.rob.game.domain.terrain.grid.GridBuilder
 import fr.rob.game.domain.terrain.map.Map
-import fr.rob.game.domain.world.UpdatableInterface
 
-class InstanceManager(private val gridBuilder: GridBuilder) : UpdatableInterface {
+class InstanceManager(private val gridBuilder: GridBuilder) {
 
     private val instances = ArrayList<MapInstance>()
 
@@ -37,12 +36,6 @@ class InstanceManager(private val gridBuilder: GridBuilder) : UpdatableInterface
         }
 
         throw RuntimeException("Cannot retrieve instance for map=$mapId zone=$zoneId")
-    }
-
-    override fun update(deltaTime: Int) {
-        for (instance in instances) {
-            instance.update(deltaTime)
-        }
     }
 
     fun getAllInstances(): List<MapInstance> = instances

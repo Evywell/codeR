@@ -3,6 +3,7 @@ package fr.rob.game.domain.terrain.grid
 import fr.rob.game.domain.entity.WorldObject
 import fr.rob.game.domain.entity.WorldObjectContainer
 import fr.rob.game.domain.entity.guid.ObjectGuid
+import fr.rob.game.domain.player.Player
 
 class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<Cell>) {
     private val worldObjectContainerList = Array(ObjectGuid.GUID_TYPE.values().size) {
@@ -29,6 +30,8 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
         return cells[index]
     }
 
+    fun getObjectsByType(type: ObjectGuid.GUID_TYPE): WorldObjectContainer = worldObjectContainerList[type.value]
+
     fun getObjectsOfCell(cell: Cell): List<WorldObject> {
         val objects = ArrayList<WorldObject>()
 
@@ -41,6 +44,20 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
         }
 
         return objects
+    }
+
+    fun getPlayersOfCell(cell: Cell): List<Player> {
+        val players = ArrayList<Player>()
+
+        for (objectContainer in worldObjectContainerList) {
+            objectContainer.forEach {
+                if (it.guid.isPlayer() && it.cell == cell) {
+                    players.add(it as Player)
+                }
+            }
+        }
+
+        return players
     }
 
     fun retrieveNeighborCells(cell: Cell, neighborRadius: Int = GridBuilder.NEIGHBOR_RADIUS_CELLS): Array<Cell> {

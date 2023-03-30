@@ -15,7 +15,7 @@ class RemoveFromWorldOpcodeFunction(private val objectManager: ObjectManager) : 
         val gameSession = gatewaySession.findGameSession(packet.sender)
         val player = gameSession.loggedAsPlayer ?: return
 
-        // objectManager.removeFromWorld(player)
-        // gatewaySession.removeGameSessionFromAccountId(packet.sender)
+        objectManager.removeFromWorld(player)
+        gatewaySession.removeGameSessionFromAccountId(packet.sender)
     }
 }

@@ -1,6 +1,7 @@
 package fr.rob.game.app.player.action
 
 import fr.rob.game.app.player.message.NearbyObjectMessage
+import fr.rob.game.app.player.message.PlayerDescriptionMessage
 import fr.rob.game.domain.entity.ObjectManager
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.WorldObject
@@ -32,6 +33,9 @@ class CreatePlayerIntoWorldHandler(
         createMobForPlayer(player)
 
         player.addToWorld(objectManager)
+
+        // @todo Send player info
+        player.ownerGameSession.send(PlayerDescriptionMessage(player.guid, player.name))
 
         notifyPlayerFromNearbyGameObjects(player)
     }

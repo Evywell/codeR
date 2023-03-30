@@ -34,7 +34,10 @@ class LogIntoWorldOpcodeFunction(
             )
         )
 
-        val movementCommand = MovementCommand(gameSession.loggedAsPlayer!!, Movement(Movement.MovementDirection.FORWARD, 0f, 3f))
+        val movementCommand = MovementCommand(
+            gameSession.loggedAsPlayer!!,
+            Movement(Movement.MovementDirectionType.FORWARD, 0f, 3f)
+        )
         MovementHandler().execute(movementCommand)
     }
 

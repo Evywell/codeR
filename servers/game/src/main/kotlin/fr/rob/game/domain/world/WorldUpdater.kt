@@ -1,33 +1,38 @@
 package fr.rob.game.domain.world
 
-import fr.rob.core.misc.clock.IntervalTimer
+class WorldUpdater(private val world: World) {
 
-class WorldUpdater(
-    private val updatableObjects: Array<UpdatableInterface>
-) {
-    private var worldUps = 0
-    private val worldRateTimer = IntervalTimer(1000)
+    private var isRunning: Boolean = false
+    var deltaTime: Int = 0
+        private set
 
-    fun update(deltaTime: Int) {
-        checkWorldUpdateRate(deltaTime)
-        updatableObjects.forEach { it.update(deltaTime) }
+    fun initialize() {
+        isRunning = true
     }
 
-    private fun checkWorldUpdateRate(deltaTime: Int) {
-        worldRateTimer.update(deltaTime)
-        worldUps += 1
+    fun loop() {
+        var realCurrentTime: Long
+        var realPreviousTime = System.currentTimeMillis()
+        var executionTime: Long
 
-        if (worldRateTimer.passed()) {
-            if (worldUps <= WORLD_UPDATE_THRESHOLD_ERROR) {
-                println("[ERROR] World update rate too low: $worldUps")
+        while (isRunning) {
+            realCurrentTime = System.currentTimeMillis()
+
+            deltaTime = (realCurrentTime - realPreviousTime).toInt()
+
+            world.update(deltaTime)
+
+            realPreviousTime = realCurrentTime
+            executionTime = System.currentTimeMillis() - realCurrentTime
+
+            if (executionTime < WORLD_UPDATE_INTERVAL) {
+                Thread.sleep(WORLD_UPDATE_INTERVAL - executionTime)
             }
-
-            worldUps = 0
-            worldRateTimer.reset()
         }
     }
 
     companion object {
-        private const val WORLD_UPDATE_THRESHOLD_ERROR = World.WORLD_UPDATE_PER_SECOND - 2
+        const val WORLD_UPDATE_PER_SECOND = 50
+        const val WORLD_UPDATE_INTERVAL = 1000 / WORLD_UPDATE_PER_SECOND
     }
 }
