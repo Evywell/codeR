@@ -15,13 +15,14 @@ class Main {
         fun main(args: Array<String>) {
             println("Gateway: Hello !")
 
-            val logger = LoggerFactory(File({}.javaClass.classLoader.getResource("log4j.config.xml")!!.path))
+            val loggerFactory = LoggerFactory(File({}.javaClass.classLoader.getResource("log4j.config.xml")!!.path))
+            val logger = loggerFactory
                 .create("GATEWAY")
 
             val gateway = GatewayBuilder()
                 .withExtensions(
                     EasExtension(),
-                    RealmExtension(logger),
+                    RealmExtension(logger, loggerFactory),
                     GameExtension(logger)
                 )
 

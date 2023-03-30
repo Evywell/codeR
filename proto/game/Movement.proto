@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "game/Position.proto";
+
+package fr.raven.proto.message.game;
+
+option java_outer_classname = "MovementProto";
+
+message MovementHeartbeat {
+  uint64 guid = 1;
+  Position position = 2;
+  float speed = 3;
+}

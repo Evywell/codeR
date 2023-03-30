@@ -1,6 +1,7 @@
 package fr.rob.game.infra.network.session
 
 import com.google.protobuf.Message
+import fr.raven.log.LoggerInterface
 import fr.raven.proto.message.game.GameProto.Packet
 import fr.rob.core.network.Filter
 import fr.rob.core.network.thread.LockedQueue
@@ -18,6 +19,7 @@ import fr.rob.game.infra.opcode.GameNodeOpcodeFunction
 
 class GatewayGameSession(
     private val opcodeHandler: OpcodeHandler<GameNodeFunctionParameters>,
+    private val logger: LoggerInterface,
     socket: SessionSocketInterface
 ) : Session(socket) {
 
@@ -58,12 +60,12 @@ class GatewayGameSession(
     fun findGameSession(accountId: Int): GameSession = playerGameSessionContainers[accountId]?.session
         ?: throw GameSessionNotFoundException("Cannot find game session with accountId $accountId")
 
-    fun createGameSession(accountId: Int): GameSession {
+    private fun createGameSession(accountId: Int): GameSession {
         if (playerGameSessionContainers.containsKey(accountId)) {
             throw GameSessionAlreadyOpenedException("The game session is already opened for account $accountId")
         }
 
-        val messageSender = GatewaySessionMessageSender(this)
+        val messageSender = GatewaySessionMessageSender(this, logger)
         val gameSession = GameSession(accountId, messageSender)
 
         playerGameSessionContainers[accountId] = GameSessionContainer(gameSession, LockedQueue())
