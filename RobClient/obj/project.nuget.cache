@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "dgSpecHash": "vSOw5dqnJMqz9QcB7m/hzuAKTGlv4mSxGyDURpUXwlyFXv210/9JXWFM7O5NzZdB14OVrFDm+6K+yxYcAedoXQ==",
+  "success": true,
+  "projectFilePath": "/home/axel/Documents/csharp/codeRClientLibrary/RobClient/RobClient.csproj",
+  "expectedPackageFiles": [
+    "/home/axel/.nuget/packages/dotnetty.buffers/0.7.5/dotnetty.buffers.0.7.5.nupkg.sha512",
+    "/home/axel/.nuget/packages/dotnetty.codecs/0.7.5/dotnetty.codecs.0.7.5.nupkg.sha512",
+    "/home/axel/.nuget/packages/dotnetty.codecs.protobuf/0.7.5/dotnetty.codecs.protobuf.0.7.5.nupkg.sha512",
+    "/home/axel/.nuget/packages/dotnetty.common/0.7.5/dotnetty.common.0.7.5.nupkg.sha512",
+    "/home/axel/.nuget/packages/dotnetty.transport/0.7.5/dotnetty.transport.0.7.5.nupkg.sha512",
+    "/home/axel/.nuget/packages/google.protobuf/3.21.12/google.protobuf.3.21.12.nupkg.sha512",
+    "/home/axel/.nuget/packages/microsoft.extensions.dependencyinjection/5.0.0/microsoft.extensions.dependencyinjection.5.0.0.nupkg.sha512",
+    "/home/axel/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/5.0.0/microsoft.extensions.dependencyinjection.abstractions.5.0.0.nupkg.sha512",
+    "/home/axel/.nuget/packages/microsoft.extensions.logging/5.0.0/microsoft.extensions.logging.5.0.0.nupkg.sha512",
+    "/home/axel/.nuget/packages/microsoft.extensions.logging.abstractions/5.0.0/microsoft.extensions.logging.abstractions.5.0.0.nupkg.sha512",
+    "/home/axel/.nuget/packages/microsoft.extensions.options/5.0.0/microsoft.extensions.options.5.0.0.nupkg.sha512",
+    "/home/axel/.nuget/packages/microsoft.extensions.primitives/5.0.0/microsoft.extensions.primitives.5.0.0.nupkg.sha512",
+    "/home/axel/.nuget/packages/system.collections.immutable/1.5.0/system.collections.immutable.1.5.0.nupkg.sha512",
+    "/home/axel/.nuget/packages/system.runtime.compilerservices.unsafe/5.0.0/system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

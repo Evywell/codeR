@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "dgSpecHash": "xRiGqdwNIUCuEWMGaVTOkkwCvP1+D9uxSPg56TQ9oe3JVLZIAuh5ohGOtIUeKpJhMicSofRmO0orILvHfZ+ueQ==",
+  "success": true,
+  "projectFilePath": "/home/axel/Documents/csharp/codeRClientLibrary/Sandbox/Sandbox.csproj",
+  "expectedPackageFiles": [
+    "/home/axel/.nuget/packages/dotnetty.buffers/0.7.5/dotnetty.buffers.0.7.5.nupkg.sha512",
+    "/home/axel/.nuget/packages/dotnetty.codecs/0.7.5/dotnetty.codecs.0.7.5.nupkg.sha512",
+    "/home/axel/.nuget/packages/dotnetty.codecs.protobuf/0.7.5/dotnetty.codecs.protobuf.0.7.5.nupkg.sha512",
+    "/home/axel/.nuget/packages/dotnetty.common/0.7.5/dotnetty.common.0.7.5.nupkg.sha512",
+    "/home/axel/.nuget/packages/dotnetty.transport/0.7.5/dotnetty.transport.0.7.5.nupkg.sha512",
+    "/home/axel/.nuget/packages/google.protobuf/3.21.12/google.protobuf.3.21.12.nupkg.sha512",
+    "/home/axel/.nuget/packages/microsoft.extensions.dependencyinjection/5.0.0/microsoft.extensions.dependencyinjection.5.0.0.nupkg.sha512",
+    "/home/axel/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/5.0.0/microsoft.extensions.dependencyinjection.abstractions.5.0.0.nupkg.sha512",
+    "/home/axel/.nuget/packages/microsoft.extensions.logging/5.0.0/microsoft.extensions.logging.5.0.0.nupkg.sha512",
+    "/home/axel/.nuget/packages/microsoft.extensions.logging.abstractions/5.0.0/microsoft.extensions.logging.abstractions.5.0.0.nupkg.sha512",
+    "/home/axel/.nuget/packages/microsoft.extensions.options/5.0.0/microsoft.extensions.options.5.0.0.nupkg.sha512",
+    "/home/axel/.nuget/packages/microsoft.extensions.primitives/5.0.0/microsoft.extensions.primitives.5.0.0.nupkg.sha512",
+    "/home/axel/.nuget/packages/objectdumper/1.0.0.12/objectdumper.1.0.0.12.nupkg.sha512",
+    "/home/axel/.nuget/packages/system.collections.immutable/1.5.0/system.collections.immutable.1.5.0.nupkg.sha512",
+    "/home/axel/.nuget/packages/system.runtime.compilerservices.unsafe/5.0.0/system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Le package 'ObjectDumper 1.0.0.12' a été restauré en utilisant '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' au lieu du framework cible du projet 'net6.0'. Ce package n'est peut-être pas totalement compatible avec votre projet.",
+      "libraryId": "ObjectDumper",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    }
+  ]
+}

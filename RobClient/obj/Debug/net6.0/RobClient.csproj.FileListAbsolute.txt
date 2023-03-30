@@ -1,0 +1,12 @@
+/home/axel/Documents/csharp/codeRClientLibrary/RobClient/bin/Debug/net6.0/RobClient.deps.json
+/home/axel/Documents/csharp/codeRClientLibrary/RobClient/bin/Debug/net6.0/RobClient.dll
+/home/axel/Documents/csharp/codeRClientLibrary/RobClient/bin/Debug/net6.0/RobClient.pdb
+/home/axel/Documents/csharp/codeRClientLibrary/RobClient/obj/Debug/net6.0/RobClient.csproj.AssemblyReference.cache
+/home/axel/Documents/csharp/codeRClientLibrary/RobClient/obj/Debug/net6.0/RobClient.GeneratedMSBuildEditorConfig.editorconfig
+/home/axel/Documents/csharp/codeRClientLibrary/RobClient/obj/Debug/net6.0/RobClient.AssemblyInfoInputs.cache
+/home/axel/Documents/csharp/codeRClientLibrary/RobClient/obj/Debug/net6.0/RobClient.AssemblyInfo.cs
+/home/axel/Documents/csharp/codeRClientLibrary/RobClient/obj/Debug/net6.0/RobClient.csproj.CoreCompileInputs.cache
+/home/axel/Documents/csharp/codeRClientLibrary/RobClient/obj/Debug/net6.0/RobClient.dll
+/home/axel/Documents/csharp/codeRClientLibrary/RobClient/obj/Debug/net6.0/refint/RobClient.dll
+/home/axel/Documents/csharp/codeRClientLibrary/RobClient/obj/Debug/net6.0/RobClient.pdb
+/home/axel/Documents/csharp/codeRClientLibrary/RobClient/obj/Debug/net6.0/ref/RobClient.dll

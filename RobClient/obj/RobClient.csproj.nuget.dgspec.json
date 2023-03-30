@@ -1,0 +1,83 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/axel/Documents/csharp/codeRClientLibrary/RobClient/RobClient.csproj": {}
+  },
+  "projects": {
+    "/home/axel/Documents/csharp/codeRClientLibrary/RobClient/RobClient.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/axel/Documents/csharp/codeRClientLibrary/RobClient/RobClient.csproj",
+        "projectName": "RobClient",
+        "projectPath": "/home/axel/Documents/csharp/codeRClientLibrary/RobClient/RobClient.csproj",
+        "packagesPath": "/home/axel/.nuget/packages/",
+        "outputPath": "/home/axel/Documents/csharp/codeRClientLibrary/RobClient/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/axel/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "DotNetty.Codecs": {
+              "target": "Package",
+              "version": "[0.7.5, )"
+            },
+            "DotNetty.Codecs.Protobuf": {
+              "target": "Package",
+              "version": "[0.7.5, )"
+            },
+            "DotNetty.Common": {
+              "target": "Package",
+              "version": "[0.7.5, )"
+            },
+            "DotNetty.Transport": {
+              "target": "Package",
+              "version": "[0.7.5, )"
+            },
+            "Google.Protobuf": {
+              "target": "Package",
+              "version": "[3.21.12, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/6.0.406/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
