@@ -40,11 +40,13 @@ import fr.rob.game.domain.terrain.map.loader.creature.CreatureLoader
 import fr.rob.game.domain.terrain.map.loader.creature.CreatureRepository
 import fr.rob.game.domain.terrain.map.loader.creature.CreatureRepositoryInterface
 import fr.rob.game.infra.command.LogIntoWorldOpcodeFunction
+import fr.rob.game.infra.command.PlayerMovementOpcodeFunction
 import fr.rob.game.infra.command.RemoveFromWorldOpcodeFunction
 import fr.rob.game.infra.misc.player.FakeInstanceFinder
 import fr.rob.game.infra.mysql.character.MysqlCheckCharacterExist
 import fr.rob.game.infra.mysql.character.MysqlFetchCharacter
 import fr.rob.game.infra.opcode.CMSG_LOG_INTO_WORLD
+import fr.rob.game.infra.opcode.CMSG_PLAYER_MOVEMENT
 import fr.rob.game.infra.opcode.CMSG_REMOVE_FROM_WORLD
 import fr.rob.game.infra.opcode.OpcodeRegistry
 import org.koin.core.module.dsl.singleOf
@@ -123,7 +125,8 @@ val opcodeModule = module {
     single(named("OPCODE_DEFINITIONS")) {
         arrayOf(
             OpcodeFunctionItem(CMSG_LOG_INTO_WORLD, LogIntoWorldOpcodeFunction(get(), get())),
-            OpcodeFunctionItem(CMSG_REMOVE_FROM_WORLD, RemoveFromWorldOpcodeFunction(get()))
+            OpcodeFunctionItem(CMSG_REMOVE_FROM_WORLD, RemoveFromWorldOpcodeFunction(get())),
+            OpcodeFunctionItem(CMSG_PLAYER_MOVEMENT, PlayerMovementOpcodeFunction())
         )
     }
 

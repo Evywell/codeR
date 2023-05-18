@@ -3,7 +3,7 @@ package fr.rob.game.test.unit.domain.entity.behavior
 import fr.rob.game.domain.entity.Movement
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.Unit
-import fr.rob.game.domain.entity.behavior.MovingBehavior
+import fr.rob.game.domain.entity.behavior.MovableTrait
 import fr.rob.game.domain.entity.guid.ObjectGuid
 import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -14,10 +14,10 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class MovingBehaviorTest {
+class MovableTraitTest {
     @ParameterizedTest
     @MethodSource("orientationsDataProvider")
-    fun `As moving behavior, I should calculate positions correctly`(
+    fun `As movable trait, I should calculate positions correctly`(
         startPosition: Position,
         orientation: Float,
         speed: Float,
@@ -31,13 +31,13 @@ class MovingBehaviorTest {
             "The unit name",
             1
         )
-        val movingBehavior = MovingBehavior(unit)
-        val movement = Movement(Movement.MovementDirectionType.FORWARD, orientation, speed)
+        val movableTrait = MovableTrait(unit, speed)
+        val movement = Movement(Movement.MovementDirectionType.FORWARD, orientation)
         unit.position = startPosition
 
         // Act
-        unit.setMoving(movingBehavior, movement)
-        unit.update(timeElapsedMs)
+        movableTrait.move(movement)
+        movableTrait.update(timeElapsedMs)
 
         // Assert
         assertEquals(expectedEndPosition.x, unit.position.x)

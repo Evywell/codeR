@@ -1,16 +1,30 @@
 package fr.rob.game.domain.entity.behavior
 
-import fr.rob.game.domain.entity.Unit
+import fr.rob.game.domain.entity.Movement
+import fr.rob.game.domain.entity.UpdatableTraitInterface
+import fr.rob.game.domain.entity.WorldObject
 import java.math.RoundingMode
 import kotlin.math.cos
 import kotlin.math.sin
 
-class MovingBehavior(private val unit: Unit) : BehaviorInterface {
+class MovableTrait(
+    private val worldObject: WorldObject,
+    private var speed: Float = DEFAULT_SPEED
+) : UpdatableTraitInterface {
+    private var movement: Movement? = null
+
+    fun move(movementInfo: Movement) {
+        movement = movementInfo
+    }
+
     override fun update(deltaTime: Int) {
+        if (!isMoving()) {
+            return
+        }
+
         // It is based on radians wheel
-        val movement = unit.currentMovement!!
-        val radianAngle = movement.orientationDeg * 0.017453f // Convert degrees to radians
-        val traveledDistance = movement.speed * (deltaTime / 1000f)
+        val radianAngle = movement!!.orientationDeg * 0.017453f // Convert degrees to radians
+        val traveledDistance = speed * (deltaTime / 1000f)
         val traveledDistanceX: Float = cos(radianAngle) * traveledDistance
         val traveledDistanceY: Float = sin(radianAngle) * traveledDistance
 
@@ -31,13 +45,17 @@ class MovingBehavior(private val unit: Unit) : BehaviorInterface {
         println("SIN(x): " + sin(radianAngle))
         println("COS(x): " + cos(radianAngle))
          */
-        unit.moveTo(
-            unit.position.x + distanceXBigDecimal.toFloat(),
-            unit.position.y + distanceYBigDecimal.toFloat(),
-            unit.position.z,
-            movement.orientationDeg
+        worldObject.setPosition(
+            worldObject.position.x + distanceXBigDecimal.toFloat(),
+            worldObject.position.y + distanceYBigDecimal.toFloat(),
+            worldObject.position.z,
+            movement!!.orientationDeg
         )
     }
 
-    override fun isActive(): Boolean = unit.isMoving()
+    private fun isMoving(): Boolean = movement != null
+
+    companion object {
+        const val DEFAULT_SPEED = 3.0f
+    }
 }
