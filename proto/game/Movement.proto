@@ -6,8 +6,23 @@ package fr.raven.proto.message.game;
 
 option java_outer_classname = "MovementProto";
 
+message ProceedMovement {
+    MovementPhase phase = 1;
+    float orientation = 2;
+    MovementDirectionType direction = 3;
+}
+
 message MovementHeartbeat {
   uint64 guid = 1;
   Position position = 2;
   float speed = 3;
+}
+
+enum MovementPhase {
+  PHASE_BEGIN = 0;
+  PHASE_END = 1;
+}
+
+enum MovementDirectionType {
+  TYPE_FORWARD = 0;
 }
