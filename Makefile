@@ -73,6 +73,8 @@ JAVA_CLIENT_DST_DIR = $(JAVA_CLIENT_DIR)/src/main/java
 PHP_DIR = ./servers/webclient
 PHP_DST_DIR = $(PHP_DIR)/protobuf
 
+PROTO_SOURCES=$(shell find proto/ -iname "*.proto")
+
 ##> Debug
 DEBUGGER_SOCKET_PORT = 5005
 DEBUGGER_BUILD_GAME_JAR_PATH = build/libs/game-1.0.jar
@@ -113,7 +115,7 @@ build-core-proto:
 
 .PHONY: build-client-proto
 build-client-proto:
-	@echo "Generating java protos" && $(MAKE) build-java-proto ARGS="client"
+	$(PROTOC) -I=./proto --csharp_out=./client/RobClient/src/messages $(PROTO_SOURCES)
 
 .PHONY: build-game-proto
 build-game-proto: ## Builds game protos for java and php
