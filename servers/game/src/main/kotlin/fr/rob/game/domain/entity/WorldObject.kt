@@ -47,7 +47,6 @@ open class WorldObject(
         position.orientation = orientation
 
         pushEvent(WorldObjectMovedEvent(this))
-        // notifyNearbyPlayers()
     }
 
     fun addTrait(trait: Any) {
