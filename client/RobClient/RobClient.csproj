@@ -14,7 +14,6 @@
     <PackageReference Include="DotNetty.Common" Version="0.7.5" />
     <PackageReference Include="DotNetty.Transport" Version="0.7.5" />
     <PackageReference Include="Google.Protobuf" Version="3.19.4" />
-    <PackageReference Include="Stateless" Version="5.13.0" />
     <PackageReference Include="System.Reactive" Version="6.0.0" />
   </ItemGroup>
 
