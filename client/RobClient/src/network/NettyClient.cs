@@ -17,10 +17,6 @@ namespace RobClient.Network {
             this.bootstrap = new Bootstrap();
             this.client = _client;
 
-            this.Init();
-        }
-
-        private void Init() {
             bootstrap
                 .Group(group)
                 .Channel<TcpSocketChannel>()

@@ -16,7 +16,7 @@ namespace RobClient.Game.Entity {
             X = x;
             Y = y;
             Z = z;
-            O = O;
+            O = o;
         }
 
         public static Vector4f Zero() {

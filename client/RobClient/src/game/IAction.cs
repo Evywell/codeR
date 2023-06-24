@@ -1,4 +1,4 @@
-namespace RobClient.Game.Interaction.Action {
+namespace RobClient.Game {
     public interface IAction {
         void Invoke(int deltaTime);
         bool ShouldBeRepeated();

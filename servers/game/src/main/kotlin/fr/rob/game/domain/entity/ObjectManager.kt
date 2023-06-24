@@ -5,13 +5,15 @@ import fr.rob.game.domain.entity.guid.ObjectGuid
 import fr.rob.game.domain.entity.guid.ObjectGuid.LowGuid
 import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
 import fr.rob.game.domain.instance.MapInstance
+import fr.rob.game.domain.terrain.grid.Grid
 import fr.rob.game.domain.terrain.map.Map
+import java.util.Optional
 
 class ObjectManager(
     private val objectGuidGenerator: ObjectGuidGenerator,
-    private val positionNormalizer: PositionNormalizer,
+    private val positionNormalizer: PositionNormalizer
 ) {
-    fun spawnObject(lowGuid: LowGuid, position: Position, instance: MapInstance): WorldObject {
+    fun spawnObject(lowGuid: LowGuid, position: Position, instance: MapInstance): Optional<WorldObject> {
         // Check out of bounds
         if (!isInsideMap(instance.map, position)) {
             throw OutOfBoundsException(
@@ -23,8 +25,15 @@ class ObjectManager(
             ObjectGuidGenerator.GuidInfo(lowGuid, ObjectGuid.GUID_TYPE.GAME_OBJECT)
         )
 
-        return createWorldObject(guid, instance, position)
+        if (isObjectAlreadyInGrid(guid, instance.grid)) {
+            Optional.empty<WorldObject>()
+        }
+
+        return Optional.of(createWorldObject(guid, instance, position))
     }
+
+    private fun isObjectAlreadyInGrid(guid: ObjectGuid, grid: Grid): Boolean =
+        grid.findObjectByGuid(guid).isPresent
 
     private fun createWorldObject(guid: ObjectGuid, instance: MapInstance, position: Position): WorldObject {
         val worldObject = WorldObject(guid)

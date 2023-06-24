@@ -1,34 +1,30 @@
 using Fr.Raven.Proto.Message.Game;
 using GatewayPacket = Fr.Raven.Proto.Message.Gateway.Packet;
-using RobClient.Game.Entity;
 using RobClient.Game.Interaction.Action.Movement;
-using RobClient.Game.World;
-using Google.Protobuf;
+using RobClient.Network;
 
 namespace RobClient.Game.Interaction {
     public class PlayerInteraction {
-        private Client _client;
-        private LocalWorld _world;
+        private GameEnvironment _gameEnvironment;
+        private IMessageSender _sender;
 
-        internal PlayerInteraction(Client client, LocalWorld world) {
-            _client = client;
-            _world = world;
+        public PlayerInteraction(
+            GameEnvironment gameEnvironment,
+            IMessageSender sender
+        ) {
+            _gameEnvironment = gameEnvironment;
+            _sender = sender;
         }
 
         public void Move(float orientation) {
-            _world.AddAction(new Movement());
+            _gameEnvironment.AddAction(new Movement());
 
-            var payload = new ProceedMovement();
-            payload.Phase = MovementPhase.PhaseBegin;
-            payload.Direction = MovementDirectionType.TypeForward;
-            payload.Orientation = orientation;
-
-            var packet = new GatewayPacket();
-            packet.Opcode = 0x06;
-            packet.Body = payload.ToByteString();
-            packet.Context = GatewayPacket.Types.Context.Game;
+            var movement = new ProceedMovement();
+            movement.Phase = MovementPhase.PhaseBegin;
+            movement.Direction = MovementDirectionType.TypeForward;
+            movement.Orientation = orientation;
             
-            _ =_client.Send(packet);
+            _sender.SendMessage(0x06, movement, GatewayPacket.Types.Context.Game);
         }
     }
 }

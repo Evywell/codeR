@@ -4,6 +4,7 @@ import fr.rob.game.domain.entity.WorldObject
 import fr.rob.game.domain.entity.WorldObjectContainer
 import fr.rob.game.domain.entity.guid.ObjectGuid
 import fr.rob.game.domain.player.Player
+import java.util.Optional
 
 class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<Cell>) {
     private val worldObjectContainerList = Array(ObjectGuid.GUID_TYPE.values().size) {
@@ -31,6 +32,16 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
     }
 
     fun getObjectsByType(type: ObjectGuid.GUID_TYPE): WorldObjectContainer = worldObjectContainerList[type.value]
+
+    fun findObjectByGuid(guid: ObjectGuid): Optional<WorldObject> {
+        for (worldObject in worldObjectContainerList[guid.getType().value]) {
+            if (worldObject.guid == guid) {
+                return Optional.of(worldObject)
+            }
+        }
+
+        return Optional.empty()
+    }
 
     fun getObjectsOfCell(cell: Cell): List<WorldObject> {
         val objects = ArrayList<WorldObject>()

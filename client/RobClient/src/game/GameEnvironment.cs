@@ -2,29 +2,67 @@ using System.Collections.Concurrent;
 using RobClient.Game.Entity.Guid;
 using RobClient.Game.Entity;
 using System.Collections.Generic;
+using System.Reactive.Subjects;
 
 namespace RobClient.Game {
     public class GameEnvironment {
         public ObjectGuid ControlledObjectId
         { get; set; }
 
-        private ConcurrentDictionary<ulong, WorldObject> _objects = new ConcurrentDictionary<ulong, WorldObject>();
+        public Subject<WorldObject> WorldObjectUpdatedSub
+        { get; private set; }
 
-        public void AttachObject(WorldObject worldObject) {
-            _objects.TryAdd(worldObject.Guid.GetRawValue(), worldObject);
+        private ConcurrentDictionary<ulong, WorldObject> _objects = new ConcurrentDictionary<ulong, WorldObject>();
+        private ConcurrentQueue<IAction> actions = new ConcurrentQueue<IAction>();
+
+        public GameEnvironment()
+        {
+            WorldObjectUpdatedSub = new Subject<WorldObject>();
         }
 
-        public void UpdateObjectPosition(ObjectGuid guid, Vector4f position) {
-            WorldObject worldObject;
+        public void Update(int deltaTime)
+        {
+            int actionsToProceed = GetMaxActionsToProceed();
+            
+            for (int i = 0; i < actionsToProceed; i++) {
+                actions.TryDequeue(out IAction action);
+                action.Invoke(deltaTime);
 
-            _objects.TryGetValue(guid.GetRawValue(), out worldObject);
-
-            if (worldObject != null) {
-                worldObject.Position = position;
+                if (action.ShouldBeRepeated()) {
+                    AddAction(action);
+                }
             }
         }
 
-        public WorldObject GetControlledObject() {
+        public void AddAction(IAction action)
+        {
+            actions.Enqueue(action);
+        }
+
+        public void AddPlayerToWorld(Player player)
+        {
+            AttachObject(player);
+            ControlledObjectId = player.Guid;
+        }
+
+        public void AttachObject(WorldObject worldObject)
+        {
+            _objects.TryAdd(worldObject.Guid.GetRawValue(), worldObject);
+            WorldObjectUpdatedSub.OnNext(worldObject);
+        }
+
+        public void UpdateObjectPosition(ObjectGuid guid, Vector4f position)
+        {
+            _objects.TryGetValue(guid.GetRawValue(), out WorldObject worldObject);
+
+            if (worldObject != null) {
+                worldObject.Position = position;
+                WorldObjectUpdatedSub.OnNext(worldObject);
+            }
+        }
+
+        public WorldObject GetControlledObject()
+        {
             if (ControlledObjectId == null) {
                 return null;
             }
@@ -36,8 +74,13 @@ namespace RobClient.Game {
             return null;
         }
 
-        public IReadOnlyDictionary<ulong, WorldObject> GetWorldObjects() {
+        public IReadOnlyDictionary<ulong, WorldObject> GetWorldObjects()
+        {
             return _objects;
+        }
+
+        private int GetMaxActionsToProceed() {
+            return System.Math.Min(actions.Count, 20);
         }
     }
 }
