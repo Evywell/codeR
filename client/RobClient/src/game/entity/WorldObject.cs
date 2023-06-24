@@ -16,7 +16,8 @@ namespace RobClient.Game.Entity {
         public WorldObject(ObjectGuid guid) : this(guid, Vector4f.Zero()) {}
 
         public override string ToString() {
-            return $"Position: {{ X: {Position.X}, Y: {Position.Y}, Z: {Position.Z} }}";
+            var className = this.GetType().Name;
+            return $"{className} {{ Guid: {Guid.GetRawValue()}, Position: {{ X: {Position.X}, Y: {Position.Y}, Z: {Position.Z} }} }}";
         }
     }
 }

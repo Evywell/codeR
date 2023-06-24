@@ -1,37 +1,22 @@
 ﻿using RobClient;
-using RobClient.Game;
+using RobClient.Network;
 
 namespace Sandbox;
 
 class Program {
     static async Task RunClientAsync() {
-        Entrypoint client = new Entrypoint(new NullObjectViewFactory(), new ConsoleLogger());
+        var communication = new GatewayCommunication("127.0.0.1", 11111);
+        var gameClientFactory = new GameClientFactory();
+        var gameClient = gameClientFactory.Create(communication, communication);
 
-        WatchGameEnvironment(client.Game.GameEnvironment);
+        gameClient.Game.WorldObjectUpdatedSub.Subscribe(Console.WriteLine);
 
-        await client.ConnectToGateway();
-        await client.Eas.Authenticate();
-
-        await StartScenario(client);
+        await gameClient.AuthenticateWithUserId(1);
+        await gameClient.Realm.JoinWorldWithCharacter(1);
+        gameClient.Interaction.Move(0);
 
         Console.ReadLine();
     }
 
     static void Main() => RunClientAsync().Wait();
-
-    private static async Task StartScenario(Entrypoint client) {
-        await client.Realm.ReserveCharacterWithId(1);
-        await client.Game.JoinWorld();
-
-        var playerInteraction = client.Game.PlayerInteraction;
-        playerInteraction.Move(10);
-    }
-
-    private static void WatchGameEnvironment(GameEnvironment gameEnvironment) {
-        GameClientWatcher watcher = new GameClientWatcher(gameEnvironment);
-
-        Thread InstanceCaller = new Thread(new ThreadStart(watcher.PrintObjects));
-
-        InstanceCaller.Start();
-    }
 }
