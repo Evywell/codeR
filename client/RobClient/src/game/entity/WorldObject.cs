@@ -8,9 +8,13 @@ namespace RobClient.Game.Entity {
         public Vector4f Position
         { get; set; }
 
+        public float Speed
+        { get; set; }
+
         public WorldObject(ObjectGuid guid, Vector4f position) {
             Guid = guid;
             Position = position;
+            Speed = 3.0f;
         }
 
         public WorldObject(ObjectGuid guid) : this(guid, Vector4f.Zero()) {}
