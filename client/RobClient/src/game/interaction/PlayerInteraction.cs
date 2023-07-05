@@ -17,7 +17,7 @@ namespace RobClient.Game.Interaction {
         }
 
         public void Move(float orientation) {
-            _gameEnvironment.AddAction(new Movement());
+            _gameEnvironment.AddAction(new Movement(_gameEnvironment.GetControlledObject(), orientation));
 
             var movement = new ProceedMovement();
             movement.Phase = MovementPhase.PhaseBegin;
