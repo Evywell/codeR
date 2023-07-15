@@ -1,3 +1,6 @@
 [submodule "servers/auth"]
 	path = servers/auth
 	url = git@github.com:Evywell/codeR-auth.git
+[submodule "client/RobAlpha"]
+	path = client/RobAlpha
+	url = git@github.com:Evywell/RobAlpha.git
