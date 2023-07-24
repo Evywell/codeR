@@ -3,6 +3,7 @@ using RobClient.Game.Entity.Guid;
 using RobClient.Game.Entity;
 using System.Collections.Generic;
 using System.Reactive.Subjects;
+using RobClient.Framework;
 
 namespace RobClient.Game {
     public class GameEnvironment {
@@ -25,13 +26,24 @@ namespace RobClient.Game {
             int actionsToProceed = GetMaxActionsToProceed();
             
             for (int i = 0; i < actionsToProceed; i++) {
-                actions.TryDequeue(out IAction action);
+                if (!actions.TryDequeue(out IAction action)) {
+                    break;
+                }
+
                 action.Invoke(deltaTime);
 
                 if (action.ShouldBeRepeated()) {
                     AddAction(action);
                 }
             }
+        }
+
+        public StateProxy<WorldObject> UseStateProxyFor(WorldObject worldObject)
+        {
+            return new StateProxyChangeNotify<WorldObject>(
+                worldObject,
+                () => WorldObjectUpdatedSub.OnNext(worldObject)
+            );
         }
 
         public void AddAction(IAction action)

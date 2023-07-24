@@ -112,6 +112,33 @@ public class MovementTest
         new object[] { new Vector4f(7f, -140f, 0f, 270f), 28f, new Vector4f(6.998f, -168f, 0f, 270f), 1000 },
     };
 
+    [Test]
+    public void MovementTriggersUpdate()
+    {
+        // Arrange
+        var game = new GameEnvironment();
+        var sender = new VoidMessageSender();
+        var playerInteraction = new PlayerInteraction(game, sender);
+        var playerGenerator = new PlayerGenerator();
+        var player = playerGenerator.GenerateWith("Evywell");
+        game.AddPlayerToWorld(player);
+
+        Player? lastUpdatedWorldObject = null;
+        game.WorldObjectUpdatedSub.Subscribe((worldObject) => {
+            lastUpdatedWorldObject = (Player)worldObject;
+        });
+
+        // Act
+        playerInteraction.Move(0);
+
+        game.Update(1000);
+
+        // Assert
+        Assert.IsNotNull(lastUpdatedWorldObject);
+        Assert.That(lastUpdatedWorldObject.Name, Is.EqualTo("Evywell"));
+        Assert.That(lastUpdatedWorldObject.Position.X, Is.EqualTo(3.0f));
+    }
+
     private static Vector4f OriginPosition(float orientation = 0f)
     {
         var position = Vector4f.Zero();
