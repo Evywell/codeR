@@ -46,6 +46,17 @@ namespace RobClient.Network {
             await _client.Send(packet);
         }
 
+        public async Task Disconnect()
+        {
+            if (!isConnectedToGateway) {
+                return;
+            }
+
+            await _gateway.Close();
+
+           isConnectedToGateway = false; 
+        }
+
         private async Task EnsureConnectionIsEstablished()
         {
             if(isConnectedToGateway) {
