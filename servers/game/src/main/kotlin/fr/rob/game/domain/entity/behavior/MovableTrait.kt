@@ -25,7 +25,7 @@ class MovableTrait(
         }
 
         // It is based on radians wheel
-        val radianAngle = getRadianAngleFromMovement(movement!!) // Convert degrees to radians
+        val radianAngle = getRadianAngleFromMovement(movement!!)
         val traveledDistance = speed * (deltaTime / 1000f)
         val traveledDistanceX: Float = cos(radianAngle) * traveledDistance
         val traveledDistanceY: Float = sin(radianAngle) * traveledDistance
