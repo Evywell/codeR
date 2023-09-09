@@ -4,6 +4,8 @@ import fr.rob.game.domain.entity.Movement
 import fr.rob.game.domain.entity.UpdatableTraitInterface
 import fr.rob.game.domain.entity.WorldObject
 import java.math.RoundingMode
+import kotlin.math.PI
+import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -23,14 +25,14 @@ class MovableTrait(
         }
 
         // It is based on radians wheel
-        val radianAngle = movement!!.orientationDeg * 0.017453f // Convert degrees to radians
+        val radianAngle = getRadianAngleFromMovement(movement!!) // Convert degrees to radians
         val traveledDistance = speed * (deltaTime / 1000f)
         val traveledDistanceX: Float = cos(radianAngle) * traveledDistance
         val traveledDistanceY: Float = sin(radianAngle) * traveledDistance
 
         // Convert to BigDecimal to avoid decimal wrong roundings
-        val distanceXBigDecimal = traveledDistanceX.toBigDecimal().setScale(3, RoundingMode.FLOOR)
-        val distanceYBigDecimal = traveledDistanceY.toBigDecimal().setScale(3, RoundingMode.FLOOR)
+        val distanceXBigDecimal = traveledDistanceX.toBigDecimal().setScale(3, RoundingMode.DOWN)
+        val distanceYBigDecimal = traveledDistanceY.toBigDecimal().setScale(3, RoundingMode.DOWN)
 
         /*
         println("======")
@@ -49,8 +51,28 @@ class MovableTrait(
             worldObject.position.x + distanceXBigDecimal.toFloat(),
             worldObject.position.y + distanceYBigDecimal.toFloat(),
             worldObject.position.z,
-            movement!!.orientationDeg
+            movement!!.orientationRadians
         )
+    }
+
+    private fun getRadianAngleFromMovement(movement: Movement): Float {
+        val orientationRadians = movement.orientationRadians
+
+        return when (movement.directionType) {
+            Movement.MovementDirectionType.FORWARD -> orientationRadians
+            Movement.MovementDirectionType.BACKWARD -> ((orientationRadians + PI) % (2 * PI)).toFloat()
+            Movement.MovementDirectionType.LEFT -> {
+                val shiftedOrientation = orientationRadians + (PI / 2)
+
+                atan2(sin(shiftedOrientation), cos(shiftedOrientation)).toFloat()
+            }
+            Movement.MovementDirectionType.RIGHT -> {
+                val shiftedOrientation = orientationRadians - (PI / 2)
+
+                atan2(sin(shiftedOrientation), cos(shiftedOrientation)).toFloat()
+            }
+            else -> throw NotImplementedError()
+        }
     }
 
     private fun isMoving(): Boolean = movement != null
