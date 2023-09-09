@@ -2,7 +2,7 @@ package fr.rob.game.domain.entity
 
 class Movement(
     val directionType: MovementDirectionType,
-    val orientationDeg: Float
+    var orientationRadians: Float
 ) {
 
     data class Direction(val verticalAxis: Float, val horizontalAxis: Float, val depthAxis: Float)
