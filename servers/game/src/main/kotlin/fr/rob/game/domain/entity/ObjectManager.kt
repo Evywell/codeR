@@ -11,18 +11,18 @@ import java.util.Optional
 
 class ObjectManager(
     private val objectGuidGenerator: ObjectGuidGenerator,
-    private val positionNormalizer: PositionNormalizer
+    private val positionNormalizer: PositionNormalizer,
 ) {
     fun spawnObject(lowGuid: LowGuid, position: Position, instance: MapInstance): Optional<WorldObject> {
         // Check out of bounds
         if (!isInsideMap(instance.map, position)) {
             throw OutOfBoundsException(
-                "Cannot create object for positions $position"
+                "Cannot create object for positions $position",
             )
         }
 
         val guid = objectGuidGenerator.fromGuidInfo(
-            ObjectGuidGenerator.GuidInfo(lowGuid, ObjectGuid.GUID_TYPE.GAME_OBJECT)
+            ObjectGuidGenerator.GuidInfo(lowGuid, ObjectGuid.GUID_TYPE.GAME_OBJECT),
         )
 
         if (isObjectAlreadyInGrid(guid, instance.grid)) {
@@ -32,16 +32,20 @@ class ObjectManager(
         return Optional.of(createWorldObject(guid, instance, position))
     }
 
+    fun addObjectToWorld(worldObject: WorldObject, instance: MapInstance, position: Position) {
+        worldObject.mapInstance = instance
+        worldObject.position = position
+        worldObject.isInWorld = true
+        addToGrid(worldObject)
+    }
+
     private fun isObjectAlreadyInGrid(guid: ObjectGuid, grid: Grid): Boolean =
         grid.findObjectByGuid(guid).isPresent
 
     private fun createWorldObject(guid: ObjectGuid, instance: MapInstance, position: Position): WorldObject {
         val worldObject = WorldObject(guid)
 
-        worldObject.mapInstance = instance
-        worldObject.position = position
-        worldObject.isInWorld = true
-        addToGrid(worldObject)
+        addObjectToWorld(worldObject, instance, position)
 
         return worldObject
     }
@@ -56,7 +60,7 @@ class ObjectManager(
                 obj.mapInstance.map.zoneInfo.offsetX,
                 obj.mapInstance.map.zoneInfo.offsetY,
                 obj.mapInstance.grid.cellSize,
-            )
+            ),
         )
 
         val cell = grid.getCellFromCellPosition(cellPosition)
