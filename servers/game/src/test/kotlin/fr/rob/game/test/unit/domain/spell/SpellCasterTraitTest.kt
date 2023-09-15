@@ -9,7 +9,7 @@ import fr.rob.game.domain.entity.guid.ObjectGuid
 import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
 import fr.rob.game.domain.spell.SpellBook
 import fr.rob.game.domain.spell.SpellCasterTrait
-import fr.rob.game.domain.spell.target.SingleObjectInInstanceSpellTarget
+import fr.rob.game.domain.spell.target.SpellTargetParameter
 import fr.rob.game.test.unit.tools.WorldBuilder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -37,7 +37,7 @@ class SpellCasterTraitTest {
         objectManager.addObjectToWorld(unit, instance, Position(0f, 0f, 0f, 0f))
         objectManager.addObjectToWorld(other, instance, Position(0f, 0f, 0f, 0f))
 
-        unit.getTrait(SpellCasterTrait::class).get().castSpell(1, SingleObjectInInstanceSpellTarget(other.guid, unit.mapInstance))
+        unit.getTrait(SpellCasterTrait::class).get().castSpell(1, SpellTargetParameter(other.guid, unit.mapInstance))
 
         assertEquals(91, other.getTrait(HealthResourceTrait::class).get().health)
     }

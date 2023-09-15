@@ -1,15 +1,15 @@
 package fr.rob.game.domain.spell.effect
 
 import fr.rob.game.domain.entity.behavior.HealthResourceTrait
-import fr.rob.game.domain.spell.target.SpellTargetInterface
+import fr.rob.game.domain.spell.target.SpellTargetParameter
 
 class InstantDamageEffect(
     private val spellEffectInfo: InstantDamageEffectInfo,
-    private val target: SpellTargetInterface,
+    private val target: SpellTargetParameter,
     private val casterLevel: Int,
 ) {
     fun cast() {
-        target.getFirstTarget().ifPresent { tar ->
+        target.getPrimaryTarget().ifPresent { tar ->
             tar.getTrait(HealthResourceTrait::class).ifPresent {
                 it.applyDamages(spellEffectInfo.value * casterLevel)
             }
