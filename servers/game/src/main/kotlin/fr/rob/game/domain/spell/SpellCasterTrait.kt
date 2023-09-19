@@ -1,13 +1,10 @@
 package fr.rob.game.domain.spell
 
-import fr.rob.game.domain.entity.Unit
+import fr.rob.game.domain.entity.UpdatableTraitInterface
 import fr.rob.game.domain.entity.WorldObject
-import fr.rob.game.domain.spell.effect.InstantDamageEffect
-import fr.rob.game.domain.spell.effect.SpellEffectInfo
-import fr.rob.game.domain.spell.effect.SpellEffectTypeEnum
 import fr.rob.game.domain.spell.target.SpellTargetParameter
 
-class SpellCasterTrait(private val caster: WorldObject, private val spellBook: SpellBook) {
+class SpellCasterTrait(private val caster: WorldObject, private val spellBook: SpellBook) : UpdatableTraitInterface {
     fun castSpell(spellId: Int, target: SpellTargetParameter) {
         val spellInfoQuery = spellBook.getSpellInfo(spellId)
 
@@ -16,14 +13,10 @@ class SpellCasterTrait(private val caster: WorldObject, private val spellBook: S
             return
         }
 
-        spellInfoQuery.get().effects.forEach { castEffect(it, target) }
+        spellBook.castSpell(Spell(spellInfoQuery.get(), caster, target))
     }
 
-    private fun castEffect(effectInfo: SpellEffectInfo, target: SpellTargetParameter) {
-        val effect = when (effectInfo.type) {
-            SpellEffectTypeEnum.INSTANT_DAMAGE -> InstantDamageEffect(effectInfo as InstantDamageEffect.InstantDamageEffectInfo, target, (caster as Unit).level)
-        }
-
-        effect.cast()
+    override fun update(deltaTime: Int) {
+        spellBook.update(deltaTime)
     }
 }

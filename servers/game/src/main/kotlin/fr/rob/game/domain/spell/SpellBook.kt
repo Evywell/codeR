@@ -1,12 +1,19 @@
 package fr.rob.game.domain.spell
 
-import fr.rob.game.domain.spell.effect.InstantDamageEffect
 import java.util.Optional
 
-class SpellBook {
-    private val spells: HashMap<Int, SpellInfo> = hashMapOf(
-        1 to SpellInfo(arrayOf(InstantDamageEffect.InstantDamageEffectInfo(3))),
-    )
+class SpellBook(private val availableSpells: HashMap<Int, SpellInfo>) {
+    private val ongoingSpells = ArrayList<Spell>()
 
-    fun getSpellInfo(spellId: Int): Optional<SpellInfo> = Optional.ofNullable(spells[spellId])
+    fun getSpellInfo(spellId: Int): Optional<SpellInfo> = Optional.ofNullable(availableSpells[spellId])
+
+    fun castSpell(spell: Spell) {
+        ongoingSpells.add(spell)
+        spell.cast()
+    }
+
+    fun update(deltaTime: Int) {
+        ongoingSpells.forEach { spell -> spell.update(deltaTime) }
+        ongoingSpells.removeIf { spell -> spell.isEnded() }
+    }
 }
