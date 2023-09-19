@@ -1,44 +1,62 @@
 package fr.rob.game.test.unit.domain.spell
 
-import fr.rob.game.domain.entity.ObjectManager
-import fr.rob.game.domain.entity.Position
-import fr.rob.game.domain.entity.PositionNormalizer
-import fr.rob.game.domain.entity.Unit
 import fr.rob.game.domain.entity.behavior.HealthResourceTrait
-import fr.rob.game.domain.entity.guid.ObjectGuid
-import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
 import fr.rob.game.domain.spell.SpellBook
 import fr.rob.game.domain.spell.SpellCasterTrait
+import fr.rob.game.domain.spell.SpellInfo
+import fr.rob.game.domain.spell.effect.InstantDamageEffect
 import fr.rob.game.domain.spell.target.SpellTargetParameter
-import fr.rob.game.test.unit.tools.WorldBuilder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class SpellCasterTraitTest {
+class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
     @Test
-    fun itShouldWork() {
-        val instance = WorldBuilder.buildBasicWorld()
-        val guidGenerator = ObjectGuidGenerator()
-        val objectManager = ObjectManager(guidGenerator, PositionNormalizer())
-        val unit = Unit(
-            guidGenerator.fromGuidInfo(ObjectGuidGenerator.GuidInfo(ObjectGuid.LowGuid(1u, 0u), ObjectGuid.GUID_TYPE.GAME_OBJECT)),
-            "The unit name",
-            3,
-        )
-        unit.addTrait(SpellCasterTrait(unit, SpellBook()))
+    fun `I should be able to cast instant spells`() {
+        caster.getTrait(SpellCasterTrait::class).get().castSpell(1, SpellTargetParameter(target.guid, caster.mapInstance))
 
-        val other = Unit(
-            guidGenerator.fromGuidInfo(ObjectGuidGenerator.GuidInfo(ObjectGuid.LowGuid(2u, 0u), ObjectGuid.GUID_TYPE.GAME_OBJECT)),
-            "Other",
-            1,
-        )
-        other.addTrait(HealthResourceTrait(100))
-
-        objectManager.addObjectToWorld(unit, instance, Position(0f, 0f, 0f, 0f))
-        objectManager.addObjectToWorld(other, instance, Position(0f, 0f, 0f, 0f))
-
-        unit.getTrait(SpellCasterTrait::class).get().castSpell(1, SpellTargetParameter(other.guid, unit.mapInstance))
-
-        assertEquals(91, other.getTrait(HealthResourceTrait::class).get().health)
+        assertEquals(91, target.getTrait(HealthResourceTrait::class).get().health)
     }
+
+    @Test
+    fun `I should be able to cast spell with projectiles`() {
+        target.position.x = 6f
+
+        caster.getTrait(SpellCasterTrait::class).get().castSpell(2, SpellTargetParameter(target.guid, caster.mapInstance))
+
+        assertEquals(100, target.getTrait(HealthResourceTrait::class).get().health)
+
+        // Projectile still moving
+        caster.update(1000)
+        assertEquals(100, target.getTrait(HealthResourceTrait::class).get().health)
+
+        // Projectile hit the target
+        caster.update(1000)
+        assertEquals(91, target.getTrait(HealthResourceTrait::class).get().health)
+    }
+
+    @Test
+    fun `I should be able to cas spell with timed projectiles`() {
+        target.position.x = 6f
+
+        caster.getTrait(SpellCasterTrait::class).get().castSpell(3, SpellTargetParameter(target.guid, caster.mapInstance))
+
+        assertEquals(100, target.getTrait(HealthResourceTrait::class).get().health)
+
+        // Projectile still moving
+        caster.update(1000)
+        assertEquals(100, target.getTrait(HealthResourceTrait::class).get().health)
+
+        // Projectile hit the target
+        caster.update(1000)
+        assertEquals(91, target.getTrait(HealthResourceTrait::class).get().health)
+    }
+
+    override fun createSpellBook(): SpellBook =
+        SpellBook(
+            hashMapOf(
+                1 to SpellInfo(SpellInfo.LaunchType.INSTANT, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(3))),
+                2 to SpellInfo(SpellInfo.LaunchType.GHOST_PROJECTILES, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(3)), 3f),
+                3 to SpellInfo(SpellInfo.LaunchType.TIMED_PROJECTILES, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(3)), 3f),
+            ),
+        )
 }
