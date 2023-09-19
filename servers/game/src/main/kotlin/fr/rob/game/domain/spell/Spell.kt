@@ -1,11 +1,9 @@
 package fr.rob.game.domain.spell
 
 import fr.rob.game.domain.entity.Position
-import fr.rob.game.domain.entity.Unit
 import fr.rob.game.domain.entity.WorldObject
-import fr.rob.game.domain.spell.effect.InstantDamageEffect
+import fr.rob.game.domain.spell.effect.EffectFromSpellInterface
 import fr.rob.game.domain.spell.effect.SpellEffectInfo
-import fr.rob.game.domain.spell.effect.SpellEffectTypeEnum
 import fr.rob.game.domain.spell.projectile.CarryProjectileInterface
 import fr.rob.game.domain.spell.projectile.GhostProjectile
 import fr.rob.game.domain.spell.projectile.TimedProjectile
@@ -13,8 +11,8 @@ import fr.rob.game.domain.spell.target.SpellTargetParameter
 
 class Spell(
     private val spellInfo: SpellInfo,
-    private val caster: WorldObject,
-    private val target: SpellTargetParameter,
+    val caster: WorldObject,
+    val target: SpellTargetParameter,
 ) {
     private var state = SpellState.PREPARING
     private var projectile: CarryProjectileInterface? = null
@@ -76,7 +74,7 @@ class Spell(
 
     private fun createProjectile() {
         when (spellInfo.launchingType) {
-            SpellInfo.LaunchType.INSTANT -> {}
+            SpellInfo.LaunchType.INSTANT -> {} // For the moment, there is no projectile when the spell is instant
             SpellInfo.LaunchType.GHOST_PROJECTILES -> createGhostProjectile(target.getPrimaryTarget().get())
             SpellInfo.LaunchType.TIMED_PROJECTILES -> createTimedProjectile(target.getPrimaryTarget().get())
         }
@@ -119,11 +117,9 @@ class Spell(
     }
 
     private fun applyEffect(effectInfo: SpellEffectInfo) {
-        val effect = when (effectInfo.type) {
-            SpellEffectTypeEnum.INSTANT_DAMAGE -> InstantDamageEffect(effectInfo as InstantDamageEffect.InstantDamageEffectInfo, target, (caster as Unit).level)
+        if (effectInfo is EffectFromSpellInterface) {
+            effectInfo.createEffectFromSpell(this).cast()
         }
-
-        effect.cast()
     }
 
     private fun updateTimers(deltaTime: Int) {
