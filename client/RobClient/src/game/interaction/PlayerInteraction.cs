@@ -1,6 +1,6 @@
-using Fr.Raven.Proto.Message.Game;
+using RobClient.game.interaction.movement;
 using GatewayPacket = Fr.Raven.Proto.Message.Gateway.Packet;
-using RobClient.Game.Interaction.Action.Movement;
+using RobClient.Game.Interaction.Movement;
 using RobClient.Network;
 
 namespace RobClient.Game.Interaction {
@@ -16,17 +16,19 @@ namespace RobClient.Game.Interaction {
             _sender = sender;
         }
 
-        public void Move(float orientation) {
+        public void Move(MovementInfo movementInfo) {
             _gameEnvironment.AddAction(
-                new Movement(_gameEnvironment.UseStateProxyFor(_gameEnvironment.GetControlledObject()), orientation)
+                new MovementAction(
+                    _gameEnvironment.UseStateProxyFor(_gameEnvironment.GetControlledObject()),
+                    movementInfo
+                )
             );
-
-            var movement = new ProceedMovement();
-            movement.Phase = MovementPhase.PhaseBegin;
-            movement.Direction = MovementDirectionType.TypeForward;
-            movement.Orientation = orientation;
             
-            _sender.SendMessage(0x06, movement, GatewayPacket.Types.Context.Game);
+            _sender.SendMessage(
+                0x06,
+                MovementPacketBuilder.CreateFromMovementInfo(movementInfo),
+                GatewayPacket.Types.Context.Game
+            );
         }
     }
 }

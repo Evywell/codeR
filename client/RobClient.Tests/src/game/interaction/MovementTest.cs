@@ -5,6 +5,7 @@ using RobClient.Game.Entity;
 using RobClient.Tests.Helper;
 using RobClient.Game;
 using RobClient.Game.Interaction;
+using RobClient.Game.Interaction.Movement;
 
 namespace RobClient.Tests.Game.Interaction;
 
@@ -17,21 +18,24 @@ public class MovementTest
         var kit = GameClientKit.Create();
         var gameClient = kit.Client;
         var receiver = kit.Receiver;
-        var objectFactory = new ObjectFactory();
         var player = new PlayerGenerator().GenerateWith("Evywell");
 
         gameClient.Game.AddPlayerToWorld(player);
 
         // Act
-        var heartbeat = new MovementHeartbeat();
-        heartbeat.Guid = player.Guid.GetRawValue();
-        heartbeat.Position = new Position();
-        heartbeat.Position.PosX = 3;
-        heartbeat.Position.PosY = 0.3f;
-        heartbeat.Position.PosZ = 0;
-        heartbeat.Position.Orientation = 0;
+        var heartbeat = new MovementHeartbeat
+        {
+            Guid = player.Guid.GetRawValue(),
+            Position = new Position
+            {
+                PosX = 3,
+                PosY = 0.3f,
+                PosZ = 0,
+                Orientation = 0
+            }
+        };
 
-        receiver.OnNext(createGamePacket(0x04, heartbeat));
+        receiver.OnNext(CreateGamePacket(0x04, heartbeat));
 
         // Assert
         Assert.That(player.Position.X, Is.EqualTo(3));
@@ -83,7 +87,12 @@ public class MovementTest
         game.AddPlayerToWorld(player);
 
         // Act
-        playerInteraction.Move(originalPosition.O);
+        playerInteraction.Move(new MovementInfo(
+            MovementDirection.FORWARD,
+            MovementModificator.NONE,
+            originalPosition.O,
+            0
+        ));
         game.Update(timeElapsedMs);
 
         // Assert
@@ -129,14 +138,19 @@ public class MovementTest
         });
 
         // Act
-        playerInteraction.Move(0);
+        playerInteraction.Move(new MovementInfo(
+            MovementDirection.FORWARD,
+            MovementModificator.NONE,
+            0,
+            0
+        ));
 
         game.Update(1000);
 
         // Assert
         Assert.IsNotNull(lastUpdatedWorldObject);
-        Assert.That(lastUpdatedWorldObject.Name, Is.EqualTo("Evywell"));
-        Assert.That(lastUpdatedWorldObject.Position.X, Is.EqualTo(3.0f));
+        Assert.That(lastUpdatedWorldObject?.Name, Is.EqualTo("Evywell"));
+        Assert.That(lastUpdatedWorldObject?.Position.X, Is.EqualTo(3.0f));
     }
 
     private static Vector4f OriginPosition(float orientation = 0f)
@@ -148,12 +162,14 @@ public class MovementTest
     }
     
 
-    private GatewayPacket createGamePacket(int opcode, IMessage body)
+    private GatewayPacket CreateGamePacket(int opcode, IMessage body)
     {
-        var packet = new GatewayPacket();
-        packet.Opcode = opcode;
-        packet.Context = GatewayPacket.Types.Context.Game;
-        packet.Body = body.ToByteString();
+        var packet = new GatewayPacket
+        {
+            Opcode = opcode,
+            Context = GatewayPacket.Types.Context.Game,
+            Body = body.ToByteString()
+        };
 
         return packet;
     }
