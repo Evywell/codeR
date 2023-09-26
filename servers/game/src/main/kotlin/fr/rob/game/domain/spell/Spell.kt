@@ -1,7 +1,9 @@
 package fr.rob.game.domain.spell
 
+import fr.rob.core.misc.clock.IntervalTimer
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.WorldObject
+import fr.rob.game.domain.entity.behavior.MovableTrait
 import fr.rob.game.domain.spell.effect.EffectFromSpellInterface
 import fr.rob.game.domain.spell.effect.SpellEffectInfo
 import fr.rob.game.domain.spell.projectile.CarryProjectileInterface
@@ -14,7 +16,10 @@ class Spell(
     val caster: WorldObject,
     val target: SpellTargetParameter,
 ) {
-    private var state = SpellState.PREPARING
+    var state = SpellState.PREPARING
+        private set
+
+    private val castingTimer = IntervalTimer(spellInfo.castingTime)
     private var projectile: CarryProjectileInterface? = null
     private var lastUpdateDeltaTime: Int = 0
 
@@ -27,7 +32,7 @@ class Spell(
         cast()
     }
 
-    fun isEnded(): Boolean = state == SpellState.ENDED
+    fun isEnded(): Boolean = state == SpellState.ENDED || state == SpellState.CANCELED
 
     private fun handleNextStep() {
         when (state) {
@@ -40,6 +45,15 @@ class Spell(
     }
 
     private fun handlePreparingPhase() {
+        if (
+            spellInfo.castingTime > SpellInfo.INSTANT_CASTING_TIME &&
+            isCastSequenceOngoing()
+        ) {
+            checkCastingSequenceRequirements()
+
+            return
+        }
+
         if (spellInfo.launchingType == SpellInfo.LaunchType.INSTANT) {
             state = SpellState.APPLY_EFFECTS
             handleNextStep()
@@ -50,6 +64,21 @@ class Spell(
         state = SpellState.LAUNCHING
         handleNextStep()
     }
+
+    private fun checkCastingSequenceRequirements() {
+        // Movement should cancel the cast unless it is authorized
+        if (!spellInfo.flags.contains(SpellInfo.FLAGS.ALLOW_CAST_WHILE_MOVING)) {
+            val movableCaster = caster.getTrait<MovableTrait>()
+
+            if (movableCaster.isPresent && movableCaster.get().isMoving()) {
+                state = SpellState.CANCELED
+
+                return
+            }
+        }
+    }
+
+    private fun isCastSequenceOngoing(): Boolean = !castingTimer.passed()
 
     private fun handleLaunchingPhase() {
         if (spellInfo.launchingType == SpellInfo.LaunchType.INSTANT) {
@@ -124,13 +153,15 @@ class Spell(
 
     private fun updateTimers(deltaTime: Int) {
         lastUpdateDeltaTime = deltaTime
+        castingTimer.update(deltaTime)
     }
 
-    private enum class SpellState {
+    enum class SpellState {
         PREPARING,
         LAUNCHING,
         PROJECTILE_TRAVELING,
         APPLY_EFFECTS,
         ENDED,
+        CANCELED,
     }
 }
