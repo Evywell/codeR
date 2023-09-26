@@ -11,7 +11,7 @@ import kotlin.math.sin
 
 class MovableTrait(
     private val worldObject: WorldObject,
-    private var speed: Float = DEFAULT_SPEED
+    private var speed: Float = DEFAULT_SPEED,
 ) : UpdatableTraitInterface {
     private var movement: Movement? = null
 
@@ -51,9 +51,11 @@ class MovableTrait(
             worldObject.position.x + distanceXBigDecimal.toFloat(),
             worldObject.position.y + distanceYBigDecimal.toFloat(),
             worldObject.position.z,
-            movement!!.orientationRadians
+            movement!!.orientationRadians,
         )
     }
+
+    fun isMoving(): Boolean = movement != null
 
     private fun getRadianAngleFromMovement(movement: Movement): Float {
         val orientationRadians = movement.orientationRadians
@@ -66,16 +68,16 @@ class MovableTrait(
 
                 atan2(sin(shiftedOrientation), cos(shiftedOrientation)).toFloat()
             }
+
             Movement.MovementDirectionType.RIGHT -> {
                 val shiftedOrientation = orientationRadians - (PI / 2)
 
                 atan2(sin(shiftedOrientation), cos(shiftedOrientation)).toFloat()
             }
+
             else -> throw NotImplementedError()
         }
     }
-
-    private fun isMoving(): Boolean = movement != null
 
     companion object {
         const val DEFAULT_SPEED = 3.0f
