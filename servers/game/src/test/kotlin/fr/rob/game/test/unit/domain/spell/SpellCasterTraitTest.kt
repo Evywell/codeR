@@ -13,6 +13,7 @@ import fr.rob.game.domain.spell.effect.EffectFromSpellInterface
 import fr.rob.game.domain.spell.effect.EffectInterface
 import fr.rob.game.domain.spell.effect.InstantDamageEffect
 import fr.rob.game.domain.spell.effect.SpellEffectInfo
+import fr.rob.game.domain.spell.effect.SpellEffectSummary
 import fr.rob.game.domain.spell.effect.SpellEffectTypeEnum
 import fr.rob.game.domain.spell.target.SpellTargetParameter
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -132,7 +133,7 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
             override fun createEffectFromSpell(spell: Spell): EffectInterface = CounterEffect(spell.caster)
         }
 
-        override fun cast() {
+        override fun cast(spellEffectSummary: SpellEffectSummary) {
             caster.getTrait<CounterTrait>().get().increment()
         }
     }
