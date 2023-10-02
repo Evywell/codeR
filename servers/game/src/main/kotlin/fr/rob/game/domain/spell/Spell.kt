@@ -3,9 +3,11 @@ package fr.rob.game.domain.spell
 import fr.rob.core.misc.clock.IntervalTimer
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.WorldObject
+import fr.rob.game.domain.entity.behavior.HealthResourceTrait
 import fr.rob.game.domain.entity.behavior.MovableTrait
 import fr.rob.game.domain.spell.effect.EffectFromSpellInterface
 import fr.rob.game.domain.spell.effect.SpellEffectInfo
+import fr.rob.game.domain.spell.effect.SpellEffectSummary
 import fr.rob.game.domain.spell.projectile.CarryProjectileInterface
 import fr.rob.game.domain.spell.projectile.GhostProjectile
 import fr.rob.game.domain.spell.projectile.TimedProjectile
@@ -121,12 +123,24 @@ class Spell(
     }
 
     private fun handleApplyEffectsPhase() {
+        val spellEffectSummary = SpellEffectSummary()
+
         spellInfo.effects.forEach {
-            applyEffect(it)
+            applyEffect(it, spellEffectSummary)
         }
+
+        handleSpellDamages(spellEffectSummary)
 
         state = SpellState.ENDED
         handleNextStep()
+    }
+
+    private fun handleSpellDamages(spellEffectSummary: SpellEffectSummary) {
+        spellEffectSummary.forEach { target, sources ->
+            target.getTrait(HealthResourceTrait::class).ifPresent {
+                it.applyDamages(sources)
+            }
+        }
     }
 
     private fun createTimedProjectile(target: WorldObject) {
@@ -145,9 +159,9 @@ class Spell(
         )
     }
 
-    private fun applyEffect(effectInfo: SpellEffectInfo) {
+    private fun applyEffect(effectInfo: SpellEffectInfo, spellEffectSummary: SpellEffectSummary) {
         if (effectInfo is EffectFromSpellInterface) {
-            effectInfo.createEffectFromSpell(this).cast()
+            effectInfo.createEffectFromSpell(this).cast(spellEffectSummary)
         }
     }
 

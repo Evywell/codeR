@@ -1,5 +1,5 @@
 package fr.rob.game.domain.spell.effect
 
 interface EffectInterface {
-    fun cast()
+    fun cast(spellEffectSummary: SpellEffectSummary)
 }
