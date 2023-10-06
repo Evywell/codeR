@@ -31,7 +31,7 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
     fun `I should be able to cast instant spells`() {
         caster.getTrait(SpellCasterTrait::class).get().castSpell(1, SpellTargetParameter(target.guid, caster.mapInstance))
 
-        assertEquals(91, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(97, target.getTrait(ObjectSheetTrait::class).get().health)
     }
 
     @Test
@@ -48,7 +48,7 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
 
         // Projectile hit the target
         caster.update(1000)
-        assertEquals(91, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(99, target.getTrait(ObjectSheetTrait::class).get().health)
     }
 
     @Test
@@ -65,7 +65,7 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
 
         // Projectile hit the target
         caster.update(1000)
-        assertEquals(91, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(99, target.getTrait(ObjectSheetTrait::class).get().health)
     }
 
     @Test
@@ -78,7 +78,7 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
         // 2 seconds casting
         caster.update(1000)
-        assertEquals(82, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(94, target.getTrait(ObjectSheetTrait::class).get().health)
     }
 
     @Test
@@ -120,7 +120,7 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
 
         // 2 more seconds casting
         caster.update(2000)
-        assertEquals(97, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(99, target.getTrait(ObjectSheetTrait::class).get().health)
     }
 
     @Test
@@ -168,24 +168,24 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
 
     fun critDamageDataProvider(): Stream<Arguments> = Stream.of(
         // We rolled a 1 (out of 100) -> it's a crit !
-        // 9 (base damage) * 2 (crit !) = 18 => 100 - 18 = 82
-        Arguments.of(100, 82),
+        // 3 (base damage) * 2 (crit !) = 6 => 100 - 6 = 94
+        Arguments.of(100, 94),
         // We rolled a 1.01 (out of 100) -> it is not a crit
-        Arguments.of(101, 91),
+        Arguments.of(101, 97),
         // We rolled a 0.9 (out of 100) -> it's a crit
-        Arguments.of(90, 82),
+        Arguments.of(90, 94),
         // We rolled a 0 (out of 100) -> it's a crit
-        Arguments.of(0, 82),
+        Arguments.of(0, 94),
         // We rolled a 100 (out of 100) -> it is not a crit
-        Arguments.of(10000, 91),
+        Arguments.of(10000, 97),
     )
 
     override fun createSpellBook(): SpellBook =
         SpellBook(
             hashMapOf(
                 1 to SpellInfo(SpellInfo.LaunchType.INSTANT, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(3))),
-                2 to SpellInfo(SpellInfo.LaunchType.GHOST_PROJECTILES, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(3)), projectileSpeed = 3f),
-                3 to SpellInfo(SpellInfo.LaunchType.TIMED_PROJECTILES, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(3)), projectileSpeed = 3f),
+                2 to SpellInfo(SpellInfo.LaunchType.GHOST_PROJECTILES, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1)), projectileSpeed = 3f),
+                3 to SpellInfo(SpellInfo.LaunchType.TIMED_PROJECTILES, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1)), projectileSpeed = 3f),
                 4 to SpellInfo(SpellInfo.LaunchType.INSTANT, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(6)), CASTING_TIME_2_SECONDS),
                 5 to SpellInfo(SpellInfo.LaunchType.INSTANT, arrayOf(CounterEffect.CounterEffectInfo())),
                 6 to SpellInfo(SpellInfo.LaunchType.INSTANT, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1)), CASTING_TIME_2_SECONDS, flags = EnumSet.of(SpellInfo.FLAGS.ALLOW_CAST_WHILE_MOVING)),
