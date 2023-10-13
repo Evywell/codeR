@@ -1,25 +1,20 @@
 package fr.rob.game.domain.terrain.grid
 
+import fr.rob.game.domain.entity.Position
+import fr.rob.game.domain.entity.PositionNormalizer
 import fr.rob.game.domain.entity.WorldObject
 import fr.rob.game.domain.entity.WorldObjectContainer
 import fr.rob.game.domain.entity.guid.ObjectGuid
 import fr.rob.game.domain.player.Player
 import java.util.Optional
+import kotlin.math.ceil
 
 class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<Cell>) {
     private val worldObjectContainerList = Array(ObjectGuid.GUID_TYPE.values().size) {
         WorldObjectContainer()
     }
 
-    fun updateGameObjects(deltaTime: Int) {
-        worldObjectContainerList[ObjectGuid.GUID_TYPE.PLAYER.value].forEach {
-            it.update(deltaTime)
-        }
-
-        worldObjectContainerList[ObjectGuid.GUID_TYPE.GAME_OBJECT.value].forEach {
-            it.update(deltaTime)
-        }
-    }
+    private val positionNormalizer = PositionNormalizer()
 
     fun getCellFromCellPosition(cellPosition: Cell.CellPosition): Cell {
         val index = cellPosition.x + (height * cellPosition.y)
@@ -41,6 +36,23 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
         }
 
         return Optional.empty()
+    }
+
+    fun findObjectsInsideRadius(origin: Position, radius: Float): List<WorldObject> {
+        val neighborRadius = ceil(radius).toInt()
+        val cells = retrieveNeighborCells(getCellFromWorldPosition(origin), neighborRadius)
+
+        val objects = ArrayList<WorldObject>()
+
+        cells.forEach { cell ->
+            getObjectsOfCell(cell).forEach { worldObject ->
+                if (isInsideRadius(origin, radius, worldObject.position)) {
+                    objects.add(worldObject)
+                }
+            }
+        }
+
+        return objects
     }
 
     fun getObjectsOfCell(cell: Cell): List<WorldObject> {
@@ -97,6 +109,27 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
 
     fun removeWorldObject(obj: WorldObject) {
         worldObjectContainerList[obj.guid.getType().value].remove(obj)
+    }
+
+    private fun getCellFromWorldPosition(position: Position): Cell {
+        val cellPosition = positionNormalizer.fromMapPositionToGridCellCoordinate(
+            PositionNormalizer.MapInfoForPosition(
+                position,
+                width,
+                height,
+                0f,
+                0f,
+                cellSize,
+            ),
+        )
+
+        return getCellFromCellPosition(cellPosition)
+    }
+
+    private fun isInsideRadius(origin: Position, radius: Float, subject: Position): Boolean {
+        val distance = ((origin.x - subject.x) * (origin.x - subject.x)) + ((origin.y - subject.y) * (origin.y - subject.y))
+
+        return !(distance > radius * radius)
     }
 
     private fun isCellInsideMesh(posX: Int, posY: Int): Boolean =

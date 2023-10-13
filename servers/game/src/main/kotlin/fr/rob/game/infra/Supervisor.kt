@@ -38,7 +38,7 @@ class Supervisor(
     private val gameNodeOpcodeHandler: OpcodeHandler<GameNodeFunctionParameters>,
     private val fakeInstanceBuilder: FakeInstanceBuilder,
     private val instanceManager: InstanceManager,
-    private val characterWaitingRoom: CharacterWaitingRoom
+    private val characterWaitingRoom: CharacterWaitingRoom,
 ) {
 
     fun run(nodeConfig: NodeConfig) {
@@ -53,7 +53,7 @@ class Supervisor(
             .build(
                 NioConfigShard(),
                 ProtobufPipelineShard(GameProto.Packet.getDefaultInstance()),
-                ProtobufHandlerShard(server, socketBuilder)
+                ProtobufHandlerShard(server, socketBuilder),
             )
 
         server.start(process)
@@ -72,13 +72,13 @@ class Supervisor(
                 arrayOf(
                     gameSessionUpdater,
                     InstanceUpdater(instanceManager, eventDispatcher),
-                    WorldUpdateRateChecker()
-                )
+                    WorldUpdateRateChecker(),
+                ),
             )
             val worldUpdater = WorldUpdater(world)
 
             eventDispatcher.attachListener(
-                NotifyWorldObjectMovedListener(Scheduler(), WorldObjectUpdatedNotifier(), world.updateState)
+                NotifyWorldObjectMovedListener(Scheduler(), WorldObjectUpdatedNotifier(), world.updateState),
             )
 
             worldUpdater.initialize()
@@ -90,7 +90,7 @@ class Supervisor(
         messageQueueDispatcher.dispatch(
             NewGameNodeProto.NewGameNode.newBuilder()
                 .setPort(node.port)
-                .build()
+                .build(),
         )
 
         logger.info("World ready. Waiting for instruction...")
