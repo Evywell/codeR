@@ -6,7 +6,7 @@ class World(private val updatableObjects: Array<UpdatableInterface>) {
 
     fun update(deltaTime: Int) {
         updateState.timeElapsedSinceLastUpdate = deltaTime
-        updateState.timeElapsedSinceStartup = updateState.timeElapsedSinceStartup + deltaTime
+        updateState.timeElapsedSinceStartup += deltaTime
 
         updatableObjects.forEach { it.update(deltaTime) }
     }

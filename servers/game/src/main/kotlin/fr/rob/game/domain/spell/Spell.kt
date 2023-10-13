@@ -43,6 +43,7 @@ class Spell(
             SpellState.PROJECTILE_TRAVELING -> handleProjectileTravelingPhase()
             SpellState.APPLY_EFFECTS -> handleApplyEffectsPhase()
             SpellState.ENDED -> {}
+            SpellState.CANCELED -> {}
         }
     }
 
