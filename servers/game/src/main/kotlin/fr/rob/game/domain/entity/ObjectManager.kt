@@ -11,7 +11,6 @@ import java.util.Optional
 
 class ObjectManager(
     private val objectGuidGenerator: ObjectGuidGenerator,
-    private val positionNormalizer: PositionNormalizer,
 ) {
     fun spawnObject(lowGuid: LowGuid, position: Position, instance: MapInstance): Optional<WorldObject> {
         // Check out of bounds
@@ -26,7 +25,7 @@ class ObjectManager(
         )
 
         if (isObjectAlreadyInGrid(guid, instance.grid)) {
-            Optional.empty<WorldObject>()
+            return Optional.empty<WorldObject>()
         }
 
         return Optional.of(createWorldObject(guid, instance, position))
@@ -52,7 +51,7 @@ class ObjectManager(
 
     fun addToGrid(obj: WorldObject) {
         val grid = obj.mapInstance.grid
-        val cellPosition = positionNormalizer.fromMapPositionToGridCellCoordinate(
+        val cellPosition = PositionNormalizer.fromMapPositionToGridCellCoordinate(
             PositionNormalizer.MapInfoForPosition(
                 obj.position,
                 obj.mapInstance.map.zoneInfo.width,

@@ -2,7 +2,6 @@ package fr.rob.game.test.unit.domain.spell
 
 import fr.rob.game.domain.entity.ObjectManager
 import fr.rob.game.domain.entity.Position
-import fr.rob.game.domain.entity.PositionNormalizer
 import fr.rob.game.domain.entity.behavior.ObjectSheetTrait
 import fr.rob.game.domain.entity.guid.ObjectGuid
 import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
@@ -21,7 +20,7 @@ abstract class SpellCasterEnvironmentBaseTest {
     private lateinit var spellBook: SpellBook
     private val instance = WorldBuilder.buildBasicWorld()
     private val guidGenerator = ObjectGuidGenerator()
-    private val objectManager = ObjectManager(guidGenerator, PositionNormalizer())
+    private val objectManager = ObjectManager(guidGenerator)
     private var entryGuid: UInt = 1u
 
     @BeforeEach

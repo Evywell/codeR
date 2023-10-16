@@ -2,7 +2,6 @@ package fr.rob.game.test.unit.domain.game.world
 
 import fr.rob.game.domain.entity.ObjectManager
 import fr.rob.game.domain.entity.Position
-import fr.rob.game.domain.entity.PositionNormalizer
 import fr.rob.game.domain.entity.exception.OutOfBoundsException
 import fr.rob.game.domain.entity.guid.ObjectGuid
 import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
@@ -89,5 +88,5 @@ class ObjectManagerTest {
         )
     )
 
-    private fun getObjectManager(): ObjectManager = ObjectManager(ObjectGuidGenerator(), PositionNormalizer())
+    private fun getObjectManager(): ObjectManager = ObjectManager(ObjectGuidGenerator())
 }

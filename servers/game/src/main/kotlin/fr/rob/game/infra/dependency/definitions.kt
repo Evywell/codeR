@@ -114,10 +114,7 @@ val opcodeModule = module {
         )
     }
     single {
-        ObjectManager(
-            get(),
-            PositionNormalizer()
-        )
+        ObjectManager(get())
     }
     single { CharacterWaitingRoom() }
     single { CreatePlayerIntoWorldHandler(get(), get()) }
