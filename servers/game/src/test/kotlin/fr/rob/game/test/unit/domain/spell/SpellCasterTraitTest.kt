@@ -12,9 +12,9 @@ import fr.rob.game.domain.spell.SpellInfo.Companion.CASTING_TIME_2_SECONDS
 import fr.rob.game.domain.spell.effect.EffectFromSpellInterface
 import fr.rob.game.domain.spell.effect.EffectInterface
 import fr.rob.game.domain.spell.effect.InstantDamageEffect
-import fr.rob.game.domain.spell.effect.SpellEffectInfo
-import fr.rob.game.domain.spell.effect.SpellEffectSummary
-import fr.rob.game.domain.spell.effect.SpellEffectTypeEnum
+import fr.rob.game.domain.spell.SpellEffectInfo
+import fr.rob.game.domain.spell.SpellEffectSummary
+import fr.rob.game.domain.spell.SpellEffectTypeEnum
 import fr.rob.game.domain.spell.target.SpellTargetParameter
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

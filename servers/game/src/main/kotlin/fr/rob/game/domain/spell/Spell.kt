@@ -6,8 +6,6 @@ import fr.rob.game.domain.entity.WorldObject
 import fr.rob.game.domain.entity.behavior.MovableTrait
 import fr.rob.game.domain.entity.behavior.ObjectSheetTrait
 import fr.rob.game.domain.spell.effect.EffectFromSpellInterface
-import fr.rob.game.domain.spell.effect.SpellEffectInfo
-import fr.rob.game.domain.spell.effect.SpellEffectSummary
 import fr.rob.game.domain.spell.projectile.CarryProjectileInterface
 import fr.rob.game.domain.spell.projectile.GhostProjectile
 import fr.rob.game.domain.spell.projectile.TimedProjectile

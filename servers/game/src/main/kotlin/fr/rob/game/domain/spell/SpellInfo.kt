@@ -1,6 +1,5 @@
 package fr.rob.game.domain.spell
 
-import fr.rob.game.domain.spell.effect.SpellEffectInfo
 import java.util.EnumSet
 
 /**
