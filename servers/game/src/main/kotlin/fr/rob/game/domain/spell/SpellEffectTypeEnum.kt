@@ -1,4 +1,4 @@
-package fr.rob.game.domain.spell.effect
+package fr.rob.game.domain.spell
 
 enum class SpellEffectTypeEnum {
     INSTANT_DAMAGE

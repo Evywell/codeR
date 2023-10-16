@@ -3,6 +3,9 @@ package fr.rob.game.domain.spell.effect
 import fr.rob.game.domain.combat.DamageSource
 import fr.rob.game.domain.entity.WorldObject
 import fr.rob.game.domain.spell.Spell
+import fr.rob.game.domain.spell.SpellEffectInfo
+import fr.rob.game.domain.spell.SpellEffectSummary
+import fr.rob.game.domain.spell.SpellEffectTypeEnum
 import fr.rob.game.domain.spell.target.SpellTargetParameter
 
 class InstantDamageEffect(

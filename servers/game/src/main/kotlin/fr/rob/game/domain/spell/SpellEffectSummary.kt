@@ -1,4 +1,4 @@
-package fr.rob.game.domain.spell.effect
+package fr.rob.game.domain.spell
 
 import fr.rob.game.domain.combat.DamageSource
 import fr.rob.game.domain.entity.WorldObject
