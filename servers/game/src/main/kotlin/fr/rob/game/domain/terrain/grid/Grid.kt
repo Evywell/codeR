@@ -14,8 +14,6 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
         WorldObjectContainer()
     }
 
-    private val positionNormalizer = PositionNormalizer()
-
     fun getCellFromCellPosition(cellPosition: Cell.CellPosition): Cell {
         val index = cellPosition.x + (height * cellPosition.y)
 
@@ -112,7 +110,7 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
     }
 
     private fun getCellFromWorldPosition(position: Position): Cell {
-        val cellPosition = positionNormalizer.fromMapPositionToGridCellCoordinate(
+        val cellPosition = PositionNormalizer.fromMapPositionToGridCellCoordinate(
             PositionNormalizer.MapInfoForPosition(
                 position,
                 width,
