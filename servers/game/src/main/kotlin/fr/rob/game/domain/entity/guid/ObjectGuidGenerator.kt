@@ -1,5 +1,7 @@
 package fr.rob.game.domain.entity.guid
 
+import fr.rob.game.domain.entity.WorldObject
+
 class ObjectGuidGenerator {
 
     /**
@@ -21,6 +23,12 @@ class ObjectGuidGenerator {
         val low = ObjectGuid.LowGuid(0u, characterId.toUInt())
 
         return fromGuidInfo(GuidInfo(low, ObjectGuid.GUID_TYPE.PLAYER))
+    }
+
+    fun createForScriptableObject(owner: WorldObject, counter: Int): ObjectGuid {
+        val low = ObjectGuid.LowGuid(owner.guid.getCounter(), counter.toUInt())
+
+        return fromGuidInfo(GuidInfo(low, ObjectGuid.GUID_TYPE.SCRIPTABLE_OBJECT))
     }
 
     data class GuidInfo(val lowGuid: ObjectGuid.LowGuid, val type: ObjectGuid.GUID_TYPE)

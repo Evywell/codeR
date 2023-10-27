@@ -12,7 +12,7 @@ import fr.rob.game.domain.spell.projectile.TimedProjectile
 import fr.rob.game.domain.spell.target.SpellTargetParameter
 
 class Spell(
-    private val spellInfo: SpellInfo,
+    val spellInfo: SpellInfo,
     val caster: WorldObject,
     val target: SpellTargetParameter,
 ) {

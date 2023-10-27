@@ -14,16 +14,6 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
         WorldObjectContainer()
     }
 
-    fun getCellFromCellPosition(cellPosition: Cell.CellPosition): Cell {
-        val index = cellPosition.x + (height * cellPosition.y)
-
-        if (index < 0 || index > cells.size - 1) {
-            throw Exception("Cannot find cell for positions $cellPosition")
-        }
-
-        return cells[index]
-    }
-
     fun getObjectsByType(type: ObjectGuid.GUID_TYPE): WorldObjectContainer = worldObjectContainerList[type.value]
 
     fun findObjectByGuid(guid: ObjectGuid): Optional<WorldObject> {
@@ -101,12 +91,35 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
         return neighborCells.toTypedArray()
     }
 
-    fun addWorldObject(obj: WorldObject) {
+    fun addWorldObject(obj: WorldObject): Cell {
         worldObjectContainerList[obj.guid.getType().value].add(obj)
+
+        val cellPosition = PositionNormalizer.fromMapPositionToGridCellCoordinate(
+            PositionNormalizer.MapInfoForPosition(
+                obj.position,
+                obj.mapInstance.map.zoneInfo.width,
+                obj.mapInstance.map.zoneInfo.height,
+                obj.mapInstance.map.zoneInfo.offsetX,
+                obj.mapInstance.map.zoneInfo.offsetY,
+                obj.mapInstance.grid.cellSize,
+            ),
+        )
+
+        return getCellFromCellPosition(cellPosition)
     }
 
     fun removeWorldObject(obj: WorldObject) {
         worldObjectContainerList[obj.guid.getType().value].remove(obj)
+    }
+
+    private fun getCellFromCellPosition(cellPosition: Cell.CellPosition): Cell {
+        val index = cellPosition.x + (height * cellPosition.y)
+
+        if (index < 0 || index > cells.size - 1) {
+            throw Exception("Cannot find cell for positions $cellPosition")
+        }
+
+        return cells[index]
     }
 
     private fun getCellFromWorldPosition(position: Position): Cell {

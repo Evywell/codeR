@@ -22,7 +22,6 @@ import fr.rob.game.app.player.action.CreatePlayerIntoWorldHandler
 import fr.rob.game.domain.character.CharacterService
 import fr.rob.game.domain.character.waitingroom.CharacterWaitingRoom
 import fr.rob.game.domain.entity.ObjectManager
-import fr.rob.game.domain.entity.PositionNormalizer
 import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
 import fr.rob.game.domain.entity.template.Creature
 import fr.rob.game.domain.instance.InstanceManager
@@ -88,13 +87,13 @@ val queueModule = module {
     single<AMQPConnection> { params ->
         AMQPConnection(
             params.get(),
-            get(named("QUEUE_LOGGER"))
+            get(named("QUEUE_LOGGER")),
         )
     }
     single<MessageQueueDispatcher> { params ->
         MessageQueueDispatcher(
             arrayOf(TransportConfig("orchestrator.income", AMQPSender("orchestrator", params.get()))),
-            params.get()
+            params.get(),
         )
     }
     single<MessageQueueReceiver> { params ->
@@ -107,10 +106,10 @@ val opcodeModule = module {
     single {
         PlayerFactory(
             CharacterService(
-                MysqlCheckCharacterExist(get<ConnectionPool>(named(DB_REALM)).getNextConnection())
+                MysqlCheckCharacterExist(get<ConnectionPool>(named(DB_REALM)).getNextConnection()),
             ),
             MysqlFetchCharacter(get<ConnectionPool>(named(DB_REALM)).getNextConnection()),
-            get()
+            get(),
         )
     }
     single {
@@ -123,7 +122,7 @@ val opcodeModule = module {
         arrayOf(
             OpcodeFunctionItem(CMSG_LOG_INTO_WORLD, LogIntoWorldOpcodeFunction(get(), get())),
             OpcodeFunctionItem(CMSG_REMOVE_FROM_WORLD, RemoveFromWorldOpcodeFunction(get())),
-            OpcodeFunctionItem(CMSG_PLAYER_MOVEMENT, PlayerMovementOpcodeFunction())
+            OpcodeFunctionItem(CMSG_PLAYER_MOVEMENT, PlayerMovementOpcodeFunction()),
         )
     }
 

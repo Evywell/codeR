@@ -21,8 +21,7 @@ class PlayerFactory(
         val guid = guidGenerator.createForPlayer(character.id)
 
         val player = Player(session, guid, character.name, character.level)
-        player.position = character.position
-        player.mapInstance = mapInstance
+        player.addIntoInstance(mapInstance, character.position)
         player.addTrait(MovableTrait(player))
 
         return PlayerInitResult(true, player)

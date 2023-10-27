@@ -1,6 +1,6 @@
 package fr.rob.game.domain.world
 
-class WorldUpdater(private val world: World) {
+class WorldUpdater(private val world: World, private val updatableObjects: Array<UpdatableInterface>) {
 
     private var isRunning: Boolean = false
     var deltaTime: Int = 0
@@ -21,6 +21,7 @@ class WorldUpdater(private val world: World) {
             deltaTime = (realCurrentTime - realPreviousTime).toInt()
 
             world.update(deltaTime)
+            updatableObjects.forEach { it.update(deltaTime) }
 
             realPreviousTime = realCurrentTime
             executionTime = System.currentTimeMillis() - realCurrentTime

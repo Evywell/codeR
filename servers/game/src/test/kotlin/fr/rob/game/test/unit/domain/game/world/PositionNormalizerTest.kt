@@ -14,7 +14,6 @@ class PositionNormalizerTest {
     @Test
     fun `Convert map position to grid cell coordinates`() {
         // Arrange
-        val normalizer = PositionNormalizer()
         val gridBuilder = GridBuilder(GridConstraintChecker())
         val mapInfo = MapInfo("A testing map", 2000, 2000)
         val zoneInfo = ZoneInfo("A testing zone", 500, 500, -50f, -50f)
@@ -25,26 +24,26 @@ class PositionNormalizerTest {
         val positionB = Position(90f, 40f, 0f, 0f)
 
         // Act
-        val cellCoordinatesA = normalizer.fromMapPositionToGridCellCoordinate(
+        val cellCoordinatesA = PositionNormalizer.fromMapPositionToGridCellCoordinate(
             PositionNormalizer.MapInfoForPosition(
                 positionA,
                 500,
                 500,
                 -50f,
                 -50f,
-                100
-            )
+                100,
+            ),
         )
 
-        val cellCoordinatesB = normalizer.fromMapPositionToGridCellCoordinate(
+        val cellCoordinatesB = PositionNormalizer.fromMapPositionToGridCellCoordinate(
             PositionNormalizer.MapInfoForPosition(
                 positionB,
                 500,
                 500,
                 -50f,
                 -50f,
-                100
-            )
+                100,
+            ),
         )
 
         // Assert
