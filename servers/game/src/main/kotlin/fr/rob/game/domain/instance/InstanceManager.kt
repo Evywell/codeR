@@ -11,7 +11,7 @@ class InstanceManager(private val gridBuilder: GridBuilder) {
         val instance = MapInstance(
             id,
             map,
-            gridBuilder.buildGrid(GridBuilder.DEFAULT_CELL_SIZE, map.zoneInfo.width, map.zoneInfo.height)
+            gridBuilder.buildGrid(GridBuilder.DEFAULT_CELL_SIZE, map.zoneInfo.width, map.zoneInfo.height),
         )
         instances.add(instance)
 

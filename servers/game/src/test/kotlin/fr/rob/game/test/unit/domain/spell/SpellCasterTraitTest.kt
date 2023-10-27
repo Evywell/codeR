@@ -7,14 +7,14 @@ import fr.rob.game.domain.entity.behavior.ObjectSheetTrait
 import fr.rob.game.domain.spell.Spell
 import fr.rob.game.domain.spell.SpellBook
 import fr.rob.game.domain.spell.SpellCasterTrait
+import fr.rob.game.domain.spell.SpellEffectInfo
+import fr.rob.game.domain.spell.SpellEffectSummary
+import fr.rob.game.domain.spell.SpellEffectTypeEnum
 import fr.rob.game.domain.spell.SpellInfo
 import fr.rob.game.domain.spell.SpellInfo.Companion.CASTING_TIME_2_SECONDS
 import fr.rob.game.domain.spell.effect.EffectFromSpellInterface
 import fr.rob.game.domain.spell.effect.EffectInterface
 import fr.rob.game.domain.spell.effect.InstantDamageEffect
-import fr.rob.game.domain.spell.SpellEffectInfo
-import fr.rob.game.domain.spell.SpellEffectSummary
-import fr.rob.game.domain.spell.SpellEffectTypeEnum
 import fr.rob.game.domain.spell.target.SpellTargetParameter
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -183,12 +183,12 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
     override fun createSpellBook(): SpellBook =
         SpellBook(
             hashMapOf(
-                1 to SpellInfo(SpellInfo.LaunchType.INSTANT, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(3))),
-                2 to SpellInfo(SpellInfo.LaunchType.GHOST_PROJECTILES, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1)), projectileSpeed = 3f),
-                3 to SpellInfo(SpellInfo.LaunchType.TIMED_PROJECTILES, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1)), projectileSpeed = 3f),
-                4 to SpellInfo(SpellInfo.LaunchType.INSTANT, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(6)), CASTING_TIME_2_SECONDS),
-                5 to SpellInfo(SpellInfo.LaunchType.INSTANT, arrayOf(CounterEffect.CounterEffectInfo())),
-                6 to SpellInfo(SpellInfo.LaunchType.INSTANT, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1)), CASTING_TIME_2_SECONDS, flags = EnumSet.of(SpellInfo.FLAGS.ALLOW_CAST_WHILE_MOVING)),
+                1 to SpellInfo(1, SpellInfo.LaunchType.INSTANT, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(3))),
+                2 to SpellInfo(2, SpellInfo.LaunchType.GHOST_PROJECTILES, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1)), projectileSpeed = 3f),
+                3 to SpellInfo(3, SpellInfo.LaunchType.TIMED_PROJECTILES, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1)), projectileSpeed = 3f),
+                4 to SpellInfo(4, SpellInfo.LaunchType.INSTANT, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(6)), CASTING_TIME_2_SECONDS),
+                5 to SpellInfo(5, SpellInfo.LaunchType.INSTANT, arrayOf(CounterEffect.CounterEffectInfo())),
+                6 to SpellInfo(6, SpellInfo.LaunchType.INSTANT, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1)), CASTING_TIME_2_SECONDS, flags = EnumSet.of(SpellInfo.FLAGS.ALLOW_CAST_WHILE_MOVING)),
             ),
         )
 }

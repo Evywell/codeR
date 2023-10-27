@@ -6,6 +6,7 @@ import java.util.EnumSet
  * @param castingTime Casting time of the spell in milliseconds (ms)
  */
 class SpellInfo(
+    val identifier: Int,
     val launchingType: LaunchType,
     val effects: Array<SpellEffectInfo>,
     val castingTime: Int = INSTANT_CASTING_TIME,

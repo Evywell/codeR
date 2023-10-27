@@ -12,14 +12,14 @@ import fr.rob.game.domain.player.session.GameSession
 
 class CreatePlayerIntoWorldHandler(
     private val playerFactory: PlayerFactory,
-    private val objectManager: ObjectManager
+    private val objectManager: ObjectManager,
 ) {
     fun execute(command: CreatePlayerIntoWorldCommand) {
         val playerGameSession = command.gameSession
         val createPlayerResult = playerFactory.createFromGameSession(
             playerGameSession,
             command.characterId,
-            command.mapInstance
+            command.mapInstance,
         )
 
         if (!createPlayerResult.isSuccess) {
@@ -31,8 +31,6 @@ class CreatePlayerIntoWorldHandler(
 
         // @todo remove this
         createMobForPlayer(player)
-
-        player.addToWorld(objectManager)
 
         // @todo Send player info
         player.ownerGameSession.send(PlayerDescriptionMessage(player.guid, player.name))
@@ -72,7 +70,7 @@ class CreatePlayerIntoWorldHandler(
         objectManager.spawnObject(
             ObjectGuid.LowGuid(1u, 1u),
             position,
-            player.mapInstance
+            player.mapInstance,
         )
     }
 }

@@ -16,9 +16,9 @@ abstract class SpellCasterEnvironmentBaseTest {
     protected lateinit var caster: WorldUnit
     protected lateinit var target: WorldUnit
     protected val targetRiggedDiceEngine = RiggedDiceEngine()
+    protected val instance = WorldBuilder.buildBasicWorld()
 
     private lateinit var spellBook: SpellBook
-    private val instance = WorldBuilder.buildBasicWorld()
     private val guidGenerator = ObjectGuidGenerator()
     private val objectManager = ObjectManager(guidGenerator)
     private var entryGuid: UInt = 1u
@@ -42,8 +42,7 @@ abstract class SpellCasterEnvironmentBaseTest {
             level,
         )
         unitToCreate.addTrait(ObjectSheetTrait(unitToCreate, 100, targetRiggedDiceEngine))
-
-        objectManager.addObjectToWorld(unitToCreate, instance, position)
+        unitToCreate.addIntoInstance(instance, position)
 
         return unitToCreate
     }

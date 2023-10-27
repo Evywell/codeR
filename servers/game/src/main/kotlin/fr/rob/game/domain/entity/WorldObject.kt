@@ -49,6 +49,21 @@ open class WorldObject(
         pushEvent(WorldObjectMovedEvent(this))
     }
 
+    fun addIntoInstance(instance: MapInstance, toPosition: Position) {
+        mapInstance = instance
+        position = toPosition
+        isInWorld = true
+
+        val addedIntoCell = mapInstance.grid.addWorldObject(this)
+
+        cell = addedIntoCell
+    }
+
+    fun scheduleRemoveFromInstance() {
+        mapInstance.scheduleRemoveFromInstance(this)
+        cell = null
+    }
+
     fun addTrait(trait: Any) {
         traits[trait::class] = trait
     }

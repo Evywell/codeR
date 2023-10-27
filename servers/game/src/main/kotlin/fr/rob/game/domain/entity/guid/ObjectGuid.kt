@@ -14,6 +14,7 @@ class ObjectGuid(private val lowGuid: UInt, private val highGuid: Int) {
 
     fun isPlayer(): Boolean = highGuid == GUID_TYPE.PLAYER.value
     fun isGameObject(): Boolean = highGuid == GUID_TYPE.GAME_OBJECT.value
+    fun isScriptableObject(): Boolean = highGuid == GUID_TYPE.SCRIPTABLE_OBJECT.value
 
     fun getRawValue(): Long {
         // Merge the low and high guid together
@@ -23,7 +24,8 @@ class ObjectGuid(private val lowGuid: UInt, private val highGuid: Int) {
     fun getType(): GUID_TYPE = when {
         isPlayer() -> GUID_TYPE.PLAYER
         isGameObject() -> GUID_TYPE.GAME_OBJECT
-        else -> throw RuntimeException("Invalid Guid Type") // @todo Change to a specific exception
+        isScriptableObject() -> GUID_TYPE.SCRIPTABLE_OBJECT
+        else -> throw RuntimeException("Invalid Guid Type $highGuid") // @todo Change to a specific exception
     }
 
     fun getHigh(): Int = highGuid
@@ -59,5 +61,6 @@ class ObjectGuid(private val lowGuid: UInt, private val highGuid: Int) {
     enum class GUID_TYPE(val value: Int) {
         GAME_OBJECT(0x00),
         PLAYER(0x01),
+        SCRIPTABLE_OBJECT(0x02),
     }
 }

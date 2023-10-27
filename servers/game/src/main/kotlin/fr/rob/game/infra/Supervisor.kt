@@ -12,11 +12,7 @@ import fr.rob.core.network.v2.session.SessionSocketUpdater
 import fr.rob.core.opcode.v2.OpcodeHandler
 import fr.rob.game.app.instance.FakeInstanceBuilder
 import fr.rob.game.domain.character.waitingroom.CharacterWaitingRoom
-import fr.rob.game.domain.entity.movement.NotifyWorldObjectMovedListener
-import fr.rob.game.domain.entity.notifier.Scheduler
-import fr.rob.game.domain.entity.notifier.WorldObjectUpdatedNotifier
 import fr.rob.game.domain.instance.InstanceManager
-import fr.rob.game.domain.instance.InstanceUpdater
 import fr.rob.game.domain.node.NodeBuilder
 import fr.rob.game.domain.node.NodeConfig
 import fr.rob.game.domain.world.World
@@ -66,19 +62,17 @@ class Supervisor(
         rpcServer.start()
 
         thread(true) {
-            val eventDispatcher = ListEventDispatcher()
-
             val world = World(
+                ListEventDispatcher(),
+                instanceManager,
+            )
+
+            val worldUpdater = WorldUpdater(
+                world,
                 arrayOf(
                     gameSessionUpdater,
-                    InstanceUpdater(instanceManager, eventDispatcher),
                     WorldUpdateRateChecker(),
                 ),
-            )
-            val worldUpdater = WorldUpdater(world)
-
-            eventDispatcher.attachListener(
-                NotifyWorldObjectMovedListener(Scheduler(), WorldObjectUpdatedNotifier(), world.updateState),
             )
 
             worldUpdater.initialize()

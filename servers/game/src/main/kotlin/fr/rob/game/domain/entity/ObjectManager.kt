@@ -31,40 +31,15 @@ class ObjectManager(
         return Optional.of(createWorldObject(guid, instance, position))
     }
 
-    fun addObjectToWorld(worldObject: WorldObject, instance: MapInstance, position: Position) {
-        worldObject.mapInstance = instance
-        worldObject.position = position
-        worldObject.isInWorld = true
-        addToGrid(worldObject)
-    }
-
     private fun isObjectAlreadyInGrid(guid: ObjectGuid, grid: Grid): Boolean =
         grid.findObjectByGuid(guid).isPresent
 
     private fun createWorldObject(guid: ObjectGuid, instance: MapInstance, position: Position): WorldObject {
         val worldObject = WorldObject(guid)
 
-        addObjectToWorld(worldObject, instance, position)
+        worldObject.addIntoInstance(instance, position)
 
         return worldObject
-    }
-
-    fun addToGrid(obj: WorldObject) {
-        val grid = obj.mapInstance.grid
-        val cellPosition = PositionNormalizer.fromMapPositionToGridCellCoordinate(
-            PositionNormalizer.MapInfoForPosition(
-                obj.position,
-                obj.mapInstance.map.zoneInfo.width,
-                obj.mapInstance.map.zoneInfo.height,
-                obj.mapInstance.map.zoneInfo.offsetX,
-                obj.mapInstance.map.zoneInfo.offsetY,
-                obj.mapInstance.grid.cellSize,
-            ),
-        )
-
-        val cell = grid.getCellFromCellPosition(cellPosition)
-        grid.addWorldObject(obj)
-        obj.cell = cell
     }
 
     fun removeFromWorld(obj: WorldObject) {

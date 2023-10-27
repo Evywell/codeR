@@ -9,7 +9,8 @@ import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
 import fr.rob.game.domain.instance.MapInstance
 import fr.rob.game.domain.player.PlayerFactory
 import fr.rob.game.domain.player.session.GameSession
-import fr.rob.game.domain.terrain.grid.Grid
+import fr.rob.game.domain.terrain.grid.GridBuilder
+import fr.rob.game.domain.terrain.grid.GridConstraintChecker
 import fr.rob.game.domain.terrain.map.Map
 import fr.rob.game.domain.terrain.map.MapInfo
 import fr.rob.game.domain.terrain.map.ZoneInfo
@@ -31,7 +32,7 @@ class PlayerFactoryTest {
         val initializer = PlayerFactory(
             characterService,
             SpecificCharacterFetcher(character),
-            ObjectGuidGenerator()
+            ObjectGuidGenerator(),
         )
 
         // Act
@@ -63,11 +64,18 @@ class PlayerFactoryTest {
         assertNull(result.player)
     }
 
-    private fun getMapInstance() = MapInstance(
-        1,
-        Map(1, 2, MapInfo("Map info", 10, 10), ZoneInfo("Zone info", 10, 10, 0f, 0f)),
-        Grid(10, 10, 1, emptyArray())
-    )
+    private fun getMapInstance(): MapInstance {
+        val gridBuilder = GridBuilder(GridConstraintChecker())
+        val cellSize = 1
+        val width = 20
+        val height = 20
+
+        return MapInstance(
+            1,
+            Map(1, 2, MapInfo("Map info", width, width), ZoneInfo("Zone info", width, height, 0f, 0f)),
+            gridBuilder.buildGrid(cellSize, width, height),
+        )
+    }
 
     class CharacterFoundForUser : CheckCharacterExistInterface {
         override fun characterExistsForAccount(characterId: Int, accountId: Int): Boolean = true
