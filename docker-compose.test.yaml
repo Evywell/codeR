@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  rabbit:
+    build:
+      context: docker/rabbitmq
+    ports:
+      - '5672'
+
+  mysql_unit:
+    image: mysql:8.0.32
+    volumes:
+      - ./docker/mysql/init_test/:/docker-entrypoint-initdb.d/
+    ports:
+      - '33061:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      TZ: Europe/Paris
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: secret
+      MYSQL_DATABASE: coder
+    healthcheck:
+      test: "mysql -u$$MYSQL_USER -p$$MYSQL_PASSWORD -h127.0.0.1 -e 'SELECT 1;'"
+      interval: 6s
+      timeout: 10s
+      retries: 10

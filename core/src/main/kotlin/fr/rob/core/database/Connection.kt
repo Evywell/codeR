@@ -19,7 +19,7 @@ class Connection(
     var port: Long,
     var user: String,
     var password: String,
-    var dbname: String
+    var dbname: String,
 ) {
     private val queryRunner = QueryRunner()
 
@@ -28,7 +28,7 @@ class Connection(
     var eventManager: EventManagerInterface? = null
 
     constructor(dbname: String, user: String, password: String) :
-            this("localhost", 3306, user, password, dbname)
+        this("localhost", 3306, user, password, dbname)
 
     /**
      * Returns true if the transaction is a success
@@ -64,11 +64,15 @@ class Connection(
             val stopwatch = StopWatch()
             stopwatch.start()
 
-            val stmt: PreparedStatement = if (returnKeys) PreparedStatement(
-                this,
-                sql,
-                connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
-            ) else PreparedStatement(this, sql, connection.prepareStatement(sql))
+            val stmt: PreparedStatement = if (returnKeys) {
+                PreparedStatement(
+                    this,
+                    sql,
+                    connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS),
+                )
+            } else {
+                PreparedStatement(this, sql, connection.prepareStatement(sql))
+            }
 
             stopwatch.stop()
 
@@ -114,11 +118,11 @@ class Connection(
                 port,
                 dbname,
                 user,
-                password
+                password,
             )
 
             this.connection = DriverManager.getConnection(
-                dsn
+                dsn,
             )
             connected = true
         } catch (e: SQLException) {

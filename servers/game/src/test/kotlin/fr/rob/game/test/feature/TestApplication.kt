@@ -57,22 +57,22 @@ open class TestApplication : KoinTest {
         connectionPoolManager.createPool(
             DB_WORLD,
             DatabaseConfig(
-                System.getProperty("mysql_game.host"),
-                System.getProperty("mysql_game.tcp.3306").toLong(),
-                "testing",
-                "passwordtesting",
-                "world",
+                System.getProperty("mysql_unit.host"),
+                System.getProperty("mysql_unit.tcp.3306").toLong(),
+                "dev",
+                "secret",
+                "coder",
             ),
         )
 
         connectionPoolManager.createPool(
             DB_REALM,
             DatabaseConfig(
-                System.getProperty("mysql_game.host"),
-                System.getProperty("mysql_game.tcp.3306").toLong(),
-                "testing",
-                "passwordtesting",
-                "players",
+                System.getProperty("mysql_unit.host"),
+                System.getProperty("mysql_unit.tcp.3306").toLong(),
+                "dev",
+                "secret",
+                "coder",
             ),
         )
     }

@@ -2,12 +2,10 @@ version: '3.7'
 
 networks:
   gamedb:
-  tests:
   messaging:
 
 volumes:
   mysqldata:
-  mysqlunitdata:
 
 services:
   protobuf:
@@ -28,7 +26,6 @@ services:
       - .:/mnt/app
     networks:
       - gamedb
-      - tests
 
   rabbit:
     build:
@@ -39,12 +36,7 @@ services:
       - messaging
 
   mysql_game:
-    build:
-      context: docker/mysql
-      target: dev
-      args:
-        - USER_ID=${USER_ID:-1000}
-        - GROUP_ID=${GROUP_ID:-1000}
+    image: mysql:8.0.32
     volumes:
       - ./docker/mysql/init:/docker-entrypoint-initdb.d
       - mysqldata:/mnt/data
@@ -54,23 +46,14 @@ services:
     networks:
       - gamedb
     environment:
-      MYSQL_USER: ${WORLD_MYSQL_USER}
-      MYSQL_PASSWORD: ${WORLD_MYSQL_PASSWORD}
-      MYSQL_HOST: ${WORLD_MYSQL_HOST}
+      MYSQL_ROOT_PASSWORD: pass
+      TZ: Europe/Paris
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    healthcheck:
+      test: "mysql -u$$MYSQL_USER -p$$MYSQL_PASSWORD -h127.0.0.1 -e 'SELECT 1;'"
+      interval: 6s
+      timeout: 10s
+      retries: 10
 
-  mysql_unit:
-    build:
-      context: docker/mysql
-      target: unit
-      args:
-        - USER_ID=${USER_ID:-1000}
-        - GROUP_ID=${GROUP_ID:-1000}
-    volumes:
-      - mysqlunitdata:/mnt/data
-      - ./logs/mysql_unit:/mnt/log
-    networks:
-      - tests
-    environment:
-      MYSQL_USER: ${UNIT_MYSQL_USER}
-      MYSQL_PASSWORD: ${UNIT_MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${UNIT_MYSQL_DATABASE}
