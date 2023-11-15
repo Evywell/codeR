@@ -88,7 +88,7 @@ lint-fix: up
 
 .PHONY: install-ci
 install-ci: servers/login/src/test/resources/private.pem ## Install the CI environment
-	@$(MAKE) -i CI_SERVER=true build-proto migrate seed
+	@$(MAKE) -i CI_SERVER=true build-proto
 
 .PHONY: help
 help: ## Outputs this help message

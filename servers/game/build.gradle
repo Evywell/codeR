@@ -67,13 +67,17 @@ jacoco {
     toolVersion = "0.8.7"
 }
 
-dockerCompose.isRequiredBy(test)
-dockerCompose.isRequiredBy(run)
-
 dockerCompose {
     dockerComposeWorkingDirectory = project.rootProject.projectDir
     projectName = 'coder'
     removeVolumes = false
+    isRequiredBy(run)
+
+    unit_tests {
+        useComposeFiles = ['docker-compose.test.yaml']
+        removeVolumes = true
+        isRequiredBy(test)
+    }
 }
 
 mainClassName = 'fr.rob.game.Main'

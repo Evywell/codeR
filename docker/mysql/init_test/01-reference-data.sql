@@ -1,0 +1,2 @@
+INSERT INTO accounts (id, user_id, is_administrator, name, banned_at, is_locked, created_at, updated_at) VALUES (1, 1, 1, 'Evywell#1234', null, 0, '2022-09-14 17:18:03', null);
+INSERT INTO characters (id, account_id, name, level, position_x, position_y, position_z, orientation, last_selected_at, created_at, updated_at) VALUES (1, 1, 'Evy', 1, 0, 0, 0, 0, '2022-09-14 17:17:31', '2022-09-14 17:18:06', '2022-09-14 17:23:51');

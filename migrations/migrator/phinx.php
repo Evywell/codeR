@@ -7,29 +7,27 @@ require_once dirname(__DIR__) . '/sql/constants.php';
 
 Dotenv::createImmutable(dirname(__DIR__, 2))->load();
 
-$dbPrefix = $_SERVER['DB_PREFIX'] ?? null;
+$dbNamespace = $_SERVER['DB_NAMESPACE'] ?? null;
 
-if ($dbPrefix === null) {
-    throw new RuntimeException('You must define a database prefix using $_SERVER[\'DB_PREFIX\']');
+if ($dbNamespace === null) {
+    throw new RuntimeException('You must define a database namespace using $_SERVER[\'DB_NAMESPACE\']');
 }
-
-$envDbPrefix = strtoupper($dbPrefix);
 
 return
 [
     'paths' => [
-        'migrations' => "%%PHINX_CONFIG_DIR%%/../sql/$dbPrefix",
-        'seeds' => "%%PHINX_CONFIG_DIR%%/../sql/$dbPrefix/seeds"
+        'migrations' => "%%PHINX_CONFIG_DIR%%/../sql/$dbNamespace",
+        'seeds' => "%%PHINX_CONFIG_DIR%%/../sql/$dbNamespace/seeds"
     ],
     'environments' => [
         'default_migration_table' => 'phinxlog',
         'default_environment' => 'development',
         'development' => [
             'adapter' => 'mysql',
-            'host' => $_ENV[$envDbPrefix . '_MYSQL_HOST'],
-            'name' => $_ENV[$envDbPrefix . '_MYSQL_DATABASE'],
-            'user' => $_ENV[$envDbPrefix . '_MYSQL_USER'],
-            'pass' => $_ENV[$envDbPrefix . '_MYSQL_PASSWORD'],
+            'host' => $_ENV['MYSQL_HOST'],
+            'name' => $_ENV['MYSQL_DATABASE'],
+            'user' => $_ENV['MYSQL_USER'],
+            'pass' => $_ENV['MYSQL_PASSWORD'],
             'port' => '3306',
             'charset' => 'utf8',
         ],
