@@ -42,19 +42,6 @@ class ObjectManager(
         return worldObject
     }
 
-    fun removeFromWorld(obj: WorldObject) {
-        obj.isInWorld = false
-
-        removeFromGrid(obj)
-    }
-
-    private fun removeFromGrid(obj: WorldObject) {
-        val grid = obj.mapInstance.grid
-        grid.removeWorldObject(obj)
-
-        obj.cell = null
-    }
-
     private fun isInsideMap(map: Map, position: Position): Boolean {
         val mapHalfWith = map.mapInfo.width / 2
         val mapHalfHeight = map.mapInfo.height / 2

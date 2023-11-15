@@ -25,14 +25,16 @@ open class WorldObject(
     private val domainEventContainer = DomainEventContainer()
     private val traits = HashMap<KClass<*>, Any>()
 
-    open fun update(deltaTime: Int) {
-        domainEventContainer.resetContainer()
-
+    open fun onUpdate(deltaTime: Int) {
         traits.forEach { (_, trait) ->
             if (trait is UpdatableTraitInterface) {
                 trait.update(deltaTime)
             }
         }
+    }
+
+    open fun onAfterUpdate() {
+        domainEventContainer.resetContainer()
     }
 
     open fun accept(worldObjectVisitor: WorldObjectVisitorInterface) {
@@ -54,13 +56,14 @@ open class WorldObject(
         position = toPosition
         isInWorld = true
 
-        val addedIntoCell = mapInstance.grid.addWorldObject(this)
+        val addedIntoCell = mapInstance.addInInstance(this)
 
         cell = addedIntoCell
     }
 
     fun scheduleRemoveFromInstance() {
         mapInstance.scheduleRemoveFromInstance(this)
+        isInWorld = false
         cell = null
     }
 

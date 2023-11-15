@@ -18,6 +18,10 @@ message MovementHeartbeat {
   float speed = 3;
 }
 
+message CheatTeleport {
+  Position position = 1;
+}
+
 enum MovementPhase {
   PHASE_BEGIN = 0;
   PHASE_END = 1;

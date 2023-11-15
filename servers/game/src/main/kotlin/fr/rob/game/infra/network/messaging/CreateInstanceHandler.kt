@@ -12,7 +12,7 @@ import fr.rob.orchestrator.shared.entities.CreateInstanceRequestProto
 class CreateInstanceHandler(
     private val nodeManager: GameNodeManager,
     private val mapManager: MapManager,
-    private val messageQueueDispatcher: MessageQueueDispatcher
+    private val messageQueueDispatcher: MessageQueueDispatcher,
 ) : MessageHandlerInterface {
     override fun handle(envelope: MessagingProto.Envelope) {
         val message = CreateInstanceRequestProto.CreateMapInstance.parseFrom(envelope.data)
@@ -31,7 +31,7 @@ class CreateInstanceHandler(
                 .setMapId(instance.map.id)
                 .setZoneId(instance.map.zoneId)
                 .setNode(node.info.name)
-                .build()
+                .build(),
         )
     }
 }

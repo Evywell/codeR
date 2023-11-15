@@ -6,6 +6,7 @@ import fr.rob.game.domain.entity.WorldObject
 import fr.rob.game.domain.entity.WorldObjectContainer
 import fr.rob.game.domain.entity.guid.ObjectGuid
 import fr.rob.game.domain.player.Player
+import fr.rob.game.domain.terrain.grid.query.GridQuery
 import java.util.Optional
 import kotlin.math.ceil
 
@@ -89,6 +90,10 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
         }
 
         return neighborCells.toTypedArray()
+    }
+
+    fun query(): GridQuery {
+        return GridQuery(this)
     }
 
     fun addWorldObject(obj: WorldObject): Cell {

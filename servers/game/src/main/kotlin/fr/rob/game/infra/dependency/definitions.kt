@@ -14,8 +14,6 @@ import fr.rob.core.database.pool.ConnectionPool
 import fr.rob.core.database.pool.ConnectionPoolManager
 import fr.rob.core.event.EventManager
 import fr.rob.core.event.EventManagerInterface
-import fr.rob.core.opcode.v2.OpcodeFunctionRegistryInterface.OpcodeFunctionItem
-import fr.rob.core.opcode.v2.OpcodeHandler
 import fr.rob.game.DB_REALM
 import fr.rob.game.DB_WORLD
 import fr.rob.game.app.player.action.CreatePlayerIntoWorldHandler
@@ -38,16 +36,19 @@ import fr.rob.game.domain.terrain.map.loader.WorldObjectsLoaderInterface
 import fr.rob.game.domain.terrain.map.loader.creature.CreatureLoader
 import fr.rob.game.domain.terrain.map.loader.creature.CreatureRepository
 import fr.rob.game.domain.terrain.map.loader.creature.CreatureRepositoryInterface
-import fr.rob.game.infra.command.LogIntoWorldOpcodeFunction
-import fr.rob.game.infra.command.PlayerMovementOpcodeFunction
-import fr.rob.game.infra.command.RemoveFromWorldOpcodeFunction
+import fr.rob.game.domain.world.function.CheatTeleportFunction
+import fr.rob.game.domain.world.function.LogIntoWorldFunction
+import fr.rob.game.domain.world.function.PlayerMovementFunction
+import fr.rob.game.domain.world.function.RemoveFromWorldFunction
+import fr.rob.game.domain.world.function.WorldFunctionRegistry
+import fr.rob.game.domain.world.packet.WorldPacketQueue
 import fr.rob.game.infra.misc.player.FakeInstanceFinder
 import fr.rob.game.infra.mysql.character.MysqlCheckCharacterExist
 import fr.rob.game.infra.mysql.character.MysqlFetchCharacter
+import fr.rob.game.infra.opcode.CMSG_CHEAT_TELEPORT
 import fr.rob.game.infra.opcode.CMSG_LOG_INTO_WORLD
 import fr.rob.game.infra.opcode.CMSG_PLAYER_MOVEMENT
 import fr.rob.game.infra.opcode.CMSG_REMOVE_FROM_WORLD
-import fr.rob.game.infra.opcode.OpcodeRegistry
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.withOptions
 import org.koin.core.qualifier.named
@@ -118,13 +119,14 @@ val opcodeModule = module {
     single { CharacterWaitingRoom() }
     single { CreatePlayerIntoWorldHandler(get(), get()) }
 
-    single(named("OPCODE_DEFINITIONS")) {
+    single(named("FUNCTION_DEFINITIONS")) {
         arrayOf(
-            OpcodeFunctionItem(CMSG_LOG_INTO_WORLD, LogIntoWorldOpcodeFunction(get(), get())),
-            OpcodeFunctionItem(CMSG_REMOVE_FROM_WORLD, RemoveFromWorldOpcodeFunction(get())),
-            OpcodeFunctionItem(CMSG_PLAYER_MOVEMENT, PlayerMovementOpcodeFunction()),
+            WorldFunctionRegistry.WorldFunctionItem(CMSG_LOG_INTO_WORLD, LogIntoWorldFunction(get(), get())),
+            WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_MOVEMENT, PlayerMovementFunction()),
+            WorldFunctionRegistry.WorldFunctionItem(CMSG_REMOVE_FROM_WORLD, RemoveFromWorldFunction()),
+            WorldFunctionRegistry.WorldFunctionItem(CMSG_CHEAT_TELEPORT, CheatTeleportFunction()),
         )
     }
-
-    single { OpcodeHandler(OpcodeRegistry(get(named("OPCODE_DEFINITIONS")))) }
+    single { WorldFunctionRegistry(get(named("FUNCTION_DEFINITIONS"))) }
+    single { WorldPacketQueue(get()) }
 }

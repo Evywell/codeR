@@ -13,7 +13,7 @@ abstract class AbstractMessageOpcodeFunction<FunctionParameters, ProtoMessage> :
     override fun call(functionParameters: FunctionParameters) {
         callForMessage(
             createMessageFromPacket(getPacketFromParameters(functionParameters)),
-            functionParameters
+            functionParameters,
         )
     }
 }

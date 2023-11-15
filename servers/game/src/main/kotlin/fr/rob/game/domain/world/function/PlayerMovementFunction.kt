@@ -1,31 +1,28 @@
-package fr.rob.game.infra.command
+package fr.rob.game.domain.world.function
 
+import com.google.protobuf.ByteString
 import com.google.protobuf.Message
-import fr.raven.proto.message.game.GameProto
 import fr.raven.proto.message.game.MovementProto
 import fr.rob.game.app.player.action.MovementCommand
 import fr.rob.game.app.player.action.MovementHandler
 import fr.rob.game.domain.entity.Movement
-import fr.rob.game.infra.opcode.GameNodeFunctionParameters
+import fr.rob.game.domain.player.session.GameSession
 
-class PlayerMovementOpcodeFunction : AuthenticatedSessionFunction() {
-    override fun createMessageFromPacket(packet: GameProto.Packet): Message =
-        MovementProto.ProceedMovement.parseFrom(packet.body)
-
-    override fun callForMessage(message: Message, functionParameters: GameNodeFunctionParameters) {
+class PlayerMovementFunction : WorldFunctionInterface {
+    override fun invoke(sender: GameSession, opcode: Int, message: Message) {
         message as MovementProto.ProceedMovement
 
-        val packet = getPacketFromParameters(functionParameters)
-        val gameSession = functionParameters.gatewaySession.findGameSession(packet.sender)
-
         val movementCommand = MovementCommand(
-            gameSession,
+            sender,
             getMovementDirectionType(message),
-            message.orientation
+            message.orientation,
         )
 
         MovementHandler().execute(movementCommand)
     }
+
+    override fun parseFromByteString(data: ByteString): Message =
+        MovementProto.ProceedMovement.parseFrom(data)
 
     private fun getMovementDirectionType(message: MovementProto.ProceedMovement): Movement.MovementDirectionType {
         return when (message.direction) {
