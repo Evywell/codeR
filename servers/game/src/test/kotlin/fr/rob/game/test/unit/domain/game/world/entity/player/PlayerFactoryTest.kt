@@ -36,17 +36,17 @@ class PlayerFactoryTest {
         )
 
         // Act
-        val result = initializer.createFromGameSession(GameSession(1, NullMessageSender()), 1, getMapInstance())
+        val result = initializer.createFromGameSession(GameSession(1, NullMessageSender()), 1)
 
         // Assert
         assertTrue(result.isSuccess)
         assertNotNull(result.player)
         assertEquals("Hello", result.player!!.name)
         assertEquals(8, result.player!!.level)
-        assertEquals(5f, result.player!!.position.x)
-        assertEquals(6f, result.player!!.position.y)
-        assertEquals(7f, result.player!!.position.z)
-        assertEquals(0.2f, result.player!!.position.orientation)
+        assertEquals(5f, result.position!!.x)
+        assertEquals(6f, result.position!!.y)
+        assertEquals(7f, result.position!!.z)
+        assertEquals(0.2f, result.position!!.orientation)
         assertTrue(result.player!!.guid.isPlayer())
     }
 
@@ -57,7 +57,7 @@ class PlayerFactoryTest {
         val initializer = PlayerFactory(characterService, NullCharacterFetcher(), ObjectGuidGenerator())
 
         // Act
-        val result = initializer.createFromGameSession(GameSession(1, NullMessageSender()), 1, getMapInstance())
+        val result = initializer.createFromGameSession(GameSession(1, NullMessageSender()), 1)
 
         // Assert
         assertFalse(result.isSuccess)

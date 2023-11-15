@@ -57,7 +57,7 @@ class GatewaySessionMessageSender(
                     .setPosY(message.position.y)
                     .setPosZ(message.position.z)
                     .setOrientation(message.position.orientation)
-                    .build()
+                    .build(),
             )
             .build()
 

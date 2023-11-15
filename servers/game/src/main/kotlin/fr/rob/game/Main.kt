@@ -41,7 +41,7 @@ class Main {
         private fun fromGlobal(config: Config): GameConfig = GameConfig(
             Orchestrator(
                 config.getString("orchestrator.host")!!,
-                config.getInteger("orchestrator.port")!!
+                config.getInteger("orchestrator.port")!!,
             ),
             Databases(
                 DatabaseConfig(
@@ -49,22 +49,22 @@ class Main {
                     System.getProperty("mysql_game.tcp.3306").toLong(),
                     config.getString("databases.config.user")!!,
                     config.getString("databases.config.password")!!,
-                    config.getString("databases.config.database")!!
+                    config.getString("databases.config.database")!!,
                 ),
                 DatabaseConfig(
                     System.getProperty("mysql_game.host"),
                     System.getProperty("mysql_game.tcp.3306").toLong(),
                     config.getString("databases.players.user")!!,
                     config.getString("databases.players.password")!!,
-                    config.getString("databases.players.database")!!
+                    config.getString("databases.players.database")!!,
                 ),
                 DatabaseConfig(
                     System.getProperty("mysql_game.host"),
                     System.getProperty("mysql_game.tcp.3306").toLong(),
                     config.getString("databases.world.user")!!,
                     config.getString("databases.world.password")!!,
-                    config.getString("databases.world.database")!!
-                )
+                    config.getString("databases.world.database")!!,
+                ),
             ),
             NodesConfig(config),
             AMQPConfig(
@@ -72,8 +72,8 @@ class Main {
                 System.getProperty("rabbit.tcp.5672").toInt(),
                 config.getString("rabbitmq.username")!!,
                 config.getString("rabbitmq.password")!!,
-                config.getString("rabbitmq.vhost")!!
-            )
+                config.getString("rabbitmq.vhost")!!,
+            ),
         )
 
         private fun getConfigFile(configFileName: String?): File {

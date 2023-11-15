@@ -9,7 +9,6 @@ import fr.rob.core.network.v2.netty.shard.NioConfigShard
 import fr.rob.core.network.v2.netty.shard.ProtobufHandlerShard
 import fr.rob.core.network.v2.netty.shard.ProtobufPipelineShard
 import fr.rob.core.network.v2.session.SessionSocketUpdater
-import fr.rob.core.opcode.v2.OpcodeHandler
 import fr.rob.game.app.instance.FakeInstanceBuilder
 import fr.rob.game.domain.character.waitingroom.CharacterWaitingRoom
 import fr.rob.game.domain.instance.InstanceManager
@@ -18,11 +17,11 @@ import fr.rob.game.domain.node.NodeConfig
 import fr.rob.game.domain.world.World
 import fr.rob.game.domain.world.WorldUpdateRateChecker
 import fr.rob.game.domain.world.WorldUpdater
-import fr.rob.game.infra.event.ListEventDispatcher
+import fr.rob.game.domain.world.function.WorldFunctionRegistry
+import fr.rob.game.domain.world.packet.WorldPacketQueue
 import fr.rob.game.infra.grpc.CharacterServiceImpl
+import fr.rob.game.infra.network.packet.BytesToMessageBuilder
 import fr.rob.game.infra.network.server.GameNodeServer
-import fr.rob.game.infra.network.session.GameSessionUpdater
-import fr.rob.game.infra.opcode.GameNodeFunctionParameters
 import fr.rob.orchestrator.shared.entities.NewGameNodeProto
 import io.grpc.ServerBuilder
 import kotlin.concurrent.thread
@@ -31,7 +30,8 @@ class Supervisor(
     private val nodeBuilder: NodeBuilder,
     private val messageQueueDispatcher: MessageQueueDispatcherInterface,
     private val logger: LoggerInterface,
-    private val gameNodeOpcodeHandler: OpcodeHandler<GameNodeFunctionParameters>,
+    private val worldFunctionRegistry: WorldFunctionRegistry,
+    private val worldPacketQueue: WorldPacketQueue,
     private val fakeInstanceBuilder: FakeInstanceBuilder,
     private val instanceManager: InstanceManager,
     private val characterWaitingRoom: CharacterWaitingRoom,
@@ -42,9 +42,10 @@ class Supervisor(
 
         val updater = SessionSocketUpdater()
         val socketBuilder = NettyBufferedSocketBuilder(updater)
-        val gameSessionUpdater = GameSessionUpdater()
         fakeInstanceBuilder.buildInstance(1, 1, 1)
-        val server = GameNodeServer(gameSessionUpdater, gameNodeOpcodeHandler, logger)
+        val bytesToMessageBuilder = BytesToMessageBuilder(worldFunctionRegistry)
+
+        val server = GameNodeServer(worldPacketQueue, bytesToMessageBuilder, logger)
         val process = NettyServerBuilder<GameProto.Packet>(node.port, false)
             .build(
                 NioConfigShard(),
@@ -62,15 +63,11 @@ class Supervisor(
         rpcServer.start()
 
         thread(true) {
-            val world = World(
-                ListEventDispatcher(),
-                instanceManager,
-            )
+            val world = World(instanceManager, worldPacketQueue)
 
             val worldUpdater = WorldUpdater(
                 world,
                 arrayOf(
-                    gameSessionUpdater,
                     WorldUpdateRateChecker(),
                 ),
             )

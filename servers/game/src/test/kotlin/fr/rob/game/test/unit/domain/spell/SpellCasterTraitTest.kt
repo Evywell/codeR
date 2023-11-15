@@ -43,11 +43,11 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
 
         // Projectile still moving
-        caster.update(1000)
+        caster.onUpdate(1000)
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
 
         // Projectile hit the target
-        caster.update(1000)
+        caster.onUpdate(1000)
         assertEquals(99, target.getTrait(ObjectSheetTrait::class).get().health)
     }
 
@@ -60,11 +60,11 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
 
         // Projectile still moving
-        caster.update(1000)
+        caster.onUpdate(1000)
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
 
         // Projectile hit the target
-        caster.update(1000)
+        caster.onUpdate(1000)
         assertEquals(99, target.getTrait(ObjectSheetTrait::class).get().health)
     }
 
@@ -74,10 +74,10 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
 
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
         // 1 second casting
-        caster.update(1000)
+        caster.onUpdate(1000)
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
         // 2 seconds casting
-        caster.update(1000)
+        caster.onUpdate(1000)
         assertEquals(94, target.getTrait(ObjectSheetTrait::class).get().health)
     }
 
@@ -88,17 +88,17 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
 
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
         // 1 second casting
-        caster.update(1000)
+        caster.onUpdate(1000)
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
 
         // Walking
         caster.getTrait<MovableTrait>().get().move(Movement(Movement.MovementDirectionType.FORWARD, 0f))
-        caster.update(100)
+        caster.onUpdate(100)
         assertEquals(Spell.SpellState.CANCELED, caster.getTrait<SpellCasterTrait>().get().getLastSpellCasted().get().state)
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
 
         // 2 more seconds casting
-        caster.update(2000)
+        caster.onUpdate(2000)
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
     }
 
@@ -109,17 +109,17 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
 
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
         // 1 second casting
-        caster.update(1000)
+        caster.onUpdate(1000)
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
 
         // Walking
         caster.getTrait<MovableTrait>().get().move(Movement(Movement.MovementDirectionType.FORWARD, 0f))
-        caster.update(100)
+        caster.onUpdate(100)
         assertEquals(Spell.SpellState.PREPARING, caster.getTrait<SpellCasterTrait>().get().getLastSpellCasted().get().state)
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
 
         // 2 more seconds casting
-        caster.update(2000)
+        caster.onUpdate(2000)
         assertEquals(99, target.getTrait(ObjectSheetTrait::class).get().health)
     }
 
@@ -130,7 +130,7 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
         caster.getTrait(SpellCasterTrait::class).get().castSpell(5, SpellTargetParameter(target.guid, caster.mapInstance))
 
         assertEquals(1, counterTrait.counter)
-        caster.update(100)
+        caster.onUpdate(100)
         assertEquals(1, counterTrait.counter)
     }
 

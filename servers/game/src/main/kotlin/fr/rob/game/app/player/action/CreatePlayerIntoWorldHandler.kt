@@ -6,6 +6,7 @@ import fr.rob.game.domain.entity.ObjectManager
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.WorldObject
 import fr.rob.game.domain.entity.guid.ObjectGuid
+import fr.rob.game.domain.instance.MapInstance
 import fr.rob.game.domain.player.Player
 import fr.rob.game.domain.player.PlayerFactory
 import fr.rob.game.domain.player.session.GameSession
@@ -19,7 +20,6 @@ class CreatePlayerIntoWorldHandler(
         val createPlayerResult = playerFactory.createFromGameSession(
             playerGameSession,
             command.characterId,
-            command.mapInstance,
         )
 
         if (!createPlayerResult.isSuccess) {
@@ -30,15 +30,22 @@ class CreatePlayerIntoWorldHandler(
         playerGameSession.assignToPlayer(player)
 
         // @todo remove this
-        createMobForPlayer(player)
+        createMobAroundPosition(createPlayerResult.position!!, command.mapInstance)
+
+        player.addIntoInstance(command.mapInstance, createPlayerResult.position!!)
 
         // @todo Send player info
         player.ownerGameSession.send(PlayerDescriptionMessage(player.guid, player.name))
 
-        notifyPlayerFromNearbyGameObjects(player)
+        // @todo move this into a specific event handler
+        // notifyPlayerFromNearbyGameObjects(player)
     }
 
     private fun notifyPlayerFromNearbyGameObjects(player: Player) {
+        if (player.controlledByGameSession == null) {
+            return
+        }
+
         assert(player.cell != null)
 
         val grid = player.mapInstance.grid
@@ -49,11 +56,8 @@ class CreatePlayerIntoWorldHandler(
             worldObjectToBeNotifiedOf.addAll(grid.getObjectsOfCell(cell))
         }
 
-        // Notify worldObject.ownerGameSession
-        if (player.controlledByGameSession != null) {
-            // Notify worldObject.controlledByGameSession
-            worldObjectToBeNotifiedOf.forEach { obj -> notifyForObject(player.controlledByGameSession!!, obj) }
-        }
+        // Notify worldObject.controlledByGameSession
+        worldObjectToBeNotifiedOf.forEach { obj -> notifyForObject(player.controlledByGameSession!!, obj) }
     }
 
     private fun notifyForObject(session: GameSession, obj: WorldObject) {
@@ -64,13 +68,13 @@ class CreatePlayerIntoWorldHandler(
         session.send(NearbyObjectMessage(obj.guid, obj.position))
     }
 
-    private fun createMobForPlayer(player: Player) {
-        val position = Position(player.position.x + 10, player.position.y, player.position.z, 0f)
+    private fun createMobAroundPosition(position: Position, mapInstance: MapInstance) {
+        val mobPosition = Position(position.x + 10, position.y, position.z, 0f)
 
         objectManager.spawnObject(
             ObjectGuid.LowGuid(1u, 1u),
-            position,
-            player.mapInstance,
+            mobPosition,
+            mapInstance,
         )
     }
 }

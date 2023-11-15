@@ -1,8 +1,4 @@
-package fr.rob.game.infra.event
-
-import fr.rob.game.domain.event.DomainEventDispatcherInterface
-import fr.rob.game.domain.event.DomainEventInterface
-import fr.rob.game.domain.event.DomainEventListenerInterface
+package fr.rob.game.domain.event
 
 class ListEventDispatcher : DomainEventDispatcherInterface {
     private val listeners = ArrayList<DomainEventListenerInterface>()
