@@ -25,9 +25,10 @@ import org.opentest4j.AssertionFailedError
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 open class TestApplication : KoinTest {
     private val objectGuidGenerator = ObjectGuidGenerator()
+    protected lateinit var connectionPoolManager: ConnectionPoolManager
 
     @BeforeAll
-    fun launchApp() {
+    open fun launchApp() {
         startKoin {
             modules(globalModule, databaseModule, mapModule, queueModule, opcodeModule)
         }
@@ -36,7 +37,7 @@ open class TestApplication : KoinTest {
     }
 
     @AfterAll
-    fun shutdownApp() {
+    open fun shutdownApp() {
         stopKoin()
     }
 
@@ -52,7 +53,7 @@ open class TestApplication : KoinTest {
         objectGuidGenerator.fromGuidInfo(ObjectGuidGenerator.GuidInfo(low, type))
 
     private fun createDatabasePools() {
-        val connectionPoolManager = get<ConnectionPoolManager> { parametersOf(6) }
+        connectionPoolManager = get<ConnectionPoolManager> { parametersOf(1) }
 
         connectionPoolManager.createPool(
             DB_WORLD,

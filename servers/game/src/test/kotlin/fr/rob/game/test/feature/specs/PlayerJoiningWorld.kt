@@ -17,14 +17,18 @@ import fr.rob.game.domain.world.packet.WorldPacketQueue
 import fr.rob.game.infra.opcode.CMSG_LOG_INTO_WORLD
 import fr.rob.game.infra.opcode.SMSG_NEARBY_OBJECT_UPDATE
 import fr.rob.game.infra.opcode.SMSG_PLAYER_DESCRIPTION
-import fr.rob.game.test.feature.TestApplication
+import fr.rob.game.test.feature.DatabaseTestApplication
 import fr.rob.game.test.unit.sandbox.network.session.StoreMessageSender
 import org.junit.jupiter.api.Test
 import org.koin.test.get
 
-class PlayerJoiningWorld : TestApplication() {
+class PlayerJoiningWorld : DatabaseTestApplication() {
     @Test
     fun `When player joins the world, it should be notified with objects around him`() {
+        // Loading fixtures
+        databaseConnection.executeStatement("INSERT INTO accounts (id, user_id, is_administrator, name) VALUES (1, 1, 1, 'Evywell#1234')")
+        databaseConnection.executeStatement("INSERT INTO characters (id, account_id, name, level, position_x, position_y, position_z, orientation, last_selected_at) VALUES (1, 1, 'Evy', 1, 0, 0, 0, 0, '2022-09-14 00:00:00')")
+
         // 1. Instantiate the world
         val instanceManager = get<InstanceManager>()
         val worldPacketQueue = get<WorldPacketQueue>()
