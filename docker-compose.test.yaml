@@ -10,7 +10,7 @@ services:
   mysql_unit:
     image: mysql:8.0.32
     volumes:
-      - ./docker/mysql/init_test/:/docker-entrypoint-initdb.d/
+      - ./docker/mysql/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
     ports:
       - '33061:3306'
     environment:

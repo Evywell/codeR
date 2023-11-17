@@ -107,9 +107,9 @@ val opcodeModule = module {
     single {
         PlayerFactory(
             CharacterService(
-                MysqlCheckCharacterExist(get<ConnectionPool>(named(DB_REALM)).getNextConnection()),
+                MysqlCheckCharacterExist(get<ConnectionPool>(named(DB_WORLD)).getNextConnection()),
             ),
-            MysqlFetchCharacter(get<ConnectionPool>(named(DB_REALM)).getNextConnection()),
+            MysqlFetchCharacter(get<ConnectionPool>(named(DB_WORLD)).getNextConnection()),
             get(),
         )
     }

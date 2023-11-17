@@ -16,15 +16,19 @@ import fr.rob.game.domain.world.packet.WorldPacketQueue
 import fr.rob.game.infra.opcode.CMSG_CHEAT_TELEPORT
 import fr.rob.game.infra.opcode.CMSG_LOG_INTO_WORLD
 import fr.rob.game.infra.opcode.SMSG_MOVEMENT_HEARTBEAT
-import fr.rob.game.test.feature.TestApplication
+import fr.rob.game.test.feature.DatabaseTestApplication
 import fr.rob.game.test.unit.sandbox.network.session.StoreMessageSender
 import org.junit.jupiter.api.Test
 import org.koin.test.get
 import fr.raven.proto.message.game.PositionProto.Position as PositionProto
 
-class PlayerCheatTeleport : TestApplication() {
+class PlayerCheatTeleport : DatabaseTestApplication() {
     @Test
     fun `As a player, I should be able to teleport for testing purpose`() {
+        // Loading fixtures
+        databaseConnection.executeStatement("INSERT INTO accounts (id, user_id, is_administrator, name) VALUES (1, 1, 1, 'Evywell#1234')")
+        databaseConnection.executeStatement("INSERT INTO characters (id, account_id, name, level, position_x, position_y, position_z, orientation, last_selected_at) VALUES (1, 1, 'Evy', 1, 0, 0, 0, 0, '2022-09-14 00:00:00')")
+
         val instanceManager = get<InstanceManager>()
         val worldPacketQueue = get<WorldPacketQueue>()
         val world = World(instanceManager, worldPacketQueue)

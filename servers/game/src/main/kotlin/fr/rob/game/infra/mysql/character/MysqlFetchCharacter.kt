@@ -14,7 +14,7 @@ class MysqlFetchCharacter(private val db: Connection) : FetchCharacterInterface 
             SELECT id, name, level, position_x, position_y, position_z, orientation 
             FROM characters 
             WHERE id = ?
-            """.trimIndent()
+            """.trimIndent(),
         )!!
 
         stmt.setInt(1, id)
@@ -30,7 +30,7 @@ class MysqlFetchCharacter(private val db: Connection) : FetchCharacterInterface 
             id = rs.getInt(1),
             name = rs.getString(2),
             level = rs.getInt(3),
-            position = Position(rs.getFloat(4), rs.getFloat(5), rs.getFloat(6), rs.getFloat(7))
+            position = Position(rs.getFloat(4), rs.getFloat(5), rs.getFloat(6), rs.getFloat(7)),
         )
 
         return returnAndClose(character, rs, stmt)
