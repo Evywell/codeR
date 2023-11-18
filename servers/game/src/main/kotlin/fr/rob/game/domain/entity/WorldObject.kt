@@ -71,6 +71,7 @@ open class WorldObject(
         traits[trait::class] = trait
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <T : Any> getTrait(traitType: KClass<T>): Optional<T> = Optional.ofNullable(traits[traitType] as T?)
 
     inline fun <reified T : Any> getTrait(): Optional<T> {
