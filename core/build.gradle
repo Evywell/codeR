@@ -14,14 +14,14 @@ plugins {
 }
 
 dependencies {
-    compile 'com.fasterxml:jackson-module-json-org:0.9.1'
+    implementation 'com.fasterxml:jackson-module-json-org:0.9.1'
     implementation 'mysql:mysql-connector-java:8.0.25'
 
-    compile 'io.jsonwebtoken:jjwt-api:0.11.2'
-    compile 'io.jsonwebtoken:jjwt-impl:0.11.2'
-    compile 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
-    compile 'org.bouncycastle:bcprov-jdk15on:1.69'
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
 
     implementation 'com.xenomachina:kotlin-argparser:2.0.7'
 

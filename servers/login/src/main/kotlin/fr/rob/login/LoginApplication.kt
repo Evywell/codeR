@@ -2,7 +2,6 @@ package fr.rob.login
 
 import fr.raven.log.LoggerFactoryInterface
 import fr.rob.core.AbstractModule
-import fr.rob.core.DB_CONFIG
 import fr.rob.core.SingleServerApplication
 import fr.rob.core.config.Config
 import fr.rob.core.config.commons.configuration2.ConfigLoader
@@ -33,7 +32,7 @@ import fr.rob.login.security.account.AccountRepository
 open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, env: String) :
     SingleServerApplication<Packet>(env, loggerFactory.create("login"), ConfigLoader(), EventManager()) {
 
-    val connectionManager = ConnectionManager(eventManager)
+    private val connectionManager = ConnectionManager(eventManager)
     var connectionPoolManager = ConnectionPoolManager(4, connectionManager)
     val processManager = ProcessManager()
 
@@ -43,7 +42,6 @@ open class LoginApplication(private val loggerFactory: LoggerFactoryInterface, e
         config!!.retrieveConfig(CONFIG_KEY_DATABASES)
 
         val dbPlayersPool = connectionPoolManager.getPool(DB_PLAYERS)!!
-        val dbConfigPool = connectionPoolManager.getPool(DB_CONFIG)!!
 
         val characterRepository = CharacterRepository(dbPlayersPool.getNextConnection())
         val accountRepository = AccountRepository(dbPlayersPool.getNextConnection())
