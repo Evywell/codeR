@@ -38,7 +38,7 @@ import fr.rob.game.domain.terrain.map.loader.creature.CreatureRepository
 import fr.rob.game.domain.terrain.map.loader.creature.CreatureRepositoryInterface
 import fr.rob.game.domain.world.function.CheatTeleportFunction
 import fr.rob.game.domain.world.function.LogIntoWorldFunction
-import fr.rob.game.domain.world.function.PlayerMovementFunction
+import fr.rob.game.domain.world.function.MovePlayerFunction
 import fr.rob.game.domain.world.function.RemoveFromWorldFunction
 import fr.rob.game.domain.world.function.WorldFunctionRegistry
 import fr.rob.game.domain.world.packet.WorldPacketQueue
@@ -122,7 +122,7 @@ val opcodeModule = module {
     single(named("FUNCTION_DEFINITIONS")) {
         arrayOf(
             WorldFunctionRegistry.WorldFunctionItem(CMSG_LOG_INTO_WORLD, LogIntoWorldFunction(get(), get())),
-            WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_MOVEMENT, PlayerMovementFunction()),
+            WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_MOVEMENT, MovePlayerFunction()),
             WorldFunctionRegistry.WorldFunctionItem(CMSG_REMOVE_FROM_WORLD, RemoveFromWorldFunction()),
             WorldFunctionRegistry.WorldFunctionItem(CMSG_CHEAT_TELEPORT, CheatTeleportFunction()),
         )

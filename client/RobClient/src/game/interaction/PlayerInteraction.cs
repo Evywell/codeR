@@ -28,5 +28,20 @@ namespace RobClient.Game.Interaction {
             
             _sender.SendMessage(0x06, movement, GatewayPacket.Types.Context.Game);
         }
+
+        public void MoveClient(float posX, float posY, float posZ, float orientation) {
+            var position = new Position();
+            position.PosX = posX;
+            position.PosY = posY;
+            position.PosZ = posZ;
+            position.Orientation = orientation;
+            
+            var movement = new SMovementInfo();
+            movement.Phase = MovementPhase.PhaseBegin;
+            movement.Position = position;
+            movement.Direction = MovementDirectionType.TypeForward;
+
+            _sender.SendMessage(0x06, movement, GatewayPacket.Types.Context.Game);
+        }
     }
 }

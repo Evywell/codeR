@@ -12,6 +12,12 @@ message ProceedMovement {
     MovementDirectionType direction = 3;
 }
 
+message SMovementInfo {
+  MovementPhase phase = 1;
+  Position position = 2;
+  MovementDirectionType direction = 3;
+}
+
 message MovementHeartbeat {
   uint64 guid = 1;
   Position position = 2;

@@ -6,6 +6,9 @@
     <Authors>Evywell</Authors>
     <Company>EvyCorp</Company>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <OutputPath>../RobAlpha/Assets/Plugins/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +18,18 @@
     <PackageReference Include="DotNetty.Transport" Version="0.7.5" />
     <PackageReference Include="Google.Protobuf" Version="3.19.4" />
     <PackageReference Include="System.Reactive" Version="6.0.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.59.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.60.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+
+    <!-- ProtoRoot is used fix "include" functionnality in proto files with sub directories -->
+    <Protobuf
+      Include="../../proto/**/*.proto"
+      GrpcServices="Client"
+      ProtoRoot="../../proto"
+    />
   </ItemGroup>
 
 </Project>
