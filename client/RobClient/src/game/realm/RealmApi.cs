@@ -18,8 +18,11 @@ namespace RobClient.Game.Realm {
             var joinTheWorld = new JoinTheWorld();
             joinTheWorld.CharacterId = (uint)characterId;
 
+            var logIntoWorld = new LogIntoWorld();
+            logIntoWorld.CharacterId = (uint)characterId;
+
             await _sender.SendMessage(0x03, joinTheWorld, Packet.Types.Context.Realm);
-            await _sender.SendMessage(0x01, new LogIntoWorld(), Packet.Types.Context.Game);
+            await _sender.SendMessage(0x01, logIntoWorld, Packet.Types.Context.Game);
         }
     }
 }

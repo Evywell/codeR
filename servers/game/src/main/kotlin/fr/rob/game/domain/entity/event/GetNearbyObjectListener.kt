@@ -6,6 +6,9 @@ import fr.rob.game.domain.event.DomainEventListenerInterface
 import fr.rob.game.domain.player.Player
 import fr.rob.game.domain.terrain.grid.query.predicate.CanSeeObject
 
+/**
+ * When a new player is added into world, send every near visible objects to it (except itself)
+ */
 class GetNearbyObjectListener : DomainEventListenerInterface {
     override fun supports(event: DomainEventInterface): Boolean = event is AddedIntoWorldEvent
 
@@ -34,7 +37,7 @@ class GetNearbyObjectListener : DomainEventListenerInterface {
                 visibleObject.controlledByGameSession != null &&
                 visibleObject.controlledByGameSession == player.controlledByGameSession
             ) {
-                return
+                return@forEach
             }
 
             player.controlledByGameSession?.send(NearbyObjectMessage(visibleObject.guid, visibleObject.position))

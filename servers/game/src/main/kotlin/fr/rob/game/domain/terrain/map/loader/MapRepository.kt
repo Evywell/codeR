@@ -38,7 +38,7 @@ class MapRepository(private val db: Connection) : MapRepositoryInterface {
             rs.getInt(5),
             rs.getInt(6),
             rs.getFloat(7),
-            rs.getFloat(8)
+            rs.getFloat(8),
         )
 
         return returnAndClose(Pair(mapInfo, zoneInfo), rs, stmt)
