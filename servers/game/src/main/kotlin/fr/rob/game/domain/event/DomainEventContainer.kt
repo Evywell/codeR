@@ -2,8 +2,16 @@ package fr.rob.game.domain.event
 
 class DomainEventContainer : DomainEventCarrierInterface {
     private val events = ArrayList<DomainEventInterface>()
+    private val uniqueEvents = ArrayList<String>()
 
     override fun pushEvent(event: DomainEventInterface) {
+        if (event is UniqueDomainEventInterface) {
+            val eventKey = event::class.qualifiedName
+            uniqueEvents.forEach { if (it == eventKey) return }
+
+            uniqueEvents.add(eventKey!!)
+        }
+
         events.add(event)
     }
 
@@ -11,5 +19,6 @@ class DomainEventContainer : DomainEventCarrierInterface {
 
     fun resetContainer() {
         events.clear()
+        uniqueEvents.clear()
     }
 }

@@ -1,7 +1,7 @@
 package fr.rob.game.domain.entity.behavior
 
 import fr.rob.game.domain.combat.DamageSource
-import fr.rob.game.domain.combat.HealthUpdatedEvent
+import fr.rob.game.domain.combat.ObjectSheetUpdated
 import fr.rob.game.domain.entity.WorldObject
 import fr.rob.game.domain.world.RollEngineInterface
 import kotlin.math.max
@@ -30,7 +30,7 @@ class ObjectSheetTrait(
             health -= damageTaken
         }
 
-        owner.pushEvent(HealthUpdatedEvent(owner, health))
+        owner.pushEvent(ObjectSheetUpdated(owner, this))
     }
 
     fun isCriticalHit(caster: WorldObject): Boolean {

@@ -9,10 +9,8 @@ class GridQuery(private val grid: Grid) {
         val allCells = grid.retrieveNeighborCells(cell)
         val objects = ArrayList<WorldObject>()
 
-        allCells.forEach { gridCell ->
-            val objectsInCell = grid.getObjectsOfCell(gridCell)
-
-            objectsInCell.forEach { worldObject ->
+        grid.iterateOverObjects { worldObject ->
+            if (allCells.contains(worldObject.cell)) {
                 var isWorldObjectMatchingPredicate = true
 
                 for (predicate in predicates) {

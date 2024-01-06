@@ -6,13 +6,13 @@ import fr.rob.game.domain.event.DomainEventListenerInterface
 import fr.rob.game.domain.terrain.grid.query.predicate.IsAPlayer
 import fr.rob.game.domain.terrain.grid.query.predicate.VisibleByObject
 
-class NotifyHealthUpdatedListener : DomainEventListenerInterface {
-    override fun supports(event: DomainEventInterface): Boolean = event is HealthUpdatedEvent
+class ObjectSheetUpdatedListener : DomainEventListenerInterface {
+    override fun supports(event: DomainEventInterface): Boolean = event is ObjectSheetUpdated
 
     override fun invoke(event: DomainEventInterface) {
-        event as HealthUpdatedEvent
+        event as ObjectSheetUpdated
 
-        val worldObject = event.worldObject
+        val worldObject = event.subject
 
         assert(worldObject.isInWorld)
         assert(worldObject.cell != null)
@@ -26,7 +26,7 @@ class NotifyHealthUpdatedListener : DomainEventListenerInterface {
             )
 
         visiblePlayers.forEach { player ->
-            player.controlledByGameSession?.send(HealthMessage(event.worldObject.guid, event.newHealth))
+            player.controlledByGameSession?.send(HealthMessage(event.subject.guid, event.sheet.health))
         }
     }
 }

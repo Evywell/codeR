@@ -33,29 +33,24 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
 
         val objects = ArrayList<WorldObject>()
 
-        cells.forEach { cell ->
-            getObjectsOfCell(cell).forEach { worldObject ->
-                if (isInsideRadius(origin, radius, worldObject.position)) {
-                    objects.add(worldObject)
-                }
+        iterateOverObjects { worldObject ->
+            if (
+                cells.contains(worldObject.cell) &&
+                isInsideRadius(origin, radius, worldObject.position)
+            ) {
+                objects.add(worldObject)
             }
         }
 
         return objects
     }
 
-    fun getObjectsOfCell(cell: Cell): List<WorldObject> {
-        val objects = ArrayList<WorldObject>()
-
+    fun iterateOverObjects(callback: (worldObject: WorldObject) -> Unit) {
         for (objectContainer in worldObjectContainerList) {
             objectContainer.forEach {
-                if (it.cell == cell) {
-                    objects.add(it)
-                }
+                callback(it)
             }
         }
-
-        return objects
     }
 
     fun getPlayersOfCell(cell: Cell): List<Player> {
