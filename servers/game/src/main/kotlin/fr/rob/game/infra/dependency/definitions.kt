@@ -36,6 +36,7 @@ import fr.rob.game.domain.terrain.map.loader.WorldObjectsLoaderInterface
 import fr.rob.game.domain.terrain.map.loader.creature.CreatureLoader
 import fr.rob.game.domain.terrain.map.loader.creature.CreatureRepository
 import fr.rob.game.domain.terrain.map.loader.creature.CreatureRepositoryInterface
+import fr.rob.game.domain.world.function.CastSpellFunction
 import fr.rob.game.domain.world.function.CheatTeleportFunction
 import fr.rob.game.domain.world.function.LogIntoWorldFunction
 import fr.rob.game.domain.world.function.MovePlayerFunction
@@ -47,6 +48,7 @@ import fr.rob.game.infra.mysql.character.MysqlCheckCharacterExist
 import fr.rob.game.infra.mysql.character.MysqlFetchCharacter
 import fr.rob.game.infra.opcode.CMSG_CHEAT_TELEPORT
 import fr.rob.game.infra.opcode.CMSG_LOG_INTO_WORLD
+import fr.rob.game.infra.opcode.CMSG_PLAYER_CAST_SPELL
 import fr.rob.game.infra.opcode.CMSG_PLAYER_MOVEMENT
 import fr.rob.game.infra.opcode.CMSG_REMOVE_FROM_WORLD
 import org.koin.core.module.dsl.singleOf
@@ -125,6 +127,7 @@ val opcodeModule = module {
             WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_MOVEMENT, MovePlayerFunction()),
             WorldFunctionRegistry.WorldFunctionItem(CMSG_REMOVE_FROM_WORLD, RemoveFromWorldFunction()),
             WorldFunctionRegistry.WorldFunctionItem(CMSG_CHEAT_TELEPORT, CheatTeleportFunction()),
+            WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_CAST_SPELL, CastSpellFunction()),
         )
     }
     single { WorldFunctionRegistry(get(named("FUNCTION_DEFINITIONS"))) }

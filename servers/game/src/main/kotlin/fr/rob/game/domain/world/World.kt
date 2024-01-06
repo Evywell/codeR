@@ -1,5 +1,6 @@
 package fr.rob.game.domain.world
 
+import fr.rob.game.domain.combat.NotifyHealthUpdatedListener
 import fr.rob.game.domain.entity.event.GetNearbyObjectListener
 import fr.rob.game.domain.entity.event.NotifyAddedIntoWorldListener
 import fr.rob.game.domain.entity.movement.NotifyWorldObjectMovedListener
@@ -22,6 +23,7 @@ class World(
         )
         eventDispatcher.attachListener(NotifyAddedIntoWorldListener())
         eventDispatcher.attachListener(GetNearbyObjectListener())
+        eventDispatcher.attachListener(NotifyHealthUpdatedListener())
     }
 
     fun update(deltaTime: Int) {

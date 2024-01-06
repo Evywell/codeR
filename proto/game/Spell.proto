@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package fr.raven.proto.message.game;
+
+option java_outer_classname = "SellProto";
+
+message CastSpell {
+  uint32 spellId = 1;
+}

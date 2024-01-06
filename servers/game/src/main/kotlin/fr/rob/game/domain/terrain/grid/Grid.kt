@@ -131,8 +131,8 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
         val cellPosition = PositionNormalizer.fromMapPositionToGridCellCoordinate(
             PositionNormalizer.MapInfoForPosition(
                 position,
-                width,
-                height,
+                width * cellSize,
+                height * cellSize,
                 0f,
                 0f,
                 cellSize,

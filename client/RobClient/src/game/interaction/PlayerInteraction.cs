@@ -30,18 +30,31 @@ namespace RobClient.Game.Interaction {
         }
 
         public void MoveClient(float posX, float posY, float posZ, float orientation) {
-            var position = new Position();
-            position.PosX = posX;
-            position.PosY = posY;
-            position.PosZ = posZ;
-            position.Orientation = orientation;
-            
-            var movement = new SMovementInfo();
-            movement.Phase = MovementPhase.PhaseBegin;
-            movement.Position = position;
-            movement.Direction = MovementDirectionType.TypeForward;
+            var position = new Position
+            {
+                PosX = posX,
+                PosY = posY,
+                PosZ = posZ,
+                Orientation = orientation
+            };
+
+            var movement = new SMovementInfo
+            {
+                Phase = MovementPhase.PhaseBegin,
+                Position = position,
+                Direction = MovementDirectionType.TypeForward
+            };
 
             _sender.SendMessage(0x06, movement, GatewayPacket.Types.Context.Game);
+        }
+
+        public void CastSpell(uint spellId) {
+            var message = new CastSpell
+            {
+                SpellId = spellId
+            };
+
+            _sender.SendMessage(0x07, message, GatewayPacket.Types.Context.Game);
         }
     }
 }

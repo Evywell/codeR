@@ -73,6 +73,16 @@ namespace RobClient.Game {
             }
         }
 
+        public void UpdateObjectHealth(ObjectGuid guid, uint newHealth)
+        {
+            _objects.TryGetValue(guid.GetRawValue(), out WorldObject worldObject);
+
+            if (worldObject != null) {
+                worldObject.Health = newHealth;
+                WorldObjectUpdatedSub.OnNext(worldObject);
+            }
+        }
+
         public WorldObject GetControlledObject()
         {
             if (ControlledObjectId == null) {

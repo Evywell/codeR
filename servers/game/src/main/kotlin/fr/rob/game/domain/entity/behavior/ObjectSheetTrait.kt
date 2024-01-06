@@ -1,6 +1,7 @@
 package fr.rob.game.domain.entity.behavior
 
 import fr.rob.game.domain.combat.DamageSource
+import fr.rob.game.domain.combat.HealthUpdatedEvent
 import fr.rob.game.domain.entity.WorldObject
 import fr.rob.game.domain.world.RollEngineInterface
 import kotlin.math.max
@@ -19,7 +20,17 @@ class ObjectSheetTrait(
     fun applyDamages(damageSources: List<DamageSource>, isCritical: Boolean) {
         // @todo tmp values
         val criticalMultiplier = if (isCritical) 2 else 1
-        damageSources.forEach { damageSource -> health -= damageSource.amount * criticalMultiplier }
+
+        var damageTaken = 0
+        damageSources.forEach { damageSource -> damageTaken += damageSource.amount * criticalMultiplier }
+
+        if (health - damageTaken < 0) {
+            health = 0
+        } else {
+            health -= damageTaken
+        }
+
+        owner.pushEvent(HealthUpdatedEvent(owner, health))
     }
 
     fun isCriticalHit(caster: WorldObject): Boolean {

@@ -15,14 +15,17 @@ namespace RobClient.Game.World {
             _environment = environment;
             sink.Add(worldApi.GamePacketReceivedObs.Subscribe(packet => {
                 switch (packet.Opcode) {
-                    case 0x02:
+                    case 0x02: // SMSG_PLAYER_DESCRIPTION
                         OnPlayerInitialized(PlayerDescription.Parser.ParseFrom(packet.Body));
                         break;
-                    case 0x03:
+                    case 0x03: // SMSG_NEARBY_OBJECT_UPDATE
                         OnObjectSpawn(NearbyObjectOpcode.Parser.ParseFrom(packet.Body));
                         break;
-                    case 0x04:
+                    case 0x04: // SMSG_MOVEMENT_HEARTBEAT
                         OnObjectMove(MovementHeartbeat.Parser.ParseFrom(packet.Body));
+                        break;
+                    case 0x08: // SMSG_OBJECT_HEALTH_UPDATED
+                        OnObjectHealthUpdated(ObjectSheetUpdate.Parser.ParseFrom(packet.Body));
                         break;
                 }
             }));
@@ -71,6 +74,14 @@ namespace RobClient.Game.World {
                     heartbeat.Position.PosZ,
                     heartbeat.Position.Orientation
                 )
+            );
+        }
+
+        private void OnObjectHealthUpdated(ObjectSheetUpdate objectSheetUpdate)
+        {
+            _environment.UpdateObjectHealth(
+                ObjectGuid.From(objectSheetUpdate.Guid),
+                objectSheetUpdate.Health
             );
         }
     }

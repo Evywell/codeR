@@ -6,6 +6,10 @@ import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
 import fr.rob.game.domain.movement.Movable
 import fr.rob.game.domain.player.session.GameSession
+import fr.rob.game.domain.spell.SpellBook
+import fr.rob.game.domain.spell.SpellCasterTrait
+import fr.rob.game.domain.spell.SpellInfo
+import fr.rob.game.domain.spell.effect.InstantAoeDamageEffect
 
 class PlayerFactory(
     private val characterService: CharacterService,
@@ -23,6 +27,21 @@ class PlayerFactory(
         val player = Player(session, guid, character.name, character.level)
         // player.addTrait(MovableTrait(player))
         player.addTrait(Movable(player))
+        // @todo change this
+        player.addTrait(
+            SpellCasterTrait(
+                player,
+                SpellBook(
+                    hashMapOf(
+                        1 to SpellInfo(
+                            1,
+                            SpellInfo.LaunchType.INSTANT,
+                            arrayOf(InstantAoeDamageEffect.InstantAoeDamageEffectInfo(1, 5f)),
+                        ),
+                    ),
+                ),
+            ),
+        )
 
         return PlayerInitResult(true, player, character.position)
     }

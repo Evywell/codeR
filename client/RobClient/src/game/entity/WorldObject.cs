@@ -11,10 +11,14 @@ namespace RobClient.Game.Entity {
         public float Speed
         { get; set; }
 
+        public uint Health
+        { get; set; }
+
         public WorldObject(ObjectGuid guid, Vector4f position) {
             Guid = guid;
             Position = position;
             Speed = 3.0f;
+            Health = 100;
         }
 
         public WorldObject(ObjectGuid guid) : this(guid, Vector4f.Zero()) {}
