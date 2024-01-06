@@ -3,9 +3,11 @@ package fr.rob.game.app.player.action
 import fr.rob.game.app.player.message.PlayerDescriptionMessage
 import fr.rob.game.domain.entity.ObjectManager
 import fr.rob.game.domain.entity.Position
+import fr.rob.game.domain.entity.behavior.ObjectSheetTrait
 import fr.rob.game.domain.entity.guid.ObjectGuid
 import fr.rob.game.domain.instance.MapInstance
 import fr.rob.game.domain.player.PlayerFactory
+import fr.rob.game.domain.world.RandomRollEngine
 
 class CreatePlayerIntoWorldHandler(
     private val playerFactory: PlayerFactory,
@@ -37,10 +39,12 @@ class CreatePlayerIntoWorldHandler(
     private fun createMobAroundPosition(position: Position, mapInstance: MapInstance) {
         val mobPosition = Position(position.x + 10, position.y, position.z, 0f)
 
-        objectManager.spawnObject(
+        val worldObject = objectManager.spawnObject(
             ObjectGuid.LowGuid(1u, 1u),
             mobPosition,
             mapInstance,
         )
+
+        worldObject.ifPresent { it.addTrait(ObjectSheetTrait(it, 100, RandomRollEngine())) }
     }
 }

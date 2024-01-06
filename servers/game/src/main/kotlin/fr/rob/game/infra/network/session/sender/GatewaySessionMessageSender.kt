@@ -5,8 +5,10 @@ import fr.raven.log.LoggerInterface
 import fr.raven.proto.message.game.GameProto
 import fr.raven.proto.message.game.MovementProto.MovementHeartbeat
 import fr.raven.proto.message.game.NearbyObjectOpcodeProto
+import fr.raven.proto.message.game.ObjectSheetProto.ObjectSheetUpdate
 import fr.raven.proto.message.game.PlayerProto.PlayerDescription
 import fr.raven.proto.message.game.PositionProto
+import fr.rob.game.app.player.message.HealthMessage
 import fr.rob.game.app.player.message.MovementHeartbeatMessage
 import fr.rob.game.app.player.message.NearbyObjectMessage
 import fr.rob.game.app.player.message.PlayerDescriptionMessage
@@ -18,7 +20,7 @@ import fr.rob.game.infra.opcode.OPCODES_MAP
 
 class GatewaySessionMessageSender(
     private val gatewaySession: GatewayGameSession,
-    private val logger: LoggerInterface
+    private val logger: LoggerInterface,
 ) : SessionMessageSenderInterface {
     override fun send(session: GameSession, message: GameMessageHolder) {
         val sender = session.accountId
@@ -61,11 +63,18 @@ class GatewaySessionMessageSender(
             )
             .build()
 
+    private fun fromHealthMessage(message: HealthMessage): Message =
+        ObjectSheetUpdate.newBuilder()
+            .setGuid(message.objectId.getRawValue())
+            .setHealth(message.health)
+            .build()
+
     private fun toProtoMessage(message: Any): Message {
         when (message) {
             is PlayerDescriptionMessage -> return fromPlayerDescriptionMessage(message)
             is NearbyObjectMessage -> return fromNearbyObjectMessage(message)
             is MovementHeartbeatMessage -> return fromMovementHeartbeatMessage(message)
+            is HealthMessage -> return fromHealthMessage(message)
         }
 
         throw RuntimeException("No message builder found for ${message.javaClass.name}")

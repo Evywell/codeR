@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package fr.raven.proto.message.game;
+
+option java_outer_classname = "ObjectSheetProto";
+
+message ObjectSheetUpdate {
+  uint64 guid = 1;
+  uint32 health = 2;
+}
