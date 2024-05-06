@@ -3,8 +3,8 @@ package fr.rob.game.domain.spell
 import fr.rob.core.misc.clock.IntervalTimer
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.WorldObject
-import fr.rob.game.domain.entity.behavior.MovableTrait
 import fr.rob.game.domain.entity.behavior.ObjectSheetTrait
+import fr.rob.game.domain.movement.Movable
 import fr.rob.game.domain.spell.effect.EffectFromSpellInterface
 import fr.rob.game.domain.spell.projectile.CarryProjectileInterface
 import fr.rob.game.domain.spell.projectile.GhostProjectile
@@ -69,7 +69,7 @@ class Spell(
     private fun checkCastingSequenceRequirements() {
         // Movement should cancel the cast unless it is authorized
         if (!spellInfo.flags.contains(SpellInfo.FLAGS.ALLOW_CAST_WHILE_MOVING)) {
-            val movableCaster = caster.getTrait<MovableTrait>()
+            val movableCaster = caster.getTrait<Movable>()
 
             if (movableCaster.isPresent && movableCaster.get().isMoving()) {
                 state = SpellState.CANCELED

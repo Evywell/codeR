@@ -1,9 +1,9 @@
 package fr.rob.game.test.unit.domain.spell
 
-import fr.rob.game.domain.entity.Movement
+import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.WorldObject
-import fr.rob.game.domain.entity.behavior.MovableTrait
 import fr.rob.game.domain.entity.behavior.ObjectSheetTrait
+import fr.rob.game.domain.movement.Movable
 import fr.rob.game.domain.spell.Spell
 import fr.rob.game.domain.spell.SpellBook
 import fr.rob.game.domain.spell.SpellCasterTrait
@@ -83,7 +83,7 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
 
     @Test
     fun `The cast time should break when moving`() {
-        caster.addTrait(MovableTrait(caster))
+        caster.addTrait(Movable(caster))
         caster.getTrait<SpellCasterTrait>().get().castSpell(4, SpellTargetParameter(target.guid, caster.mapInstance))
 
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
@@ -92,7 +92,7 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
 
         // Walking
-        caster.getTrait<MovableTrait>().get().move(Movement(Movement.MovementDirectionType.FORWARD, 0f))
+        caster.getTrait<Movable>().get().moveToPosition(Position(0f, 0f, 0f, 0f), Movable.Movement(Movable.DirectionType.FORWARD, Movable.Phase.MOVING))
         caster.onUpdate(100)
         assertEquals(Spell.SpellState.CANCELED, caster.getTrait<SpellCasterTrait>().get().getLastSpellCasted().get().state)
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
@@ -104,7 +104,7 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
 
     @Test
     fun `The cast time should not break when moving if has flag ALLOW_CAST_WHILE_MOVING`() {
-        caster.addTrait(MovableTrait(caster))
+        caster.addTrait(Movable(caster))
         caster.getTrait<SpellCasterTrait>().get().castSpell(6, SpellTargetParameter(target.guid, caster.mapInstance))
 
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
@@ -113,7 +113,7 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
 
         // Walking
-        caster.getTrait<MovableTrait>().get().move(Movement(Movement.MovementDirectionType.FORWARD, 0f))
+        caster.getTrait<Movable>().get().moveToPosition(Position(0f, 0f, 0f, 0f), Movable.Movement(Movable.DirectionType.FORWARD, Movable.Phase.MOVING))
         caster.onUpdate(100)
         assertEquals(Spell.SpellState.PREPARING, caster.getTrait<SpellCasterTrait>().get().getLastSpellCasted().get().state)
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)

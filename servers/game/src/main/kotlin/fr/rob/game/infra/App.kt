@@ -13,6 +13,7 @@ import fr.rob.game.domain.character.waitingroom.CharacterWaitingRoom
 import fr.rob.game.domain.instance.InstanceManager
 import fr.rob.game.domain.node.NodeBuilder
 import fr.rob.game.domain.terrain.map.MapManager
+import fr.rob.game.domain.world.DelayedUpdateQueue
 import fr.rob.game.domain.world.function.WorldFunctionRegistry
 import fr.rob.game.domain.world.packet.WorldPacketQueue
 import fr.rob.game.infra.config.GameConfig
@@ -37,6 +38,7 @@ class App(private val config: GameConfig) : KoinComponent {
     private val characterWaitingRoom: CharacterWaitingRoom by inject()
     private val worldFunctionRegistry: WorldFunctionRegistry by inject()
     private val worldPacketQueue: WorldPacketQueue by inject()
+    private val delayedUpdateQueue: DelayedUpdateQueue by inject()
 
     fun run() {
         createDatabasePools()
@@ -48,6 +50,7 @@ class App(private val config: GameConfig) : KoinComponent {
             loggerFactory.create("supervisor"),
             worldFunctionRegistry,
             worldPacketQueue,
+            delayedUpdateQueue,
             FakeInstanceBuilder(mapManager, instanceManager),
             instanceManager,
             characterWaitingRoom,

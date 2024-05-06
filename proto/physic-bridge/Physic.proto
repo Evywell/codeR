@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package fr.raven.proto.message.physicbridge;
+
+option java_outer_classname = "PhysicProto";
+
+message Packet {
+  uint32 opcode = 1;
+  bytes body = 2;
+}
+
+message SpawnRequest {
+  uint64 guid = 1;
+  Position position = 2;
+}
+
+message MoveToRequest {
+  uint64 guid = 1;
+  Position position = 2;
+}
+
+message ObjectMoved {
+  uint64 guid = 1;
+  Position position = 2;
+}
+
+message Position {
+  float posX = 1;
+  float posY = 2;
+  float posZ = 3;
+  float orientation = 4;
+}

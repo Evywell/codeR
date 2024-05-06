@@ -3,15 +3,21 @@ package fr.rob.game.app.player.action
 import fr.rob.game.app.player.message.PlayerDescriptionMessage
 import fr.rob.game.domain.entity.ObjectManager
 import fr.rob.game.domain.entity.Position
+import fr.rob.game.domain.entity.WorldObject
 import fr.rob.game.domain.entity.behavior.ObjectSheetTrait
+import fr.rob.game.domain.entity.controller.SplineMovementController
 import fr.rob.game.domain.entity.guid.ObjectGuid
+import fr.rob.game.domain.entity.movement.spline.SplineMovementGeneratorInterface
 import fr.rob.game.domain.instance.MapInstance
+import fr.rob.game.domain.movement.Movable
 import fr.rob.game.domain.player.PlayerFactory
 import fr.rob.game.domain.world.RandomRollEngine
+import java.util.Optional
 
 class CreatePlayerIntoWorldHandler(
     private val playerFactory: PlayerFactory,
     private val objectManager: ObjectManager,
+    private val splineMovementGenerator: SplineMovementGeneratorInterface
 ) {
     fun execute(command: CreatePlayerIntoWorldCommand) {
         val playerGameSession = command.gameSession
@@ -28,15 +34,23 @@ class CreatePlayerIntoWorldHandler(
         playerGameSession.assignToPlayer(player)
 
         // @todo remove this
-        createMobAroundPosition(createPlayerResult.position!!, command.mapInstance)
+        val worldObject = createMobAroundPosition(createPlayerResult.position!!, command.mapInstance)
 
         player.addIntoInstance(command.mapInstance, createPlayerResult.position)
 
         // @todo Send player info
         player.ownerGameSession.send(PlayerDescriptionMessage(player.guid, player.name))
+
+        worldObject.ifPresent {
+            // send info to unity + ask to move
+            val controller = SplineMovementController(it, splineMovementGenerator)
+            controller.initiateMovementToPosition(Position(15f, 50f, 0.5f, 0f))
+
+            it.addTrait(controller)
+        }
     }
 
-    private fun createMobAroundPosition(position: Position, mapInstance: MapInstance) {
+    private fun createMobAroundPosition(position: Position, mapInstance: MapInstance): Optional<WorldObject> {
         val mobPosition = Position(position.x + 10, position.y, position.z, 0f)
 
         val worldObject = objectManager.spawnObject(
@@ -45,6 +59,11 @@ class CreatePlayerIntoWorldHandler(
             mapInstance,
         )
 
-        worldObject.ifPresent { it.addTrait(ObjectSheetTrait(it, 100, RandomRollEngine())) }
+        worldObject.ifPresent {
+            it.addTrait(ObjectSheetTrait(it, 100, RandomRollEngine()))
+            it.addTrait(Movable(it))
+        }
+
+        return worldObject
     }
 }
