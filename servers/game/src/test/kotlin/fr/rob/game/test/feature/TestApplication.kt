@@ -12,7 +12,6 @@ import fr.rob.game.infra.dependency.databaseModule
 import fr.rob.game.infra.dependency.globalModule
 import fr.rob.game.infra.dependency.mapModule
 import fr.rob.game.infra.dependency.opcodeModule
-import fr.rob.game.infra.dependency.queueModule
 import fr.rob.game.test.unit.sandbox.network.session.StoreMessageSender
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -37,7 +36,7 @@ open class TestApplication : KoinTest {
         }
 
         startKoin {
-            modules(globalModule, databaseModule, mapModule, queueModule, opcodeModule, testModule)
+            modules(globalModule, databaseModule, mapModule, opcodeModule, testModule)
         }
 
         createDatabasePools()

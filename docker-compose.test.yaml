@@ -1,12 +1,6 @@
 version: "3.7"
 
 services:
-  rabbit:
-    build:
-      context: docker/rabbitmq
-    ports:
-      - '5672'
-
   mysql_unit:
     image: mysql:8.0.32
     volumes:

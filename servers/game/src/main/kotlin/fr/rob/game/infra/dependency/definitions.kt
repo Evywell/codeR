@@ -1,14 +1,7 @@
 package fr.rob.game.infra.dependency
 
 import fr.raven.log.LoggerFactoryInterface
-import fr.raven.log.LoggerInterface
 import fr.raven.log.log4j.LoggerFactory
-import fr.raven.messaging.rabbitmq.AMQPConnection
-import fr.raven.messaging.rabbitmq.AMQPReceiver
-import fr.raven.messaging.rabbitmq.AMQPSender
-import fr.raven.messaging.receive.MessageQueueReceiver
-import fr.raven.messaging.send.MessageQueueDispatcher
-import fr.raven.messaging.send.TransportConfig
 import fr.rob.core.database.ConnectionManager
 import fr.rob.core.database.pool.ConnectionPool
 import fr.rob.core.database.pool.ConnectionPoolManager
@@ -92,25 +85,6 @@ val mapModule = module {
     single<WorldObjectsLoaderInterface<Creature>> { CreatureLoader(get()) }
 
     singleOf(::MapManager)
-}
-
-val queueModule = module {
-    single<LoggerInterface>(named("QUEUE_LOGGER")) { get<LoggerFactoryInterface>().create("queue") }
-    single<AMQPConnection> { params ->
-        AMQPConnection(
-            params.get(),
-            get(named("QUEUE_LOGGER")),
-        )
-    }
-    single<MessageQueueDispatcher> { params ->
-        MessageQueueDispatcher(
-            arrayOf(TransportConfig("orchestrator.income", AMQPSender("orchestrator", params.get()))),
-            params.get(),
-        )
-    }
-    single<MessageQueueReceiver> { params ->
-        MessageQueueReceiver(arrayOf(AMQPReceiver("orchestrator.outcome", params.get())), get(named("QUEUE_LOGGER")))
-    }
 }
 
 val opcodeModule = module {

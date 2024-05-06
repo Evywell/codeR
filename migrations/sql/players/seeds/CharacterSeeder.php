@@ -21,6 +21,10 @@ class CharacterSeeder extends AbstractSeed
                 'id' => 1,
                 'name' => 'Evywell',
                 'level' => CURRENT_LEVEL_MAX,
+                'position_x' => 0,
+                'position_y' => 0,
+                'position_z' => 0,
+                'orientation' => 0,
                 'account_id' => 1,
                 'last_selected_at' => $now
             ],
@@ -28,6 +32,10 @@ class CharacterSeeder extends AbstractSeed
                 'id' => 2,
                 'name' => 'Tarthas',
                 'level' => CURRENT_LEVEL_MAX,
+                'position_x' => 0,
+                'position_y' => 0,
+                'position_z' => 0,
+                'orientation' => 0,
                 'account_id' => 3, // We skip the account_id 2 because it is a specific user (no characters)
                 'last_selected_at' => $now
             ]

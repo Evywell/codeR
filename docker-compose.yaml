@@ -2,7 +2,6 @@ version: '3.7'
 
 networks:
   gamedb:
-  messaging:
 
 volumes:
   mysqldata:
@@ -26,14 +25,6 @@ services:
       - .:/mnt/app
     networks:
       - gamedb
-
-  rabbit:
-    build:
-      context: docker/rabbitmq
-    ports:
-      - '5672'
-    networks:
-      - messaging
 
   mysql_game:
     image: mysql:8.0.32

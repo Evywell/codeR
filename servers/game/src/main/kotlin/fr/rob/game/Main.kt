@@ -1,6 +1,5 @@
 package fr.rob.game
 
-import fr.raven.messaging.rabbitmq.AMQPConfig
 import fr.rob.core.config.Config
 import fr.rob.core.config.commons.configuration2.ConfigLoader
 import fr.rob.core.config.database.DatabaseConfig
@@ -13,7 +12,6 @@ import fr.rob.game.infra.dependency.databaseModule
 import fr.rob.game.infra.dependency.globalModule
 import fr.rob.game.infra.dependency.mapModule
 import fr.rob.game.infra.dependency.opcodeModule
-import fr.rob.game.infra.dependency.queueModule
 import org.koin.core.context.startKoin
 import java.io.File
 import java.io.InputStream
@@ -31,7 +29,7 @@ class Main {
             val config = fromGlobal(globalConfig)
 
             startKoin {
-                modules(globalModule, databaseModule, mapModule, queueModule, opcodeModule)
+                modules(globalModule, databaseModule, mapModule, opcodeModule)
             }
 
             val app = App(config)
@@ -67,13 +65,6 @@ class Main {
                 ),
             ),
             NodesConfig(config),
-            AMQPConfig(
-                System.getProperty("rabbit.host"),
-                System.getProperty("rabbit.tcp.5672").toInt(),
-                config.getString("rabbitmq.username")!!,
-                config.getString("rabbitmq.password")!!,
-                config.getString("rabbitmq.vhost")!!,
-            ),
         )
 
         private fun getConfigFile(configFileName: String?): File {
