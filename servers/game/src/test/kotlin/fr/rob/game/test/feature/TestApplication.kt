@@ -6,6 +6,8 @@ import fr.rob.game.DB_REALM
 import fr.rob.game.DB_WORLD
 import fr.rob.game.domain.entity.guid.ObjectGuid
 import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
+import fr.rob.game.domain.entity.movement.spline.SplineMovementGeneratorInterface
+import fr.rob.game.domain.entity.movement.spline.StraightSplineMovementGenerator
 import fr.rob.game.infra.dependency.databaseModule
 import fr.rob.game.infra.dependency.globalModule
 import fr.rob.game.infra.dependency.mapModule
@@ -18,6 +20,7 @@ import org.junit.jupiter.api.TestInstance
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.core.parameter.parametersOf
+import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.get
 import org.opentest4j.AssertionFailedError
@@ -29,8 +32,12 @@ open class TestApplication : KoinTest {
 
     @BeforeAll
     open fun launchApp() {
+        val testModule = module {
+            single<SplineMovementGeneratorInterface> { StraightSplineMovementGenerator() }
+        }
+
         startKoin {
-            modules(globalModule, databaseModule, mapModule, queueModule, opcodeModule)
+            modules(globalModule, databaseModule, mapModule, queueModule, opcodeModule, testModule)
         }
 
         createDatabasePools()

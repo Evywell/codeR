@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "Sandbox\Sandbox.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobClient.Tests", "RobClient.Tests\RobClient.Tests.csproj", "{1A3B9EB8-C7EB-4C35-A020-8217BA5F1018}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysicBridgeProto", "PhysicBridgeProto\PhysicBridgeProto.csproj", "{0D206758-0C0D-4D58-A5E4-984B8C512B26}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{1A3B9EB8-C7EB-4C35-A020-8217BA5F1018}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A3B9EB8-C7EB-4C35-A020-8217BA5F1018}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A3B9EB8-C7EB-4C35-A020-8217BA5F1018}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D206758-0C0D-4D58-A5E4-984B8C512B26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D206758-0C0D-4D58-A5E4-984B8C512B26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D206758-0C0D-4D58-A5E4-984B8C512B26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D206758-0C0D-4D58-A5E4-984B8C512B26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

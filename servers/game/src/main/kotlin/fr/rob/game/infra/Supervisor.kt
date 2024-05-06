@@ -14,6 +14,7 @@ import fr.rob.game.domain.character.waitingroom.CharacterWaitingRoom
 import fr.rob.game.domain.instance.InstanceManager
 import fr.rob.game.domain.node.NodeBuilder
 import fr.rob.game.domain.node.NodeConfig
+import fr.rob.game.domain.world.DelayedUpdateQueue
 import fr.rob.game.domain.world.World
 import fr.rob.game.domain.world.WorldUpdateRateChecker
 import fr.rob.game.domain.world.WorldUpdater
@@ -32,6 +33,7 @@ class Supervisor(
     private val logger: LoggerInterface,
     private val worldFunctionRegistry: WorldFunctionRegistry,
     private val worldPacketQueue: WorldPacketQueue,
+    private val delayedUpdateQueue: DelayedUpdateQueue,
     private val fakeInstanceBuilder: FakeInstanceBuilder,
     private val instanceManager: InstanceManager,
     private val characterWaitingRoom: CharacterWaitingRoom,
@@ -63,7 +65,7 @@ class Supervisor(
         rpcServer.start()
 
         thread(true) {
-            val world = World(instanceManager, worldPacketQueue)
+            val world = World(instanceManager, worldPacketQueue, delayedUpdateQueue)
 
             val worldUpdater = WorldUpdater(
                 world,

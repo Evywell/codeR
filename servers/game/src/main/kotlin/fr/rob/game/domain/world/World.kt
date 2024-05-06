@@ -13,6 +13,7 @@ import fr.rob.game.domain.world.packet.WorldPacketQueue
 class World(
     private val instanceManager: InstanceManager,
     private val worldPacketQueue: WorldPacketQueue,
+    private val delayedUpdateQueue: DelayedUpdateQueue,
 ) {
     private val updateState: WorldUpdateState = WorldUpdateState()
     private val eventDispatcher = ListEventDispatcher()
@@ -31,6 +32,7 @@ class World(
         updateState.timeElapsedSinceStartup += deltaTime
 
         worldPacketQueue.dequeue()
+        delayedUpdateQueue.dequeue(deltaTime)
         instanceManager.getAllInstances().forEach { instance -> instance.update(deltaTime, eventDispatcher) }
     }
 }

@@ -10,6 +10,7 @@ import fr.rob.game.domain.player.session.GameSession
 import fr.rob.game.domain.terrain.map.Map
 import fr.rob.game.domain.terrain.map.MapInfo
 import fr.rob.game.domain.terrain.map.ZoneInfo
+import fr.rob.game.domain.world.DelayedUpdateQueue
 import fr.rob.game.domain.world.World
 import fr.rob.game.domain.world.packet.WorldPacket
 import fr.rob.game.domain.world.packet.WorldPacketQueue
@@ -28,7 +29,7 @@ class PlayerMoving : DatabaseTestApplication() {
 
         val instanceManager = get<InstanceManager>()
         val worldPacketQueue = get<WorldPacketQueue>()
-        val world = World(instanceManager, worldPacketQueue)
+        val world = World(instanceManager, worldPacketQueue, get<DelayedUpdateQueue>())
 
         instanceManager.create(
             PlayerJoiningWorld.DEFAULT_TEST_INSTANCE_ID,

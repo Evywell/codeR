@@ -11,6 +11,7 @@ import fr.rob.game.domain.player.session.GameSession
 import fr.rob.game.domain.terrain.map.Map
 import fr.rob.game.domain.terrain.map.MapInfo
 import fr.rob.game.domain.terrain.map.ZoneInfo
+import fr.rob.game.domain.world.DelayedUpdateQueue
 import fr.rob.game.domain.world.World
 import fr.rob.game.domain.world.packet.WorldPacket
 import fr.rob.game.domain.world.packet.WorldPacketQueue
@@ -33,7 +34,7 @@ class PlayerJoiningWorld : DatabaseTestApplication() {
         val instanceManager = get<InstanceManager>()
         val worldPacketQueue = get<WorldPacketQueue>()
         val objectManager = get<ObjectManager>()
-        val world = World(instanceManager, worldPacketQueue)
+        val world = World(instanceManager, worldPacketQueue, get<DelayedUpdateQueue>())
 
         val instance = instanceManager.create(
             DEFAULT_TEST_INSTANCE_ID,
@@ -107,6 +108,15 @@ class PlayerJoiningWorld : DatabaseTestApplication() {
                 container.message.body is NearbyObjectMessage &&
                 (container.message.body as NearbyObjectMessage).objectId == ObjectGuid(1u, 1) &&
                 (container.message.body as NearbyObjectMessage).position == Position(0f, 0f, 0f, 0f)
+        }
+
+        // Temp assert the straight spline movement generator is working
+        assertContainsMessage(messages) { container ->
+            container.session.accountId == DEFAULT_TEST_ACCOUNT_ID &&
+                container.message.opcode == SMSG_NEARBY_OBJECT_UPDATE &&
+                container.message.body is NearbyObjectMessage &&
+                (container.message.body as NearbyObjectMessage).objectId == getGuidFromLow(ObjectGuid.LowGuid(1u, 1u), ObjectGuid.GUID_TYPE.GAME_OBJECT) &&
+                (container.message.body as NearbyObjectMessage).position == Position(15f, 50f, 0.5f, 0f)
         }
     }
 

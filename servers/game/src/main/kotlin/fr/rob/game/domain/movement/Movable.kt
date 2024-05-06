@@ -12,6 +12,8 @@ class Movable(private val source: WorldObject) {
         currentMovement = movement
     }
 
+    fun isMoving() = currentMovement.isMoving()
+
     data class Movement(val direction: DirectionType, val phase: Phase) {
         fun isMoving(): Boolean = phase == Phase.MOVING
     }

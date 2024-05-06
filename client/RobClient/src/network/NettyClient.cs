@@ -25,7 +25,7 @@ namespace RobClient.Network {
                 .Handler(new ProtobufNettyChannelInitializer(this.client));
         }
 
-        public async Task ConnectTo(String host, int port) {
+        public async Task ConnectTo(string host, int port) {
             _channel = await this.bootstrap.ConnectAsync(
                 new IPEndPoint(IPAddress.Parse(host), port)
             );
