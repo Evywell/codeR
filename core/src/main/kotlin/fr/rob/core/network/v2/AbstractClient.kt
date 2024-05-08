@@ -12,4 +12,6 @@ abstract class AbstractClient<T> : ClientInterface<T> {
     override fun send(message: Any) {
         session.send(message)
     }
+
+    override fun onConnectionClosed() {}
 }

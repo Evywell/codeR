@@ -5,6 +5,7 @@ import fr.rob.core.network.v2.Server
 import fr.rob.core.network.v2.session.Session
 import fr.rob.core.network.v2.session.SessionSocketInterface
 import fr.rob.gateway.extension.ExtensionInterface
+import fr.rob.gateway.extension.game.GameNode
 import fr.rob.gateway.extension.realm.gamenode.GameNodes
 import fr.rob.gateway.network.dispatcher.PacketDispatcherInterface
 
@@ -19,6 +20,12 @@ class Gateway : Server<Packet>() {
         dispatchers.add(extension.createDispatcher(this))
 
         return this
+    }
+
+    fun closeGameNodeConnection(gameNode: GameNode) {
+        findSessionsByGameNode(gameNode).forEach { session -> session.kick() }
+
+        gameNodes.removeGameNode(gameNode)
     }
 
     override fun onPacketReceived(session: Session, packet: Packet) {
@@ -59,5 +66,19 @@ class Gateway : Server<Packet>() {
 
     fun registerSessionIdentifier(gatewaySession: GatewaySession) {
         sessionIdentifiers[gatewaySession.accountId!!] = gatewaySession.id
+    }
+
+    private fun findSessionsByGameNode(gameNode: GameNode): List<GatewaySession> {
+        val matchingSession = ArrayList<GatewaySession>()
+
+        sessionIdentifiers.forEach { (_, sessionId) ->
+            val session = sessionFromIdentifier(sessionId) as GatewaySession
+
+            if (session.currentGameNode == gameNode) {
+                matchingSession.add(session)
+            }
+        }
+
+        return matchingSession
     }
 }

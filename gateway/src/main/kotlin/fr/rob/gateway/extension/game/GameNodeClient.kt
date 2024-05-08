@@ -14,6 +14,7 @@ import fr.rob.gateway.network.Gateway
 import fr.rob.gateway.network.GatewaySession
 
 class GameNodeClient(
+    private val nodeLabel: String,
     private val gateway: Gateway,
     private val logger: LoggerInterface
 ) : AbstractClient<Packet>() {
@@ -24,6 +25,12 @@ class GameNodeClient(
 
     override fun onConnectionEstablished(session: Session) {
         this.session = session
+    }
+
+    override fun onConnectionClosed() {
+        logger.error("Connection lost with game node $nodeLabel, closing client connections...")
+
+        gateway.gameNodes.findByLabel(nodeLabel).ifPresent { gameNode -> gateway.closeGameNodeConnection(gameNode) }
     }
 
     override fun onPacketReceived(packet: Packet) {

@@ -12,4 +12,8 @@ class GameNodeNettyChannelHandler(client: ClientInterface<GamePacket>) : NettyCh
 
     override fun createSessionSocket(ctx: ChannelHandlerContext): SessionSocketInterface =
         NettySessionSocket(ctx.channel())
+
+    override fun channelInactive(ctx: ChannelHandlerContext) {
+        client.onConnectionClosed()
+    }
 }
