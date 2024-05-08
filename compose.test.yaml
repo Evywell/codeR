@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
   mysql_unit:
     image: mysql:8.0.32

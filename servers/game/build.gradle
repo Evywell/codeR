@@ -74,7 +74,7 @@ dockerCompose {
     isRequiredBy(run)
 
     unit_tests {
-        useComposeFiles = ['docker-compose.test.yaml']
+        useComposeFiles = ['compose.test.yaml']
         removeVolumes = true
         isRequiredBy(test)
     }
