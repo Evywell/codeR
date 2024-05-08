@@ -6,7 +6,7 @@ import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
 import io.netty.util.ReferenceCountUtil
 
-abstract class NettyChannelHandler<T>(private val client: ClientInterface<T>) : ChannelInboundHandlerAdapter() {
+abstract class NettyChannelHandler<T>(protected val client: ClientInterface<T>) : ChannelInboundHandlerAdapter() {
 
     abstract fun createPacketFromMessage(msg: Any): T
     abstract fun createSessionSocket(ctx: ChannelHandlerContext): SessionSocketInterface

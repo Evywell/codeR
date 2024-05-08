@@ -12,7 +12,6 @@ import fr.rob.gateway.network.GatewaySession
 import fr.rob.world.api.grpc.character.CharacterInfo
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
-import java.util.Optional
 
 class RealmService(
     private val gateway: Gateway,
@@ -39,7 +38,7 @@ class RealmService(
     }
 
     private fun retrieveGameNodeOrCreate(nodeLabel: String, hostname: String, port: Int, gameNodes: GameNodes): GameNode {
-        val gameNodeContainer = retrieveGameNodeFromLabel(nodeLabel, gameNodes)
+        val gameNodeContainer = gameNodes.findByLabel(nodeLabel)
 
         if (gameNodeContainer.isPresent) {
             return gameNodeContainer.get()
@@ -49,16 +48,6 @@ class RealmService(
         gameNodes.addNode(gameNode)
 
         return gameNode
-    }
-
-    private fun retrieveGameNodeFromLabel(nodeLabel: String, gameNodes: GameNodes): Optional<GameNode> {
-        for (gameNode in gameNodes.getNodes()) {
-            if (gameNode.label == nodeLabel) {
-                return Optional.of(gameNode)
-            }
-        }
-
-        return Optional.empty()
     }
 
     fun reserveCharacterForSession(session: GatewaySession, character: CharacterInfo) {

@@ -9,6 +9,7 @@ interface ClientInterface<T> {
     val responseStack: ResponseStackInterface
 
     fun onConnectionEstablished(session: Session)
+    fun onConnectionClosed()
     fun onPacketReceived(packet: T)
 
     fun send(message: Any)
