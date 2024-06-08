@@ -5,7 +5,7 @@ import com.google.protobuf.Message
 import fr.raven.proto.message.game.MovementProto
 import fr.raven.proto.message.game.MovementProto.SMovementInfo
 import fr.rob.game.domain.entity.Position
-import fr.rob.game.domain.movement.Movable
+import fr.rob.game.domain.entity.movement.Movable
 import fr.rob.game.domain.player.session.GameSession
 
 class MovePlayerFunction : WorldFunctionInterface {

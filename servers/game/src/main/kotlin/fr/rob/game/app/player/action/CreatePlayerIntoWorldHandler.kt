@@ -9,7 +9,7 @@ import fr.rob.game.domain.entity.controller.SplineMovementController
 import fr.rob.game.domain.entity.guid.ObjectGuid
 import fr.rob.game.domain.entity.movement.spline.SplineMovementGeneratorInterface
 import fr.rob.game.domain.instance.MapInstance
-import fr.rob.game.domain.movement.Movable
+import fr.rob.game.domain.entity.movement.Movable
 import fr.rob.game.domain.player.PlayerFactory
 import fr.rob.game.domain.world.RandomRollEngine
 import java.util.Optional

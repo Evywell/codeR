@@ -1,4 +1,4 @@
-package fr.rob.game.domain.movement
+package fr.rob.game.domain.entity.movement
 
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.WorldObject
