@@ -3,7 +3,7 @@ package fr.rob.game.test.unit.domain.spell
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.WorldObject
 import fr.rob.game.domain.entity.behavior.ObjectSheetTrait
-import fr.rob.game.domain.movement.Movable
+import fr.rob.game.domain.entity.movement.Movable
 import fr.rob.game.domain.spell.Spell
 import fr.rob.game.domain.spell.SpellBook
 import fr.rob.game.domain.spell.SpellCasterTrait

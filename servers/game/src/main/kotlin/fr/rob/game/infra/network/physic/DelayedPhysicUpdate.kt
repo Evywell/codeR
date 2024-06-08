@@ -2,7 +2,7 @@ package fr.rob.game.infra.network.physic
 
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.movement.spline.SplineMovement
-import fr.rob.game.domain.movement.Movable
+import fr.rob.game.domain.entity.movement.Movable
 import fr.rob.game.domain.world.DelayedUpdateInterface
 
 class DelayedPhysicUpdate(

@@ -4,7 +4,7 @@ import fr.rob.game.domain.character.CharacterService
 import fr.rob.game.domain.character.FetchCharacterInterface
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
-import fr.rob.game.domain.movement.Movable
+import fr.rob.game.domain.entity.movement.Movable
 import fr.rob.game.domain.player.session.GameSession
 import fr.rob.game.domain.spell.SpellBook
 import fr.rob.game.domain.spell.SpellCasterTrait

@@ -4,7 +4,7 @@ import fr.rob.core.misc.clock.IntervalTimer
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.WorldObject
 import fr.rob.game.domain.entity.behavior.ObjectSheetTrait
-import fr.rob.game.domain.movement.Movable
+import fr.rob.game.domain.entity.movement.Movable
 import fr.rob.game.domain.spell.effect.EffectFromSpellInterface
 import fr.rob.game.domain.spell.projectile.CarryProjectileInterface
 import fr.rob.game.domain.spell.projectile.GhostProjectile
