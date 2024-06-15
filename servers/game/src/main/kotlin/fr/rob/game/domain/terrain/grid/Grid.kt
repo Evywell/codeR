@@ -10,6 +10,9 @@ import fr.rob.game.domain.terrain.grid.query.GridQuery
 import java.util.Optional
 import kotlin.math.ceil
 
+/**
+ * @internal
+ */
 class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<Cell>) {
     private val worldObjectContainerList = Array(ObjectGuid.GUID_TYPE.values().size) {
         WorldObjectContainer()

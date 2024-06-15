@@ -1,5 +1,6 @@
 package fr.rob.game.domain.instance
 
+import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.WorldObject
 import fr.rob.game.domain.entity.event.AddedIntoWorldEvent
 import fr.rob.game.domain.entity.guid.ObjectGuid
@@ -10,6 +11,7 @@ import fr.rob.game.domain.event.DomainEventInterface
 import fr.rob.game.domain.terrain.grid.Cell
 import fr.rob.game.domain.terrain.grid.Grid
 import fr.rob.game.domain.terrain.map.Map
+import java.util.Optional
 
 /**
  * We use MapInstance instead of Instance to avoid confusion with the entity
@@ -43,6 +45,9 @@ class MapInstance(val id: Int, val map: Map, val grid: Grid) : DomainEventCarrie
     fun scheduleRemoveFromInstance(worldObject: WorldObject) {
         objectsToRemove.add(worldObject)
     }
+
+    fun findObjectsInsideRadius(origin: Position, radius: Float): List<WorldObject> = grid.findObjectsInsideRadius(origin, radius)
+    fun findObjectByGuid(guid: ObjectGuid): Optional<WorldObject> = grid.findObjectByGuid(guid)
 
     private fun updateGameObjectOfType(
         type: ObjectGuid.GUID_TYPE,

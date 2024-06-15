@@ -14,6 +14,6 @@ class SpellTargetParameter(
             return Optional.empty()
         }
 
-        return targetingOnInstance.grid.findObjectByGuid(targetGuid)
+        return targetingOnInstance.findObjectByGuid(targetGuid)
     }
 }
