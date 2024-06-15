@@ -14,7 +14,7 @@ class InstantAoeDamageEffect(
     override fun cast(spellEffectSummary: SpellEffectSummary) {
         // Select the enemies inside the AOE
         val origin = caster.position
-        val objects = caster.mapInstance.grid.findObjectsInsideRadius(origin, spellEffectInfo.radius)
+        val objects = caster.mapInstance.findObjectsInsideRadius(origin, spellEffectInfo.radius)
 
         objects.forEach { worldObject ->
             if (worldObject != caster) {
