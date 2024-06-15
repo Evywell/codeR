@@ -11,6 +11,7 @@ package fr.rob.game.domain.entity.guid
  * Total = 64 bits (unsigned long)
  */
 class ObjectGuid(private val lowGuid: UInt, private val highGuid: Int) {
+    constructor(rawValue: Long) : this((rawValue and 0xFFFFF).toUInt(), (rawValue shr 36).toInt())
 
     fun isPlayer(): Boolean = highGuid == GUID_TYPE.PLAYER.value
     fun isGameObject(): Boolean = highGuid == GUID_TYPE.GAME_OBJECT.value
