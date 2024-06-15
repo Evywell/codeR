@@ -2,6 +2,7 @@ package fr.rob.game.domain.player
 
 import fr.rob.game.domain.character.CharacterService
 import fr.rob.game.domain.character.FetchCharacterInterface
+import fr.rob.game.domain.combat.CombatTrait
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
 import fr.rob.game.domain.entity.movement.Movable
@@ -27,6 +28,7 @@ class PlayerFactory(
         val player = Player(session, guid, character.name, character.level)
         // player.addTrait(MovableTrait(player))
         player.addTrait(Movable(player))
+        player.addTrait(CombatTrait(player))
         // @todo change this
         player.addTrait(
             SpellCasterTrait(

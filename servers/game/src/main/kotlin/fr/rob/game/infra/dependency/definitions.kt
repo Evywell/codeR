@@ -37,6 +37,7 @@ import fr.rob.game.domain.world.function.CastSpellFunction
 import fr.rob.game.domain.world.function.CheatTeleportFunction
 import fr.rob.game.domain.world.function.LogIntoWorldFunction
 import fr.rob.game.domain.world.function.MovePlayerFunction
+import fr.rob.game.domain.world.function.PlayerEngageCombatFunction
 import fr.rob.game.domain.world.function.RemoveFromWorldFunction
 import fr.rob.game.domain.world.function.WorldFunctionRegistry
 import fr.rob.game.domain.world.packet.WorldPacketQueue
@@ -51,6 +52,7 @@ import fr.rob.game.infra.network.physic.unity.UnityIntegration
 import fr.rob.game.infra.opcode.CMSG_CHEAT_TELEPORT
 import fr.rob.game.infra.opcode.CMSG_LOG_INTO_WORLD
 import fr.rob.game.infra.opcode.CMSG_PLAYER_CAST_SPELL
+import fr.rob.game.infra.opcode.CMSG_PLAYER_ENGAGE_COMBAT
 import fr.rob.game.infra.opcode.CMSG_PLAYER_MOVEMENT
 import fr.rob.game.infra.opcode.CMSG_REMOVE_FROM_WORLD
 import org.koin.core.module.dsl.singleOf
@@ -128,6 +130,7 @@ val opcodeModule = module {
             WorldFunctionRegistry.WorldFunctionItem(CMSG_REMOVE_FROM_WORLD, RemoveFromWorldFunction()),
             WorldFunctionRegistry.WorldFunctionItem(CMSG_CHEAT_TELEPORT, CheatTeleportFunction()),
             WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_CAST_SPELL, CastSpellFunction()),
+            WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_ENGAGE_COMBAT, PlayerEngageCombatFunction())
         )
     }
     single { WorldFunctionRegistry(get(named("FUNCTION_DEFINITIONS"))) }
