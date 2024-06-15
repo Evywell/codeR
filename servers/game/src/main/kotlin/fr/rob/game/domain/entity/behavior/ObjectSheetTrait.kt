@@ -24,13 +24,16 @@ class ObjectSheetTrait(
         var damageTaken = 0
         damageSources.forEach { damageSource -> damageTaken += damageSource.amount * criticalMultiplier }
 
-        if (health - damageTaken < 0) {
-            health = 0
-        } else {
-            health -= damageTaken
-        }
+        inflictDamages(damageTaken)
+    }
 
-        owner.pushEvent(ObjectSheetUpdated(owner, this))
+    fun applySingleDamage(damageSource: DamageSource, isCritical: Boolean) {
+        // @todo tmp values
+        val criticalMultiplier = if (isCritical) 2 else 1
+
+        val damageTaken = damageSource.amount * criticalMultiplier
+
+        inflictDamages(damageTaken)
     }
 
     fun isCriticalHit(caster: WorldObject): Boolean {
@@ -56,6 +59,16 @@ class ObjectSheetTrait(
         val criticalChance = max(DEFAULT_BASE_CRITICAL_CHANCE, baseCriticalChance - criticalChanceReduction)
 
         return roll <= criticalChance
+    }
+
+    private fun inflictDamages(damageTaken: Int) {
+        if (health - damageTaken < 0) {
+            health = 0
+        } else {
+            health -= damageTaken
+        }
+
+        owner.pushEvent(ObjectSheetUpdated(owner, this))
     }
 
     companion object {
