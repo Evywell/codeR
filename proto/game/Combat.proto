@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package fr.raven.proto.message.game;
+
+option java_outer_classname = "CombatProto";
+
+message PlayerEngageCombat {
+  uint64 target = 1;
+}
