@@ -42,6 +42,9 @@ open class WorldObject(
         worldObjectVisitor.visit(this)
     }
 
+    fun isInMeleeRangeOf(target: WorldObject): Boolean =
+        position.getSquaredDistanceWith(target.position) <= DEFAULT_MELEE_RANGE_METERS * DEFAULT_MELEE_RANGE_METERS * DEFAULT_MELEE_RANGE_METERS
+
     fun setPosition(x: Float, y: Float, z: Float, orientation: Float) {
         position.x = x
         position.y = y
@@ -84,4 +87,8 @@ open class WorldObject(
 
     override fun getDomainEventContainer(): Collection<DomainEventInterface> =
         domainEventContainer.getDomainEventContainer()
+
+    companion object {
+        const val DEFAULT_MELEE_RANGE_METERS = 2
+    }
 }
