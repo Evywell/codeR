@@ -6,8 +6,9 @@ import fr.rob.game.domain.entity.WorldObject
 import fr.rob.game.domain.entity.behavior.ObjectSheetTrait
 
 class CombatTrait(private val source: WorldObject): UpdatableTraitInterface {
-    private val mainHandAttacksInterval = IntervalTimer(MAIN_HAND_WEAPON_SPEED_MS, MAIN_HAND_WEAPON_SPEED_MS)
+    private val mainHandAttacksInterval = IntervalTimer(MAIN_HAND_WEAPON_SPEED_MS)
     private var currentTarget: WorldObject? = null
+    private var shouldPerformAttack = true
 
     fun engageCombatWith(target: WorldObject) {
         currentTarget = target
@@ -18,6 +19,12 @@ class CombatTrait(private val source: WorldObject): UpdatableTraitInterface {
             return
         }
 
+        if (shouldPerformAttack) {
+            performAttack()
+
+            return
+        }
+
         mainHandAttacksInterval.update(deltaTime)
 
         if (!mainHandAttacksInterval.passed()) {
@@ -25,8 +32,18 @@ class CombatTrait(private val source: WorldObject): UpdatableTraitInterface {
         }
 
         mainHandAttacksInterval.reset()
+        shouldPerformAttack = true
+    }
+
+    private fun performAttack() {
+        if (!source.isInMeleeRangeOf(currentTarget!!)) {
+            return
+        }
+
         currentTarget?.getTrait<ObjectSheetTrait>()?.ifPresent {
             it.applySingleDamage(DamageSource(source, MAIN_HAND_WEAPON_DAMAGE_AMOUNT), it.isCriticalHit(source))
+
+            shouldPerformAttack = false
         }
     }
 
