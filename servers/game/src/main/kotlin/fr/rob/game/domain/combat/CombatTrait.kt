@@ -36,7 +36,7 @@ class CombatTrait(private val source: WorldObject): UpdatableTraitInterface {
     }
 
     private fun performAttack() {
-        if (!source.isInMeleeRangeOf(currentTarget!!)) {
+        if (!source.isInMeleeRangeOf(currentTarget!!) || !source.isInFrontOf(currentTarget!!)) {
             return
         }
 

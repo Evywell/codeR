@@ -2,6 +2,7 @@ using Fr.Raven.Proto.Message.Game;
 using GatewayPacket = Fr.Raven.Proto.Message.Gateway.Packet;
 using RobClient.Game.Interaction.Action.Movement;
 using RobClient.Network;
+using RobClient.Game.Entity.Guid;
 
 namespace RobClient.Game.Interaction {
     public class PlayerInteraction {
@@ -55,6 +56,15 @@ namespace RobClient.Game.Interaction {
             };
 
             _sender.SendMessage(0x07, message, GatewayPacket.Types.Context.Game);
+        }
+
+        public void EngageCombat(ObjectGuid target) {
+            var message = new PlayerEngageCombat
+            {
+                Target = target.GetRawValue()
+            };
+
+            _sender.SendMessage(0x09, message, GatewayPacket.Types.Context.Game);
         }
     }
 }
