@@ -48,6 +48,7 @@ class GatewaySessionMessageSender(
             .setPosX(message.position.x)
             .setPosY(message.position.y)
             .setPosZ(message.position.z)
+            .setOrientation(message.position.orientation)
             .build()
 
     private fun fromMovementHeartbeatMessage(message: MovementHeartbeatMessage): Message =

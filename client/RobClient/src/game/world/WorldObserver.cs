@@ -43,7 +43,7 @@ namespace RobClient.Game.World {
              var player = _objectFactory.CreatePlayer(
                 ObjectGuid.From(description.Guid),
                 description.Name,
-                Vector4f.Zero()
+                new Vector4f(12f, 0.7f, 0f, 2.61799f) // @todo to change with real data
             );
 
             _environment.AddPlayerToWorld(player);

@@ -51,7 +51,7 @@ class CreatePlayerIntoWorldHandler(
     }
 
     private fun createMobAroundPosition(position: Position, mapInstance: MapInstance): Optional<WorldObject> {
-        val mobPosition = Position(position.x + 10, position.y, position.z, 0f)
+        val mobPosition = Position(10f, 0f, 1f, 0f)
 
         val worldObject = objectManager.spawnObject(
             ObjectGuid.LowGuid(1u, 1u),
