@@ -27,6 +27,9 @@ namespace RobClient.Game.World {
                     case 0x08: // SMSG_OBJECT_HEALTH_UPDATED
                         OnObjectHealthUpdated(ObjectSheetUpdate.Parser.ParseFrom(packet.Body));
                         break;
+                    case 0x97:
+                        OnDebugSignalReceived(DebugSignal.Parser.ParseFrom(packet.Body));
+                        break;
                 }
             }));
         }
@@ -83,6 +86,11 @@ namespace RobClient.Game.World {
                 ObjectGuid.From(objectSheetUpdate.Guid),
                 objectSheetUpdate.Health
             );
+        }
+
+        private void OnDebugSignalReceived(DebugSignal debugSignal)
+        {
+            _environment.DispatchSignal(debugSignal);
         }
     }
 }
