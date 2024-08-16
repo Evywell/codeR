@@ -55,6 +55,28 @@ open class TestApplication : KoinTest {
         }
     }
 
+    protected fun assertContainsMessage(messages: List<StoreMessageSender.MessageSent>, expectations: Array<(StoreMessageSender.MessageSent) -> Boolean>) {
+        var depth = 0
+
+        for (message in messages) {
+            expectation@ for ((expectationIndex, expected) in expectations.withIndex()) {
+                if (!expected(message)) {
+                    break@expectation
+                }
+
+                if (depth < expectationIndex) {
+                    depth = expectationIndex
+                }
+            }
+        }
+
+        if (depth < expectations.size - 1) {
+            depth++
+
+            throw AssertionFailedError("Assertion {$depth} failed")
+        }
+    }
+
     protected fun getGuidFromLow(low: ObjectGuid.LowGuid, type: ObjectGuid.GUID_TYPE): ObjectGuid =
         objectGuidGenerator.fromGuidInfo(ObjectGuidGenerator.GuidInfo(low, type))
 

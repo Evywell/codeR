@@ -77,12 +77,12 @@ class PlayerCheatTeleport : DatabaseTestApplication() {
 
         val messages = messageSender.getMessages()
 
-        assertContainsMessage(messages) { container ->
-            container.session.accountId == PlayerJoiningWorld.DEFAULT_TEST_ACCOUNT_ID &&
-                container.message.opcode == SMSG_MOVEMENT_HEARTBEAT &&
-                container.message.body is MovementHeartbeatMessage &&
-                (container.message.body as MovementHeartbeatMessage).objectId == ObjectGuid(1u, 1) &&
-                (container.message.body as MovementHeartbeatMessage).position == Position(8f, -6f, 3.3f, 0.6f)
-        }
+        assertContainsMessage(messages, arrayOf(
+            { container -> container.session.accountId == PlayerJoiningWorld.DEFAULT_TEST_ACCOUNT_ID },
+            { container -> container.message.opcode == SMSG_MOVEMENT_HEARTBEAT },
+            { container -> container.message.body is MovementHeartbeatMessage },
+            { container -> (container.message.body as MovementHeartbeatMessage).objectId == ObjectGuid(1u, 1) },
+            { container -> (container.message.body as MovementHeartbeatMessage).position == Position(8f, -6f, 3.3f, 0.6f) },
+        ))
     }
 }
