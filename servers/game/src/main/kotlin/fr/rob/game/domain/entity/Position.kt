@@ -25,8 +25,6 @@ class Position(var x: Float, var y: Float, var z: Float, notNormalizedOrientatio
 
         val leftBorder = -1 * (normalizedArc / border)
         val rightBorder = (normalizedArc / border)
-        println("Player=$this; Enemy=$position")
-        println("Orientation=$orientation; Arc=$arc; Normalized Arc=$normalizedArc; Angle=$angle; Left border=$leftBorder; Right border=$rightBorder")
 
         return ((angle >= leftBorder) && (angle <= rightBorder))
     }

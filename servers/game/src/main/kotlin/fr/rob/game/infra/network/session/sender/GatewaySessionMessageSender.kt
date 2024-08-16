@@ -2,12 +2,14 @@ package fr.rob.game.infra.network.session.sender
 
 import com.google.protobuf.Message
 import fr.raven.log.LoggerInterface
+import fr.raven.proto.message.game.DebugProto.DebugSignal
 import fr.raven.proto.message.game.GameProto
 import fr.raven.proto.message.game.MovementProto.MovementHeartbeat
 import fr.raven.proto.message.game.NearbyObjectOpcodeProto
 import fr.raven.proto.message.game.ObjectSheetProto.ObjectSheetUpdate
 import fr.raven.proto.message.game.PlayerProto.PlayerDescription
 import fr.raven.proto.message.game.PositionProto
+import fr.rob.game.app.player.message.DebugSignalMessage
 import fr.rob.game.app.player.message.HealthMessage
 import fr.rob.game.app.player.message.MovementHeartbeatMessage
 import fr.rob.game.app.player.message.NearbyObjectMessage
@@ -70,12 +72,19 @@ class GatewaySessionMessageSender(
             .setHealth(message.health)
             .build()
 
+    private fun fromDebugSignalMessage(message: DebugSignalMessage): Message =
+        DebugSignal.newBuilder()
+            .setName(message.signalName)
+            .setValue(message.signalValue)
+            .build()
+
     private fun toProtoMessage(message: Any): Message {
         when (message) {
             is PlayerDescriptionMessage -> return fromPlayerDescriptionMessage(message)
             is NearbyObjectMessage -> return fromNearbyObjectMessage(message)
             is MovementHeartbeatMessage -> return fromMovementHeartbeatMessage(message)
             is HealthMessage -> return fromHealthMessage(message)
+            is DebugSignalMessage -> return fromDebugSignalMessage(message)
         }
 
         throw RuntimeException("No message builder found for ${message.javaClass.name}")
