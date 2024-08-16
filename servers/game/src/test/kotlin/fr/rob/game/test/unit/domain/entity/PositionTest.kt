@@ -1,13 +1,13 @@
 package fr.rob.game.test.unit.domain.entity
 
 import fr.rob.game.domain.entity.Position
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Assertions.assertFalse
 import kotlin.math.PI
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -226,7 +226,6 @@ class PositionTest {
             Position(25f, -185f, 0f, 0f),
         ),
     )
-
 
     @ParameterizedTest
     @MethodSource("positionOutsideArcDataProvider")
