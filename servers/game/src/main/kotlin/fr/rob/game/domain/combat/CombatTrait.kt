@@ -1,6 +1,7 @@
 package fr.rob.game.domain.combat
 
 import fr.rob.core.misc.clock.IntervalTimer
+import fr.rob.game.app.player.message.DebugSignalMessage
 import fr.rob.game.domain.entity.UpdatableTraitInterface
 import fr.rob.game.domain.entity.WorldObject
 import fr.rob.game.domain.entity.behavior.ObjectSheetTrait
@@ -18,6 +19,8 @@ class CombatTrait(private val source: WorldObject): UpdatableTraitInterface {
         if (!isInCombatWithTarget()) {
             return
         }
+
+        source.controlledByGameSession?.send(DebugSignalMessage("IS_IN_FRONT_OF", if (source.isInFrontOf(currentTarget!!)) 1 else 0))
 
         if (shouldPerformAttack) {
             performAttack()
