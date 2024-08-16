@@ -3,10 +3,10 @@ package fr.rob.game.domain.entity.controller
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.UpdatableTraitInterface
 import fr.rob.game.domain.entity.WorldObject
+import fr.rob.game.domain.entity.movement.Movable
 import fr.rob.game.domain.entity.movement.spline.NullSplineMovement
 import fr.rob.game.domain.entity.movement.spline.SplineMovement
 import fr.rob.game.domain.entity.movement.spline.SplineMovementGeneratorInterface
-import fr.rob.game.domain.entity.movement.Movable
 
 class SplineMovementController(
     private val source: WorldObject,

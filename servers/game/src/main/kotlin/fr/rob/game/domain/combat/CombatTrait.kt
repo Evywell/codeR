@@ -6,7 +6,7 @@ import fr.rob.game.domain.entity.UpdatableTraitInterface
 import fr.rob.game.domain.entity.WorldObject
 import fr.rob.game.domain.entity.behavior.ObjectSheetTrait
 
-class CombatTrait(private val source: WorldObject): UpdatableTraitInterface {
+class CombatTrait(private val source: WorldObject) : UpdatableTraitInterface {
     private val mainHandAttacksInterval = IntervalTimer(MAIN_HAND_WEAPON_SPEED_MS)
     private var currentTarget: WorldObject? = null
     private var shouldPerformAttack = true
