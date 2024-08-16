@@ -4,6 +4,7 @@ using RobClient.Game.Entity;
 using System.Collections.Generic;
 using System.Reactive.Subjects;
 using RobClient.Framework;
+using Fr.Raven.Proto.Message.Game;
 
 namespace RobClient.Game {
     public class GameEnvironment {
@@ -13,12 +14,16 @@ namespace RobClient.Game {
         public Subject<WorldObject> WorldObjectUpdatedSub
         { get; private set; }
 
+        public Subject<DebugSignal> DebugSignalSub
+        { get; private set; }
+
         private ConcurrentDictionary<ulong, WorldObject> _objects = new ConcurrentDictionary<ulong, WorldObject>();
         private ConcurrentQueue<IAction> actions = new ConcurrentQueue<IAction>();
 
         public GameEnvironment()
         {
             WorldObjectUpdatedSub = new Subject<WorldObject>();
+            DebugSignalSub = new Subject<DebugSignal>();
         }
 
         public void Update(int deltaTime)
@@ -36,6 +41,11 @@ namespace RobClient.Game {
                     AddAction(action);
                 }
             }
+        }
+
+        public void DispatchSignal(DebugSignal debugSignal)
+        {
+            DebugSignalSub.OnNext(debugSignal);
         }
 
         public StateProxy<WorldObject> UseStateProxyFor(WorldObject worldObject)
