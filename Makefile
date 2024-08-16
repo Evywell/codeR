@@ -20,7 +20,7 @@ else
 NO_INTERACTIVE_FLAGS =
 endif
 
-DOCKER_COMPOSE = docker-compose
+DOCKER_COMPOSE = docker compose
 DCR = $(DOCKER_COMPOSE) run --rm $(NO_INTERACTIVE_FLAGS)
 DCE = $(DOCKER_COMPOSE) exec
 

@@ -12,7 +12,7 @@ jobs:
           cp .env.ci .env
       - name: Runs the docker containers with the current user
         run: |
-          USER_ID=$(id -u) GROUP_ID=$(id -g) docker-compose up --build -d
+          USER_ID=$(id -u) GROUP_ID=$(id -g) docker compose up --build -d
       - name: Install the ci env
         run: |
           make install-ci
