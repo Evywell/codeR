@@ -8,7 +8,7 @@ class Position(var x: Float, var y: Float, var z: Float, notNormalizedOrientatio
         set(value) { field = normalizeOrientation(value) }
 
     fun isSameHas(position: Position): Boolean =
-        x == position.x && y == position.y && z == position.z
+        x == position.x && y == position.y && z == position.z && orientation == position.orientation
 
     fun getSquaredDistanceWith(position: Position): Float {
         return ((x - position.x) * (x - position.x)) + ((y - position.y) * (y - position.y)) + ((z - position.z) * (z - position.z))
@@ -62,6 +62,18 @@ class Position(var x: Float, var y: Float, var z: Float, notNormalizedOrientatio
             orientation: $orientation
         }
     """.trimIndent()
+
+    override fun hashCode(): Int {
+        var result = x.hashCode()
+        result = 31 * result + y.hashCode()
+        result = 31 * result + z.hashCode()
+        result = 31 * result + orientation.hashCode()
+        return result
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return other is Position && other.isSameHas(this)
+    }
 
     companion object {
         private const val ANGLE_PI = PI.toFloat()
