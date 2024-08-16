@@ -71,6 +71,7 @@ dockerCompose {
     dockerComposeWorkingDirectory = project.rootProject.projectDir
     projectName = 'coder'
     removeVolumes = false
+    useDockerComposeV2 = true
     isRequiredBy(run)
 
     unit_tests {
