@@ -8,7 +8,7 @@ import fr.rob.game.domain.entity.behavior.ObjectSheetTrait
 import fr.rob.game.domain.entity.controller.SplineMovementController
 import fr.rob.game.domain.entity.guid.ObjectGuid
 import fr.rob.game.domain.entity.movement.Movable
-import fr.rob.game.domain.entity.movement.spline.SplineMovementGeneratorInterface
+import fr.rob.game.domain.entity.movement.spline.SplineMovementBrainInterface
 import fr.rob.game.domain.instance.MapInstance
 import fr.rob.game.domain.player.PlayerFactory
 import fr.rob.game.domain.world.RandomRollEngine
@@ -17,7 +17,7 @@ import java.util.Optional
 class CreatePlayerIntoWorldHandler(
     private val playerFactory: PlayerFactory,
     private val objectManager: ObjectManager,
-    private val splineMovementGenerator: SplineMovementGeneratorInterface
+    private val splineMovementBrain: SplineMovementBrainInterface
 ) {
     fun execute(command: CreatePlayerIntoWorldCommand) {
         val playerGameSession = command.gameSession
@@ -43,10 +43,8 @@ class CreatePlayerIntoWorldHandler(
 
         worldObject.ifPresent {
             // send info to unity + ask to move
-            val controller = SplineMovementController(it, splineMovementGenerator)
-            controller.initiateMovementToPosition(Position(15f, 50f, 0.5f, 0f))
-
-            it.addTrait(controller)
+            val controller = SplineMovementController(it, splineMovementBrain)
+            controller.initiateMovementToPosition(Position(15f, 50f, 1f, 0f))
         }
     }
 

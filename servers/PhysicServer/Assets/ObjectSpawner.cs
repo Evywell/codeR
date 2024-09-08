@@ -1,3 +1,4 @@
+using App;
 using App.Network;
 using Fr.Raven.Proto.Message.Physicbridge;
 using UnityEngine;
@@ -13,5 +14,6 @@ public class ObjectSpawner : MonoBehaviour
 
         gameObject.name = $"entity-{entityGuid}";
         gameObject.GetComponent<TransformSyncOverNetwork>().entityGuid = entityGuid;
+        gameObject.GetComponent<ObjectController>().entityGuid = entityGuid;
     }
 }

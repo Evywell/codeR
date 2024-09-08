@@ -9,7 +9,9 @@ class Program {
         var gameClientFactory = new GameClientFactory();
         var gameClient = gameClientFactory.Create(communication, communication);
 
-        gameClient.Game.WorldObjectUpdatedSub.Subscribe(Console.WriteLine);
+        gameClient.Game.WorldObjectUpdatedSub.Subscribe(updt => {
+            Console.WriteLine($"[{updt.Type}] {updt.WorldObject}");
+        });
 
         await gameClient.AuthenticateWithUserId(1);
         await gameClient.Realm.JoinWorldWithCharacter(1);

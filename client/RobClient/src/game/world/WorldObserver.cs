@@ -76,7 +76,8 @@ namespace RobClient.Game.World {
                     heartbeat.Position.PosY,
                     heartbeat.Position.PosZ,
                     heartbeat.Position.Orientation
-                )
+                ),
+                heartbeat.Phase == MovementPhase.PhaseBegin
             );
         }
 

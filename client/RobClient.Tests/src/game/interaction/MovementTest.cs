@@ -124,8 +124,8 @@ public class MovementTest
         game.AddPlayerToWorld(player);
 
         Player? lastUpdatedWorldObject = null;
-        game.WorldObjectUpdatedSub.Subscribe((worldObject) => {
-            lastUpdatedWorldObject = (Player)worldObject;
+        game.WorldObjectUpdatedSub.Subscribe((worldObjectUpdate) => {
+            lastUpdatedWorldObject = (Player)worldObjectUpdate.WorldObject;
         });
 
         // Act

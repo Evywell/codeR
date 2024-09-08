@@ -6,8 +6,8 @@ import fr.rob.game.DB_REALM
 import fr.rob.game.DB_WORLD
 import fr.rob.game.domain.entity.guid.ObjectGuid
 import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
-import fr.rob.game.domain.entity.movement.spline.SplineMovementGeneratorInterface
-import fr.rob.game.domain.entity.movement.spline.StraightSplineMovementGenerator
+import fr.rob.game.domain.entity.movement.spline.SplineMovementBrainInterface
+import fr.rob.game.domain.entity.movement.spline.StraightSplineMovementBrain
 import fr.rob.game.infra.dependency.databaseModule
 import fr.rob.game.infra.dependency.globalModule
 import fr.rob.game.infra.dependency.mapModule
@@ -32,7 +32,7 @@ open class TestApplication : KoinTest {
     @BeforeAll
     open fun launchApp() {
         val testModule = module {
-            single<SplineMovementGeneratorInterface> { StraightSplineMovementGenerator() }
+            single<SplineMovementBrainInterface> { StraightSplineMovementBrain() }
         }
 
         startKoin {

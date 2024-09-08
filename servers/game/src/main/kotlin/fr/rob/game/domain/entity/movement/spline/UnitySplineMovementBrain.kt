@@ -1,16 +1,22 @@
 package fr.rob.game.domain.entity.movement.spline
 
 import fr.raven.proto.message.physicbridge.PhysicProto
+import fr.raven.proto.message.physicbridge.PhysicProto.ObjectMoved
+import fr.raven.proto.message.physicbridge.PhysicProto.ObjectReachDestination
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.WorldObject
+import fr.rob.game.domain.entity.movement.Movable
+import fr.rob.game.domain.world.DelayedUpdateQueue
 import fr.rob.game.infra.network.physic.PhysicObjectInteraction
+import fr.rob.game.infra.network.physic.SplineStepDelayedUpdate
 import fr.rob.game.infra.network.physic.unity.UnityIntegration
 
-class UnitySplineMovementGenerator(
+class UnitySplineMovementBrain(
     private val physicClientIntegration: UnityIntegration,
     private val physicObjectInteraction: PhysicObjectInteraction,
-) : SplineMovementGeneratorInterface {
-    override fun generateForFinalPosition(source: WorldObject, position: Position): SplineMovement {
+    private val delayedUpdateQueue: DelayedUpdateQueue,
+) : SplineMovementBrainInterface {
+    override fun moveToDestination(source: WorldObject, destination: Position, stepHandler: (SplineMovement) -> Unit) {
         val sourceGuidRawValue = source.guid.getRawValue()
 
         physicClientIntegration.send(
@@ -32,6 +38,26 @@ class UnitySplineMovementGenerator(
                 .build(),
         )
 
+        val splineMovement = SplineMovement()
+
+        physicObjectInteraction.registerObjectInteractionCallback(source.guid, ObjectMoved::class) {
+            it as ObjectMoved
+
+            splineMovement.position = Position(it.position.posX, it.position.posY, it.position.posZ, it.position.orientation)
+            splineMovement.movement = Movable.Movement(Movable.DirectionType.FORWARD, Movable.Phase.MOVING)
+
+            delayedUpdateQueue.enqueueDelayedUpdate(SplineStepDelayedUpdate(stepHandler, splineMovement))
+        }
+
+        physicObjectInteraction.registerObjectInteractionCallback(source.guid, ObjectReachDestination::class) {
+            it as ObjectReachDestination
+
+            splineMovement.reachDestination()
+            splineMovement.movement = Movable.Movement(Movable.DirectionType.FORWARD, Movable.Phase.STOPPED)
+
+            delayedUpdateQueue.enqueueDelayedUpdate(SplineStepDelayedUpdate(stepHandler, splineMovement))
+        }
+
         physicClientIntegration.send(
             PhysicProto.Packet.newBuilder()
                 .setOpcode(2)
@@ -40,20 +66,15 @@ class UnitySplineMovementGenerator(
                         .setGuid(sourceGuidRawValue)
                         .setPosition(
                             PhysicProto.Position.newBuilder()
-                                .setPosX(position.x)
-                                .setPosY(position.y)
-                                .setPosZ(position.z)
-                                .setOrientation(position.orientation),
+                                .setPosX(destination.x)
+                                .setPosY(destination.y)
+                                .setPosZ(destination.z)
+                                .setOrientation(destination.orientation),
                         )
                         .build()
                         .toByteString(),
                 )
                 .build(),
         )
-
-        val splineMovement = SplineMovement()
-        physicObjectInteraction.movingObjects[sourceGuidRawValue] = splineMovement
-
-        return splineMovement
     }
 }
