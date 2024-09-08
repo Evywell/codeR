@@ -7,13 +7,13 @@ import fr.rob.game.domain.entity.movement.Movable
 /**
  * For the moment this is pretty dumb, it teleports the object instead of moving it gradually
  */
-class StraightSplineMovementGenerator : SplineMovementGeneratorInterface {
-    override fun generateForFinalPosition(source: WorldObject, position: Position): SplineMovement {
+class StraightSplineMovementBrain : SplineMovementBrainInterface {
+    override fun moveToDestination(source: WorldObject, destination: Position, stepHandler: (SplineMovement) -> Unit) {
         val movement = SplineMovement()
 
-        movement.position = position
+        movement.position = destination
         movement.movement = Movable.Movement(Movable.DirectionType.FORWARD, Movable.Phase.MOVING)
 
-        return movement
+        stepHandler(movement)
     }
 }

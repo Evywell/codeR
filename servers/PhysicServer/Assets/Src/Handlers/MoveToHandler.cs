@@ -3,7 +3,6 @@ using App.Network;
 using Fr.Raven.Proto.Message.Physicbridge;
 using Google.Protobuf;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace App.Handlers {
     public class MoveToHandler : PacketHandler<MoveToRequest>
@@ -25,10 +24,10 @@ namespace App.Handlers {
             }
 
             var position = message.Position;
-            var vec3Position = new Vector3(position.PosX, position.PosZ, position.PosY);
 
-            var agent = actor.GetComponent<NavMeshAgent>();
-            agent.SetDestination(vec3Position);
+            var agent = actor.GetComponent<ObjectController>();
+
+            agent.MoveToPosition(new Vector3(position.PosX, position.PosZ, position.PosY));
         }
     }
 }

@@ -11,7 +11,7 @@ namespace RobClient.Game {
         public ObjectGuid ControlledObjectId
         { get; set; }
 
-        public Subject<WorldObject> WorldObjectUpdatedSub
+        public Subject<WorldObjectUpdate> WorldObjectUpdatedSub
         { get; private set; }
 
         public Subject<DebugSignal> DebugSignalSub
@@ -22,7 +22,7 @@ namespace RobClient.Game {
 
         public GameEnvironment()
         {
-            WorldObjectUpdatedSub = new Subject<WorldObject>();
+            WorldObjectUpdatedSub = new Subject<WorldObjectUpdate>();
             DebugSignalSub = new Subject<DebugSignal>();
         }
 
@@ -52,7 +52,7 @@ namespace RobClient.Game {
         {
             return new StateProxyChangeNotify<WorldObject>(
                 worldObject,
-                () => WorldObjectUpdatedSub.OnNext(worldObject)
+                () => WorldObjectUpdatedSub.OnNext(new WorldObjectUpdate(UpdateType.POSITION, worldObject))
             );
         }
 
@@ -70,16 +70,17 @@ namespace RobClient.Game {
         public void AttachObject(WorldObject worldObject)
         {
             _objects.TryAdd(worldObject.Guid.GetRawValue(), worldObject);
-            WorldObjectUpdatedSub.OnNext(worldObject);
+            WorldObjectUpdatedSub.OnNext(new WorldObjectUpdate(UpdateType.SPAWN, worldObject));
         }
 
-        public void UpdateObjectPosition(ObjectGuid guid, Vector4f position)
+        public void UpdateObjectPosition(ObjectGuid guid, Vector4f position, bool isMovementOngoing = false)
         {
             _objects.TryGetValue(guid.GetRawValue(), out WorldObject worldObject);
 
             if (worldObject != null) {
                 worldObject.Position = position;
-                WorldObjectUpdatedSub.OnNext(worldObject);
+                worldObject.IsMoving = isMovementOngoing;
+                WorldObjectUpdatedSub.OnNext(new WorldObjectUpdate(UpdateType.POSITION, worldObject));
             }
         }
 
@@ -89,7 +90,7 @@ namespace RobClient.Game {
 
             if (worldObject != null) {
                 worldObject.Health = newHealth;
-                WorldObjectUpdatedSub.OnNext(worldObject);
+                WorldObjectUpdatedSub.OnNext(new WorldObjectUpdate(UpdateType.RESOURCE, worldObject));
             }
         }
 

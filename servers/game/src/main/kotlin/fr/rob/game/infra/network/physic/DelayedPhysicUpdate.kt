@@ -7,10 +7,11 @@ import fr.rob.game.domain.world.DelayedUpdateInterface
 
 class DelayedPhysicUpdate(
     private val movementToUpdate: SplineMovement,
-    private val newPosition: Position
+    private val newPosition: Position?,
+    private val movementPhase: Movable.Phase = Movable.Phase.MOVING
 ) : DelayedUpdateInterface {
     override fun update(deltaTime: Int) {
-        movementToUpdate.movement = Movable.Movement(Movable.DirectionType.FORWARD, Movable.Phase.MOVING)
+        movementToUpdate.movement = Movable.Movement(Movable.DirectionType.FORWARD, movementPhase)
         movementToUpdate.position = newPosition
     }
 }

@@ -11,6 +11,9 @@ namespace RobClient.Game.Entity {
         public float Speed
         { get; set; }
 
+        public bool IsMoving
+        { get; set;}
+
         public uint Health
         { get; set; }
 
@@ -19,6 +22,7 @@ namespace RobClient.Game.Entity {
             Position = position;
             Speed = 3.0f;
             Health = 100;
+            IsMoving = false;
         }
 
         public WorldObject(ObjectGuid guid) : this(guid, Vector4f.Zero()) {}

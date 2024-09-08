@@ -22,6 +22,7 @@ message MovementHeartbeat {
   uint64 guid = 1;
   Position position = 2;
   float speed = 3;
+  MovementPhase phase = 4;
 }
 
 message CheatTeleport {

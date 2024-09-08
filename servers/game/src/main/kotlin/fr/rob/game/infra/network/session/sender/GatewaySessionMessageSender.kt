@@ -4,6 +4,7 @@ import com.google.protobuf.Message
 import fr.raven.log.LoggerInterface
 import fr.raven.proto.message.game.DebugProto.DebugSignal
 import fr.raven.proto.message.game.GameProto
+import fr.raven.proto.message.game.MovementProto
 import fr.raven.proto.message.game.MovementProto.MovementHeartbeat
 import fr.raven.proto.message.game.NearbyObjectOpcodeProto
 import fr.raven.proto.message.game.ObjectSheetProto.ObjectSheetUpdate
@@ -19,6 +20,7 @@ import fr.rob.game.domain.player.session.GameSession
 import fr.rob.game.domain.player.session.SessionMessageSenderInterface
 import fr.rob.game.infra.network.session.GatewayGameSession
 import fr.rob.game.infra.opcode.OPCODES_MAP
+import fr.rob.game.infra.opcode.SMSG_MOVEMENT_HEARTBEAT
 
 class GatewaySessionMessageSender(
     private val gatewaySession: GatewayGameSession,
@@ -33,9 +35,15 @@ class GatewaySessionMessageSender(
             .setBody(toProtoMessage(message.body).toByteString())
             .build()
 
-        logger.debug("Sending message ${OPCODES_MAP[message.opcode]} with size ${gamePacket.toByteArray().size} bytes")
+        if (shouldLogMessageSending(message.opcode)) {
+            logger.debug("Sending message ${OPCODES_MAP[message.opcode]} with size ${gamePacket.toByteArray().size} bytes")
+        }
 
         gatewaySession.send(gamePacket)
+    }
+
+    private fun shouldLogMessageSending(opcode: Int): Boolean {
+        return !opcodesToIgnore.contains(opcode)
     }
 
     private fun fromPlayerDescriptionMessage(message: PlayerDescriptionMessage): Message =
@@ -64,6 +72,7 @@ class GatewaySessionMessageSender(
                     .setOrientation(message.position.orientation)
                     .build(),
             )
+            .setPhase(if (message.movement === null || message.movement.isMoving()) MovementProto.MovementPhase.PHASE_BEGIN else MovementProto.MovementPhase.PHASE_END)
             .build()
 
     private fun fromHealthMessage(message: HealthMessage): Message =
@@ -88,5 +97,9 @@ class GatewaySessionMessageSender(
         }
 
         throw RuntimeException("No message builder found for ${message.javaClass.name}")
+    }
+
+    companion object {
+        private val opcodesToIgnore = arrayOf(SMSG_MOVEMENT_HEARTBEAT)
     }
 }

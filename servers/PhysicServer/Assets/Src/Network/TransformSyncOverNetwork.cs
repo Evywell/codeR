@@ -1,8 +1,7 @@
 using Google.Protobuf;
 using UnityEngine;
-using Bridge = Fr.Raven.Proto.Message.Physicbridge;
-using Fr.Raven.Proto.Message.Game;
 using Fr.Raven.Proto.Message.Physicbridge;
+using App.Normalizers;
 
 namespace App.Network {
     public class TransformSyncOverNetwork : MonoBehaviour {
@@ -41,14 +40,21 @@ namespace App.Network {
             _hasPositionYChanged = false;
             _hasPositionZChanged = false;
 
-            PhysicServer.Instance.SendMessageToEveryone(new Bridge.Packet {
+            float orientationRad = transform.rotation.eulerAngles.y * Mathf.Deg2Rad;
+
+            float orientation = NormalizeOrientation(PositionNormalizer.TransformUnityOrientationToServerOrientation(orientationRad));
+
+            PhysicServer.Instance.SendMessageToEveryone(new Packet
+            {
                 Opcode = 0x01,
                 Body = new ObjectMoved {
                     Guid = entityGuid,
-                    Position = new Bridge.Position {
+                    Position = new Position
+                    {
                         PosX = _currentPosition.x,
-                        PosY = _currentPosition.y,
-                        PosZ = _currentPosition.z,
+                        PosY = _currentPosition.z,
+                        PosZ = _currentPosition.y,
+                        Orientation = orientation
                     }
                 }.ToByteString()
             });
@@ -71,6 +77,10 @@ namespace App.Network {
 
         private bool IsCurrentPositionDirty() {
             return _hasPositionXChanged || _hasPositionYChanged || _hasPositionZChanged;
+        }
+
+        private float NormalizeOrientation(float orientation) {
+            return orientation % (2 * Mathf.PI);
         }
     }
 }

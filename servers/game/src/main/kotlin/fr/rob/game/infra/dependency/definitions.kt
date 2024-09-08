@@ -15,8 +15,8 @@ import fr.rob.game.domain.character.CharacterService
 import fr.rob.game.domain.character.waitingroom.CharacterWaitingRoom
 import fr.rob.game.domain.entity.ObjectManager
 import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
-import fr.rob.game.domain.entity.movement.spline.SplineMovementGeneratorInterface
-import fr.rob.game.domain.entity.movement.spline.UnitySplineMovementGenerator
+import fr.rob.game.domain.entity.movement.spline.SplineMovementBrainInterface
+import fr.rob.game.domain.entity.movement.spline.UnitySplineMovementBrain
 import fr.rob.game.domain.entity.template.Creature
 import fr.rob.game.domain.instance.InstanceManager
 import fr.rob.game.domain.player.InstanceFinderInterface
@@ -45,6 +45,7 @@ import fr.rob.game.infra.misc.player.FakeInstanceFinder
 import fr.rob.game.infra.mysql.character.MysqlCheckCharacterExist
 import fr.rob.game.infra.mysql.character.MysqlFetchCharacter
 import fr.rob.game.infra.network.physic.ObjectMovedHandler
+import fr.rob.game.infra.network.physic.ObjectReachedDestinationHandler
 import fr.rob.game.infra.network.physic.PhysicObjectInteraction
 import fr.rob.game.infra.network.physic.PhysicOpcodeFunctionRegistry
 import fr.rob.game.infra.network.physic.unity.UnityClientBuilder
@@ -110,7 +111,8 @@ val opcodeModule = module {
 
     single(named("PHYSIC_FUNCTION_DEFINITIONS")) {
         arrayOf(
-            OpcodeFunctionRegistryInterface.OpcodeFunctionItem(0x01, ObjectMovedHandler(get(), get()))
+            OpcodeFunctionRegistryInterface.OpcodeFunctionItem(0x01, ObjectMovedHandler(get())),
+            OpcodeFunctionRegistryInterface.OpcodeFunctionItem(0x02, ObjectReachedDestinationHandler(get()))
         )
     }
 
@@ -118,7 +120,7 @@ val opcodeModule = module {
 
     single { UnityIntegration(get()) }
 
-    single<SplineMovementGeneratorInterface> { UnitySplineMovementGenerator(get(), get()) }
+    single<SplineMovementBrainInterface> { UnitySplineMovementBrain(get(), get(), get()) }
 
     single { CharacterWaitingRoom() }
     single { CreatePlayerIntoWorldHandler(get(), get(), get()) }

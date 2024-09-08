@@ -116,7 +116,7 @@ class PlayerJoiningWorld : DatabaseTestApplication() {
                 container.message.opcode == SMSG_NEARBY_OBJECT_UPDATE &&
                 container.message.body is NearbyObjectMessage &&
                 (container.message.body as NearbyObjectMessage).objectId == getGuidFromLow(ObjectGuid.LowGuid(1u, 1u), ObjectGuid.GUID_TYPE.GAME_OBJECT) &&
-                (container.message.body as NearbyObjectMessage).position == Position(15f, 50f, 0.5f, 0f)
+                (container.message.body as NearbyObjectMessage).position == Position(15f, 50f, 1f, 0f)
         }
     }
 

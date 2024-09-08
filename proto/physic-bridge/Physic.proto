@@ -24,6 +24,10 @@ message ObjectMoved {
   Position position = 2;
 }
 
+message ObjectReachDestination {
+  uint64 guid = 1;
+}
+
 message Position {
   float posX = 1;
   float posY = 2;
