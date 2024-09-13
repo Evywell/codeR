@@ -12,10 +12,16 @@ message ProceedMovement {
     MovementDirectionType direction = 3;
 }
 
+message Direction {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+}
+
 message SMovementInfo {
   MovementPhase phase = 1;
   Position position = 2;
-  MovementDirectionType direction = 3;
+  Direction direction = 3;
 }
 
 message MovementHeartbeat {
@@ -23,6 +29,7 @@ message MovementHeartbeat {
   Position position = 2;
   float speed = 3;
   MovementPhase phase = 4;
+  Direction direction = 5;
 }
 
 message CheatTeleport {

@@ -54,8 +54,8 @@ public class MovementTest
         game.AddPlayerToWorld(player2);
 
         // Act
-        game.UpdateObjectPosition(player1.Guid, new Vector4f(4, 4.33f, -1, 0.12f));
-        game.UpdateObjectPosition(player2.Guid, new Vector4f(156, -6.3f, 30, 0.4f));
+        game.UpdateObjectPosition(player1.Guid, new Vector4f(4, 4.33f, -1, 0.12f), new Vector3f(0, 0, 0));
+        game.UpdateObjectPosition(player2.Guid, new Vector4f(156, -6.3f, 30, 0.4f), new Vector3f(0, 0, 0));
 
         // Assert
         Assert.That(player1.Position.X, Is.EqualTo(4));

@@ -5,6 +5,7 @@ import fr.raven.log.LoggerInterface
 import fr.raven.proto.message.game.DebugProto.DebugSignal
 import fr.raven.proto.message.game.GameProto
 import fr.raven.proto.message.game.MovementProto
+import fr.raven.proto.message.game.MovementProto.Direction
 import fr.raven.proto.message.game.MovementProto.MovementHeartbeat
 import fr.raven.proto.message.game.NearbyObjectOpcodeProto
 import fr.raven.proto.message.game.ObjectSheetProto.ObjectSheetUpdate
@@ -61,8 +62,15 @@ class GatewaySessionMessageSender(
             .setOrientation(message.position.orientation)
             .build()
 
-    private fun fromMovementHeartbeatMessage(message: MovementHeartbeatMessage): Message =
-        MovementHeartbeat.newBuilder()
+    private fun fromMovementHeartbeatMessage(message: MovementHeartbeatMessage): Message {
+        val direction = if (message.movement != null) Direction.newBuilder()
+            .setX(message.movement.direction.x)
+            .setY(message.movement.direction.y)
+            .setZ(message.movement.direction.z)
+            .build()
+            else Direction.getDefaultInstance()
+
+        return MovementHeartbeat.newBuilder()
             .setGuid(message.objectId.getRawValue())
             .setPosition(
                 PositionProto.Position.newBuilder()
@@ -72,8 +80,10 @@ class GatewaySessionMessageSender(
                     .setOrientation(message.position.orientation)
                     .build(),
             )
+            .setDirection(direction)
             .setPhase(if (message.movement === null || message.movement.isMoving()) MovementProto.MovementPhase.PHASE_BEGIN else MovementProto.MovementPhase.PHASE_END)
             .build()
+    }
 
     private fun fromHealthMessage(message: HealthMessage): Message =
         ObjectSheetUpdate.newBuilder()

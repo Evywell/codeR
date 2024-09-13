@@ -4,6 +4,7 @@ import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.WorldObject
 import fr.rob.game.domain.entity.behavior.ObjectSheetTrait
 import fr.rob.game.domain.entity.movement.Movable
+import fr.rob.game.domain.maths.Vector3f
 import fr.rob.game.domain.spell.Spell
 import fr.rob.game.domain.spell.SpellBook
 import fr.rob.game.domain.spell.SpellCasterTrait
@@ -96,7 +97,7 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
 
         // Walking
-        caster.getTrait<Movable>().get().moveToPosition(Position(0f, 0f, 0f, 0f), Movable.Movement(Movable.DirectionType.FORWARD, Movable.Phase.MOVING))
+        caster.getTrait<Movable>().get().moveToPosition(Position(0f, 0f, 0f, 0f), Movable.Movement(Vector3f.forward(), Movable.Phase.MOVING))
         caster.onUpdate(100)
         assertEquals(Spell.SpellState.CANCELED, caster.getTrait<SpellCasterTrait>().get().getLastSpellCasted().get().state)
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
@@ -117,7 +118,7 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
 
         // Walking
-        caster.getTrait<Movable>().get().moveToPosition(Position(0f, 0f, 0f, 0f), Movable.Movement(Movable.DirectionType.FORWARD, Movable.Phase.MOVING))
+        caster.getTrait<Movable>().get().moveToPosition(Position(0f, 0f, 0f, 0f), Movable.Movement(Vector3f.forward(), Movable.Phase.MOVING))
         caster.onUpdate(100)
         assertEquals(Spell.SpellState.PREPARING, caster.getTrait<SpellCasterTrait>().get().getLastSpellCasted().get().state)
         assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)

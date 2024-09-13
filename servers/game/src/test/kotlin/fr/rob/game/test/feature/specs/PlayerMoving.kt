@@ -67,8 +67,12 @@ class PlayerMoving : DatabaseTestApplication() {
                             .setOrientation(0.8f),
                     )
                     .setPhase(MovementProto.MovementPhase.PHASE_BEGIN)
-                    .setDirection(MovementProto.MovementDirectionType.TYPE_FORWARD)
-                    .build(),
+                    .setDirection(
+                        MovementProto.Direction.newBuilder()
+                            .setX(0f)
+                            .setY(0f)
+                            .setZ(0f)
+                    ).build(),
             ),
         )
 
