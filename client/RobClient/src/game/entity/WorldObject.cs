@@ -12,7 +12,10 @@ namespace RobClient.Game.Entity {
         { get; set; }
 
         public bool IsMoving
-        { get; set;}
+        { get; set; }
+
+        public Vector3f Direction
+        { get; set; }
 
         public uint Health
         { get; set; }
@@ -20,6 +23,7 @@ namespace RobClient.Game.Entity {
         public WorldObject(ObjectGuid guid, Vector4f position) {
             Guid = guid;
             Position = position;
+            Direction = new Vector3f(0, 0, 0);
             Speed = 3.0f;
             Health = 100;
             IsMoving = false;

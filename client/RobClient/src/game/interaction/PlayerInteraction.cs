@@ -3,6 +3,7 @@ using GatewayPacket = Fr.Raven.Proto.Message.Gateway.Packet;
 using RobClient.Game.Interaction.Action.Movement;
 using RobClient.Network;
 using RobClient.Game.Entity.Guid;
+using RobClient.Game.Entity;
 
 namespace RobClient.Game.Interaction {
     public class PlayerInteraction {
@@ -30,7 +31,7 @@ namespace RobClient.Game.Interaction {
             _sender.SendMessage(0x06, movement, GatewayPacket.Types.Context.Game);
         }
 
-        public void MoveClient(float posX, float posY, float posZ, float orientation) {
+        public void MoveClient(float posX, float posY, float posZ, float orientation, Vector3f direction) {
             var position = new Position
             {
                 PosX = posX,
@@ -43,7 +44,11 @@ namespace RobClient.Game.Interaction {
             {
                 Phase = MovementPhase.PhaseBegin,
                 Position = position,
-                Direction = MovementDirectionType.TypeForward
+                Direction = new Direction {
+                    X = direction.X,
+                    Y = direction.Y,
+                    Z = direction.Z,
+                }
             };
 
             _sender.SendMessage(0x06, movement, GatewayPacket.Types.Context.Game);

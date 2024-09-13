@@ -2,9 +2,10 @@ package fr.rob.game.domain.entity.movement
 
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.WorldObject
+import fr.rob.game.domain.maths.Vector3f
 
 class Movable(private val source: WorldObject) {
-    var currentMovement = Movement(DirectionType.NONE, Phase.STOPPED)
+    var currentMovement = Movement(Vector3f.zero(), Phase.STOPPED)
         private set
 
     fun moveToPosition(position: Position, movement: Movement) {
@@ -14,12 +15,8 @@ class Movable(private val source: WorldObject) {
 
     fun isMoving() = currentMovement.isMoving()
 
-    data class Movement(val direction: DirectionType, val phase: Phase) {
+    data class Movement(val direction: Vector3f, val phase: Phase) {
         fun isMoving(): Boolean = phase == Phase.MOVING
-    }
-
-    enum class DirectionType {
-        FORWARD, BACKWARD, LEFT, RIGHT, STRAFE_LEFT, STRAFE_RIGHT, NONE
     }
 
     enum class Phase {

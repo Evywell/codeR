@@ -55,6 +55,12 @@ namespace App.Network {
                         PosY = _currentPosition.z,
                         PosZ = _currentPosition.y,
                         Orientation = orientation
+                    },
+                    Direction = new Vec3
+                    {
+                        X = Mathf.Cos(orientation),
+                        Y = Mathf.Sin(orientation),
+                        Z = 0
                     }
                 }.ToByteString()
             });

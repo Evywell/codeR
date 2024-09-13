@@ -73,12 +73,13 @@ namespace RobClient.Game {
             WorldObjectUpdatedSub.OnNext(new WorldObjectUpdate(UpdateType.SPAWN, worldObject));
         }
 
-        public void UpdateObjectPosition(ObjectGuid guid, Vector4f position, bool isMovementOngoing = false)
+        public void UpdateObjectPosition(ObjectGuid guid, Vector4f position, Vector3f direction, bool isMovementOngoing = false)
         {
             _objects.TryGetValue(guid.GetRawValue(), out WorldObject worldObject);
 
             if (worldObject != null) {
                 worldObject.Position = position;
+                worldObject.Direction = direction;
                 worldObject.IsMoving = isMovementOngoing;
                 WorldObjectUpdatedSub.OnNext(new WorldObjectUpdate(UpdateType.POSITION, worldObject));
             }

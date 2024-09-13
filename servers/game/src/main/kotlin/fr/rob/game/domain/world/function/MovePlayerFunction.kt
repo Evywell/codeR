@@ -3,9 +3,11 @@ package fr.rob.game.domain.world.function
 import com.google.protobuf.ByteString
 import com.google.protobuf.Message
 import fr.raven.proto.message.game.MovementProto
+import fr.raven.proto.message.game.MovementProto.Direction
 import fr.raven.proto.message.game.MovementProto.SMovementInfo
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.movement.Movable
+import fr.rob.game.domain.maths.Vector3f
 import fr.rob.game.domain.player.session.GameSession
 
 class MovePlayerFunction : WorldFunctionInterface {
@@ -22,11 +24,7 @@ class MovePlayerFunction : WorldFunctionInterface {
 
     override fun parseFromByteString(data: ByteString): Message = SMovementInfo.parseFrom(data)
 
-    private fun getDirectionFromMessage(message: MovementProto.MovementDirectionType): Movable.DirectionType =
-        when (message) {
-            MovementProto.MovementDirectionType.TYPE_FORWARD -> Movable.DirectionType.FORWARD
-            MovementProto.MovementDirectionType.UNRECOGNIZED -> Movable.DirectionType.NONE
-        }
+    private fun getDirectionFromMessage(direction: Direction): Vector3f = Vector3f(direction.x, direction.y, direction.z)
 
     private fun getPhaseFromMessage(message: MovementProto.MovementPhase): Movable.Phase =
         when (message) {

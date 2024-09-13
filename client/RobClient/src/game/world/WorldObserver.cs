@@ -77,6 +77,7 @@ namespace RobClient.Game.World {
                     heartbeat.Position.PosZ,
                     heartbeat.Position.Orientation
                 ),
+                new Vector3f(heartbeat.Direction.X, heartbeat.Direction.Y, heartbeat.Direction.Z),
                 heartbeat.Phase == MovementPhase.PhaseBegin
             );
         }

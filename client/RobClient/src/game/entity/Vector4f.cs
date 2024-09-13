@@ -12,14 +12,16 @@ namespace RobClient.Game.Entity {
         public float O
         { get; set; }
 
-        public Vector4f(float x, float y, float z, float o) {
+        public Vector4f(float x, float y, float z, float o)
+        {
             X = x;
             Y = y;
             Z = z;
             O = o;
         }
 
-        public static Vector4f Zero() {
+        public static Vector4f Zero()
+        {
             return new Vector4f(0, 0, 0, 0);
         }
     }
