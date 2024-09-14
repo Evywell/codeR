@@ -11,6 +11,8 @@ import fr.rob.game.domain.spell.SpellBook
 import fr.rob.game.domain.spell.SpellCasterTrait
 import fr.rob.game.domain.spell.SpellInfo
 import fr.rob.game.domain.spell.effect.InstantAoeDamageEffect
+import fr.rob.game.domain.spell.trigger.ApplyEffectsSpellTrigger
+import fr.rob.game.domain.spell.type.instant.InstantLaunchInfo
 
 class PlayerFactory(
     private val characterService: CharacterService,
@@ -37,8 +39,7 @@ class PlayerFactory(
                     hashMapOf(
                         1 to SpellInfo(
                             1,
-                            SpellInfo.LaunchType.INSTANT,
-                            arrayOf(InstantAoeDamageEffect.InstantAoeDamageEffectInfo(1, 5f)),
+                            InstantLaunchInfo(ApplyEffectsSpellTrigger(arrayOf(InstantAoeDamageEffect.InstantAoeDamageEffectInfo(1, 5f))))
                         ),
                     ),
                 ),
