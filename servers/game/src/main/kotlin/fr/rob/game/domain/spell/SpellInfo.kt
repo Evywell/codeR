@@ -1,5 +1,6 @@
 package fr.rob.game.domain.spell
 
+import fr.rob.game.domain.spell.type.LaunchInfoInterface
 import java.util.EnumSet
 
 /**
@@ -7,18 +8,10 @@ import java.util.EnumSet
  */
 class SpellInfo(
     val identifier: Int,
-    val launchingType: LaunchType,
-    val effects: Array<SpellEffectInfo>,
+    val launchInfo: LaunchInfoInterface,
     val castingTime: Int = INSTANT_CASTING_TIME,
-    val projectileSpeed: Float = 0f,
     val flags: EnumSet<FLAGS> = EnumSet.noneOf(FLAGS::class.java),
 ) {
-    enum class LaunchType {
-        INSTANT,
-        GHOST_PROJECTILES,
-        TIMED_PROJECTILES,
-    }
-
     enum class FLAGS {
         ALLOW_CAST_WHILE_MOVING,
     }

@@ -16,6 +16,10 @@ import fr.rob.game.domain.spell.effect.EffectFromSpellInterface
 import fr.rob.game.domain.spell.effect.EffectInterface
 import fr.rob.game.domain.spell.effect.InstantDamageEffect
 import fr.rob.game.domain.spell.target.SpellTargetParameter
+import fr.rob.game.domain.spell.trigger.ApplyEffectsSpellTrigger
+import fr.rob.game.domain.spell.type.instant.InstantLaunchInfo
+import fr.rob.game.domain.spell.type.projectile.GhostProjectileLaunchInfo
+import fr.rob.game.domain.spell.type.projectile.TimedProjectileLaunchInfo
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -183,12 +187,12 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
     override fun createSpellBook(): SpellBook =
         SpellBook(
             hashMapOf(
-                1 to SpellInfo(1, SpellInfo.LaunchType.INSTANT, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(3))),
-                2 to SpellInfo(2, SpellInfo.LaunchType.GHOST_PROJECTILES, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1)), projectileSpeed = 3f),
-                3 to SpellInfo(3, SpellInfo.LaunchType.TIMED_PROJECTILES, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1)), projectileSpeed = 3f),
-                4 to SpellInfo(4, SpellInfo.LaunchType.INSTANT, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(6)), CASTING_TIME_2_SECONDS),
-                5 to SpellInfo(5, SpellInfo.LaunchType.INSTANT, arrayOf(CounterEffect.CounterEffectInfo())),
-                6 to SpellInfo(6, SpellInfo.LaunchType.INSTANT, arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1)), CASTING_TIME_2_SECONDS, flags = EnumSet.of(SpellInfo.FLAGS.ALLOW_CAST_WHILE_MOVING)),
+                1 to SpellInfo(1, InstantLaunchInfo(ApplyEffectsSpellTrigger(arrayOf(InstantDamageEffect.InstantDamageEffectInfo(3))))),
+                2 to SpellInfo(2, GhostProjectileLaunchInfo(3f, ApplyEffectsSpellTrigger(arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1))))),
+                3 to SpellInfo(3, TimedProjectileLaunchInfo(3f, ApplyEffectsSpellTrigger(arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1))))),
+                4 to SpellInfo(4, InstantLaunchInfo(ApplyEffectsSpellTrigger(arrayOf(InstantDamageEffect.InstantDamageEffectInfo(6)))), CASTING_TIME_2_SECONDS),
+                5 to SpellInfo(5, InstantLaunchInfo(ApplyEffectsSpellTrigger(arrayOf(CounterEffect.CounterEffectInfo())))),
+                6 to SpellInfo(6, InstantLaunchInfo(ApplyEffectsSpellTrigger(arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1)))), CASTING_TIME_2_SECONDS, flags = EnumSet.of(SpellInfo.FLAGS.ALLOW_CAST_WHILE_MOVING)),
             ),
         )
 }

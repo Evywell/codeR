@@ -8,6 +8,8 @@ import fr.rob.game.domain.spell.SpellBook
 import fr.rob.game.domain.spell.SpellInfo
 import fr.rob.game.domain.spell.effect.InstantAoeDamageEffect
 import fr.rob.game.domain.spell.target.SpellTargetParameter
+import fr.rob.game.domain.spell.trigger.ApplyEffectsSpellTrigger
+import fr.rob.game.domain.spell.type.instant.InstantLaunchInfo
 
 class InstantDamageAoeScript(
     private val owner: ScriptedWorldObject,
@@ -21,8 +23,7 @@ class InstantDamageAoeScript(
         hashMapOf(
             1 to SpellInfo(
                 1,
-                SpellInfo.LaunchType.INSTANT,
-                arrayOf(InstantAoeDamageEffect.InstantAoeDamageEffectInfo(damageValue, radius)),
+                InstantLaunchInfo(ApplyEffectsSpellTrigger(arrayOf(InstantAoeDamageEffect.InstantAoeDamageEffectInfo(damageValue, radius))))
             ),
         ),
     )
@@ -45,7 +46,12 @@ class InstantDamageAoeScript(
 
         frequencyTimer.reset()
 
-        val spell = Spell(spellBook.getSpellInfo(1).get(), owner, SpellTargetParameter(null, owner.mapInstance))
+        val spell = Spell(
+            spellBook.getSpellInfo(1).get(),
+            owner,
+            SpellTargetParameter(null, owner.mapInstance),
+        )
+
         spell.cast()
     }
 }

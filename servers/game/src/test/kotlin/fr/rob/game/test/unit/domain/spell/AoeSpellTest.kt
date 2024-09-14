@@ -8,6 +8,8 @@ import fr.rob.game.domain.spell.SpellInfo
 import fr.rob.game.domain.spell.effect.InstantAoeDamageEffect
 import fr.rob.game.domain.spell.effect.SummonInstantDamageAoeEffect
 import fr.rob.game.domain.spell.target.SpellTargetParameter
+import fr.rob.game.domain.spell.trigger.ApplyEffectsSpellTrigger
+import fr.rob.game.domain.spell.type.instant.InstantLaunchInfo
 import fr.rob.game.test.unit.tools.VoidEventDispatcher
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -71,13 +73,11 @@ class AoeSpellTest : SpellCasterEnvironmentBaseTest() {
         hashMapOf(
             1 to SpellInfo(
                 1,
-                SpellInfo.LaunchType.INSTANT,
-                arrayOf(InstantAoeDamageEffect.InstantAoeDamageEffectInfo(10, 5f)),
+                InstantLaunchInfo(ApplyEffectsSpellTrigger(arrayOf(InstantAoeDamageEffect.InstantAoeDamageEffectInfo(10, 5f))))
             ),
             2 to SpellInfo(
                 2,
-                SpellInfo.LaunchType.INSTANT,
-                arrayOf(SummonInstantDamageAoeEffect.SummonInstantDamageAoeEffectInfo(10, 5f, 500, 1500)),
+                InstantLaunchInfo(ApplyEffectsSpellTrigger(arrayOf(SummonInstantDamageAoeEffect.SummonInstantDamageAoeEffectInfo(10, 5f, 500, 1500))))
             ),
         ),
     )
