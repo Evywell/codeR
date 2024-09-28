@@ -1,10 +1,4 @@
-UNAME := $(shell uname | tr '[:upper:]' '[:lower:]')
-
-ifeq ($(UNAME), darwin)
- 	OS = osx
-else
-	OS = linux
-endif
+include Makefile.cmds.mk
 
 # @todo: replace this by variables
 SUPPORTED_COMMANDS := migration-players-create migration-world-create migration-config-create seed-create
@@ -14,23 +8,8 @@ ifneq "$(SUPPORTS_MAKE_ARGS)" ""
   $(eval $(COMMAND_ARGS):;@:)
 endif
 
-ifdef CI_SERVER
-NO_INTERACTIVE_FLAGS = -T
-else
-NO_INTERACTIVE_FLAGS =
-endif
-
-DOCKER_COMPOSE = docker compose
-DCR = $(DOCKER_COMPOSE) run --rm $(NO_INTERACTIVE_FLAGS)
-DCE = $(DOCKER_COMPOSE) exec
-
-GRADLE = $(DCE) gradle
-GRADLE_TASK = $(GRADLE) gradle
-
-PROTOC = $(DCR) protobuf
-
 ##> Migrator
-MIGRATOR = $(DCR) migrator
+MIGRATOR = ${DOCKER_COMPOSE_RUN_CMD} migrator
 PHINX = $(MIGRATOR) migrations/migrator/vendor/bin/phinx
 PHINX_CONFIG_ARG = --configuration migrations/migrator
 PHINX_WORLD_CONFIG_ARG = $(PHINX_CONFIG_ARG)/phinx-world.php
@@ -41,177 +20,34 @@ MIGRATOR_SEED_NAME :=
 MIGRATOR_DB :=
 ##< Migrator
 
-CLI_DIR = cli
-CORE_DIR = core
-GAME_DIR = servers/game
-LOGIN_DIR = servers/login
-ORCHESTRATOR_DIR = orchestrator
-CLIENT_DIR = client
-
-JAVA_GAME_DIR = ./$(GAME_DIR)
-JAVA_GAME_DST_DIR = $(JAVA_GAME_DIR)/src/main/java
-JAVA_GAME_PROTOS_DIR = $(JAVA_GAME_DIR)/src/main/protos
-JAVA_GAME_TEST_DST_DIR = $(JAVA_GAME_DIR)/src/test/java
-JAVA_GAME_TEST_SRC_DIR = $(JAVA_GAME_DIR)/src/test/protos
-
-JAVA_LOGIN_DIR = ./$(LOGIN_DIR)
-JAVA_LOGIN_PROTOS_DIR = $(JAVA_LOGIN_DIR)/src/main/protos
-JAVA_LOGIN_DST_DIR = $(JAVA_LOGIN_DIR)/src/main/java
-
-JAVA_ORCHESTRATOR_DIR = ./$(ORCHESTRATOR_DIR)
-JAVA_ORCHESTRATOR_SHARED_PROTOS_DIR = $(JAVA_ORCHESTRATOR_DIR)/shared/src/main/protos
-JAVA_ORCHESTRATOR_SHARED_DST_DIR = $(JAVA_ORCHESTRATOR_DIR)/shared/src/main/java
-
-JAVA_CORE_DIR = ./$(CORE_DIR)
-JAVA_CORE_PROTOS_DIR = $(JAVA_CORE_DIR)/src/main/protos
-JAVA_CORE_DST_DIR = $(JAVA_CORE_DIR)/src/main/java
-
-JAVA_CLIENT_DIR = ./$(CLIENT_DIR)
-JAVA_CLIENT_PROTOS_DIR = $(JAVA_CLIENT_DIR)/src/main/protos
-JAVA_CLIENT_DST_DIR = $(JAVA_CLIENT_DIR)/src/main/java
-
-PHP_DIR = ./servers/webclient
-PHP_DST_DIR = $(PHP_DIR)/protobuf
-
-PROTO_SOURCES=$(shell find proto/ -iname "*.proto")
-
-##> Debug
-DEBUGGER_SOCKET_PORT = 5005
-DEBUGGER_BUILD_GAME_JAR_PATH = build/libs/game-1.0.jar
-DEBUGGER_BUILD_LOGIN_JAR_PATH = build/libs/login-1.0.jar
-DEBUGGER_BUILD_CLI_JAR_PATH = build/libs/cli-1.0.jar
-##< Debug
-
-.PHONY: lint-fix
-lint-fix: up
-	$(GRADLE_TASK) ktlintFormat
-
-.PHONY: install-ci
-install-ci: servers/login/src/test/resources/private.pem ## Install the CI environment
-	@$(MAKE) -i CI_SERVER=true build-proto
-
 .PHONY: help
 help: ## Outputs this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: build-proto
-build-proto: ## Builds protos for java and php
-	@$(MAKE) -i build-core-proto
-	@$(MAKE) -i build-game-proto
-	@$(MAKE) -i build-login-proto
-	@$(MAKE) -i build-orchestrator-proto
-
-.PHONY: build-java-proto
-build-java-proto:
-	$(PROTOC) -I=./$(ARGS)/src/main/protos --java_out=./$(ARGS)/src/main/java ./$(ARGS)/src/main/protos/*.proto
-
-.PHONY: build-test-proto
-build-test-proto:
-	$(PROTOC) -I=./$(ARGS)/src/test/protos --java_out=./$(ARGS)/src/test/java ./$(ARGS)/src/test/protos/*.proto
-
-.PHONY: build-core-proto
-build-core-proto:
-	@echo "Generating java protos" && $(MAKE) build-java-proto ARGS="core"
-
-.PHONY: build-client-proto
-build-client-proto:
-	$(PROTOC) -I=./proto --csharp_out=./client/RobClient/src/messages $(PROTO_SOURCES)
-
-.PHONY: build-game-proto
-build-game-proto: ## Builds game protos for java and php
-	@echo "Generating game java protos" && $(MAKE) build-java-proto ARGS="servers/game"
-	@echo "Generating test java protos" && $(MAKE) build-test-proto ARGS="servers/game"
-	@echo "Generating php protos" && $(PROTOC) -I=$(JAVA_GAME_PROTOS_DIR) --php_out=$(PHP_DST_DIR) $(JAVA_GAME_PROTOS_DIR)/*.proto
-
-.PHONY: build-login-proto
-build-login-proto: ## Builds login protos for java and php
-	@echo "Generating login java protos" && $(MAKE) build-java-proto ARGS="servers/login"
-	@echo "Generating php protos" && $(PROTOC) -I=$(JAVA_LOGIN_PROTOS_DIR) --php_out=$(PHP_DST_DIR) $(JAVA_LOGIN_PROTOS_DIR)/*.proto
-
-.PHONY: build-orchestrator-proto
-build-orchestrator-proto: ## Builds orchestrator protos for java
-	@echo "Generating shared protos" && $(PROTOC) -I=$(JAVA_ORCHESTRATOR_SHARED_PROTOS_DIR) --java_out=$(JAVA_ORCHESTRATOR_SHARED_DST_DIR) $(JAVA_ORCHESTRATOR_SHARED_PROTOS_DIR)/*.proto
-	@echo "Generating shared protos" && $(PROTOC) -I=./servers/orchestrator/src/main/protos --java_out=./servers/orchestrator/src/main/java ./servers/orchestrator/src/main/protos/*.proto
-
-.PHONY: build-vendor-proto
-build-vendor-proto:
-	$(MAKE) build-java-proto ARGS="vendor/raven/messaging/lib"
-	$(MAKE) build-test-proto ARGS="vendor/raven/messaging/lib"
-
-.PHONY: bp
-bp: build-proto ## alias of build-proto
-
-.PHONY: run
-run: up ## Runs the :servers:game run
-	$(GRADLE_TASK) :servers:game:run
-
-.PHONY: up
-up: .env ## Runs all the docker containers
-	$(DOCKER_COMPOSE) up -d
-
-.PHONY: test
-test: build-proto setup-tests ## Runs the :servers:game tests
-	@bash $(GAME_DIR)/bin/test/setup.sh
-	@$(MAKE) task-test
-
-.PHONY: task-test
-task-test:
-	$(GRADLE_TASK) :servers:game:test
-
-.PHONY: login-test
-login-test:
-	$(GRADLE_TASK) :servers:login:test
-	@$(MAKE) login-cucumber
-
-.PHONY: login-test
-login-cucumber:
-	@$(MAKE) -i seed
-	$(GRADLE_TASK) :servers:login:cucumber
-
-.PHONY: setup-tests
-setup-tests: servers/game/src/test/resources/private.pem
+.PHONY: lint-fix
+lint-fix:
+	${GRADLE_CMD} ktlintFormat
 
 .PHONY: build
-build: up ## Builds all the projects
-	$(GRADLE_TASK) build
+build: ## Builds all the projects
+	${GRADLE_CMD} build
 
-.PHONY: build-game-debug
-build-game-debug: ## Runs the build of the game project then start the debugger socket
-	$(GRADLE_TASK) :servers:game:run -Ddebug_mode="true" -Ddebug_port="5006"
+.PHONY: game-server-dev
+game-server-dev: ## Runs the game server using gradle
+	${GRADLE_CMD} :servers:game:run
 
-.PHONY: build-orchestrator-debug
-build-orchestrator-debug: ## Runs the build of the game project then start the debugger socket
-	$(GRADLE_TASK) :orchestrator:api:run -Ddebug_mode="true" -Ddebug_port="5008"
+.PHONY: game-server-test
+game-server-test: ## Runs the game server tests
+	${GRADLE_CMD} :servers:game:test
 
-.PHONY: build-login
-build-login:
-	$(GRADLE_TASK) :servers:login:build
+game-server-build:
+	${GRADLE_CMD} :servers:game:build
 
-.PHONY: build-login-debug
-build-login-debug: ## Runs the build of the login project then start the debugger socket
-	$(GRADLE_TASK) :servers:login:run -Ddebug_mode="true"
-
-.PHONY: build-cli
-build-cli: up
-	$(GRADLE_TASK) :cli:build
-
-build-cli-debug:  ## Runs the build of the cli project then start the debugger socket
-	$(GRADLE_TASK) :cli:run -Ddebug_mode="true" -Ddebug_port="5007"
-
-.PHONY: server
-run-game: ## Launches the game server
-	$(GRADLE_TASK) :servers:game:run
-
-.PHONY: login
-login: ## Launches the login server
-	$(GRADLE_TASK) :servers:login:run
-
-.PHONY: client
-client: ## Launches the game client
-	$(GRADLE_TASK) :client:run
-
-.PHONY: composer
-composer: servers/webclient/vendor/autoload.php ## Launches a composer install
+.PHONY: game-server
+game-server: game-server-build start-dependencies ## Builds and run the game server jar with minimal configuration
+	rm -rf servers/game/build/distributions/game-1.0
+	cd servers/game/build/distributions; unzip game-1.0.zip
+	cd servers/game/build/distributions/game-1.0; GAME_OPTS="-Dmysql_game.host=127.0.0.1 -Dmysql_game.tcp.3306=33060" ./bin/game
 
 .PHONY: migrate
 migrate: migrations/migrator/vendor/autoload.php
@@ -242,21 +78,26 @@ seed-create: migrations/migrator/vendor/autoload.php
 	$(PHINX) seed:create $(MIGRATOR_SEED_NAME) $(PHINX_CONFIG_ARG)/phinx-$(MIGRATOR_DB).php
 
 .PHONY: migration-status
-migration-status: up
+migration-status: start-dependencies
 	$(PHINX) status --configuration migrator/phinx.php
 
-migrations/migrator/vendor/autoload.php: up
+.PHONY: install-ci
+install-ci: servers/login/src/test/resources/private.pem
+
+start-dependencies: .env ## Runs all the docker containers
+	${DOCKER_COMPOSE_CMD} up -d
+
+migrations/migrator/vendor/autoload.php: start-dependencies
 	$(MIGRATOR) composer install -d migrations/migrator
 
-servers/game/src/test/resources/private.pem:
-	@bash $(GAME_DIR)/bin/test/setup.sh
-
 servers/login/src/test/resources/private.pem:
-	@bash $(LOGIN_DIR)/bin/test/setup.sh
+	@bash servers/login/bin/test/setup.sh
 
 servers/webclient/vendor/autoload.php: servers/webclient/composer.lock
 	composer install -d servers/webclient
 	touch servers/webclient/vendor/autoload.php
+
+composer: servers/webclient/vendor/autoload.php
 
 .env:
 	cp .env.dev .env
