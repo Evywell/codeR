@@ -17,8 +17,7 @@ dependencies {
     implementation 'com.google.guava:guava:31.0.1-jre'
     implementation "io.insert-koin:koin-core:3.2.1"
     implementation 'com.xenomachina:kotlin-argparser:2.0.7'
-    implementation 'fr.raven.messaging:lib:0.1.1'
-    implementation 'fr.raven.log:lib:0.1.1'
+    implementation 'fr.raven.log:lib:0.1.2'
 
     testImplementation project(':core').sourceSets.test.output
     testImplementation "io.insert-koin:koin-test:3.2.1"
