@@ -60,12 +60,11 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.withOptions
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import java.io.File
 
 val globalModule = module {
     single<EventManagerInterface>(named("EVENT_MANAGER_DATABASE")) { EventManager() }
     single<EventManagerInterface> { EventManager() }
-    singleOf<LoggerFactoryInterface> { LoggerFactory(File({}.javaClass.classLoader.getResource("log4j.config.xml")!!.path)) }
+    singleOf<LoggerFactoryInterface> { LoggerFactory({}.javaClass.classLoader.getResourceAsStream("log4j.config.xml")!!) }
     single { InstanceManager(GridBuilder(GridConstraintChecker())) }
     single<InstanceFinderInterface> { FakeInstanceFinder(get()) }
 }
