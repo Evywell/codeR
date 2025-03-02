@@ -16,6 +16,7 @@ import fr.rob.game.app.player.message.HealthMessage
 import fr.rob.game.app.player.message.MovementHeartbeatMessage
 import fr.rob.game.app.player.message.NearbyObjectMessage
 import fr.rob.game.app.player.message.PlayerDescriptionMessage
+import fr.rob.game.app.player.message.ObjectMovingToDestinationMessage
 import fr.rob.game.domain.player.session.GameMessageHolder
 import fr.rob.game.domain.player.session.GameSession
 import fr.rob.game.domain.player.session.SessionMessageSenderInterface
@@ -97,6 +98,17 @@ class GatewaySessionMessageSender(
             .setValue(message.signalValue)
             .build()
 
+    private fun fromTravelPlanDefinedMessage(message: ObjectMovingToDestinationMessage): Message =
+        MovementProto.ObjectMovingToDestination.newBuilder()
+            .setGuid(message.objectId.getRawValue())
+            .setDestination(
+                PositionProto.PositionVec3.newBuilder()
+                    .setPosX(message.destination.x)
+                    .setPosY(message.destination.y)
+                    .setPosZ(message.destination.z)
+            )
+            .build()
+
     private fun toProtoMessage(message: Any): Message {
         when (message) {
             is PlayerDescriptionMessage -> return fromPlayerDescriptionMessage(message)
@@ -104,6 +116,7 @@ class GatewaySessionMessageSender(
             is MovementHeartbeatMessage -> return fromMovementHeartbeatMessage(message)
             is HealthMessage -> return fromHealthMessage(message)
             is DebugSignalMessage -> return fromDebugSignalMessage(message)
+            is ObjectMovingToDestinationMessage -> return fromTravelPlanDefinedMessage(message)
         }
 
         throw RuntimeException("No message builder found for ${message.javaClass.name}")

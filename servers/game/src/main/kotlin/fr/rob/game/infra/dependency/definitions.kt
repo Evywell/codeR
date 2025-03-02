@@ -45,6 +45,7 @@ import fr.rob.game.infra.misc.player.FakeInstanceFinder
 import fr.rob.game.infra.mysql.character.MysqlCheckCharacterExist
 import fr.rob.game.infra.mysql.character.MysqlFetchCharacter
 import fr.rob.game.infra.network.physic.ObjectMovedHandler
+import fr.rob.game.infra.network.physic.ObjectMovingWithDestinationHandler
 import fr.rob.game.infra.network.physic.ObjectReachedDestinationHandler
 import fr.rob.game.infra.network.physic.PhysicObjectInteraction
 import fr.rob.game.infra.network.physic.PhysicOpcodeFunctionRegistry
@@ -111,7 +112,8 @@ val opcodeModule = module {
     single(named("PHYSIC_FUNCTION_DEFINITIONS")) {
         arrayOf(
             OpcodeFunctionRegistryInterface.OpcodeFunctionItem(0x01, ObjectMovedHandler(get())),
-            OpcodeFunctionRegistryInterface.OpcodeFunctionItem(0x02, ObjectReachedDestinationHandler(get()))
+            OpcodeFunctionRegistryInterface.OpcodeFunctionItem(0x02, ObjectReachedDestinationHandler(get())),
+            OpcodeFunctionRegistryInterface.OpcodeFunctionItem(0x03, ObjectMovingWithDestinationHandler(get()))
         )
     }
 

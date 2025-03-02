@@ -34,9 +34,10 @@ class CreatePlayerIntoWorldHandler(
         playerGameSession.assignToPlayer(player)
 
         // @todo remove this
-        val worldObject = createMobAroundPosition(createPlayerResult.position!!, command.mapInstance)
+        val worldObject = createMobAroundPosition(ObjectGuid.LowGuid(1u, 1u), Position(10f, 0f, 1f, 0f), command.mapInstance)
+        val worldObject2 = createMobAroundPosition(ObjectGuid.LowGuid(1u, 2u), Position(10f, 10f, 1f, 0f), command.mapInstance)
 
-        player.addIntoInstance(command.mapInstance, createPlayerResult.position)
+        player.addIntoInstance(command.mapInstance, createPlayerResult.position!!)
 
         // @todo Send player info
         player.ownerGameSession.send(PlayerDescriptionMessage(player.guid, player.name))
@@ -46,13 +47,16 @@ class CreatePlayerIntoWorldHandler(
             val controller = SplineMovementController(it, splineMovementBrain)
             controller.initiateMovementToPosition(Position(15f, 50f, 1f, 0f))
         }
+        worldObject2.ifPresent {
+            // send info to unity + ask to move
+            val controller = SplineMovementController(it, splineMovementBrain)
+            controller.initiateMovementToPosition(Position(15f, 50f, 1f, 0f))
+        }
     }
 
-    private fun createMobAroundPosition(position: Position, mapInstance: MapInstance): Optional<WorldObject> {
-        val mobPosition = Position(10f, 0f, 1f, 0f)
-
+    private fun createMobAroundPosition(lowGuid: ObjectGuid.LowGuid, mobPosition: Position, mapInstance: MapInstance): Optional<WorldObject> {
         val worldObject = objectManager.spawnObject(
-            ObjectGuid.LowGuid(1u, 1u),
+            lowGuid,
             mobPosition,
             mapInstance,
         )

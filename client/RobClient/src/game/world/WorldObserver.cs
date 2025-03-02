@@ -27,6 +27,9 @@ namespace RobClient.Game.World {
                     case 0x08: // SMSG_OBJECT_HEALTH_UPDATED
                         OnObjectHealthUpdated(ObjectSheetUpdate.Parser.ParseFrom(packet.Body));
                         break;
+                    case 0x0A: // SMSG_OBJECT_MOVING_TO_DESTINATION
+                        OnObjectMovingToDestination(ObjectMovingToDestination.Parser.ParseFrom(packet.Body));
+                        break;
                     case 0x97:
                         OnDebugSignalReceived(DebugSignal.Parser.ParseFrom(packet.Body));
                         break;
@@ -88,6 +91,19 @@ namespace RobClient.Game.World {
                 ObjectGuid.From(objectSheetUpdate.Guid),
                 objectSheetUpdate.Health
             );
+        }
+
+        private void OnObjectMovingToDestination(ObjectMovingToDestination objectMovingToDestination)
+        {
+            WorldObject worldObject = _environment.GetObjectById(ObjectGuid.From(objectMovingToDestination.Guid));
+
+            if (worldObject != null) {
+                worldObject.LastRequestedMovementDestination = new Vector3f(
+                    objectMovingToDestination.Destination.PosX,
+                    objectMovingToDestination.Destination.PosY,
+                    objectMovingToDestination.Destination.PosZ
+                );
+            }
         }
 
         private void OnDebugSignalReceived(DebugSignal debugSignal)

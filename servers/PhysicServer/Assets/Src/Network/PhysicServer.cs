@@ -88,6 +88,7 @@ namespace App.Network {
             while (currentPacketIndex < queueLength && session.PacketQueue.TryDequeue(out SessionPacket packet)) {
                 currentPacketIndex++;
 
+                Debug.Log($"Handle packet {packet.Opcode}");
                 packet.PacketHandler.HandleOpcode(packet.Opcode, packet.Data);
             }
         }

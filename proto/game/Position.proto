@@ -10,3 +10,9 @@ message Position {
   float posZ = 3;
   float orientation = 4;
 }
+
+message PositionVec3 {
+  float posX = 1;
+  float posY = 2;
+  float posZ = 3;
+}

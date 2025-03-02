@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Fr.Raven.Proto.Message.Game;
 using RobClient.Game.Entity.Guid;
 
 namespace RobClient.Game.Entity {
@@ -18,6 +20,9 @@ namespace RobClient.Game.Entity {
         { get; set; }
 
         public uint Health
+        { get; set; }
+
+        public Vector3f LastRequestedMovementDestination
         { get; set; }
 
         public WorldObject(ObjectGuid guid, Vector4f position) {

@@ -36,6 +36,11 @@ message CheatTeleport {
   Position position = 1;
 }
 
+message ObjectMovingToDestination {
+  uint64 guid = 1;
+  PositionVec3 destination = 2;
+}
+
 enum MovementPhase {
   PHASE_BEGIN = 0;
   PHASE_END = 1;
