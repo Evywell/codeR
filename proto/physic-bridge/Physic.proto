@@ -41,3 +41,8 @@ message Vec3 {
   float y = 2;
   float z = 3;
 }
+
+message ObjectMoveTo {
+  uint64 guid = 1;
+  Vec3 destination = 2;
+}

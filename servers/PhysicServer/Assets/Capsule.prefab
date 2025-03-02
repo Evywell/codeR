@@ -15,7 +15,8 @@ GameObject:
   - component: {fileID: 7584559851022745851}
   - component: {fileID: 8343234506376022432}
   - component: {fileID: 3845715507660655395}
-  m_Layer: 0
+  - component: {fileID: -8485218550931580207}
+  m_Layer: 3
   m_Name: Capsule
   m_TagString: Actor
   m_Icon: {fileID: 0}
@@ -133,7 +134,7 @@ NavMeshAgent:
   m_Height: 2
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 0
 --- !u!114 &8343234506376022432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,3 +160,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5e26e4f3b4a6b8f2942afb0fc2865ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entityGuid: 0
+  waypointPrefab: {fileID: 7890029250719884893, guid: dd413584a257546ad882424b68886c58, type: 3}
+--- !u!54 &-8485218550931580207
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6527092318700169533}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

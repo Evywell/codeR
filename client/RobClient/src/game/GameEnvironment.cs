@@ -75,7 +75,7 @@ namespace RobClient.Game {
 
         public void UpdateObjectPosition(ObjectGuid guid, Vector4f position, Vector3f direction, bool isMovementOngoing = false)
         {
-            _objects.TryGetValue(guid.GetRawValue(), out WorldObject worldObject);
+            WorldObject worldObject = GetObjectById(guid);
 
             if (worldObject != null) {
                 worldObject.Position = position;
@@ -87,12 +87,19 @@ namespace RobClient.Game {
 
         public void UpdateObjectHealth(ObjectGuid guid, uint newHealth)
         {
-            _objects.TryGetValue(guid.GetRawValue(), out WorldObject worldObject);
+            WorldObject worldObject = GetObjectById(guid);
 
             if (worldObject != null) {
                 worldObject.Health = newHealth;
                 WorldObjectUpdatedSub.OnNext(new WorldObjectUpdate(UpdateType.RESOURCE, worldObject));
             }
+        }
+
+        public WorldObject GetObjectById(ObjectGuid guid)
+        {
+            _objects.TryGetValue(guid.GetRawValue(), out WorldObject worldObject);
+
+            return worldObject;
         }
 
         public WorldObject GetControlledObject()

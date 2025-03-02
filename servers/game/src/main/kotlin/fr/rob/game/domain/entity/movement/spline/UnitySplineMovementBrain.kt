@@ -1,12 +1,16 @@
 package fr.rob.game.domain.entity.movement.spline
 
 import fr.raven.proto.message.physicbridge.PhysicProto
+import fr.raven.proto.message.physicbridge.PhysicProto.ObjectMoveTo
 import fr.raven.proto.message.physicbridge.PhysicProto.ObjectMoved
 import fr.raven.proto.message.physicbridge.PhysicProto.ObjectReachDestination
+import fr.rob.game.app.player.message.ObjectMovingToDestinationMessage
 import fr.rob.game.domain.entity.Position
 import fr.rob.game.domain.entity.WorldObject
 import fr.rob.game.domain.entity.movement.Movable
 import fr.rob.game.domain.maths.Vector3f
+import fr.rob.game.domain.terrain.grid.query.predicate.CanSeeObject
+import fr.rob.game.domain.terrain.grid.query.predicate.IsAPlayer
 import fr.rob.game.domain.world.DelayedUpdateQueue
 import fr.rob.game.infra.network.physic.PhysicObjectInteraction
 import fr.rob.game.infra.network.physic.SplineStepDelayedUpdate
@@ -28,9 +32,10 @@ class UnitySplineMovementBrain(
                         .setGuid(sourceGuidRawValue)
                         .setPosition(
                             PhysicProto.Position.newBuilder()
+                                // TODO: invert Z and Y axis
                                 .setPosX(source.position.x)
-                                .setPosY(source.position.y)
-                                .setPosZ(source.position.z)
+                                .setPosY(source.position.z)
+                                .setPosZ(source.position.y)
                                 .setOrientation(source.position.orientation),
                         )
                         .build()
@@ -57,6 +62,37 @@ class UnitySplineMovementBrain(
             splineMovement.movement = Movable.Movement(Vector3f.forward(), Movable.Phase.STOPPED)
 
             delayedUpdateQueue.enqueueDelayedUpdate(SplineStepDelayedUpdate(stepHandler, splineMovement))
+        }
+
+        physicObjectInteraction.registerObjectInteractionCallback(source.guid, ObjectMoveTo::class) {
+            it as ObjectMoveTo
+
+            val grid = source.mapInstance.grid
+
+            val visibleObjects = grid
+                .query()
+                .getObjects(
+                    source.cell!!,
+                    arrayOf(IsAPlayer(), CanSeeObject(source)),
+                )
+
+            val moveToDestination = Vector3f.fromVec3Message(it.destination)
+
+            visibleObjects.forEach { visibleObject ->
+                if (
+                    visibleObject.controlledByGameSession == null
+                    || !visibleObject.guid.isPlayer() // Should never be false
+                ) {
+                    return@forEach
+                }
+
+                visibleObject.controlledByGameSession?.send(
+                    ObjectMovingToDestinationMessage(
+                        source.guid,
+                        moveToDestination
+                    )
+                )
+            }
         }
 
         physicClientIntegration.send(
