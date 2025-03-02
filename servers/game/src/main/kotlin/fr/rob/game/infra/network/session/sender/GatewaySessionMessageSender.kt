@@ -15,8 +15,8 @@ import fr.rob.game.app.player.message.DebugSignalMessage
 import fr.rob.game.app.player.message.HealthMessage
 import fr.rob.game.app.player.message.MovementHeartbeatMessage
 import fr.rob.game.app.player.message.NearbyObjectMessage
-import fr.rob.game.app.player.message.PlayerDescriptionMessage
 import fr.rob.game.app.player.message.ObjectMovingToDestinationMessage
+import fr.rob.game.app.player.message.PlayerDescriptionMessage
 import fr.rob.game.domain.player.session.GameMessageHolder
 import fr.rob.game.domain.player.session.GameSession
 import fr.rob.game.domain.player.session.SessionMessageSenderInterface
