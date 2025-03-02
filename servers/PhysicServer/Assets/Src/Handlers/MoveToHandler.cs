@@ -1,8 +1,8 @@
 using App.Managers;
 using App.Network;
-using UnityEngine;
 using Fr.Raven.Proto.Message.Physicbridge;
 using Google.Protobuf;
+using App.Normalizers;
 
 namespace App.Handlers {
     public class MoveToHandler : PacketHandler<MoveToRequest>
@@ -27,7 +27,7 @@ namespace App.Handlers {
 
             var agent = actor.GetComponent<ObjectController>();
 
-            agent.MoveToPosition(new Vector3(position.PosX, position.PosZ, position.PosY));
+            agent.MoveToPosition(PositionNormalizer.TransformServerPositionToUnityPosition(position));
         }
     }
 }

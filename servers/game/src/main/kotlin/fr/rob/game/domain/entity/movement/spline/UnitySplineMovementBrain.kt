@@ -32,10 +32,9 @@ class UnitySplineMovementBrain(
                         .setGuid(sourceGuidRawValue)
                         .setPosition(
                             PhysicProto.Position.newBuilder()
-                                // TODO: invert Z and Y axis
                                 .setPosX(source.position.x)
-                                .setPosY(source.position.z)
-                                .setPosZ(source.position.y)
+                                .setPosY(source.position.y)
+                                .setPosZ(source.position.z)
                                 .setOrientation(source.position.orientation),
                         )
                         .build()

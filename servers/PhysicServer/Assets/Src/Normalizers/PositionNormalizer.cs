@@ -1,3 +1,4 @@
+using Fr.Raven.Proto.Message.Physicbridge;
 using UnityEngine;
 
 namespace App.Normalizers {
@@ -29,6 +30,10 @@ namespace App.Normalizers {
             }
 
             return (orientation - PI) + A3_PI_2;
+        }
+
+        public static Vector3 TransformServerPositionToUnityPosition(Position position) {
+            return new Vector3(position.PosX, position.PosZ, position.PosY);
         }
     }
 }
