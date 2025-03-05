@@ -73,10 +73,14 @@ dockerCompose {
     useDockerComposeV2 = true
     isRequiredBy(run)
 
-    unit_tests {
-        useComposeFiles = ['compose.test.yaml']
-        removeVolumes = true
-        isRequiredBy(test)
+    def isUnitTest = project.gradle.startParameter.taskRequests*.args.flatten().find { it.contains('fr.rob.game.test.unit') }
+
+    if (!isUnitTest) {
+        database_tests {
+            useComposeFiles = ['compose.test.yaml']
+            removeVolumes = true
+            isRequiredBy(test)
+        }
     }
 }
 
