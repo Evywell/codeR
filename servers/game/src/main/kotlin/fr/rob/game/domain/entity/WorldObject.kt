@@ -47,6 +47,8 @@ open class WorldObject(
 
     fun isInFrontOf(target: WorldObject): Boolean = position.hasInArc(Position.ANGLE_2_PI_3, target.position)
 
+    fun isBehindOf(target: WorldObject): Boolean = !target.isInFrontOf(this)
+
     fun setPosition(x: Float, y: Float, z: Float, orientation: Float) {
         position.x = x
         position.y = y

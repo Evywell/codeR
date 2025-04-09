@@ -9,11 +9,15 @@ class DodgeMeleeStep : MeleeHitTableStepInterface {
         hitRoll: HitTableRoll,
         nextStepHandler: HitTableNextStepHandlerInterface
     ): MeleeHitTableResult {
-        if (hitRoll.applyStepChance(DODGE_BASE_CHANCE)) {
+        if (hitRoll.attacker.isBehindOf(hitRoll.victim)) {
+            return nextStepHandler.executeNextStep(hitRoll, 0)
+        }
+
+        if (hitRoll.isSucceed(DODGE_BASE_CHANCE)) {
             return MeleeHitTableResult.DODGE
         }
 
-        return nextStepHandler.getHitTableStep().execute(hitRoll, nextStepHandler)
+        return nextStepHandler.executeNextStep(hitRoll, DODGE_BASE_CHANCE)
     }
 
     companion object {

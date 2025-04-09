@@ -15,4 +15,10 @@ class HitTableNextStepHandler(private val steps: Array<MeleeHitTableStepInterfac
 
         return step
     }
+
+    override fun executeNextStep(hitRoll: HitTableRoll, exhaustedCurrentStepChance: Int): MeleeHitTableResult {
+        hitRoll.exhaustStepChance(exhaustedCurrentStepChance)
+
+        return getHitTableStep().execute(hitRoll, this)
+    }
 }
