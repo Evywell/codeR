@@ -3,18 +3,28 @@ package fr.rob.game.domain.entity
 import kotlin.math.PI
 import kotlin.math.atan2
 
-class Position(var x: Float, var y: Float, var z: Float, notNormalizedOrientation: Float) {
+class Position(
+    var x: Float,
+    var y: Float,
+    var z: Float,
+    notNormalizedOrientation: Float,
+) {
     var orientation: Float = normalizeOrientation(notNormalizedOrientation)
-        set(value) { field = normalizeOrientation(value) }
+        set(value) {
+            field = normalizeOrientation(value)
+        }
 
     fun isSameHas(position: Position): Boolean =
         x == position.x && y == position.y && z == position.z && orientation == position.orientation
 
-    fun getSquaredDistanceWith(position: Position): Float {
-        return ((x - position.x) * (x - position.x)) + ((y - position.y) * (y - position.y)) + ((z - position.z) * (z - position.z))
-    }
+    fun getSquaredDistanceWith(position: Position): Float =
+        ((x - position.x) * (x - position.x)) + ((y - position.y) * (y - position.y)) + ((z - position.z) * (z - position.z))
 
-    fun hasInArc(arc: Float, position: Position, border: Float = 2f): Boolean {
+    fun hasInArc(
+        arc: Float,
+        position: Position,
+        border: Float = 2f,
+    ): Boolean {
         val normalizedArc = normalizeOrientation(arc)
 
         var angle = getRelativeAngle(position)
@@ -29,16 +39,17 @@ class Position(var x: Float, var y: Float, var z: Float, notNormalizedOrientatio
         return ((angle >= leftBorder) && (angle <= rightBorder))
     }
 
-    private fun getAbsoluteAngle(posX: Float, posY: Float): Float {
+    private fun getAbsoluteAngle(
+        posX: Float,
+        posY: Float,
+    ): Float {
         val dx = posX - x
         val dy = posY - y
 
         return normalizeOrientation(atan2(dy, dx))
     }
 
-    private fun getRelativeAngle(position: Position): Float {
-        return toRelativeAngle(getAbsoluteAngle(position.x, position.y))
-    }
+    private fun getRelativeAngle(position: Position): Float = toRelativeAngle(getAbsoluteAngle(position.x, position.y))
 
     private fun toRelativeAngle(absAngle: Float) = normalizeOrientation(absAngle - orientation)
 
@@ -54,14 +65,15 @@ class Position(var x: Float, var y: Float, var z: Float, notNormalizedOrientatio
         return orientation % ANGLE_2_PI
     }
 
-    override fun toString(): String = """
+    override fun toString(): String =
+        """
         {
             x: $x,
             y: $y,
             z: $z,
             orientation: $orientation
         }
-    """.trimIndent()
+        """.trimIndent()
 
     override fun hashCode(): Int {
         var result = x.hashCode()
@@ -71,9 +83,7 @@ class Position(var x: Float, var y: Float, var z: Float, notNormalizedOrientatio
         return result
     }
 
-    override fun equals(other: Any?): Boolean {
-        return other is Position && other.isSameHas(this)
-    }
+    override fun equals(other: Any?): Boolean = other is Position && other.isSameHas(this)
 
     companion object {
         private const val ANGLE_PI = PI.toFloat()

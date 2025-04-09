@@ -9,11 +9,11 @@ class CriticalHitMeleeStep : MeleeHitTableStepInterface {
         hitRoll: HitTableRoll,
         nextStepHandler: HitTableNextStepHandlerInterface
     ): MeleeHitTableResult {
-        if (hitRoll.applyStepChance(CRITICAL_HIT_BASE_CHANCE)) {
+        if (hitRoll.isSucceed(CRITICAL_HIT_BASE_CHANCE)) {
             return MeleeHitTableResult.CRITICAL_HIT
         }
 
-        return nextStepHandler.getHitTableStep().execute(hitRoll, nextStepHandler)
+        return nextStepHandler.executeNextStep(hitRoll, CRITICAL_HIT_BASE_CHANCE)
     }
 
     companion object {

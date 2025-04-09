@@ -11,14 +11,14 @@ class CrushingBlowStep : MeleeHitTableStepInterface {
     ): MeleeHitTableResult {
         // Not applicable when attacker is a player
         if (hitRoll.attacker.guid.isPlayer()) {
-            return nextStepHandler.getHitTableStep().execute(hitRoll, nextStepHandler)
+            return nextStepHandler.executeNextStep(hitRoll, 0)
         }
 
-        if (hitRoll.applyStepChance(CRUSHING_BLOW_BASE_CHANCE)) {
+        if (hitRoll.isSucceed(CRUSHING_BLOW_BASE_CHANCE)) {
             return MeleeHitTableResult.CRUSHING_BLOW
         }
 
-        return nextStepHandler.getHitTableStep().execute(hitRoll, nextStepHandler)
+        return nextStepHandler.executeNextStep(hitRoll, CRUSHING_BLOW_BASE_CHANCE)
     }
 
     companion object {

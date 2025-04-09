@@ -9,11 +9,11 @@ class MissMeleeStep : MeleeHitTableStepInterface {
         hitRoll: HitTableRoll,
         nextStepHandler: HitTableNextStepHandlerInterface
     ): MeleeHitTableResult {
-        if (hitRoll.applyStepChance(MISS_CHANCE)) {
+        if (hitRoll.isSucceed(MISS_CHANCE)) {
             return MeleeHitTableResult.MISS
         }
 
-        return nextStepHandler.getHitTableStep().execute(hitRoll, nextStepHandler)
+        return nextStepHandler.executeNextStep(hitRoll, MISS_CHANCE)
     }
 
     companion object {
