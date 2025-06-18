@@ -8,7 +8,11 @@ import fr.rob.game.entity.guid.ObjectGuid
 import fr.rob.game.player.session.GameSession
 
 class PlayerEngageCombatFunction : WorldFunctionInterface {
-    override fun invoke(sender: GameSession, opcode: Int, message: Message) {
+    override fun invoke(
+        sender: GameSession,
+        opcode: Int,
+        message: Message,
+    ) {
         message as PlayerEngageCombat
 
         val controlledWorldObject = sender.controlledWorldObject ?: return

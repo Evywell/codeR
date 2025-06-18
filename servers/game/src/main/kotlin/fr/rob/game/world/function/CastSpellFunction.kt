@@ -8,7 +8,11 @@ import fr.rob.game.spell.SpellCasterTrait
 import fr.rob.game.spell.target.SpellTargetParameter
 
 class CastSpellFunction : WorldFunctionInterface {
-    override fun invoke(sender: GameSession, opcode: Int, message: Message) {
+    override fun invoke(
+        sender: GameSession,
+        opcode: Int,
+        message: Message,
+    ) {
         message as CastSpell
 
         val controlledWorldObject = sender.controlledWorldObject ?: return

@@ -9,11 +9,13 @@ import fr.rob.game.event.DomainEventInterface
 import fr.rob.game.instance.MapInstance
 import fr.rob.game.player.session.GameSession
 import fr.rob.game.map.grid.Cell
+import fr.rob.game.ability.Ability
+import fr.rob.game.ability.AbilityInfo
 import java.util.Optional
 import kotlin.reflect.KClass
 
 open class WorldObject(
-    val guid: ObjectGuid
+    val guid: ObjectGuid,
 ) : DomainEventCarrierInterface {
     var isInWorld = false
     lateinit var mapInstance: MapInstance
@@ -21,6 +23,8 @@ open class WorldObject(
 
     var controlledByGameSession: GameSession? = null
 
+    private val knownAbilities = ArrayList<Int>()
+    private val ongoingAbilities = ArrayList<Ability>()
     private val domainEventContainer = DomainEventContainer()
     private val traits = HashMap<KClass<*>, Any>()
     private val components = mutableMapOf<KClass<*>, Any>()
@@ -43,13 +47,19 @@ open class WorldObject(
     }
 
     fun isInMeleeRangeOf(target: WorldObject): Boolean =
-        position.getSquaredDistanceWith(target.position) <= DEFAULT_MELEE_RANGE_METERS * DEFAULT_MELEE_RANGE_METERS * DEFAULT_MELEE_RANGE_METERS
+        position.getSquaredDistanceWith(target.position) <=
+            DEFAULT_MELEE_RANGE_METERS * DEFAULT_MELEE_RANGE_METERS * DEFAULT_MELEE_RANGE_METERS
 
     fun isInFrontOf(target: WorldObject): Boolean = position.hasInArc(Position.ANGLE_2_PI_3, target.position)
 
     fun isBehindOf(target: WorldObject): Boolean = !target.isInFrontOf(this)
 
-    fun setPosition(x: Float, y: Float, z: Float, orientation: Float) {
+    fun setPosition(
+        x: Float,
+        y: Float,
+        z: Float,
+        orientation: Float,
+    ) {
         position.x = x
         position.y = y
         position.z = z
@@ -82,8 +92,16 @@ open class WorldObject(
     @Suppress("UNCHECKED_CAST")
     fun <T : Any> getTrait(traitType: KClass<T>): Optional<T> = Optional.ofNullable(traits[traitType] as T?)
 
-    inline fun <reified T : Any> getTrait(): Optional<T> {
-        return getTrait(T::class)
+    inline fun <reified T : Any> getTrait(): Optional<T> = getTrait(T::class)
+
+    fun registerAbilities(knownAbilities: List<Int>) {
+        this.knownAbilities.addAll(knownAbilities)
+    }
+
+    fun hasAbility(abilityInfo: AbilityInfo): Boolean = knownAbilities.contains(abilityInfo.identifier)
+
+    fun performAbility(ability: Ability) {
+        ongoingAbilities.add(ability)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -109,8 +127,7 @@ open class WorldObject(
         domainEventContainer.pushEvent(event)
     }
 
-    override fun getDomainEventContainer(): Collection<DomainEventInterface> =
-        domainEventContainer.getDomainEventContainer()
+    override fun getDomainEventContainer(): Collection<DomainEventInterface> = domainEventContainer.getDomainEventContainer()
 
     companion object {
         const val DEFAULT_MELEE_RANGE_METERS = 2
