@@ -1,4 +1,4 @@
-package fr.rob.game.domain.world.function
+package fr.rob.game.domain.world.function.combat
 
 import com.google.protobuf.ByteString
 import com.google.protobuf.Message
@@ -6,9 +6,14 @@ import fr.raven.proto.message.game.CombatProto.PlayerEngageCombat
 import fr.rob.game.domain.combat.CombatTrait
 import fr.rob.game.domain.entity.guid.ObjectGuid
 import fr.rob.game.domain.player.session.GameSession
+import fr.rob.game.domain.world.function.WorldFunctionInterface
 
 class PlayerEngageCombatFunction : WorldFunctionInterface {
-    override fun invoke(sender: GameSession, opcode: Int, message: Message) {
+    override fun invoke(
+        sender: GameSession,
+        opcode: Int,
+        message: Message,
+    ) {
         message as PlayerEngageCombat
 
         val controlledWorldObject = sender.controlledWorldObject ?: return
