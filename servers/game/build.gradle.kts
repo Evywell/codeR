@@ -16,6 +16,8 @@ dependencies {
 
     implementation("commons-beanutils:commons-beanutils:1.9.4")
 
+    implementation("com.tinder.statemachine:statemachine:0.2.0")
+
     implementation("com.google.protobuf:protobuf-java:4.33.1")
     implementation("com.google.protobuf:protobuf-java-util:4.33.1")
 
