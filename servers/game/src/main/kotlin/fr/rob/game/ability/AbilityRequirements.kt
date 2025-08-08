@@ -3,7 +3,7 @@ package fr.rob.game.ability
 import fr.rob.game.ability.resource.ResourceTypeInterface
 
 data class AbilityRequirements(
-    private val resources: Array<ResourceTypeInterface>,
+    val resources: Array<ResourceTypeInterface>,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
