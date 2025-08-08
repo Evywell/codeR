@@ -33,7 +33,6 @@ class ObjectAbilityManager {
         }
 
         val ability = Ability(abilityInfo, source, targetParameter)
-        ability.use()
 
         source.performAbility(ability)
     }

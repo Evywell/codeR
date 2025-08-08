@@ -35,6 +35,10 @@ open class WorldObject(
                 trait.update(deltaTime)
             }
         }
+
+        ongoingAbilities.forEach {
+            it.resume(deltaTime)
+        }
     }
 
     open fun onAfterUpdate() {
@@ -104,6 +108,7 @@ open class WorldObject(
 
     fun performAbility(ability: Ability) {
         ongoingAbilities.add(ability)
+        ability.use()
     }
 
     override fun pushEvent(event: DomainEventInterface) {
