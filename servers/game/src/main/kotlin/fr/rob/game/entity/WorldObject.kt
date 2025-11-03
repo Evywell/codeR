@@ -36,8 +36,9 @@ open class WorldObject(
             }
         }
 
-        ongoingAbilities.forEach {
+        ongoingAbilities.removeIf {
             it.resume(deltaTime)
+            it.isDone()
         }
     }
 

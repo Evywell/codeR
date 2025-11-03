@@ -9,6 +9,8 @@ sealed class AbilityState {
 
     object PerformingAbility : AbilityState()
 
+    object Launching : AbilityState()
+
     object Done : AbilityState()
 
     object Failed : AbilityState()

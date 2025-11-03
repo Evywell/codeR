@@ -1,5 +1,7 @@
 package fr.rob.game.ability.launch
 
+import fr.rob.game.domain.ability.Ability
+
 class InstantLaunchInfo : LaunchInfoInterface {
-    override fun createAbilityLauncher(): LaunchTypeInterface = InstantLaunchType()
+    override fun createAbilityLauncher(ability: Ability): LaunchTypeInterface = InstantLaunchType(ability)
 }
