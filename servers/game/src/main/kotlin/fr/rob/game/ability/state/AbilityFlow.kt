@@ -5,8 +5,8 @@ import fr.rob.game.ability.AbilityInfo
 import fr.rob.game.entity.WorldObject
 
 class AbilityFlow(
-    private val source: WorldObject,
-    private val abilityInfo: AbilityInfo,
+    private val ability: Ability,
+    private val launchType: LaunchTypeInterface,
 ) {
     private val abilityStateMachine =
         StateMachine.create<AbilityState, AbilityEvent, AbilitySideEffect> {
@@ -36,6 +36,12 @@ class AbilityFlow(
 
             state<AbilityState.ResolvingAbility> {
                 on<AbilityEvent.OnResourcesComputed> {
+                    transitionTo(AbilityState.Launching, AbilitySideEffect.HandleLaunching)
+                }
+            }
+
+            state<AbilityState.Launching> {
+                on<AbilityEvent.OnLaunchCompleted> {
                     dontTransition(AbilitySideEffect.ComputeEffects)
                 }
 
@@ -54,6 +60,7 @@ class AbilityFlow(
                     AbilitySideEffect.CheckRequirements -> checkRequirements()
                     AbilitySideEffect.HandleCasting -> handleCasting()
                     AbilitySideEffect.ComputeResources -> computeResources()
+                    AbilitySideEffect.HandleLaunching -> handleLaunching()
                     AbilitySideEffect.ComputeEffects -> computeEffects()
                     null -> {}
                 }
@@ -65,20 +72,28 @@ class AbilityFlow(
     }
 
     fun resumeCasting(isCastingSequenceDone: Boolean) {
-        if (abilityInfo.castingTimeMs != AbilityInfo.INSTANT_CASTING_TIME && !isCastingSequenceDone) {
+        if (ability.info.castingTimeMs != AbilityInfo.INSTANT_CASTING_TIME && !isCastingSequenceDone) {
             return
         }
 
         abilityStateMachine.transition(AbilityEvent.OnResolvingAbility)
     }
 
+    fun resumeLaunching() {
+        if (launchType.isLaunchingCompleted()) {
+            abilityStateMachine.transition(AbilityEvent.OnLaunchCompleted)
+        }
+    }
+
     fun getCurrentState() = abilityStateMachine.state
 
     private fun checkRequirements() {
         // Check resources
-        for (resource in abilityInfo.abilityRequirement.resources) {
-            if (!resource.hasEnoughResources(source)) {
+        for (resource in ability.info.abilityRequirement.resources) {
+            if (!resource.hasEnoughResources(ability.source)) {
+                val resourceType = resource::class.simpleName ?: "unknown"
                 abilityStateMachine.transition(AbilityEvent.OnCheckingRequirementsFails)
+                ability.source.pushEvent(AbilityFailedEvent(ability, "Not enough $resourceType"))
 
                 return
             }
@@ -88,8 +103,8 @@ class AbilityFlow(
     }
 
     private fun computeResources() {
-        for (resource in abilityInfo.abilityRequirement.resources) {
-            resource.computeResources(source)
+        for (resource in ability.info.abilityRequirement.resources) {
+            resource.computeResources(ability.source)
         }
 
         abilityStateMachine.transition(AbilityEvent.OnResourcesComputed)
@@ -97,6 +112,10 @@ class AbilityFlow(
 
     private fun handleCasting() {
         resumeCasting(false)
+    }
+
+    private fun handleLaunching() {
+        launchType.handleLaunch()
     }
 
     private fun computeEffects() {

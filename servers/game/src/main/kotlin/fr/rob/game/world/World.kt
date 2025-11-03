@@ -9,6 +9,7 @@ import fr.rob.game.entity.notifier.WorldObjectUpdatedNotifier
 import fr.rob.game.event.ListEventDispatcher
 import fr.rob.game.instance.InstanceManager
 import fr.rob.game.world.packet.WorldPacketQueue
+import fr.rob.game.ability.event.NotifyAbilityFailedListener
 
 class World(
     private val instanceManager: InstanceManager,
@@ -25,6 +26,7 @@ class World(
         eventDispatcher.attachListener(NotifyAddedIntoWorldListener())
         eventDispatcher.attachListener(GetNearbyObjectListener())
         eventDispatcher.attachListener(ObjectSheetUpdatedListener())
+        eventDispatcher.attachListener(NotifyAbilityFailedListener())
     }
 
     fun update(deltaTime: Int) {

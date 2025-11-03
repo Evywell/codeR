@@ -6,12 +6,12 @@ import fr.rob.game.ability.state.AbilityFlow
 import fr.rob.game.ability.state.AbilityState
 
 class Ability(
-    private val info: AbilityInfo,
-    private val source: WorldObject,
+    val info: AbilityInfo,
+    val source: WorldObject,
     private val target: AbilityTargetParameter,
 ) {
-    private val abilityLauncher = info.launchInfo.createAbilityLauncher()
-    private val flow = AbilityFlow(source, info)
+    private val abilityLauncher = info.launchInfo.createAbilityLauncher(this)
+    private val flow = AbilityFlow(this, abilityLauncher)
     private val castingTimer = IntervalTimer(info.castingTimeMs)
 
     fun use() {
@@ -23,6 +23,10 @@ class Ability(
             castingTimer.update(elapsedTimeMs)
 
             flow.resumeCasting(castingTimer.passed())
+        }
+
+        if (flow.getCurrentState() == AbilityState.Launching) {
+            flow.resumeLaunching()
         }
     }
 

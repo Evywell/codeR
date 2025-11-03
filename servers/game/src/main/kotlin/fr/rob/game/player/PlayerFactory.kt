@@ -19,7 +19,10 @@ class PlayerFactory(
     private val fetchCharacter: FetchCharacterInterface,
     private val guidGenerator: ObjectGuidGenerator,
 ) {
-    fun createFromGameSession(session: GameSession, characterId: Int): PlayerInitResult {
+    fun createFromGameSession(
+        session: GameSession,
+        characterId: Int,
+    ): PlayerInitResult {
         if (!characterService.checkCharacterBelongsToAccount(characterId, session.accountId)) {
             return PlayerInitResult(false)
         }
@@ -37,14 +40,18 @@ class PlayerFactory(
                 player,
                 SpellBook(
                     hashMapOf(
-                        1 to SpellInfo(
-                            1,
-                            InstantLaunchInfo(ApplyEffectsSpellTrigger(arrayOf(InstantAoeDamageEffect.InstantAoeDamageEffectInfo(1, 5f))))
-                        ),
+                        1 to
+                            SpellInfo(
+                                1,
+                                InstantLaunchInfo(
+                                    ApplyEffectsSpellTrigger(arrayOf(InstantAoeDamageEffect.InstantAoeDamageEffectInfo(1, 5f))),
+                                ),
+                            ),
                     ),
                 ),
             ),
         )
+        player.registerAbilities(listOf(1))
 
         return PlayerInitResult(true, player, character.position)
     }
