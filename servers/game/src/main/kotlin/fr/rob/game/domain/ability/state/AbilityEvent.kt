@@ -12,4 +12,6 @@ sealed class AbilityEvent {
     object OnCheckingRequirementsFails : AbilityEvent()
 
     object OnResourcesComputed : AbilityEvent()
+
+    object OnLaunchCompleted : AbilityEvent()
 }

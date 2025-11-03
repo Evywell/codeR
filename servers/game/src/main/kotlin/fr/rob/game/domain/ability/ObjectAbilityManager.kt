@@ -9,6 +9,10 @@ import java.util.Optional
 class ObjectAbilityManager {
     private val abilityInfo = HashMap<Int, AbilityInfo>()
 
+    fun defineAbility(info: AbilityInfo) {
+        abilityInfo[info.identifier] = info
+    }
+
     fun useAbilityFromIdentifier(
         source: WorldObject,
         abilityId: Int,

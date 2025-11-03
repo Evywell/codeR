@@ -11,6 +11,11 @@ import fr.rob.core.opcode.v2.OpcodeFunctionRegistryInterface
 import fr.rob.game.DB_REALM
 import fr.rob.game.DB_WORLD
 import fr.rob.game.app.player.action.CreatePlayerIntoWorldHandler
+import fr.rob.game.domain.ability.AbilityInfo
+import fr.rob.game.domain.ability.AbilityRequirements
+import fr.rob.game.domain.ability.AbilityType
+import fr.rob.game.domain.ability.ObjectAbilityManager
+import fr.rob.game.domain.ability.launch.InstantLaunchInfo
 import fr.rob.game.domain.character.CharacterService
 import fr.rob.game.domain.character.waitingroom.CharacterWaitingRoom
 import fr.rob.game.domain.entity.ObjectManager
@@ -40,6 +45,7 @@ import fr.rob.game.domain.world.function.RemoveFromWorldFunction
 import fr.rob.game.domain.world.function.WorldFunctionRegistry
 import fr.rob.game.domain.world.function.combat.CastSpellFunction
 import fr.rob.game.domain.world.function.combat.PlayerEngageCombatFunction
+import fr.rob.game.domain.world.function.combat.UseAbilityFunction
 import fr.rob.game.domain.world.packet.WorldPacketQueue
 import fr.rob.game.infra.misc.player.FakeInstanceFinder
 import fr.rob.game.infra.mysql.character.MysqlCheckCharacterExist
@@ -56,6 +62,7 @@ import fr.rob.game.infra.opcode.CMSG_LOG_INTO_WORLD
 import fr.rob.game.infra.opcode.CMSG_PLAYER_CAST_SPELL
 import fr.rob.game.infra.opcode.CMSG_PLAYER_ENGAGE_COMBAT
 import fr.rob.game.infra.opcode.CMSG_PLAYER_MOVEMENT
+import fr.rob.game.infra.opcode.CMSG_PLAYER_USE_ABILITY
 import fr.rob.game.infra.opcode.CMSG_REMOVE_FROM_WORLD
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.withOptions
@@ -130,6 +137,23 @@ val opcodeModule =
         single { CharacterWaitingRoom() }
         single { CreatePlayerIntoWorldHandler(get(), get(), get()) }
 
+        single<ObjectAbilityManager> {
+            val manager = ObjectAbilityManager()
+
+            // TODO: change this
+            arrayOf(
+                AbilityInfo(
+                    identifier = 1,
+                    type = AbilityType.MAGICAL,
+                    abilityRequirement = AbilityRequirements(emptyArray()),
+                    castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
+                    launchInfo = InstantLaunchInfo(),
+                ),
+            ).forEach { manager.defineAbility(it) }
+
+            manager
+        }
+
         single(named("FUNCTION_DEFINITIONS")) {
             arrayOf(
                 WorldFunctionRegistry.WorldFunctionItem(CMSG_LOG_INTO_WORLD, LogIntoWorldFunction(get(), get())),
@@ -138,6 +162,7 @@ val opcodeModule =
                 WorldFunctionRegistry.WorldFunctionItem(CMSG_CHEAT_TELEPORT, CheatTeleportFunction()),
                 WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_CAST_SPELL, CastSpellFunction()),
                 WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_ENGAGE_COMBAT, PlayerEngageCombatFunction()),
+                WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_USE_ABILITY, UseAbilityFunction(get())),
             )
         }
         single { WorldFunctionRegistry(get(named("FUNCTION_DEFINITIONS"))) }
