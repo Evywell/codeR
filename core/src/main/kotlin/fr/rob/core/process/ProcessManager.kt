@@ -7,6 +7,7 @@ import kotlin.reflect.KClass
  * It allows to register a process in the processes store and create processes when needed
  */
 @Suppress("UNCHECKED_CAST")
+@Deprecated("Use Koin instead")
 class ProcessManager {
 
     private val processesStore = HashMap<String, (args: Array<Any>?) -> Any>()

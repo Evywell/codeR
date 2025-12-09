@@ -3,7 +3,6 @@ package fr.rob.world.service.infra
 import fr.rob.core.database.ConnectionManager
 import fr.rob.world.service.infra.config.Config
 import fr.rob.world.service.infra.dependency.modules
-import fr.rob.world.service.infra.grpc.greeter.GreeterServiceImpl
 import fr.rob.world.service.packages.characters.app.api.DescribeCharacter
 import fr.rob.world.service.packages.characters.infra.grpc.service.CharacterServiceImpl
 import io.grpc.ServerBuilder
@@ -22,7 +21,6 @@ class App(private val config: Config) : KoinComponent {
 
         val rpcServer = ServerBuilder
             .forPort(config.grpcServerPort)
-            .addService(GreeterServiceImpl())
             .addService(CharacterServiceImpl(describeCharacter))
             .build()
 

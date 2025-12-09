@@ -10,7 +10,7 @@ import java.util.HashMap
  * config.addHandler(DatabaseConfigHandler())
  *
  * @example To retrieve a configuration as an object
- * config.retrieveConfig("database") -> will returns a DatabaseConfig custom object
+ * config.retrieveConfig("database") -> will return a DatabaseConfig custom object
  */
 abstract class Config {
 

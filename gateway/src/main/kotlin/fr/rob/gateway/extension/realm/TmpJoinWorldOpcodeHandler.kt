@@ -1,14 +1,14 @@
 package fr.rob.gateway.extension.realm
 
+import fr.raven.proto.message.game.grpc.character.CharacterGrpc
+import fr.raven.proto.message.game.grpc.character.CharacterInfo
+import fr.raven.proto.message.game.grpc.character.DescribeRequest
 import fr.raven.proto.message.gateway.GatewayProto
 import fr.raven.proto.message.realm.RealmProto
 import fr.raven.proto.message.realm.RealmProto.BindCharacterToNode
 import fr.rob.gateway.extension.realm.gamenode.GameNodes
 import fr.rob.gateway.extension.realm.opcode.SMSG_REALM_GAME_NODE_READY_TO_COMMUNICATE
 import fr.rob.gateway.network.GatewaySession
-import fr.rob.world.api.grpc.character.CharacterGrpc
-import fr.rob.world.api.grpc.character.CharacterInfo
-import fr.rob.world.api.grpc.character.DescribeRequest
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 import io.grpc.Status

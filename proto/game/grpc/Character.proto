@@ -6,6 +6,11 @@ option java_multiple_files = true;
 
 service Character {
   rpc Reserve(ReservationRequest) returns (ReservationStatus) {}
+  rpc Describe(DescribeRequest) returns (CharacterInfo) {}
+}
+
+message DescribeRequest {
+  uint32 characterId = 1;
 }
 
 message ReservationRequest {
@@ -16,3 +21,15 @@ message ReservationRequest {
 }
 
 message ReservationStatus {}
+
+message CharacterInfo {
+  uint32 characterId = 1;
+  string name = 2;
+  InstanceInfo instance = 3;
+}
+
+message InstanceInfo {
+  uint32 mapId = 1;
+  uint32 zoneId = 2;
+  uint32 instanceId = 3;
+}

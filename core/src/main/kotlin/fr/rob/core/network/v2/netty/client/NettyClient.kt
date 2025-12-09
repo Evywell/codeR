@@ -7,14 +7,15 @@ import fr.rob.core.network.v2.netty.basic.client.BasicNettyChannelInitializer
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.ChannelOption
 import io.netty.channel.EventLoopGroup
-import io.netty.channel.nio.NioEventLoopGroup
+import io.netty.channel.MultiThreadIoEventLoopGroup
+import io.netty.channel.nio.NioIoHandler
 import io.netty.channel.socket.nio.NioSocketChannel
 import java.net.InetSocketAddress
 
 class NettyClient(private val hostname: String, private val port: Int, private val client: ClientInterface<Packet>) :
     ClientProcessInterface {
     override fun start() {
-        val group: EventLoopGroup = NioEventLoopGroup()
+        val group: EventLoopGroup = MultiThreadIoEventLoopGroup(NioIoHandler.newFactory())
 
         try {
             val clientBootstrap = Bootstrap()

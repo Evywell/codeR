@@ -10,8 +10,8 @@ import fr.rob.game.test.unit.sandbox.opcode.DoNothingAuthenticatedOpcodeFunction
 import fr.rob.game.test.unit.sandbox.opcode.DoNothingOpcodeFunction
 import fr.rob.game.test.unit.sandbox.opcode.HandlingOpcodeWithProtoAsMessageOpcode
 import fr.rob.game.test.unit.sandbox.opcode.TransformToSarahConnorOpcodeFunction
-import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class OpcodeHandlerTest : BaseTest() {

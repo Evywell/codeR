@@ -5,7 +5,8 @@ import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.ChannelFuture
 import io.netty.channel.ChannelOption
 import io.netty.channel.EventLoopGroup
-import io.netty.channel.nio.NioEventLoopGroup
+import io.netty.channel.MultiThreadIoEventLoopGroup
+import io.netty.channel.nio.NioIoHandler
 import io.netty.channel.socket.nio.NioServerSocketChannel
 
 abstract class NettyServer<T>(
@@ -17,8 +18,8 @@ abstract class NettyServer<T>(
     private lateinit var channelFuture: ChannelFuture
 
     override fun start() {
-        val loopGroup: EventLoopGroup = NioEventLoopGroup()
-        val workerGroup: EventLoopGroup = NioEventLoopGroup()
+        val loopGroup: EventLoopGroup = MultiThreadIoEventLoopGroup(NioIoHandler.newFactory())
+        val workerGroup: EventLoopGroup = MultiThreadIoEventLoopGroup(NioIoHandler.newFactory())
 
         bootstrap.group(loopGroup, workerGroup).channel(NioServerSocketChannel::class.java)
             .option(ChannelOption.SO_BACKLOG, 128)
