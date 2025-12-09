@@ -4,7 +4,7 @@ import io.netty.channel.ChannelInitializer
 import io.netty.channel.ChannelPipeline
 import io.netty.channel.socket.SocketChannel
 import io.netty.handler.ssl.SslContextBuilder
-import io.netty.handler.ssl.util.SelfSignedCertificate
+import io.netty.pkitesting.CertificateBuilder
 
 abstract class NettyChannelInitializer<T>(
     protected val ssl: Boolean = false
@@ -14,9 +14,10 @@ abstract class NettyChannelInitializer<T>(
         val pipeline = ch.pipeline()
 
         if (ssl) {
-            val selfSignedCertificate = SelfSignedCertificate()
+            val certificateBuilder = CertificateBuilder()
+            val selfSignedCertificate = certificateBuilder.buildSelfSigned()
             val sslCtx = SslContextBuilder
-                .forServer(selfSignedCertificate.certificate(), selfSignedCertificate.privateKey())
+                .forServer(selfSignedCertificate.toTempCertChainPem(), selfSignedCertificate.toTempPrivateKeyPem())
                 .build()
             pipeline.addLast(sslCtx.newHandler(ch.alloc()))
         }

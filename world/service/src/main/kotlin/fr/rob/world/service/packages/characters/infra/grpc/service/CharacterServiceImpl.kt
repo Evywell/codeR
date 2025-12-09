@@ -1,15 +1,15 @@
 package fr.rob.world.service.packages.characters.infra.grpc.service
 
-import fr.rob.world.api.grpc.character.CharacterGrpc.CharacterImplBase
-import fr.rob.world.api.grpc.character.CharacterInfo
-import fr.rob.world.api.grpc.character.DescribeRequest
-import fr.rob.world.api.grpc.character.InstanceInfo
+import fr.raven.proto.message.game.grpc.character.CharacterGrpc
+import fr.raven.proto.message.game.grpc.character.CharacterInfo
+import fr.raven.proto.message.game.grpc.character.DescribeRequest
+import fr.raven.proto.message.game.grpc.character.InstanceInfo
 import fr.rob.world.service.packages.characters.app.api.DescribeCharacter
 import fr.rob.world.service.packages.characters.domain.character.CharacterId
 import io.grpc.Status
 import io.grpc.stub.StreamObserver
 
-class CharacterServiceImpl(private val describeCharacterApi: DescribeCharacter) : CharacterImplBase() {
+class CharacterServiceImpl(private val describeCharacterApi: DescribeCharacter) : CharacterGrpc.CharacterImplBase() {
     override fun describe(request: DescribeRequest, responseObserver: StreamObserver<CharacterInfo>) {
         val characterDescriptionResponse = describeCharacterApi.invoke(CharacterId(request.characterId))
 

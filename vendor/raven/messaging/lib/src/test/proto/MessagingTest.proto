@@ -1,7 +1,0 @@
-syntax = "proto3";
-
-package fr.raven.messaging.test.message;
-
-option java_outer_classname = "MessagingTestProto";
-
-message Null { }

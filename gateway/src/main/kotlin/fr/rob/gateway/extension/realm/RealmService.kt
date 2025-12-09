@@ -2,6 +2,7 @@ package fr.rob.gateway.extension.realm
 
 import fr.raven.log.LoggerInterface
 import fr.raven.proto.message.game.grpc.character.CharacterGrpc
+import fr.raven.proto.message.game.grpc.character.CharacterInfo
 import fr.raven.proto.message.game.grpc.character.ReservationRequest
 import fr.raven.proto.message.realm.RealmProto.BindCharacterToNode
 import fr.rob.gateway.extension.game.GameNode
@@ -9,7 +10,6 @@ import fr.rob.gateway.extension.game.GameNodeBuilder
 import fr.rob.gateway.extension.realm.gamenode.GameNodes
 import fr.rob.gateway.network.Gateway
 import fr.rob.gateway.network.GatewaySession
-import fr.rob.world.api.grpc.character.CharacterInfo
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 

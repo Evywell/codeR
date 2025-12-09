@@ -1,9 +1,0 @@
-rootProject.name = 'messaging'
-
-include('lib')
-
-sourceControl {
-    gitRepository("https://github.com/Evywell/raven-log.git") {
-        producesModule("fr.raven.log:lib")
-    }
-}

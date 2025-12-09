@@ -5,9 +5,10 @@ import java.sql.SQLException
 
 class TransactionCommand(private val callable: () -> Unit, private val connection: Connection) : CommandInterface {
 
-    override fun execute(): Any {
+    override fun execute(): Boolean {
+        connection.executeStatement("START TRANSACTION;")
+
         try {
-            connection.executeStatement("START TRANSACTION;")
             callable.invoke()
             connection.executeStatement("COMMIT;")
         } catch (e: SQLException) {

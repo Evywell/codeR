@@ -8,5 +8,6 @@ class ProtobufNettyChannelHandler<T>(
     server: ServerInterface<T>,
     nettySessionSocketBuilder: NettySessionSocketBuilderInterface
 ) : NettyChannelHandler<T>(server, nettySessionSocketBuilder) {
+    @Suppress("UNCHECKED_CAST")
     override fun createPacketFromMessage(msg: Any): T = msg as T
 }

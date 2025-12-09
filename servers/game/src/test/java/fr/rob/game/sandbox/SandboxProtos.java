@@ -22,7 +22,7 @@ public final class SandboxProtos {
      * <code>string firstName = 1;</code>
      * @return The firstName.
      */
-    java.lang.String getFirstName();
+    String getFirstName();
     /**
      * <code>string firstName = 1;</code>
      * @return The bytes for firstName.
@@ -34,7 +34,7 @@ public final class SandboxProtos {
      * <code>string lastName = 2;</code>
      * @return The lastName.
      */
-    java.lang.String getLastName();
+    String getLastName();
     /**
      * <code>string lastName = 2;</code>
      * @return The bytes for lastName.
@@ -65,14 +65,14 @@ public final class SandboxProtos {
       lastName_ = "";
     }
 
-    @java.lang.Override
+    @Override
     @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
+    protected Object newInstance(
         UnusedPrivateParameter unused) {
       return new Subject();
     }
 
-    @java.lang.Override
+    @Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
       return this.unknownFields;
@@ -83,7 +83,7 @@ public final class SandboxProtos {
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
+        throw new NullPointerException();
       }
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -96,13 +96,13 @@ public final class SandboxProtos {
               done = true;
               break;
             case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
+              String s = input.readStringRequireUtf8();
 
               firstName_ = s;
               break;
             }
             case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
+              String s = input.readStringRequireUtf8();
 
               lastName_ = s;
               break;
@@ -133,32 +133,32 @@ public final class SandboxProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return fr.rob.game.sandbox.SandboxProtos.internal_static_sandbox_Subject_descriptor;
+      return SandboxProtos.internal_static_sandbox_Subject_descriptor;
     }
 
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    @Override
+    protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return fr.rob.game.sandbox.SandboxProtos.internal_static_sandbox_Subject_fieldAccessorTable
+      return SandboxProtos.internal_static_sandbox_Subject_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              fr.rob.game.sandbox.SandboxProtos.Subject.class, fr.rob.game.sandbox.SandboxProtos.Subject.Builder.class);
+              Subject.class, Builder.class);
     }
 
     public static final int FIRSTNAME_FIELD_NUMBER = 1;
-    private volatile java.lang.Object firstName_;
+    private volatile Object firstName_;
     /**
      * <code>string firstName = 1;</code>
      * @return The firstName.
      */
-    @java.lang.Override
-    public java.lang.String getFirstName() {
-      java.lang.Object ref = firstName_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
+    @Override
+    public String getFirstName() {
+      Object ref = firstName_;
+      if (ref instanceof String) {
+        return (String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
+        String s = bs.toStringUtf8();
         firstName_ = s;
         return s;
       }
@@ -167,14 +167,14 @@ public final class SandboxProtos {
      * <code>string firstName = 1;</code>
      * @return The bytes for firstName.
      */
-    @java.lang.Override
+    @Override
     public com.google.protobuf.ByteString
         getFirstNameBytes() {
-      java.lang.Object ref = firstName_;
-      if (ref instanceof java.lang.String) {
+      Object ref = firstName_;
+      if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
+                (String) ref);
         firstName_ = b;
         return b;
       } else {
@@ -183,20 +183,20 @@ public final class SandboxProtos {
     }
 
     public static final int LASTNAME_FIELD_NUMBER = 2;
-    private volatile java.lang.Object lastName_;
+    private volatile Object lastName_;
     /**
      * <code>string lastName = 2;</code>
      * @return The lastName.
      */
-    @java.lang.Override
-    public java.lang.String getLastName() {
-      java.lang.Object ref = lastName_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
+    @Override
+    public String getLastName() {
+      Object ref = lastName_;
+      if (ref instanceof String) {
+        return (String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
+        String s = bs.toStringUtf8();
         lastName_ = s;
         return s;
       }
@@ -205,14 +205,14 @@ public final class SandboxProtos {
      * <code>string lastName = 2;</code>
      * @return The bytes for lastName.
      */
-    @java.lang.Override
+    @Override
     public com.google.protobuf.ByteString
         getLastNameBytes() {
-      java.lang.Object ref = lastName_;
-      if (ref instanceof java.lang.String) {
+      Object ref = lastName_;
+      if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
+                (String) ref);
         lastName_ = b;
         return b;
       } else {
@@ -226,13 +226,13 @@ public final class SandboxProtos {
      * <code>uint32 age = 3;</code>
      * @return The age.
      */
-    @java.lang.Override
+    @Override
     public int getAge() {
       return age_;
     }
 
     private byte memoizedIsInitialized = -1;
-    @java.lang.Override
+    @Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -242,7 +242,7 @@ public final class SandboxProtos {
       return true;
     }
 
-    @java.lang.Override
+    @Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (!getFirstNameBytes().isEmpty()) {
@@ -257,7 +257,7 @@ public final class SandboxProtos {
       unknownFields.writeTo(output);
     }
 
-    @java.lang.Override
+    @Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -278,15 +278,15 @@ public final class SandboxProtos {
       return size;
     }
 
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
+    @Override
+    public boolean equals(final Object obj) {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof fr.rob.game.sandbox.SandboxProtos.Subject)) {
+      if (!(obj instanceof Subject)) {
         return super.equals(obj);
       }
-      fr.rob.game.sandbox.SandboxProtos.Subject other = (fr.rob.game.sandbox.SandboxProtos.Subject) obj;
+      Subject other = (Subject) obj;
 
       if (!getFirstName()
           .equals(other.getFirstName())) return false;
@@ -298,7 +298,7 @@ public final class SandboxProtos {
       return true;
     }
 
-    @java.lang.Override
+    @Override
     public int hashCode() {
       if (memoizedHashCode != 0) {
         return memoizedHashCode;
@@ -316,69 +316,69 @@ public final class SandboxProtos {
       return hash;
     }
 
-    public static fr.rob.game.sandbox.SandboxProtos.Subject parseFrom(
+    public static Subject parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static fr.rob.game.sandbox.SandboxProtos.Subject parseFrom(
+    public static Subject parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static fr.rob.game.sandbox.SandboxProtos.Subject parseFrom(
+    public static Subject parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static fr.rob.game.sandbox.SandboxProtos.Subject parseFrom(
+    public static Subject parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static fr.rob.game.sandbox.SandboxProtos.Subject parseFrom(byte[] data)
+    public static Subject parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static fr.rob.game.sandbox.SandboxProtos.Subject parseFrom(
+    public static Subject parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static fr.rob.game.sandbox.SandboxProtos.Subject parseFrom(java.io.InputStream input)
+    public static Subject parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static fr.rob.game.sandbox.SandboxProtos.Subject parseFrom(
+    public static Subject parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static fr.rob.game.sandbox.SandboxProtos.Subject parseDelimitedFrom(java.io.InputStream input)
+    public static Subject parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static fr.rob.game.sandbox.SandboxProtos.Subject parseDelimitedFrom(
+    public static Subject parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static fr.rob.game.sandbox.SandboxProtos.Subject parseFrom(
+    public static Subject parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static fr.rob.game.sandbox.SandboxProtos.Subject parseFrom(
+    public static Subject parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -386,23 +386,23 @@ public final class SandboxProtos {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-    @java.lang.Override
+    @Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(fr.rob.game.sandbox.SandboxProtos.Subject prototype) {
+    public static Builder newBuilder(Subject prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-    @java.lang.Override
+    @Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
     }
 
-    @java.lang.Override
+    @Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -412,18 +412,18 @@ public final class SandboxProtos {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:sandbox.Subject)
-        fr.rob.game.sandbox.SandboxProtos.SubjectOrBuilder {
+        SubjectOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return fr.rob.game.sandbox.SandboxProtos.internal_static_sandbox_Subject_descriptor;
+        return SandboxProtos.internal_static_sandbox_Subject_descriptor;
       }
 
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      @Override
+      protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return fr.rob.game.sandbox.SandboxProtos.internal_static_sandbox_Subject_fieldAccessorTable
+        return SandboxProtos.internal_static_sandbox_Subject_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                fr.rob.game.sandbox.SandboxProtos.Subject.class, fr.rob.game.sandbox.SandboxProtos.Subject.Builder.class);
+                Subject.class, Builder.class);
       }
 
       // Construct using fr.rob.game.sandbox.SandboxProtos.Subject.newBuilder()
@@ -432,7 +432,7 @@ public final class SandboxProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -441,7 +441,7 @@ public final class SandboxProtos {
                 .alwaysUseFieldBuilders) {
         }
       }
-      @java.lang.Override
+      @Override
       public Builder clear() {
         super.clear();
         firstName_ = "";
@@ -453,29 +453,29 @@ public final class SandboxProtos {
         return this;
       }
 
-      @java.lang.Override
+      @Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return fr.rob.game.sandbox.SandboxProtos.internal_static_sandbox_Subject_descriptor;
+        return SandboxProtos.internal_static_sandbox_Subject_descriptor;
       }
 
-      @java.lang.Override
-      public fr.rob.game.sandbox.SandboxProtos.Subject getDefaultInstanceForType() {
-        return fr.rob.game.sandbox.SandboxProtos.Subject.getDefaultInstance();
+      @Override
+      public Subject getDefaultInstanceForType() {
+        return Subject.getDefaultInstance();
       }
 
-      @java.lang.Override
-      public fr.rob.game.sandbox.SandboxProtos.Subject build() {
-        fr.rob.game.sandbox.SandboxProtos.Subject result = buildPartial();
+      @Override
+      public Subject build() {
+        Subject result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      @java.lang.Override
-      public fr.rob.game.sandbox.SandboxProtos.Subject buildPartial() {
-        fr.rob.game.sandbox.SandboxProtos.Subject result = new fr.rob.game.sandbox.SandboxProtos.Subject(this);
+      @Override
+      public Subject buildPartial() {
+        Subject result = new Subject(this);
         result.firstName_ = firstName_;
         result.lastName_ = lastName_;
         result.age_ = age_;
@@ -483,50 +483,50 @@ public final class SandboxProtos {
         return result;
       }
 
-      @java.lang.Override
+      @Override
       public Builder clone() {
         return super.clone();
       }
-      @java.lang.Override
+      @Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
+          Object value) {
         return super.setField(field, value);
       }
-      @java.lang.Override
+      @Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
-      @java.lang.Override
+      @Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
-      @java.lang.Override
+      @Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
+          int index, Object value) {
         return super.setRepeatedField(field, index, value);
       }
-      @java.lang.Override
+      @Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
+          Object value) {
         return super.addRepeatedField(field, value);
       }
-      @java.lang.Override
+      @Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof fr.rob.game.sandbox.SandboxProtos.Subject) {
-          return mergeFrom((fr.rob.game.sandbox.SandboxProtos.Subject)other);
+        if (other instanceof Subject) {
+          return mergeFrom((Subject)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(fr.rob.game.sandbox.SandboxProtos.Subject other) {
-        if (other == fr.rob.game.sandbox.SandboxProtos.Subject.getDefaultInstance()) return this;
+      public Builder mergeFrom(Subject other) {
+        if (other == Subject.getDefaultInstance()) return this;
         if (!other.getFirstName().isEmpty()) {
           firstName_ = other.firstName_;
           onChanged();
@@ -543,21 +543,21 @@ public final class SandboxProtos {
         return this;
       }
 
-      @java.lang.Override
+      @Override
       public final boolean isInitialized() {
         return true;
       }
 
-      @java.lang.Override
+      @Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        fr.rob.game.sandbox.SandboxProtos.Subject parsedMessage = null;
+        Subject parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (fr.rob.game.sandbox.SandboxProtos.Subject) e.getUnfinishedMessage();
+          parsedMessage = (Subject) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -567,21 +567,21 @@ public final class SandboxProtos {
         return this;
       }
 
-      private java.lang.Object firstName_ = "";
+      private Object firstName_ = "";
       /**
        * <code>string firstName = 1;</code>
        * @return The firstName.
        */
-      public java.lang.String getFirstName() {
-        java.lang.Object ref = firstName_;
-        if (!(ref instanceof java.lang.String)) {
+      public String getFirstName() {
+        Object ref = firstName_;
+        if (!(ref instanceof String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
+          String s = bs.toStringUtf8();
           firstName_ = s;
           return s;
         } else {
-          return (java.lang.String) ref;
+          return (String) ref;
         }
       }
       /**
@@ -590,11 +590,11 @@ public final class SandboxProtos {
        */
       public com.google.protobuf.ByteString
           getFirstNameBytes() {
-        java.lang.Object ref = firstName_;
+        Object ref = firstName_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
+                  (String) ref);
           firstName_ = b;
           return b;
         } else {
@@ -607,7 +607,7 @@ public final class SandboxProtos {
        * @return This builder for chaining.
        */
       public Builder setFirstName(
-          java.lang.String value) {
+          String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -643,21 +643,21 @@ public final class SandboxProtos {
         return this;
       }
 
-      private java.lang.Object lastName_ = "";
+      private Object lastName_ = "";
       /**
        * <code>string lastName = 2;</code>
        * @return The lastName.
        */
-      public java.lang.String getLastName() {
-        java.lang.Object ref = lastName_;
-        if (!(ref instanceof java.lang.String)) {
+      public String getLastName() {
+        Object ref = lastName_;
+        if (!(ref instanceof String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
+          String s = bs.toStringUtf8();
           lastName_ = s;
           return s;
         } else {
-          return (java.lang.String) ref;
+          return (String) ref;
         }
       }
       /**
@@ -666,11 +666,11 @@ public final class SandboxProtos {
        */
       public com.google.protobuf.ByteString
           getLastNameBytes() {
-        java.lang.Object ref = lastName_;
+        Object ref = lastName_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
+                  (String) ref);
           lastName_ = b;
           return b;
         } else {
@@ -683,7 +683,7 @@ public final class SandboxProtos {
        * @return This builder for chaining.
        */
       public Builder setLastName(
-          java.lang.String value) {
+          String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -724,7 +724,7 @@ public final class SandboxProtos {
        * <code>uint32 age = 3;</code>
        * @return The age.
        */
-      @java.lang.Override
+      @Override
       public int getAge() {
         return age_;
       }
@@ -749,13 +749,13 @@ public final class SandboxProtos {
         onChanged();
         return this;
       }
-      @java.lang.Override
+      @Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
       }
 
-      @java.lang.Override
+      @Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -766,18 +766,18 @@ public final class SandboxProtos {
     }
 
     // @@protoc_insertion_point(class_scope:sandbox.Subject)
-    private static final fr.rob.game.sandbox.SandboxProtos.Subject DEFAULT_INSTANCE;
+    private static final Subject DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new fr.rob.game.sandbox.SandboxProtos.Subject();
+      DEFAULT_INSTANCE = new Subject();
     }
 
-    public static fr.rob.game.sandbox.SandboxProtos.Subject getDefaultInstance() {
+    public static Subject getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
     private static final com.google.protobuf.Parser<Subject>
         PARSER = new com.google.protobuf.AbstractParser<Subject>() {
-      @java.lang.Override
+      @Override
       public Subject parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -790,13 +790,13 @@ public final class SandboxProtos {
       return PARSER;
     }
 
-    @java.lang.Override
+    @Override
     public com.google.protobuf.Parser<Subject> getParserForType() {
       return PARSER;
     }
 
-    @java.lang.Override
-    public fr.rob.game.sandbox.SandboxProtos.Subject getDefaultInstanceForType() {
+    @Override
+    public Subject getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -815,7 +815,7 @@ public final class SandboxProtos {
   private static  com.google.protobuf.Descriptors.FileDescriptor
       descriptor;
   static {
-    java.lang.String[] descriptorData = {
+    String[] descriptorData = {
       "\n\rSandbox.proto\022\007sandbox\";\n\007Subject\022\021\n\tf" +
       "irstName\030\001 \001(\t\022\020\n\010lastName\030\002 \001(\t\022\013\n\003age\030" +
       "\003 \001(\rB$\n\023fr.rob.game.sandboxB\rSandboxPro" +
@@ -830,7 +830,7 @@ public final class SandboxProtos {
     internal_static_sandbox_Subject_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sandbox_Subject_descriptor,
-        new java.lang.String[] { "FirstName", "LastName", "Age", });
+        new String[] { "FirstName", "LastName", "Age", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

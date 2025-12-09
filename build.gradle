@@ -1,9 +1,0 @@
-buildscript {
-    ext.kotlin_version = '1.6.10'
-}
-
-plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.6.10' apply false
-    id 'org.jlleitschuh.gradle.ktlint' version '10.2.1' apply false
-    id 'com.avast.gradle.docker-compose' version '0.16.13' apply false
-}
