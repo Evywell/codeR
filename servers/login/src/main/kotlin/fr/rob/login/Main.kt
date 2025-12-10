@@ -10,7 +10,10 @@ class Main {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val loggerFactory = LoggerFactory(File({}.javaClass.classLoader.getResource("log4j.config.xml")!!.path))
+            val logConfigResource = requireNotNull({}.javaClass.classLoader.getResource("log4j.config.xml")) {
+                "log4j.config.xml not found in classpath"
+            }
+            val loggerFactory = LoggerFactory(File(logConfigResource.path))
             val app = LoginApplication(env = ENV_DEV, loggerFactory = loggerFactory)
             app.config = Config(File("config.properties"))
 

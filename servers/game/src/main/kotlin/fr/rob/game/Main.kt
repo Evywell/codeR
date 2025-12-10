@@ -38,30 +38,30 @@ class Main {
 
         private fun fromGlobal(config: Config): GameConfig = GameConfig(
             Orchestrator(
-                config.getString("orchestrator.host")!!,
-                config.getInteger("orchestrator.port")!!,
+                requireNotNull(config.getString("orchestrator.host")) { "Missing config: orchestrator.host" },
+                requireNotNull(config.getInteger("orchestrator.port")) { "Missing config: orchestrator.port" },
             ),
             Databases(
                 DatabaseConfig(
                     System.getProperty("mysql_game.host"),
                     System.getProperty("mysql_game.tcp.3306").toLong(),
-                    config.getString("databases.config.user")!!,
-                    config.getString("databases.config.password")!!,
-                    config.getString("databases.config.database")!!,
+                    requireNotNull(config.getString("databases.config.user")) { "Missing config: databases.config.user" },
+                    requireNotNull(config.getString("databases.config.password")) { "Missing config: databases.config.password" },
+                    requireNotNull(config.getString("databases.config.database")) { "Missing config: databases.config.database" },
                 ),
                 DatabaseConfig(
                     System.getProperty("mysql_game.host"),
                     System.getProperty("mysql_game.tcp.3306").toLong(),
-                    config.getString("databases.players.user")!!,
-                    config.getString("databases.players.password")!!,
-                    config.getString("databases.players.database")!!,
+                    requireNotNull(config.getString("databases.players.user")) { "Missing config: databases.players.user" },
+                    requireNotNull(config.getString("databases.players.password")) { "Missing config: databases.players.password" },
+                    requireNotNull(config.getString("databases.players.database")) { "Missing config: databases.players.database" },
                 ),
                 DatabaseConfig(
                     System.getProperty("mysql_game.host"),
                     System.getProperty("mysql_game.tcp.3306").toLong(),
-                    config.getString("databases.world.user")!!,
-                    config.getString("databases.world.password")!!,
-                    config.getString("databases.world.database")!!,
+                    requireNotNull(config.getString("databases.world.user")) { "Missing config: databases.world.user" },
+                    requireNotNull(config.getString("databases.world.password")) { "Missing config: databases.world.password" },
+                    requireNotNull(config.getString("databases.world.database")) { "Missing config: databases.world.database" },
                 ),
             ),
             NodesConfig(config),
@@ -72,7 +72,9 @@ class Main {
                 return File(configFileName)
             }
 
-            val stream: InputStream = Main::class.java.classLoader.getResourceAsStream(CONFIG_FILE)!!
+            val stream: InputStream = requireNotNull(Main::class.java.classLoader.getResourceAsStream(CONFIG_FILE)) {
+                "Config file not found: $CONFIG_FILE"
+            }
 
             val tmpConfig = File.createTempFile("config", ".tmp", File(Paths.get("").toAbsolutePath().toString()))
             tmpConfig.writeBytes(stream.readAllBytes())

@@ -26,16 +26,14 @@ class GameNodePacketDispatcher(
     }
 
     override fun transmitInterruption(session: GatewaySession) {
-        if (session.currentGameNode == null) {
-            return
-        }
+        val gameNode = session.currentGameNode ?: return
 
         val interruptionPacket = GameProto.Packet.newBuilder()
             .setOpcode(INTERRUPTION_OPCODE)
-            .setSender(session.accountId!!)
+            .setSender(requireNotNull(session.accountId) { "session.accountId cannot be null" })
             .build()
 
-        session.currentGameNode!!.send(interruptionPacket)
+        gameNode.send(interruptionPacket)
     }
 
     companion object {

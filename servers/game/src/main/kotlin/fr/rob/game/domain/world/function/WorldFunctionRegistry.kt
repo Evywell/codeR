@@ -9,7 +9,8 @@ class WorldFunctionRegistry(functionsToRegister: Array<WorldFunctionItem>) {
         }
     }
 
-    fun getFunction(opcode: Int): WorldFunctionInterface = functions[opcode]!!
+    fun getFunction(opcode: Int): WorldFunctionInterface =
+        functions[opcode] ?: throw IllegalArgumentException("No function registered for opcode: $opcode")
 
     data class WorldFunctionItem(val opcode: Int, val function: WorldFunctionInterface)
 }

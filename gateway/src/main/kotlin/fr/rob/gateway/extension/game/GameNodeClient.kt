@@ -30,7 +30,7 @@ class GameNodeClient(
     override fun onConnectionClosed() {
         logger.error("Connection lost with game node $nodeLabel, closing client connections...")
 
-        gateway.gameNodes.findByLabel(nodeLabel).ifPresent { gameNode -> gateway.closeGameNodeConnection(gameNode) }
+        gateway.gameNodes.findByLabel(nodeLabel)?.let { gameNode -> gateway.closeGameNodeConnection(gameNode) }
     }
 
     override fun onPacketReceived(packet: Packet) {

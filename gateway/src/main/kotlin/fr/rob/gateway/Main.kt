@@ -15,7 +15,10 @@ class Main {
         fun main(args: Array<String>) {
             println("Gateway: Hello !")
 
-            val loggerFactory = LoggerFactory(File({}.javaClass.classLoader.getResource("log4j.config.xml")!!.path).inputStream())
+            val logConfigResource = requireNotNull({}.javaClass.classLoader.getResource("log4j.config.xml")) {
+                "log4j.config.xml not found in classpath"
+            }
+            val loggerFactory = LoggerFactory(File(logConfigResource.path).inputStream())
             val logger = loggerFactory
                 .create("GATEWAY")
 

@@ -38,16 +38,11 @@ class RealmService(
     }
 
     private fun retrieveGameNodeOrCreate(nodeLabel: String, hostname: String, port: Int, gameNodes: GameNodes): GameNode {
-        val gameNodeContainer = gameNodes.findByLabel(nodeLabel)
-
-        if (gameNodeContainer.isPresent) {
-            return gameNodeContainer.get()
+        return gameNodes.findByLabel(nodeLabel) ?: run {
+            val gameNode = gameNodeBuilder.build(nodeLabel, hostname, port)
+            gameNodes.addNode(gameNode)
+            gameNode
         }
-
-        val gameNode = gameNodeBuilder.build(nodeLabel, hostname, port)
-        gameNodes.addNode(gameNode)
-
-        return gameNode
     }
 
     fun reserveCharacterForSession(session: GatewaySession, character: CharacterInfo) {

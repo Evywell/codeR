@@ -12,5 +12,5 @@ data class Account(
 ) {
 
     val isBanned: Boolean
-        get() = bannedAt != null && bannedAt!! >= Date()
+        get() = bannedAt?.let { it >= Date() } ?: false
 }
