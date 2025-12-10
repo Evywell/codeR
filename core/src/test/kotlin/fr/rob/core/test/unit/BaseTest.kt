@@ -6,7 +6,6 @@ import fr.rob.core.event.EventManagerInterface
 import fr.rob.core.network.Packet
 import fr.rob.core.network.v2.Server
 import fr.rob.core.opcode.OpcodeHandler
-import fr.rob.core.process.ProcessManager
 import fr.rob.core.test.unit.sandbox.event.NIEventManager
 import fr.rob.core.test.unit.sandbox.log.NILogger
 import fr.rob.core.test.unit.sandbox.log.NILoggerFactory
@@ -19,7 +18,6 @@ open class BaseTest {
     val logger: LoggerInterface = NILogger()
     val loggerFactory: LoggerFactoryInterface = NILoggerFactory()
     val opcodeHandler: OpcodeHandler = NIOpcodeHandler(logger)
-    val processManager: ProcessManager = ProcessManager()
     var server: Server<Packet> = NIServer()
     val eventManager: EventManagerInterface = NIEventManager()
 
