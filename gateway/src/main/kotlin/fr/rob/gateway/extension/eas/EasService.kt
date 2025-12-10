@@ -45,13 +45,6 @@ class EasService(private val gateway: Gateway, private val authServices: Array<A
         authService.authenticate(session, packet)
     }
 
-    private fun retrieveAuthenticateServiceFromPacket(packet: EasPacket): AuthenticationServiceInterface {
-        for (authService in authServices) {
-            if (authService.support(packet)) {
-                return authService
-            }
-        }
-
-        throw UnknownAuthenticationService()
-    }
+    private fun retrieveAuthenticateServiceFromPacket(packet: EasPacket): AuthenticationServiceInterface =
+        authServices.find { it.support(packet) } ?: throw UnknownAuthenticationService()
 }

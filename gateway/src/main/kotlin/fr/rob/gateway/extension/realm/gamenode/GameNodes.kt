@@ -15,13 +15,6 @@ class GameNodes {
         nodes.remove(gameNode)
     }
 
-    fun findByLabel(nodeLabel: String): Optional<GameNode> {
-        for (gameNode in nodes) {
-            if (gameNode.label == nodeLabel) {
-                return Optional.of(gameNode)
-            }
-        }
-
-        return Optional.empty()
-    }
+    fun findByLabel(nodeLabel: String): GameNode? =
+        nodes.find { it.label == nodeLabel }
 }

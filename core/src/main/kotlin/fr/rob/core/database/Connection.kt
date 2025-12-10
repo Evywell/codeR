@@ -15,11 +15,11 @@ import java.sql.SQLException
 import java.sql.Statement
 
 class Connection(
-    var host: String,
-    var port: Long,
-    var user: String,
-    var password: String,
-    var dbname: String,
+    val host: String,
+    val port: Long,
+    val user: String,
+    val password: String,
+    val dbname: String,
 ) {
     private val queryRunner = QueryRunner()
 
@@ -44,23 +44,18 @@ class Connection(
     fun executeStatement(sql: String): Statement? {
         connect()
 
-        try {
+        return try {
             val st = connection.createStatement()
-
-            if (st.execute(sql)) {
-                return st
-            }
+            if (st.execute(sql)) st else null
         } catch (e: SQLException) {
-            e.printStackTrace()
+            throw SQLException("Failed to execute statement: $sql", e)
         }
-
-        return null
     }
 
     fun createPreparedStatement(sql: String, returnKeys: Boolean = false): PreparedStatement? {
         connect()
 
-        try {
+        return try {
             val stopwatch = StopWatch()
             stopwatch.start()
 
@@ -78,12 +73,10 @@ class Connection(
 
             eventManager?.dispatch(AfterCreatePreparedStatementEvent(sql, stopwatch.diffTime()))
 
-            return stmt
+            stmt
         } catch (e: SQLException) {
-            e.printStackTrace()
+            throw SQLException("Failed to create prepared statement: $sql", e)
         }
-
-        return null
     }
 
     fun execute(stmt: PreparedStatement): Boolean {
@@ -111,7 +104,7 @@ class Connection(
     private fun connect(): Boolean {
         if (connected) return true
 
-        try {
+        return try {
             val dsn = String.format(
                 "jdbc:mysql://%s:%d/%s?user=%s&password=%s&zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC",
                 host,
@@ -121,22 +114,19 @@ class Connection(
                 password,
             )
 
-            this.connection = DriverManager.getConnection(
-                dsn,
-            )
+            this.connection = DriverManager.getConnection(dsn)
             connected = true
+            true
         } catch (e: SQLException) {
-            e.printStackTrace()
-            return false
+            throw SQLException("Failed to connect to database: $host:$port/$dbname", e)
         }
-        return true
     }
 
     fun disconnect() {
         try {
             this.connection.close()
         } catch (e: SQLException) {
-            e.printStackTrace()
+            throw SQLException("Failed to disconnect from database", e)
         }
     }
 }

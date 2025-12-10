@@ -10,7 +10,8 @@ import fr.rob.core.database.returnAndCloseWithCallback
 class AccountRepository(private val db: Connection) : AccountRepositoryInterface {
 
     override fun byAccountId(accountId: Int): Account? {
-        val stmt = db.createPreparedStatement(SEL_ACCOUNT_BY_USER_ID)!!
+        val stmt = db.createPreparedStatement(SEL_ACCOUNT_BY_USER_ID)
+            ?: throw IllegalStateException("Failed to create prepared statement for byAccountId")
 
         stmt.setInt(1, accountId)
         db.execute(stmt)
@@ -34,9 +35,10 @@ class AccountRepository(private val db: Connection) : AccountRepositoryInterface
     }
 
     override fun insert(accountSkeleton: Account): Account {
-        val stmt = db.createPreparedStatement(INS_ACCOUNT, true)!!
+        val stmt = db.createPreparedStatement(INS_ACCOUNT, true)
+            ?: throw IllegalStateException("Failed to create prepared statement for insert")
 
-        stmt.setInt(1, accountSkeleton.accountGlobalId!!)
+        stmt.setInt(1, requireNotNull(accountSkeleton.accountGlobalId) { "accountGlobalId cannot be null" })
         stmt.setBoolean(2, accountSkeleton.isAdministrator)
         stmt.setString(3, accountSkeleton.name)
 
@@ -61,17 +63,19 @@ class AccountRepository(private val db: Connection) : AccountRepositoryInterface
     }
 
     override fun updateName(account: Account, accountName: String) {
-        val stmt = db.createPreparedStatement(UPD_ACCOUNT_NAME)!!
+        val stmt = db.createPreparedStatement(UPD_ACCOUNT_NAME)
+            ?: throw IllegalStateException("Failed to create prepared statement for updateName")
 
         stmt.setString(1, accountName)
-        stmt.setInt(2, account.id!!)
+        stmt.setInt(2, requireNotNull(account.id) { "account.id cannot be null" })
 
         db.execute(stmt)
         stmt.close()
     }
 
     override fun lock(accountId: Int) {
-        val stmt = db.createPreparedStatement(UPD_ACCOUNT_LOCK)!!
+        val stmt = db.createPreparedStatement(UPD_ACCOUNT_LOCK)
+            ?: throw IllegalStateException("Failed to create prepared statement for lock")
 
         stmt.setBoolean(1, true)
         stmt.setInt(2, accountId)

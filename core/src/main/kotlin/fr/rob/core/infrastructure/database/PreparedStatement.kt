@@ -3,7 +3,8 @@ package fr.rob.core.infrastructure.database
 import fr.rob.core.database.event.AfterSQLReqExecutedEvent
 import fr.rob.core.database.exception.InsertException
 import fr.rob.core.misc.clock.StopWatch
-import java.sql.*
+import java.sql.ResultSet
+import java.sql.SQLException
 
 class PreparedStatement(
     private val connection: fr.rob.core.database.Connection,
@@ -55,12 +56,10 @@ class PreparedStatement(
         return try {
             stmt.execute()
         } catch (e: SQLException) {
-            println("SQLException: ${e.message}")
-            println("SQL Query: $sql")
-            println("SQLState: ${e.sqlState}")
-            println("VendorError: ${e.errorCode}")
-            e.printStackTrace()
-            throw e
+            throw SQLException(
+                "Failed to execute SQL. Query: $sql, SQLState: ${e.sqlState}, VendorError: ${e.errorCode}",
+                e
+            )
         }
     }
 }

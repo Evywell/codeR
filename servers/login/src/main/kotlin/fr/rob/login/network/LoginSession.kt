@@ -14,15 +14,8 @@ open class LoginSession(socket: SessionSocketInterface) : Session(socket), Chara
 
     override fun getCharactersNumber(): Int = characters.size
 
-    override fun getCharacterByName(characterName: String): Character? {
-        for (character in characters) {
-            if (character.name.equals(characterName)) {
-                return character
-            }
-        }
-
-        return null
-    }
+    override fun getCharacterByName(characterName: String): Character? =
+        characters.find { it.name == characterName }
 
     fun isOperatorOrThrowException() {
         if (!isOperator()) {
