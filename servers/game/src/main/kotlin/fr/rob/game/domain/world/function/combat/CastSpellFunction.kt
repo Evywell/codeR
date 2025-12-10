@@ -1,4 +1,4 @@
-package fr.rob.game.domain.world.function
+package fr.rob.game.domain.world.function.combat
 
 import com.google.protobuf.ByteString
 import com.google.protobuf.Message
@@ -6,9 +6,14 @@ import fr.raven.proto.message.game.SellProto.CastSpell
 import fr.rob.game.domain.player.session.GameSession
 import fr.rob.game.domain.spell.SpellCasterTrait
 import fr.rob.game.domain.spell.target.SpellTargetParameter
+import fr.rob.game.domain.world.function.WorldFunctionInterface
 
 class CastSpellFunction : WorldFunctionInterface {
-    override fun invoke(sender: GameSession, opcode: Int, message: Message) {
+    override fun invoke(
+        sender: GameSession,
+        opcode: Int,
+        message: Message,
+    ) {
         message as CastSpell
 
         val controlledWorldObject = sender.controlledWorldObject ?: return

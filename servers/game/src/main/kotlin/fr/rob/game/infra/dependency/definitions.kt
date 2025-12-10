@@ -11,6 +11,11 @@ import fr.rob.core.opcode.v2.OpcodeFunctionRegistryInterface
 import fr.rob.game.DB_REALM
 import fr.rob.game.DB_WORLD
 import fr.rob.game.app.player.action.CreatePlayerIntoWorldHandler
+import fr.rob.game.domain.ability.AbilityInfo
+import fr.rob.game.domain.ability.AbilityRequirements
+import fr.rob.game.domain.ability.AbilityType
+import fr.rob.game.domain.ability.ObjectAbilityManager
+import fr.rob.game.domain.ability.launch.InstantLaunchInfo
 import fr.rob.game.domain.character.CharacterService
 import fr.rob.game.domain.character.waitingroom.CharacterWaitingRoom
 import fr.rob.game.domain.entity.ObjectManager
@@ -33,13 +38,14 @@ import fr.rob.game.domain.terrain.map.loader.creature.CreatureLoader
 import fr.rob.game.domain.terrain.map.loader.creature.CreatureRepository
 import fr.rob.game.domain.terrain.map.loader.creature.CreatureRepositoryInterface
 import fr.rob.game.domain.world.DelayedUpdateQueue
-import fr.rob.game.domain.world.function.CastSpellFunction
 import fr.rob.game.domain.world.function.CheatTeleportFunction
 import fr.rob.game.domain.world.function.LogIntoWorldFunction
 import fr.rob.game.domain.world.function.MovePlayerFunction
-import fr.rob.game.domain.world.function.PlayerEngageCombatFunction
 import fr.rob.game.domain.world.function.RemoveFromWorldFunction
 import fr.rob.game.domain.world.function.WorldFunctionRegistry
+import fr.rob.game.domain.world.function.combat.CastSpellFunction
+import fr.rob.game.domain.world.function.combat.PlayerEngageCombatFunction
+import fr.rob.game.domain.world.function.combat.UseAbilityFunction
 import fr.rob.game.domain.world.packet.WorldPacketQueue
 import fr.rob.game.infra.misc.player.FakeInstanceFinder
 import fr.rob.game.infra.mysql.character.MysqlCheckCharacterExist
@@ -56,86 +62,109 @@ import fr.rob.game.infra.opcode.CMSG_LOG_INTO_WORLD
 import fr.rob.game.infra.opcode.CMSG_PLAYER_CAST_SPELL
 import fr.rob.game.infra.opcode.CMSG_PLAYER_ENGAGE_COMBAT
 import fr.rob.game.infra.opcode.CMSG_PLAYER_MOVEMENT
+import fr.rob.game.infra.opcode.CMSG_PLAYER_USE_ABILITY
 import fr.rob.game.infra.opcode.CMSG_REMOVE_FROM_WORLD
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.withOptions
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-val globalModule = module {
-    single<EventManagerInterface>(named("EVENT_MANAGER_DATABASE")) { EventManager() }
-    single<EventManagerInterface> { EventManager() }
-    singleOf<LoggerFactoryInterface> { LoggerFactory({}.javaClass.classLoader.getResourceAsStream("log4j.config.xml")!!) }
-    single { InstanceManager(GridBuilder(GridConstraintChecker())) }
-    single<InstanceFinderInterface> { FakeInstanceFinder(get()) }
-}
-
-val databaseModule = module {
-    singleOf(::ConnectionManager) withOptions {
-        named("EVENT_MANAGER_DATABASE")
+val globalModule =
+    module {
+        single<EventManagerInterface>(named("EVENT_MANAGER_DATABASE")) { EventManager() }
+        single<EventManagerInterface> { EventManager() }
+        singleOf<LoggerFactoryInterface> { LoggerFactory({}.javaClass.classLoader.getResourceAsStream("log4j.config.xml")!!) }
+        single { InstanceManager(GridBuilder(GridConstraintChecker())) }
+        single<InstanceFinderInterface> { FakeInstanceFinder(get()) }
     }
 
-    single<ConnectionPoolManager> { params -> ConnectionPoolManager(params.get(), get()) }
-    single<ConnectionPool>(named(DB_WORLD)) { get<ConnectionPoolManager>().getPool(DB_WORLD)!! }
-    single<ConnectionPool>(named(DB_REALM)) { get<ConnectionPoolManager>().getPool(DB_REALM)!! }
-}
+val databaseModule =
+    module {
+        singleOf(::ConnectionManager) withOptions {
+            named("EVENT_MANAGER_DATABASE")
+        }
 
-val mapModule = module {
-    single<MapRepositoryInterface> { MapRepository(get<ConnectionPool>(named(DB_WORLD)).getNextConnection()) }
-    single<MapLoaderInterface> { DatabaseMapLoader(get()) }
-
-    single<CreatureRepositoryInterface> { CreatureRepository(get<ConnectionPool>(named(DB_WORLD)).getNextConnection()) }
-    single<WorldObjectsLoaderInterface<Creature>> { CreatureLoader(get()) }
-
-    singleOf(::MapManager)
-}
-
-val opcodeModule = module {
-    single { ObjectGuidGenerator() }
-
-    single {
-        PlayerFactory(
-            CharacterService(
-                MysqlCheckCharacterExist(get<ConnectionPool>(named(DB_WORLD)).getNextConnection()),
-            ),
-            MysqlFetchCharacter(get<ConnectionPool>(named(DB_WORLD)).getNextConnection()),
-            get(),
-        )
+        single<ConnectionPoolManager> { params -> ConnectionPoolManager(params.get(), get()) }
+        single<ConnectionPool>(named(DB_WORLD)) { get<ConnectionPoolManager>().getPool(DB_WORLD)!! }
+        single<ConnectionPool>(named(DB_REALM)) { get<ConnectionPoolManager>().getPool(DB_REALM)!! }
     }
 
-    single { ObjectManager(get()) }
+val mapModule =
+    module {
+        single<MapRepositoryInterface> { MapRepository(get<ConnectionPool>(named(DB_WORLD)).getNextConnection()) }
+        single<MapLoaderInterface> { DatabaseMapLoader(get()) }
 
-    single { DelayedUpdateQueue() }
+        single<CreatureRepositoryInterface> { CreatureRepository(get<ConnectionPool>(named(DB_WORLD)).getNextConnection()) }
+        single<WorldObjectsLoaderInterface<Creature>> { CreatureLoader(get()) }
 
-    single { PhysicObjectInteraction() }
-
-    single(named("PHYSIC_FUNCTION_DEFINITIONS")) {
-        arrayOf(
-            OpcodeFunctionRegistryInterface.OpcodeFunctionItem(0x01, ObjectMovedHandler(get())),
-            OpcodeFunctionRegistryInterface.OpcodeFunctionItem(0x02, ObjectReachedDestinationHandler(get())),
-            OpcodeFunctionRegistryInterface.OpcodeFunctionItem(0x03, ObjectMovingWithDestinationHandler(get()))
-        )
+        singleOf(::MapManager)
     }
 
-    single { UnityClientBuilder(PhysicOpcodeFunctionRegistry(get(named("PHYSIC_FUNCTION_DEFINITIONS")))) }
+val opcodeModule =
+    module {
+        single { ObjectGuidGenerator() }
 
-    single { UnityIntegration(get()) }
+        single {
+            PlayerFactory(
+                CharacterService(
+                    MysqlCheckCharacterExist(get<ConnectionPool>(named(DB_WORLD)).getNextConnection()),
+                ),
+                MysqlFetchCharacter(get<ConnectionPool>(named(DB_WORLD)).getNextConnection()),
+                get(),
+            )
+        }
 
-    single<SplineMovementBrainInterface> { UnitySplineMovementBrain(get(), get(), get()) }
+        single { ObjectManager(get()) }
 
-    single { CharacterWaitingRoom() }
-    single { CreatePlayerIntoWorldHandler(get(), get(), get()) }
+        single { DelayedUpdateQueue() }
 
-    single(named("FUNCTION_DEFINITIONS")) {
-        arrayOf(
-            WorldFunctionRegistry.WorldFunctionItem(CMSG_LOG_INTO_WORLD, LogIntoWorldFunction(get(), get())),
-            WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_MOVEMENT, MovePlayerFunction()),
-            WorldFunctionRegistry.WorldFunctionItem(CMSG_REMOVE_FROM_WORLD, RemoveFromWorldFunction()),
-            WorldFunctionRegistry.WorldFunctionItem(CMSG_CHEAT_TELEPORT, CheatTeleportFunction()),
-            WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_CAST_SPELL, CastSpellFunction()),
-            WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_ENGAGE_COMBAT, PlayerEngageCombatFunction())
-        )
+        single { PhysicObjectInteraction() }
+
+        single(named("PHYSIC_FUNCTION_DEFINITIONS")) {
+            arrayOf(
+                OpcodeFunctionRegistryInterface.OpcodeFunctionItem(0x01, ObjectMovedHandler(get())),
+                OpcodeFunctionRegistryInterface.OpcodeFunctionItem(0x02, ObjectReachedDestinationHandler(get())),
+                OpcodeFunctionRegistryInterface.OpcodeFunctionItem(0x03, ObjectMovingWithDestinationHandler(get())),
+            )
+        }
+
+        single { UnityClientBuilder(PhysicOpcodeFunctionRegistry(get(named("PHYSIC_FUNCTION_DEFINITIONS")))) }
+
+        single { UnityIntegration(get()) }
+
+        single<SplineMovementBrainInterface> { UnitySplineMovementBrain(get(), get(), get()) }
+
+        single { CharacterWaitingRoom() }
+        single { CreatePlayerIntoWorldHandler(get(), get(), get()) }
+
+        single<ObjectAbilityManager> {
+            val manager = ObjectAbilityManager()
+
+            // TODO: change this
+            arrayOf(
+                AbilityInfo(
+                    identifier = 1,
+                    type = AbilityType.MAGICAL,
+                    abilityRequirement = AbilityRequirements(emptyArray()),
+                    castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
+                    launchInfo = InstantLaunchInfo(),
+                ),
+            ).forEach { manager.defineAbility(it) }
+
+            manager
+        }
+
+        single(named("FUNCTION_DEFINITIONS")) {
+            arrayOf(
+                WorldFunctionRegistry.WorldFunctionItem(CMSG_LOG_INTO_WORLD, LogIntoWorldFunction(get(), get())),
+                WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_MOVEMENT, MovePlayerFunction()),
+                WorldFunctionRegistry.WorldFunctionItem(CMSG_REMOVE_FROM_WORLD, RemoveFromWorldFunction()),
+                WorldFunctionRegistry.WorldFunctionItem(CMSG_CHEAT_TELEPORT, CheatTeleportFunction()),
+                WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_CAST_SPELL, CastSpellFunction()),
+                WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_ENGAGE_COMBAT, PlayerEngageCombatFunction()),
+                WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_USE_ABILITY, UseAbilityFunction(get())),
+            )
+        }
+        single { WorldFunctionRegistry(get(named("FUNCTION_DEFINITIONS"))) }
+        single { WorldPacketQueue(get()) }
     }
-    single { WorldFunctionRegistry(get(named("FUNCTION_DEFINITIONS"))) }
-    single { WorldPacketQueue(get()) }
-}

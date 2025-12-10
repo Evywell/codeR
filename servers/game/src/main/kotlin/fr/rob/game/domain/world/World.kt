@@ -1,5 +1,6 @@
 package fr.rob.game.domain.world
 
+import fr.rob.game.domain.ability.event.NotifyAbilityFailedListener
 import fr.rob.game.domain.combat.ObjectSheetUpdatedListener
 import fr.rob.game.domain.entity.event.GetNearbyObjectListener
 import fr.rob.game.domain.entity.event.NotifyAddedIntoWorldListener
@@ -25,6 +26,7 @@ class World(
         eventDispatcher.attachListener(NotifyAddedIntoWorldListener())
         eventDispatcher.attachListener(GetNearbyObjectListener())
         eventDispatcher.attachListener(ObjectSheetUpdatedListener())
+        eventDispatcher.attachListener(NotifyAbilityFailedListener())
     }
 
     fun update(deltaTime: Int) {

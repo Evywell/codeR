@@ -1,5 +1,7 @@
 package fr.rob.game.domain.entity
 
+import fr.rob.game.domain.ability.Ability
+import fr.rob.game.domain.ability.AbilityInfo
 import fr.rob.game.domain.entity.guid.ObjectGuid
 import fr.rob.game.domain.entity.movement.WorldObjectMovedEvent
 import fr.rob.game.domain.entity.notifier.WorldObjectVisitorInterface
@@ -13,7 +15,7 @@ import java.util.Optional
 import kotlin.reflect.KClass
 
 open class WorldObject(
-    val guid: ObjectGuid
+    val guid: ObjectGuid,
 ) : DomainEventCarrierInterface {
     var isInWorld = false
     var cell: Cell? = null
@@ -22,6 +24,8 @@ open class WorldObject(
 
     var controlledByGameSession: GameSession? = null
 
+    private val knownAbilities = ArrayList<Int>()
+    private val ongoingAbilities = ArrayList<Ability>()
     private val domainEventContainer = DomainEventContainer()
     private val traits = HashMap<KClass<*>, Any>()
 
@@ -30,6 +34,11 @@ open class WorldObject(
             if (trait is UpdatableTraitInterface) {
                 trait.update(deltaTime)
             }
+        }
+
+        ongoingAbilities.removeIf {
+            it.resume(deltaTime)
+            it.isDone()
         }
     }
 
@@ -43,13 +52,19 @@ open class WorldObject(
     }
 
     fun isInMeleeRangeOf(target: WorldObject): Boolean =
-        position.getSquaredDistanceWith(target.position) <= DEFAULT_MELEE_RANGE_METERS * DEFAULT_MELEE_RANGE_METERS * DEFAULT_MELEE_RANGE_METERS
+        position.getSquaredDistanceWith(target.position) <=
+            DEFAULT_MELEE_RANGE_METERS * DEFAULT_MELEE_RANGE_METERS * DEFAULT_MELEE_RANGE_METERS
 
     fun isInFrontOf(target: WorldObject): Boolean = position.hasInArc(Position.ANGLE_2_PI_3, target.position)
 
     fun isBehindOf(target: WorldObject): Boolean = !target.isInFrontOf(this)
 
-    fun setPosition(x: Float, y: Float, z: Float, orientation: Float) {
+    fun setPosition(
+        x: Float,
+        y: Float,
+        z: Float,
+        orientation: Float,
+    ) {
         position.x = x
         position.y = y
         position.z = z
@@ -58,7 +73,10 @@ open class WorldObject(
         pushEvent(WorldObjectMovedEvent(this))
     }
 
-    fun addIntoInstance(instance: MapInstance, toPosition: Position) {
+    fun addIntoInstance(
+        instance: MapInstance,
+        toPosition: Position,
+    ) {
         mapInstance = instance
         position = toPosition
         isInWorld = true
@@ -81,16 +99,24 @@ open class WorldObject(
     @Suppress("UNCHECKED_CAST")
     fun <T : Any> getTrait(traitType: KClass<T>): Optional<T> = Optional.ofNullable(traits[traitType] as T?)
 
-    inline fun <reified T : Any> getTrait(): Optional<T> {
-        return getTrait(T::class)
+    inline fun <reified T : Any> getTrait(): Optional<T> = getTrait(T::class)
+
+    fun registerAbilities(knownAbilities: List<Int>) {
+        this.knownAbilities.addAll(knownAbilities)
+    }
+
+    fun hasAbility(abilityInfo: AbilityInfo): Boolean = knownAbilities.contains(abilityInfo.identifier)
+
+    fun performAbility(ability: Ability) {
+        ongoingAbilities.add(ability)
+        ability.use()
     }
 
     override fun pushEvent(event: DomainEventInterface) {
         domainEventContainer.pushEvent(event)
     }
 
-    override fun getDomainEventContainer(): Collection<DomainEventInterface> =
-        domainEventContainer.getDomainEventContainer()
+    override fun getDomainEventContainer(): Collection<DomainEventInterface> = domainEventContainer.getDomainEventContainer()
 
     companion object {
         const val DEFAULT_MELEE_RANGE_METERS = 2
