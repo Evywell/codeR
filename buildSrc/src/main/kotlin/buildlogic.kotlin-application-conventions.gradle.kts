@@ -11,5 +11,6 @@ plugins {
 }
 
 application {
+    // Netty and protobuf libs are using deprecated APIs. We silent the warnings for a cleaner output.
     applicationDefaultJvmArgs = listOf("--sun-misc-unsafe-memory-access=allow", "--enable-native-access=ALL-UNNAMED")
 }
