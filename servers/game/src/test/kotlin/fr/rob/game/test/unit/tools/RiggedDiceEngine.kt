@@ -1,6 +1,6 @@
 package fr.rob.game.test.unit.tools
 
-import fr.rob.game.domain.world.RollEngineInterface
+import fr.rob.game.world.RollEngineInterface
 
 class RiggedDiceEngine(var nextRollResult: Int? = null) : RollEngineInterface {
 

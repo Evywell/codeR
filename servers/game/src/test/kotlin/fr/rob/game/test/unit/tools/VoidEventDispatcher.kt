@@ -1,8 +1,8 @@
 package fr.rob.game.test.unit.tools
 
-import fr.rob.game.domain.event.DomainEventDispatcherInterface
-import fr.rob.game.domain.event.DomainEventInterface
-import fr.rob.game.domain.event.DomainEventListenerInterface
+import fr.rob.game.event.DomainEventDispatcherInterface
+import fr.rob.game.event.DomainEventInterface
+import fr.rob.game.event.DomainEventListenerInterface
 
 class VoidEventDispatcher : DomainEventDispatcherInterface {
     override fun dispatch(event: DomainEventInterface) {}

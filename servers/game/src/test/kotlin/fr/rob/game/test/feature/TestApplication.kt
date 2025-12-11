@@ -2,16 +2,16 @@ package fr.rob.game.test.feature
 
 import fr.rob.core.config.database.DatabaseConfig
 import fr.rob.core.database.pool.ConnectionPoolManager
-import fr.rob.game.DB_REALM
-import fr.rob.game.DB_WORLD
-import fr.rob.game.domain.entity.guid.ObjectGuid
-import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
-import fr.rob.game.domain.entity.movement.spline.SplineMovementBrainInterface
-import fr.rob.game.domain.entity.movement.spline.StraightSplineMovementBrain
-import fr.rob.game.infra.dependency.databaseModule
-import fr.rob.game.infra.dependency.globalModule
-import fr.rob.game.infra.dependency.mapModule
-import fr.rob.game.infra.dependency.opcodeModule
+import fr.rob.game.config.DB_REALM
+import fr.rob.game.config.DB_WORLD
+import fr.rob.game.entity.guid.ObjectGuid
+import fr.rob.game.entity.guid.ObjectGuidGenerator
+import fr.rob.game.entity.movement.spline.SplineMovementBrainInterface
+import fr.rob.game.entity.movement.spline.StraightSplineMovementBrain
+import fr.rob.game.config.databaseModule
+import fr.rob.game.config.globalModule
+import fr.rob.game.config.mapModule
+import fr.rob.game.config.opcodeModule
 import fr.rob.game.test.unit.sandbox.network.session.StoreMessageSender
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll

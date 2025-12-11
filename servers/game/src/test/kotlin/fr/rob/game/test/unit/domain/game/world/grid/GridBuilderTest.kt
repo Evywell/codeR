@@ -1,9 +1,9 @@
 package fr.rob.game.test.unit.domain.game.world.grid
 
-import fr.rob.game.domain.terrain.grid.GridBuilder
-import fr.rob.game.domain.terrain.grid.GridConstraintChecker
-import fr.rob.game.domain.terrain.grid.exception.NegativeOrNullCellSizeException
-import fr.rob.game.domain.terrain.grid.exception.ZoneDimensionInvalidException
+import fr.rob.game.map.grid.GridBuilder
+import fr.rob.game.map.grid.GridConstraintChecker
+import fr.rob.game.map.grid.exception.NegativeOrNullCellSizeException
+import fr.rob.game.map.grid.exception.ZoneDimensionInvalidException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertThrows

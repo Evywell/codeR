@@ -1,8 +1,8 @@
 package fr.rob.game.test.unit.sandbox.game.world.map
 
-import fr.rob.game.domain.terrain.map.Map
-import fr.rob.game.domain.terrain.map.MapInfo
-import fr.rob.game.domain.terrain.map.ZoneInfo
+import fr.rob.game.map.Map
+import fr.rob.game.map.MapInfo
+import fr.rob.game.map.ZoneInfo
 
 class MapHelper {
     companion object {

@@ -1,8 +1,8 @@
 package fr.rob.game.test.unit.domain.game.world
 
-import fr.rob.game.domain.entity.guid.ObjectGuid
-import fr.rob.game.domain.entity.guid.ObjectGuid.LowGuid
-import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
+import fr.rob.game.entity.guid.ObjectGuid
+import fr.rob.game.entity.guid.ObjectGuid.LowGuid
+import fr.rob.game.entity.guid.ObjectGuidGenerator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertTrue

@@ -1,6 +1,6 @@
 package fr.rob.game.test.unit.domain.entity
 
-import fr.rob.game.domain.entity.Position
+import fr.rob.game.entity.Position
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.TestInstance

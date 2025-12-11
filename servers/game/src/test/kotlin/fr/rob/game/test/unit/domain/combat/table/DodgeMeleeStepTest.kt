@@ -1,9 +1,9 @@
 package fr.rob.game.test.unit.domain.combat.table
 
-import fr.rob.game.domain.combat.HitTableRoll
-import fr.rob.game.domain.combat.MeleeHitTableResult
-import fr.rob.game.domain.combat.table.DodgeMeleeStep
-import fr.rob.game.domain.entity.Position
+import fr.rob.game.combat.HitTableRoll
+import fr.rob.game.combat.MeleeHitTableResult
+import fr.rob.game.combat.hittable.DodgeMeleeStep
+import fr.rob.game.entity.Position
 import fr.rob.game.test.unit.tools.DummyWorldObjectBuilder
 import fr.rob.game.test.unit.tools.HitTableStepTester
 import fr.rob.game.test.unit.tools.TestCaseWithContainer

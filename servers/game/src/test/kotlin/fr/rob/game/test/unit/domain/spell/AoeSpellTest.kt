@@ -1,15 +1,15 @@
 package fr.rob.game.test.unit.domain.spell
 
-import fr.rob.game.domain.entity.Position
-import fr.rob.game.domain.entity.behavior.ObjectSheetTrait
-import fr.rob.game.domain.spell.SpellBook
-import fr.rob.game.domain.spell.SpellCasterTrait
-import fr.rob.game.domain.spell.SpellInfo
-import fr.rob.game.domain.spell.effect.InstantAoeDamageEffect
-import fr.rob.game.domain.spell.effect.SummonInstantDamageAoeEffect
-import fr.rob.game.domain.spell.target.SpellTargetParameter
-import fr.rob.game.domain.spell.trigger.ApplyEffectsSpellTrigger
-import fr.rob.game.domain.spell.type.instant.InstantLaunchInfo
+import fr.rob.game.entity.Position
+import fr.rob.game.entity.behavior.ObjectSheetTrait
+import fr.rob.game.spell.SpellBook
+import fr.rob.game.spell.SpellCasterTrait
+import fr.rob.game.spell.SpellInfo
+import fr.rob.game.spell.effect.InstantAoeDamageEffect
+import fr.rob.game.spell.effect.SummonInstantDamageAoeEffect
+import fr.rob.game.spell.target.SpellTargetParameter
+import fr.rob.game.spell.trigger.ApplyEffectsSpellTrigger
+import fr.rob.game.spell.type.instant.InstantLaunchInfo
 import fr.rob.game.test.unit.tools.VoidEventDispatcher
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

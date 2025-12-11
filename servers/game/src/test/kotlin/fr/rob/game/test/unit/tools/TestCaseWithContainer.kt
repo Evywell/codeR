@@ -1,6 +1,6 @@
 package fr.rob.game.test.unit.tools
 
-import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
+import fr.rob.game.entity.guid.ObjectGuidGenerator
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.TestInstance

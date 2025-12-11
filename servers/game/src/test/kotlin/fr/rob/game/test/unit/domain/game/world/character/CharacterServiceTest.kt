@@ -1,7 +1,7 @@
 package fr.rob.game.test.unit.domain.game.world.character
 
-import fr.rob.game.domain.character.CharacterService
-import fr.rob.game.domain.character.CheckCharacterExistInterface
+import fr.rob.game.character.CharacterService
+import fr.rob.game.character.CheckCharacterExistInterface
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test

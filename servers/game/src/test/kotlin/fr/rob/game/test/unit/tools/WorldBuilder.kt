@@ -1,11 +1,11 @@
 package fr.rob.game.test.unit.tools
 
-import fr.rob.game.domain.instance.MapInstance
-import fr.rob.game.domain.terrain.grid.GridBuilder
-import fr.rob.game.domain.terrain.grid.GridConstraintChecker
-import fr.rob.game.domain.terrain.map.Map
-import fr.rob.game.domain.terrain.map.MapInfo
-import fr.rob.game.domain.terrain.map.ZoneInfo
+import fr.rob.game.instance.MapInstance
+import fr.rob.game.map.grid.GridBuilder
+import fr.rob.game.map.grid.GridConstraintChecker
+import fr.rob.game.map.Map
+import fr.rob.game.map.MapInfo
+import fr.rob.game.map.ZoneInfo
 
 class WorldBuilder {
     companion object {

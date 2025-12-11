@@ -1,7 +1,7 @@
 package fr.rob.game.test.unit.domain.game.world
 
-import fr.rob.game.domain.entity.Position
-import fr.rob.game.domain.entity.PositionNormalizer
+import fr.rob.game.entity.Position
+import fr.rob.game.entity.PositionNormalizer
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
