@@ -3,20 +3,20 @@ package fr.rob.game.test.feature.specs
 import fr.raven.proto.message.game.MovementProto
 import fr.raven.proto.message.game.PositionProto.Position
 import fr.raven.proto.message.game.setup.LogIntoWorldProto
-import fr.rob.game.app.player.message.MovementHeartbeatMessage
-import fr.rob.game.domain.entity.guid.ObjectGuid
-import fr.rob.game.domain.instance.InstanceManager
-import fr.rob.game.domain.player.session.GameSession
-import fr.rob.game.domain.terrain.map.Map
-import fr.rob.game.domain.terrain.map.MapInfo
-import fr.rob.game.domain.terrain.map.ZoneInfo
-import fr.rob.game.domain.world.DelayedUpdateQueue
-import fr.rob.game.domain.world.World
-import fr.rob.game.domain.world.packet.WorldPacket
-import fr.rob.game.domain.world.packet.WorldPacketQueue
-import fr.rob.game.infra.opcode.CMSG_LOG_INTO_WORLD
-import fr.rob.game.infra.opcode.CMSG_PLAYER_MOVEMENT
-import fr.rob.game.infra.opcode.SMSG_MOVEMENT_HEARTBEAT
+import fr.rob.game.player.message.MovementHeartbeatMessage
+import fr.rob.game.entity.guid.ObjectGuid
+import fr.rob.game.instance.InstanceManager
+import fr.rob.game.player.session.GameSession
+import fr.rob.game.map.Map
+import fr.rob.game.map.MapInfo
+import fr.rob.game.map.ZoneInfo
+import fr.rob.game.world.DelayedUpdateQueue
+import fr.rob.game.world.World
+import fr.rob.game.world.packet.WorldPacket
+import fr.rob.game.world.packet.WorldPacketQueue
+import fr.rob.game.network.opcode.CMSG_LOG_INTO_WORLD
+import fr.rob.game.network.opcode.CMSG_PLAYER_MOVEMENT
+import fr.rob.game.network.opcode.SMSG_MOVEMENT_HEARTBEAT
 import fr.rob.game.test.feature.DatabaseTestApplication
 import fr.rob.game.test.unit.sandbox.network.session.StoreMessageSender
 import org.junit.jupiter.api.Test
@@ -85,7 +85,7 @@ class PlayerMoving : DatabaseTestApplication() {
                 container.message.opcode == SMSG_MOVEMENT_HEARTBEAT &&
                 container.message.body is MovementHeartbeatMessage &&
                 (container.message.body as MovementHeartbeatMessage).objectId == ObjectGuid(1u, 1) &&
-                (container.message.body as MovementHeartbeatMessage).position == fr.rob.game.domain.entity.Position(8f, -3f, 10f, 0.8f)
+                (container.message.body as MovementHeartbeatMessage).position == fr.rob.game.entity.Position(8f, -3f, 10f, 0.8f)
         }
     }
 

@@ -1,8 +1,8 @@
 package fr.rob.game.test.unit.domain.game.world.grid
 
-import fr.rob.game.domain.terrain.grid.Cell
-import fr.rob.game.domain.terrain.grid.GridBuilder
-import fr.rob.game.domain.terrain.grid.GridConstraintChecker
+import fr.rob.game.map.grid.Cell
+import fr.rob.game.map.grid.GridBuilder
+import fr.rob.game.map.grid.GridConstraintChecker
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.params.ParameterizedTest

@@ -1,16 +1,16 @@
 package fr.rob.game.test.unit.domain.spell
 
-import fr.rob.game.domain.entity.ObjectManager
-import fr.rob.game.domain.entity.Position
-import fr.rob.game.domain.entity.behavior.ObjectSheetTrait
-import fr.rob.game.domain.entity.guid.ObjectGuid
-import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
-import fr.rob.game.domain.spell.SpellBook
-import fr.rob.game.domain.spell.SpellCasterTrait
+import fr.rob.game.entity.ObjectManager
+import fr.rob.game.entity.Position
+import fr.rob.game.entity.behavior.ObjectSheetTrait
+import fr.rob.game.entity.guid.ObjectGuid
+import fr.rob.game.entity.guid.ObjectGuidGenerator
+import fr.rob.game.spell.SpellBook
+import fr.rob.game.spell.SpellCasterTrait
 import fr.rob.game.test.unit.tools.RiggedDiceEngine
 import fr.rob.game.test.unit.tools.WorldBuilder
 import org.junit.jupiter.api.BeforeEach
-import fr.rob.game.domain.entity.Unit as WorldUnit
+import fr.rob.game.entity.Unit as WorldUnit
 
 abstract class SpellCasterEnvironmentBaseTest {
     protected lateinit var caster: WorldUnit

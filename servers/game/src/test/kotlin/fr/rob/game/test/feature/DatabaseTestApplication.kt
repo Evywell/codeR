@@ -1,7 +1,7 @@
 package fr.rob.game.test.feature
 
 import fr.rob.core.database.Connection
-import fr.rob.game.DB_WORLD
+import fr.rob.game.config.DB_WORLD
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.TestInstance

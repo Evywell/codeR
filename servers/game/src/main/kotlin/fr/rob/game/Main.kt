@@ -3,15 +3,16 @@ package fr.rob.game
 import fr.rob.core.config.Config
 import fr.rob.core.config.commons.configuration2.ConfigLoader
 import fr.rob.core.config.database.DatabaseConfig
-import fr.rob.game.infra.App
-import fr.rob.game.infra.config.Databases
-import fr.rob.game.infra.config.GameConfig
-import fr.rob.game.infra.config.NodesConfig
-import fr.rob.game.infra.config.Orchestrator
-import fr.rob.game.infra.dependency.databaseModule
-import fr.rob.game.infra.dependency.globalModule
-import fr.rob.game.infra.dependency.mapModule
-import fr.rob.game.infra.dependency.opcodeModule
+import fr.rob.game.App
+import fr.rob.game.config.Databases
+import fr.rob.game.config.GameConfig
+import fr.rob.game.config.ServerNodesConfig
+import fr.rob.game.config.Orchestrator
+import fr.rob.game.config.databaseModule
+import fr.rob.game.config.globalModule
+import fr.rob.game.config.mapModule
+import fr.rob.game.config.opcodeModule
+import fr.rob.game.config.CONFIG_FILE
 import org.koin.core.context.startKoin
 import java.io.File
 import java.io.InputStream
@@ -64,7 +65,7 @@ class Main {
                     requireNotNull(config.getString("databases.world.database")) { "Missing config: databases.world.database" },
                 ),
             ),
-            NodesConfig(config),
+            ServerNodesConfig(config),
         )
 
         private fun getConfigFile(configFileName: String?): File {

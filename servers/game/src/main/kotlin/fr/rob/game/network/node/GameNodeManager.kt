@@ -1,6 +1,6 @@
 package fr.rob.game.network.node
 
-import fr.rob.game.app.node.GameNode
+import fr.rob.game.node.GameNode
 
 class GameNodeManager {
 

@@ -1,8 +1,8 @@
 package fr.rob.game.test.unit.domain.combat
 
-import fr.rob.game.domain.combat.MeleeHitTable
-import fr.rob.game.domain.combat.MeleeHitTableResult
-import fr.rob.game.domain.entity.Position
+import fr.rob.game.combat.MeleeHitTable
+import fr.rob.game.combat.MeleeHitTableResult
+import fr.rob.game.entity.Position
 import fr.rob.game.test.unit.tools.DummyWorldObjectBuilder
 import fr.rob.game.test.unit.tools.RiggedDiceEngine
 import fr.rob.game.test.unit.tools.TestCaseWithContainer

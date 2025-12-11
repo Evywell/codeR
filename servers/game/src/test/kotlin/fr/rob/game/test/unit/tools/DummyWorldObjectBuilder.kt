@@ -1,11 +1,11 @@
 package fr.rob.game.test.unit.tools
 
-import fr.rob.game.domain.entity.guid.ObjectGuid
-import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
-import fr.rob.game.domain.player.Player
-import fr.rob.game.domain.player.session.GameSession
+import fr.rob.game.entity.guid.ObjectGuid
+import fr.rob.game.entity.guid.ObjectGuidGenerator
+import fr.rob.game.player.Player
+import fr.rob.game.player.session.GameSession
 import fr.rob.game.test.unit.sandbox.network.session.NullMessageSender
-import fr.rob.game.domain.entity.Unit as EntityUnit
+import fr.rob.game.entity.Unit as EntityUnit
 
 class DummyWorldObjectBuilder(
     private val objectGuidGenerator: ObjectGuidGenerator,

@@ -1,7 +1,7 @@
 package fr.rob.game.test.unit.domain.game.world.entity.guid
 
-import fr.rob.game.domain.entity.guid.ObjectGuid
-import fr.rob.game.domain.entity.guid.ObjectGuid.GUID_TYPE
+import fr.rob.game.entity.guid.ObjectGuid
+import fr.rob.game.entity.guid.ObjectGuid.GUID_TYPE
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotEquals

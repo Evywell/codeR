@@ -1,11 +1,11 @@
 package fr.rob.game.test.unit.domain.entity.behavior
 
-import fr.rob.game.domain.entity.Movement
-import fr.rob.game.domain.entity.Position
-import fr.rob.game.domain.entity.Unit
-import fr.rob.game.domain.entity.behavior.MovableTrait
-import fr.rob.game.domain.entity.guid.ObjectGuid
-import fr.rob.game.domain.entity.guid.ObjectGuidGenerator
+import fr.rob.game.entity.Movement
+import fr.rob.game.entity.Position
+import fr.rob.game.entity.Unit
+import fr.rob.game.entity.behavior.MovableTrait
+import fr.rob.game.entity.guid.ObjectGuid
+import fr.rob.game.entity.guid.ObjectGuidGenerator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.params.ParameterizedTest
