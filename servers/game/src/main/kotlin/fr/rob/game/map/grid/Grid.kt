@@ -18,6 +18,8 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
         WorldObjectContainer()
     }
 
+    private val gridComponent = GridComponent()
+
     fun getObjectsByType(type: ObjectGuid.GUID_TYPE): WorldObjectContainer = worldObjectContainerList[type.value]
 
     fun findObjectByGuid(guid: ObjectGuid): Optional<WorldObject> {
@@ -108,11 +110,60 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
             ),
         )
 
-        return getCellFromCellPosition(cellPosition)
+        val cell = getCellFromCellPosition(cellPosition)
+
+        gridComponent.addWorldObject(obj, cell)
+
+        return cell
+    }
+
+    fun updateWorldObject(obj: WorldObject) {
+        gridComponent.updateWorldObject(obj)
     }
 
     fun removeWorldObject(obj: WorldObject) {
         worldObjectContainerList[obj.guid.getType().value].remove(obj)
+        gridComponent.removeWorldObject(obj)
+        obj.cell = null
+    }
+
+    fun findObjectsWithComponentInRadius(
+        origin: Position,
+        radius: Float,
+        componentType: kotlin.reflect.KClass<*>
+    ): List<WorldObject> {
+        val neighborRadius = ceil(radius).toInt()
+        val cells = retrieveNeighborCells(getCellFromWorldPosition(origin), neighborRadius)
+
+        // Get pre-filtered objects from component index
+        val candidates = gridComponent.getObjectsWithComponentInCells(cells, componentType)
+
+        // Filter by actual distance
+        return candidates.filter { worldObject: WorldObject ->
+            isInsideRadius(origin, radius, worldObject.position)
+        }
+    }
+
+    fun findObjectsWithComponentsInRadius(
+        origin: Position,
+        radius: Float,
+        vararg componentTypes: kotlin.reflect.KClass<*>
+    ): List<WorldObject> {
+        if (componentTypes.isEmpty()) return emptyList()
+        if (componentTypes.size == 1) {
+            return findObjectsWithComponentInRadius(origin, radius, componentTypes[0])
+        }
+
+        val neighborRadius = ceil(radius).toInt()
+        val cells = retrieveNeighborCells(getCellFromWorldPosition(origin), neighborRadius)
+
+        // Get pre-filtered objects from component index
+        val candidates = gridComponent.getObjectsWithComponentsInCells(cells, *componentTypes)
+
+        // Filter by actual distance
+        return candidates.filter { worldObject: WorldObject ->
+            isInsideRadius(origin, radius, worldObject.position)
+        }
     }
 
     private fun getCellFromCellPosition(cellPosition: Cell.CellPosition): Cell {
