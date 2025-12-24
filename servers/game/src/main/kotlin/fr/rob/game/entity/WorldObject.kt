@@ -24,6 +24,7 @@ open class WorldObject(
 
     private val domainEventContainer = DomainEventContainer()
     private val traits = HashMap<KClass<*>, Any>()
+    private val components = mutableMapOf<KClass<*>, Any>()
 
     open fun onUpdate(deltaTime: Int) {
         traits.forEach { (_, trait) ->
@@ -71,7 +72,6 @@ open class WorldObject(
     fun scheduleRemoveFromInstance() {
         mapInstance.scheduleRemoveFromInstance(this)
         isInWorld = false
-        cell = null
     }
 
     fun addTrait(trait: Any) {
@@ -83,6 +83,25 @@ open class WorldObject(
 
     inline fun <reified T : Any> getTrait(): Optional<T> {
         return getTrait(T::class)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Any> getComponent(type: KClass<T>): T? {
+        return components[type] as? T
+    }
+
+    inline fun <reified T : Any> getComponent(): T? {
+        return getComponent(T::class)
+    }
+
+    fun getComponentTypes(): Set<KClass<*>> = components.keys
+
+    fun addComponent(component: Any) {
+        components[component::class] = component
+
+        if (this::mapInstance.isInitialized) {
+            mapInstance.grid.updateWorldObject(this)
+        }
     }
 
     override fun pushEvent(event: DomainEventInterface) {
