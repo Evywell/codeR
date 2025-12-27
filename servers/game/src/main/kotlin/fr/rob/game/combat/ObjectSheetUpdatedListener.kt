@@ -15,13 +15,14 @@ class ObjectSheetUpdatedListener : DomainEventListenerInterface {
         val worldObject = event.subject
 
         assert(worldObject.isInWorld)
-        assert(worldObject.cell != null)
+
+        val cell = worldObject.getCell()
 
         val grid = worldObject.mapInstance.grid
         val visiblePlayers = grid
             .query()
             .getObjects(
-                worldObject.cell!!,
+                cell,
                 arrayOf(IsAPlayer(), VisibleByObject(worldObject)),
             )
 

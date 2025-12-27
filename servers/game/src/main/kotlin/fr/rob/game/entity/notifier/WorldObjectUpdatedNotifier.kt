@@ -8,7 +8,7 @@ import fr.rob.game.player.Player
 class WorldObjectUpdatedNotifier : WorldObjectVisitorInterface {
     override fun visit(gameObject: WorldObject) {
         val grid = gameObject.mapInstance.grid
-        val cells = grid.retrieveNeighborCells(gameObject.cell!!)
+        val cells = grid.retrieveNeighborCells(gameObject.getCell())
         val playersToNotify = ArrayList<Player>()
 
         for (cell in cells) {

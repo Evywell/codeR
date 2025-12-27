@@ -71,7 +71,7 @@ class UnitySplineMovementBrain(
             val visibleObjects = grid
                 .query()
                 .getObjects(
-                    source.cell!!,
+                    source.getCell(),
                     arrayOf(IsAPlayer(), CanSeeObject(source)),
                 )
 

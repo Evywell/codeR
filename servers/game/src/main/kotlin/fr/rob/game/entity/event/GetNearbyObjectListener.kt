@@ -22,13 +22,12 @@ class GetNearbyObjectListener : DomainEventListenerInterface {
         }
 
         assert(player.isInWorld)
-        assert(player.cell != null)
 
         val grid = player.mapInstance.grid
         val visibleObjects = grid
             .query()
             .getObjects(
-                player.cell!!,
+                player.getCell(),
                 arrayOf(CanSeeObject(player)),
             )
 

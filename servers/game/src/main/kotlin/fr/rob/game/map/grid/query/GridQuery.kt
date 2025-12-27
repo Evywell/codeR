@@ -10,7 +10,7 @@ class GridQuery(private val grid: Grid) {
         val objects = ArrayList<WorldObject>()
 
         grid.iterateOverObjects { worldObject ->
-            if (allCells.contains(worldObject.cell)) {
+            if (allCells.contains(worldObject.getCell())) {
                 var isWorldObjectMatchingPredicate = true
 
                 for (predicate in predicates) {
