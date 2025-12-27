@@ -2,9 +2,11 @@ package fr.rob.game.world.function
 
 import com.google.protobuf.ByteString
 import com.google.protobuf.Message
+import fr.raven.proto.message.game.AbilityProto
 import fr.rob.game.ability.AbilityTargetParameter
 import fr.rob.game.ability.ObjectAbilityManager
 import fr.rob.game.ability.exception.ObjectCannotUseAbilityException
+import fr.rob.game.entity.guid.ObjectGuid
 import fr.rob.game.player.session.GameSession
 
 class UseAbilityFunction(
@@ -15,7 +17,7 @@ class UseAbilityFunction(
         opcode: Int,
         message: Message,
     ) {
-        message as UseAbility
+        message as AbilityProto.UseAbility
 
         val controlledWorldObject = sender.controlledWorldObject ?: return
         val target = controlledWorldObject.mapInstance.findObjectByGuid(ObjectGuid(message.explicitTargetGuid))
@@ -35,5 +37,5 @@ class UseAbilityFunction(
         }
     }
 
-    override fun parseFromByteString(data: ByteString): Message = UseAbility.parseFrom(data)
+    override fun parseFromByteString(data: ByteString): Message = AbilityProto.UseAbility.parseFrom(data)
 }
