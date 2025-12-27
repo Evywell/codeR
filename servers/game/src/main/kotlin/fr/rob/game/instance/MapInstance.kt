@@ -49,6 +49,10 @@ class MapInstance(val id: Int, val map: Map, val grid: Grid) : DomainEventCarrie
     fun findObjectsInsideRadius(origin: Position, radius: Float): List<WorldObject> = grid.findObjectsInsideRadius(origin, radius)
     fun findObjectByGuid(guid: ObjectGuid): Optional<WorldObject> = grid.findObjectByGuid(guid)
 
+    fun getWorldObjectCell(worldObject: WorldObject): Cell {
+        return grid.getCellFromWorldPosition(worldObject.position)
+    }
+
     private fun updateGameObjectOfType(
         type: ObjectGuid.GUID_TYPE,
         deltaTime: Int,

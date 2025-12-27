@@ -40,7 +40,7 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
 
         iterateOverObjects { worldObject ->
             if (
-                cells.contains(worldObject.cell) &&
+                cells.contains(getCellFromWorldPosition(worldObject.position)) &&
                 isInsideRadius(origin, radius, worldObject.position)
             ) {
                 objects.add(worldObject)
@@ -63,7 +63,7 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
 
         for (objectContainer in worldObjectContainerList) {
             objectContainer.forEach {
-                if (it.guid.isPlayer() && it.cell == cell) {
+                if (it.guid.isPlayer() && it.getCell() == cell) {
                     players.add(it as Player)
                 }
             }
@@ -99,20 +99,9 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
     fun addWorldObject(obj: WorldObject): Cell {
         worldObjectContainerList[obj.guid.getType().value].add(obj)
 
-        val cellPosition = PositionNormalizer.fromMapPositionToGridCellCoordinate(
-            PositionNormalizer.MapInfoForPosition(
-                obj.position,
-                obj.mapInstance.map.zoneInfo.width,
-                obj.mapInstance.map.zoneInfo.height,
-                obj.mapInstance.map.zoneInfo.offsetX,
-                obj.mapInstance.map.zoneInfo.offsetY,
-                obj.mapInstance.grid.cellSize,
-            ),
-        )
+        val cell = getCellFromWorldPosition(obj.position)
 
-        val cell = getCellFromCellPosition(cellPosition)
-
-        gridComponent.addWorldObject(obj, cell)
+        gridComponent.addWorldObject(obj)
 
         return cell
     }
@@ -124,7 +113,6 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
     fun removeWorldObject(obj: WorldObject) {
         worldObjectContainerList[obj.guid.getType().value].remove(obj)
         gridComponent.removeWorldObject(obj)
-        obj.cell = null
     }
 
     fun findObjectsWithComponentInRadius(
@@ -176,7 +164,7 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
         return cells[index]
     }
 
-    private fun getCellFromWorldPosition(position: Position): Cell {
+    fun getCellFromWorldPosition(position: Position): Cell {
         val cellPosition = PositionNormalizer.fromMapPositionToGridCellCoordinate(
             PositionNormalizer.MapInfoForPosition(
                 position,

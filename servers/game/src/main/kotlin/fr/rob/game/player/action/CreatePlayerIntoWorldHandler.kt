@@ -45,12 +45,12 @@ class CreatePlayerIntoWorldHandler(
         worldObject.ifPresent {
             // send info to unity + ask to move
             val controller = SplineMovementController(it, splineMovementBrain)
-            controller.initiateMovementToPosition(Position(15f, 50f, 1f, 0f))
+            controller.initiateMovementToPosition(Position(10f, 10f, 1f, 0f))
         }
         worldObject2.ifPresent {
             // send info to unity + ask to move
             val controller = SplineMovementController(it, splineMovementBrain)
-            controller.initiateMovementToPosition(Position(15f, 50f, 1f, 0f))
+            controller.initiateMovementToPosition(Position(10f, 10f, 1f, 0f))
         }
     }
 

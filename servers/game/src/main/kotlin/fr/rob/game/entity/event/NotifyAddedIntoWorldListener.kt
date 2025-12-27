@@ -17,13 +17,12 @@ class NotifyAddedIntoWorldListener : DomainEventListenerInterface {
         val worldObject = event.worldObject
 
         assert(worldObject.isInWorld)
-        assert(worldObject.cell != null)
 
         val grid = worldObject.mapInstance.grid
         val visiblePlayers = grid
             .query()
             .getObjects(
-                worldObject.cell!!,
+                worldObject.getCell(),
                 arrayOf(IsAPlayer(), VisibleByObject(worldObject)),
             )
 

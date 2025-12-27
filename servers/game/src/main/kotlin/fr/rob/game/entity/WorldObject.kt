@@ -16,7 +16,6 @@ open class WorldObject(
     val guid: ObjectGuid
 ) : DomainEventCarrierInterface {
     var isInWorld = false
-    var cell: Cell? = null
     lateinit var mapInstance: MapInstance
     lateinit var position: Position
 
@@ -59,14 +58,16 @@ open class WorldObject(
         pushEvent(WorldObjectMovedEvent(this))
     }
 
+    fun getCell(): Cell {
+        return mapInstance.getWorldObjectCell(this)
+    }
+
     fun addIntoInstance(instance: MapInstance, toPosition: Position) {
         mapInstance = instance
         position = toPosition
         isInWorld = true
 
-        val addedIntoCell = mapInstance.addInInstance(this)
-
-        cell = addedIntoCell
+        mapInstance.addInInstance(this)
     }
 
     fun scheduleRemoveFromInstance() {
