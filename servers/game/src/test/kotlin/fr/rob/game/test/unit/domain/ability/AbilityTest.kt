@@ -8,8 +8,6 @@ import fr.rob.game.ability.AbilityType
 import fr.rob.game.ability.launch.InstantLaunchInfo
 import fr.rob.game.ability.resource.ManaResourceType
 import fr.rob.game.component.resource.ManaComponent
-import fr.rob.game.entity.behavior.HoldPowerResourcesTrait
-import fr.rob.game.entity.power.ManaPower
 import fr.rob.game.test.unit.tools.DummyWorldObjectBuilder
 import fr.rob.game.test.unit.tools.TestCaseWithContainer
 import org.junit.jupiter.api.Assertions.assertFalse
