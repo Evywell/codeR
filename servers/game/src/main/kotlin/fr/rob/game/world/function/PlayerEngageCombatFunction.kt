@@ -3,7 +3,7 @@ package fr.rob.game.world.function
 import com.google.protobuf.ByteString
 import com.google.protobuf.Message
 import fr.raven.proto.message.game.CombatProto.PlayerEngageCombat
-import fr.rob.game.combat.CombatTrait
+import fr.rob.game.component.CombatComponent
 import fr.rob.game.entity.guid.ObjectGuid
 import fr.rob.game.player.session.GameSession
 
@@ -22,9 +22,7 @@ class PlayerEngageCombatFunction : WorldFunctionInterface {
             return
         }
 
-        controlledWorldObject.getTrait<CombatTrait>().ifPresent {
-            it.engageCombatWith(target.get())
-        }
+        controlledWorldObject.getComponent<CombatComponent>()?.engageCombatWith(target.get())
     }
 
     override fun parseFromByteString(data: ByteString): Message = PlayerEngageCombat.parseFrom(data)
