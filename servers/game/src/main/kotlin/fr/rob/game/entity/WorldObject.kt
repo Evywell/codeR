@@ -119,6 +119,8 @@ open class WorldObject(
         return getComponent(T::class)
     }
 
+    fun hasComponent(type: KClass<*>): Boolean = components.containsKey(type)
+
     fun getComponentTypes(): Set<KClass<*>> = components.keys
 
     fun addComponent(component: Any) {
