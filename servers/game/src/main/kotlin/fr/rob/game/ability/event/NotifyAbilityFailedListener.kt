@@ -1,6 +1,6 @@
 package fr.rob.game.ability.event
 
-import fr.rob.game.app.player.message.ability.AbilityFailedMessage
+import fr.rob.game.player.message.AbilityFailedMessage
 import fr.rob.game.event.DomainEventInterface
 import fr.rob.game.event.DomainEventListenerInterface
 import fr.rob.game.map.grid.query.predicate.IsAPlayer

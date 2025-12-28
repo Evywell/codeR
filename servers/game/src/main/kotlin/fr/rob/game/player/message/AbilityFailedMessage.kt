@@ -1,4 +1,4 @@
-package fr.rob.game.app.player.message.ability
+package fr.rob.game.player.message
 
 import fr.rob.game.entity.guid.ObjectGuid
 import fr.rob.game.network.opcode.SMSG_ABILITY_FAILED
