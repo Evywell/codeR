@@ -1,7 +1,7 @@
 package fr.rob.game.test.unit.domain.spell
 
+import fr.rob.game.component.resource.HealthComponent
 import fr.rob.game.entity.Position
-import fr.rob.game.entity.behavior.ObjectSheetTrait
 import fr.rob.game.spell.SpellBook
 import fr.rob.game.spell.SpellCasterTrait
 import fr.rob.game.spell.SpellInfo
@@ -27,11 +27,11 @@ class AoeSpellTest : SpellCasterEnvironmentBaseTest() {
         caster.getTrait(SpellCasterTrait::class).get().castSpell(1, SpellTargetParameter(null, caster.mapInstance))
 
         // Assert
-        assertEquals(90, target.getTrait(ObjectSheetTrait::class).get().health)
-        assertEquals(90, inRangeTarget2.getTrait(ObjectSheetTrait::class).get().health)
-        assertEquals(90, inRangeTarget3.getTrait(ObjectSheetTrait::class).get().health)
-        assertEquals(100, outOfRangeTarget1.getTrait(ObjectSheetTrait::class).get().health)
-        assertEquals(100, outOfRangeTarget2.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(90, target.getComponent<HealthComponent>()?.value)
+        assertEquals(90, inRangeTarget2.getComponent<HealthComponent>()?.value)
+        assertEquals(90, inRangeTarget3.getComponent<HealthComponent>()?.value)
+        assertEquals(100, outOfRangeTarget1.getComponent<HealthComponent>()?.value)
+        assertEquals(100, outOfRangeTarget2.getComponent<HealthComponent>()?.value)
     }
 
     @Test
@@ -41,32 +41,32 @@ class AoeSpellTest : SpellCasterEnvironmentBaseTest() {
         caster.getTrait<SpellCasterTrait>().get().castSpell(2, SpellTargetParameter(null, caster.mapInstance))
 
         // First frame, targets should be untouched
-        assertEquals(100, caster.getTrait(ObjectSheetTrait::class).get().health)
-        assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(100, caster.getComponent<HealthComponent>()?.value)
+        assertEquals(100, target.getComponent<HealthComponent>()?.value)
 
         // Let's jump after the first tick
         instance.update(500, eventDispatcher)
 
-        assertEquals(90, caster.getTrait(ObjectSheetTrait::class).get().health)
-        assertEquals(90, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(90, caster.getComponent<HealthComponent>()?.value)
+        assertEquals(90, target.getComponent<HealthComponent>()?.value)
 
         // Let's jump 200 ms => the second tick is not ready yet, no changes
         instance.update(200, eventDispatcher)
 
-        assertEquals(90, caster.getTrait(ObjectSheetTrait::class).get().health)
-        assertEquals(90, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(90, caster.getComponent<HealthComponent>()?.value)
+        assertEquals(90, target.getComponent<HealthComponent>()?.value)
 
         // Let's jump 400 ms => the second tick is past since 100ms
         instance.update(400, eventDispatcher)
 
-        assertEquals(80, caster.getTrait(ObjectSheetTrait::class).get().health)
-        assertEquals(80, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(80, caster.getComponent<HealthComponent>()?.value)
+        assertEquals(80, target.getComponent<HealthComponent>()?.value)
 
         // Let's jump 400 ms => the script should be ending
         instance.update(400, eventDispatcher)
 
-        assertEquals(80, caster.getTrait(ObjectSheetTrait::class).get().health)
-        assertEquals(80, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(80, caster.getComponent<HealthComponent>()?.value)
+        assertEquals(80, target.getComponent<HealthComponent>()?.value)
     }
 
     override fun createSpellBook(): SpellBook = SpellBook(

@@ -1,5 +1,6 @@
 package fr.rob.game.combat
 
+import fr.rob.game.component.resource.HealthComponent
 import fr.rob.game.player.message.HealthMessage
 import fr.rob.game.event.DomainEventInterface
 import fr.rob.game.event.DomainEventListenerInterface
@@ -27,7 +28,9 @@ class ObjectSheetUpdatedListener : DomainEventListenerInterface {
             )
 
         visiblePlayers.forEach { player ->
-            player.controlledByGameSession?.send(HealthMessage(event.subject.guid, event.sheet.health))
+            event.subject.getComponent<HealthComponent>()?.let {
+                player.controlledByGameSession?.send(HealthMessage(event.subject.guid, it.value))
+            }
         }
     }
 }

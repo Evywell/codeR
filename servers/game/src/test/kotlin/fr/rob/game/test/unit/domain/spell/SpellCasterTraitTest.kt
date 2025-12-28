@@ -1,8 +1,8 @@
 package fr.rob.game.test.unit.domain.spell
 
+import fr.rob.game.component.resource.HealthComponent
 import fr.rob.game.entity.Position
 import fr.rob.game.entity.WorldObject
-import fr.rob.game.entity.behavior.ObjectSheetTrait
 import fr.rob.game.entity.movement.Movable
 import fr.rob.game.map.maths.Vector3f
 import fr.rob.game.spell.Spell
@@ -36,7 +36,7 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
     fun `I should be able to cast instant spells`() {
         caster.getTrait(SpellCasterTrait::class).get().castSpell(1, SpellTargetParameter(target.guid, caster.mapInstance))
 
-        assertEquals(97, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(97, target.getComponent<HealthComponent>()?.value)
     }
 
     @Test
@@ -45,15 +45,15 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
 
         caster.getTrait(SpellCasterTrait::class).get().castSpell(2, SpellTargetParameter(target.guid, caster.mapInstance))
 
-        assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(100, target.getComponent<HealthComponent>()?.value)
 
         // Projectile still moving
         caster.onUpdate(1000)
-        assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(100, target.getComponent<HealthComponent>()?.value)
 
         // Projectile hit the target
         caster.onUpdate(1000)
-        assertEquals(99, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(99, target.getComponent<HealthComponent>()?.value)
     }
 
     @Test
@@ -62,28 +62,28 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
 
         caster.getTrait(SpellCasterTrait::class).get().castSpell(3, SpellTargetParameter(target.guid, caster.mapInstance))
 
-        assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(100, target.getComponent<HealthComponent>()?.value)
 
         // Projectile still moving
         caster.onUpdate(1000)
-        assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(100, target.getComponent<HealthComponent>()?.value)
 
         // Projectile hit the target
         caster.onUpdate(1000)
-        assertEquals(99, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(99, target.getComponent<HealthComponent>()?.value)
     }
 
     @Test
     fun `I should be able to cast spell with casting time`() {
         caster.getTrait<SpellCasterTrait>().get().castSpell(4, SpellTargetParameter(target.guid, caster.mapInstance))
 
-        assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(100, target.getComponent<HealthComponent>()?.value)
         // 1 second casting
         caster.onUpdate(1000)
-        assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(100, target.getComponent<HealthComponent>()?.value)
         // 2 seconds casting
         caster.onUpdate(1000)
-        assertEquals(94, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(94, target.getComponent<HealthComponent>()?.value)
     }
 
     @Test
@@ -91,20 +91,20 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
         caster.addTrait(Movable(caster))
         caster.getTrait<SpellCasterTrait>().get().castSpell(4, SpellTargetParameter(target.guid, caster.mapInstance))
 
-        assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(100, target.getComponent<HealthComponent>()?.value)
         // 1 second casting
         caster.onUpdate(1000)
-        assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(100, target.getComponent<HealthComponent>()?.value)
 
         // Walking
         caster.getTrait<Movable>().get().moveToPosition(Position(0f, 0f, 0f, 0f), Movable.Movement(Vector3f.forward(), Movable.Phase.MOVING))
         caster.onUpdate(100)
         assertEquals(Spell.SpellState.CANCELED, caster.getTrait<SpellCasterTrait>().get().getLastSpellCasted().get().state)
-        assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(100, target.getComponent<HealthComponent>()?.value)
 
         // 2 more seconds casting
         caster.onUpdate(2000)
-        assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(100, target.getComponent<HealthComponent>()?.value)
     }
 
     @Test
@@ -112,20 +112,20 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
         caster.addTrait(Movable(caster))
         caster.getTrait<SpellCasterTrait>().get().castSpell(6, SpellTargetParameter(target.guid, caster.mapInstance))
 
-        assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(100, target.getComponent<HealthComponent>()?.value)
         // 1 second casting
         caster.onUpdate(1000)
-        assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(100, target.getComponent<HealthComponent>()?.value)
 
         // Walking
         caster.getTrait<Movable>().get().moveToPosition(Position(0f, 0f, 0f, 0f), Movable.Movement(Vector3f.forward(), Movable.Phase.MOVING))
         caster.onUpdate(100)
         assertEquals(Spell.SpellState.PREPARING, caster.getTrait<SpellCasterTrait>().get().getLastSpellCasted().get().state)
-        assertEquals(100, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(100, target.getComponent<HealthComponent>()?.value)
 
         // 2 more seconds casting
         caster.onUpdate(2000)
-        assertEquals(99, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(99, target.getComponent<HealthComponent>()?.value)
     }
 
     @Test
@@ -168,7 +168,7 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
         caster.getTrait(SpellCasterTrait::class).get().castSpell(1, SpellTargetParameter(target.guid, caster.mapInstance))
 
         // Assert
-        assertEquals(healthRemaining, target.getTrait(ObjectSheetTrait::class).get().health)
+        assertEquals(healthRemaining, target.getComponent<HealthComponent>()?.value)
     }
 
     fun critDamageDataProvider(): Stream<Arguments> = Stream.of(

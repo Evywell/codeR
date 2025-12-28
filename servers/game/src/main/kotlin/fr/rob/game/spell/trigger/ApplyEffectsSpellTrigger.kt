@@ -1,6 +1,6 @@
 package fr.rob.game.spell.trigger
 
-import fr.rob.game.entity.behavior.ObjectSheetTrait
+import fr.rob.game.behavior.ObjectSheetBehavior
 import fr.rob.game.spell.Spell
 import fr.rob.game.spell.SpellEffectInfo
 import fr.rob.game.spell.SpellEffectSummary
@@ -25,13 +25,14 @@ class ApplyEffectsSpellTrigger(private val effects: Array<SpellEffectInfo>) : Sp
         spellEffectSummary: SpellEffectSummary,
         spell: Spell
     ) {
-        spellEffectSummary.forEach { target, sources ->
+        spellEffectSummary.forEach { (target, sources) ->
             // @todo hit check
+            val objectSheetBehavior = target.getBehavior<ObjectSheetBehavior>()
 
-            target.getTrait(ObjectSheetTrait::class).ifPresent {
-                val isCritical = it.isCriticalHit(spell.caster)
+            if (objectSheetBehavior != null) {
+                val isCritical = objectSheetBehavior.isCriticalHit(spell.caster)
 
-                it.applyDamages(sources, isCritical)
+                objectSheetBehavior.applyDamages(target, sources, isCritical)
             }
         }
     }
