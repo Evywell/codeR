@@ -1,15 +1,17 @@
 package fr.rob.game.entity
 
-import fr.rob.game.entity.behavior.ScriptableTrait
+import fr.rob.game.behavior.script.ScriptableBehavior
+import fr.rob.game.component.ScriptableComponent
 import fr.rob.game.entity.guid.ObjectGuid
 import fr.rob.game.script.ScriptInterface
 
 class ScriptedWorldObject(guid: ObjectGuid) : WorldObject(guid) {
     init {
-        addTrait(ScriptableTrait())
+        addComponent(ScriptableComponent())
+        addBehavior(ScriptableBehavior)
     }
 
     fun addScript(script: ScriptInterface) {
-        getTrait<ScriptableTrait>().get().addScript(script)
+        getComponent<ScriptableComponent>()?.addScript(script)
     }
 }
