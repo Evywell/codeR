@@ -1,9 +1,10 @@
 package fr.rob.game.player
 
+import fr.rob.game.behavior.CombatBehavior
 import fr.rob.game.behavior.MovableBehavior
 import fr.rob.game.character.CharacterService
 import fr.rob.game.character.FetchCharacterInterface
-import fr.rob.game.combat.CombatTrait
+import fr.rob.game.component.CombatComponent
 import fr.rob.game.component.MovementComponent
 import fr.rob.game.entity.Position
 import fr.rob.game.entity.guid.ObjectGuidGenerator
@@ -34,7 +35,10 @@ class PlayerFactory(
         val player = Player(session, guid, character.name, character.level)
         player.addComponent(MovementComponent())
         player.addBehavior(MovableBehavior)
-        player.addTrait(CombatTrait(player))
+
+        player.addComponent(CombatComponent())
+        player.addBehavior(CombatBehavior)
+
         // @todo change this
         player.addTrait(
             SpellCasterTrait(
