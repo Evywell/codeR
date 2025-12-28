@@ -11,6 +11,8 @@ import fr.rob.game.player.session.GameSession
 import fr.rob.game.map.grid.Cell
 import fr.rob.game.ability.Ability
 import fr.rob.game.ability.AbilityInfo
+import fr.rob.game.behavior.BehaviorInterface
+import fr.rob.game.behavior.BehaviorSet
 import java.util.Optional
 import kotlin.reflect.KClass
 
@@ -28,6 +30,7 @@ open class WorldObject(
     private val domainEventContainer = DomainEventContainer()
     private val traits = HashMap<KClass<*>, Any>()
     private val components = mutableMapOf<KClass<*>, Any>()
+    private val behaviors = BehaviorSet()
 
     open fun onUpdate(deltaTime: Int) {
         traits.forEach { (_, trait) ->
@@ -35,6 +38,8 @@ open class WorldObject(
                 trait.update(deltaTime)
             }
         }
+
+        behaviors.update(this, deltaTime)
 
         ongoingAbilities.removeIf {
             it.resume(deltaTime)
@@ -111,6 +116,10 @@ open class WorldObject(
     fun performAbility(ability: Ability) {
         ongoingAbilities.add(ability)
         ability.use()
+    }
+
+    fun addBehavior(behavior: BehaviorInterface) {
+        behaviors.addBehavior(behavior)
     }
 
     @Suppress("UNCHECKED_CAST")
