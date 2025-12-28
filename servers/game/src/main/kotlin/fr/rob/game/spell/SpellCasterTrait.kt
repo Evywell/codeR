@@ -5,6 +5,7 @@ import fr.rob.game.entity.WorldObject
 import fr.rob.game.spell.target.SpellTargetParameter
 import java.util.Optional
 
+@Deprecated("Use Ability system instead")
 class SpellCasterTrait(private val caster: WorldObject, private val spellBook: SpellBook) : UpdatableTraitInterface {
     private val ongoingSpells = ArrayList<Spell>()
     private val spellHistory = ArrayList<Spell>()
