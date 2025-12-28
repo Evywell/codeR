@@ -1,16 +1,22 @@
 package fr.rob.game.behavior
 
 import fr.rob.game.entity.WorldObject
+import kotlin.reflect.KClass
 
 class BehaviorSet {
-    private val behaviors = mutableSetOf<BehaviorInterface>()
+    private val behaviors = mutableMapOf<KClass<*>, BehaviorInterface>()
 
     fun addBehavior(behavior: BehaviorInterface) {
-        behaviors.add(behavior)
+        behaviors[behavior::class] = behavior
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T : BehaviorInterface> get(type: KClass<T>): T? {
+        return behaviors[type] as T?
     }
 
     fun update(worldObject: WorldObject, deltaTime: Int) {
-        behaviors.forEach { behavior ->
+        behaviors.values.forEach { behavior ->
             if (behavior.canApplyTo(worldObject)) {
                 behavior.update(worldObject, deltaTime)
             }

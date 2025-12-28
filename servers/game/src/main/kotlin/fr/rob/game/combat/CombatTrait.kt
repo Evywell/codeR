@@ -1,10 +1,10 @@
 package fr.rob.game.combat
 
 import fr.rob.core.misc.clock.IntervalTimer
+import fr.rob.game.behavior.ObjectSheetBehavior
 import fr.rob.game.player.message.DebugSignalMessage
 import fr.rob.game.entity.UpdatableTraitInterface
 import fr.rob.game.entity.WorldObject
-import fr.rob.game.entity.behavior.ObjectSheetTrait
 
 class CombatTrait(private val source: WorldObject) : UpdatableTraitInterface {
     private val mainHandAttacksInterval = IntervalTimer(MAIN_HAND_WEAPON_SPEED_MS)
@@ -20,7 +20,12 @@ class CombatTrait(private val source: WorldObject) : UpdatableTraitInterface {
             return
         }
 
-        source.controlledByGameSession?.send(DebugSignalMessage("IS_IN_FRONT_OF", if (source.isInFrontOf(currentTarget!!)) 1 else 0))
+        source.controlledByGameSession?.send(
+            DebugSignalMessage(
+                "IS_IN_FRONT_OF",
+                if (source.isInFrontOf(currentTarget!!)) 1 else 0
+            )
+        )
 
         if (shouldPerformAttack) {
             performAttack()
@@ -43,11 +48,15 @@ class CombatTrait(private val source: WorldObject) : UpdatableTraitInterface {
             return
         }
 
-        currentTarget?.getTrait<ObjectSheetTrait>()?.ifPresent {
-            it.applySingleDamage(DamageSource(source, MAIN_HAND_WEAPON_DAMAGE_AMOUNT), it.isCriticalHit(source))
+        val objectSheetBehavior = currentTarget?.getBehavior<ObjectSheetBehavior>() ?: return
 
-            shouldPerformAttack = false
-        }
+        objectSheetBehavior.applySingleDamage(
+            currentTarget!!,
+            DamageSource(source, MAIN_HAND_WEAPON_DAMAGE_AMOUNT),
+            objectSheetBehavior.isCriticalHit(source)
+        )
+
+        shouldPerformAttack = false
     }
 
     private fun isInCombatWithTarget(): Boolean = currentTarget != null

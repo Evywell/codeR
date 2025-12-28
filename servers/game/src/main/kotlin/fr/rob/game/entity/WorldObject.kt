@@ -122,6 +122,12 @@ open class WorldObject(
         behaviors.addBehavior(behavior)
     }
 
+    fun <T : BehaviorInterface> getBehavior(type: KClass<T>): T? = behaviors.get(type)
+
+    inline fun <reified T : BehaviorInterface> getBehavior(): T? {
+        return getBehavior(T::class)
+    }
+
     @Suppress("UNCHECKED_CAST")
     fun <T : Any> getComponent(type: KClass<T>): T? {
         return components[type] as? T

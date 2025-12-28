@@ -1,8 +1,9 @@
 package fr.rob.game.test.unit.domain.spell
 
+import fr.rob.game.behavior.ObjectSheetBehavior
+import fr.rob.game.component.resource.HealthComponent
 import fr.rob.game.entity.ObjectManager
 import fr.rob.game.entity.Position
-import fr.rob.game.entity.behavior.ObjectSheetTrait
 import fr.rob.game.entity.guid.ObjectGuid
 import fr.rob.game.entity.guid.ObjectGuidGenerator
 import fr.rob.game.spell.SpellBook
@@ -41,7 +42,8 @@ abstract class SpellCasterEnvironmentBaseTest {
             name,
             level,
         )
-        unitToCreate.addTrait(ObjectSheetTrait(unitToCreate, 100, targetRiggedDiceEngine))
+        unitToCreate.addComponent(HealthComponent(100))
+        unitToCreate.addBehavior(ObjectSheetBehavior(targetRiggedDiceEngine))
         unitToCreate.addIntoInstance(instance, position)
 
         return unitToCreate
