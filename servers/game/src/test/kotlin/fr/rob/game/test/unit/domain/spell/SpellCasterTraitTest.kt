@@ -1,9 +1,10 @@
 package fr.rob.game.test.unit.domain.spell
 
+import fr.rob.game.behavior.MovableBehavior
+import fr.rob.game.component.MovementComponent
 import fr.rob.game.component.resource.HealthComponent
 import fr.rob.game.entity.Position
 import fr.rob.game.entity.WorldObject
-import fr.rob.game.entity.movement.Movable
 import fr.rob.game.map.maths.Vector3f
 import fr.rob.game.spell.Spell
 import fr.rob.game.spell.SpellBook
@@ -34,7 +35,8 @@ import java.util.stream.Stream
 class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
     @Test
     fun `I should be able to cast instant spells`() {
-        caster.getTrait(SpellCasterTrait::class).get().castSpell(1, SpellTargetParameter(target.guid, caster.mapInstance))
+        caster.getTrait(SpellCasterTrait::class).get()
+            .castSpell(1, SpellTargetParameter(target.guid, caster.mapInstance))
 
         assertEquals(97, target.getComponent<HealthComponent>()?.value)
     }
@@ -43,7 +45,8 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
     fun `I should be able to cast spell with projectiles`() {
         target.position.x = 6f
 
-        caster.getTrait(SpellCasterTrait::class).get().castSpell(2, SpellTargetParameter(target.guid, caster.mapInstance))
+        caster.getTrait(SpellCasterTrait::class).get()
+            .castSpell(2, SpellTargetParameter(target.guid, caster.mapInstance))
 
         assertEquals(100, target.getComponent<HealthComponent>()?.value)
 
@@ -60,7 +63,8 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
     fun `I should be able to cast spell with timed projectiles`() {
         target.position.x = 6f
 
-        caster.getTrait(SpellCasterTrait::class).get().castSpell(3, SpellTargetParameter(target.guid, caster.mapInstance))
+        caster.getTrait(SpellCasterTrait::class).get()
+            .castSpell(3, SpellTargetParameter(target.guid, caster.mapInstance))
 
         assertEquals(100, target.getComponent<HealthComponent>()?.value)
 
@@ -88,7 +92,9 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
 
     @Test
     fun `The cast time should break when moving`() {
-        caster.addTrait(Movable(caster))
+        val movableBehavior = MovableBehavior
+        caster.addComponent(MovementComponent())
+        caster.addBehavior(movableBehavior)
         caster.getTrait<SpellCasterTrait>().get().castSpell(4, SpellTargetParameter(target.guid, caster.mapInstance))
 
         assertEquals(100, target.getComponent<HealthComponent>()?.value)
@@ -97,9 +103,17 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
         assertEquals(100, target.getComponent<HealthComponent>()?.value)
 
         // Walking
-        caster.getTrait<Movable>().get().moveToPosition(Position(0f, 0f, 0f, 0f), Movable.Movement(Vector3f.forward(), Movable.Phase.MOVING))
+        movableBehavior.moveObjectToPosition(
+            caster, Position(0f, 0f, 0f, 0f), MovementComponent.MovementInfo(
+                Vector3f.forward(),
+                MovementComponent.Phase.MOVING
+            )
+        )
         caster.onUpdate(100)
-        assertEquals(Spell.SpellState.CANCELED, caster.getTrait<SpellCasterTrait>().get().getLastSpellCasted().get().state)
+        assertEquals(
+            Spell.SpellState.CANCELED,
+            caster.getTrait<SpellCasterTrait>().get().getLastSpellCasted().get().state
+        )
         assertEquals(100, target.getComponent<HealthComponent>()?.value)
 
         // 2 more seconds casting
@@ -109,7 +123,9 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
 
     @Test
     fun `The cast time should not break when moving if has flag ALLOW_CAST_WHILE_MOVING`() {
-        caster.addTrait(Movable(caster))
+        val movableBehavior = MovableBehavior
+        caster.addComponent(MovementComponent())
+        caster.addBehavior(movableBehavior)
         caster.getTrait<SpellCasterTrait>().get().castSpell(6, SpellTargetParameter(target.guid, caster.mapInstance))
 
         assertEquals(100, target.getComponent<HealthComponent>()?.value)
@@ -118,9 +134,16 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
         assertEquals(100, target.getComponent<HealthComponent>()?.value)
 
         // Walking
-        caster.getTrait<Movable>().get().moveToPosition(Position(0f, 0f, 0f, 0f), Movable.Movement(Vector3f.forward(), Movable.Phase.MOVING))
+        movableBehavior.moveObjectToPosition(
+            caster,
+            Position(0f, 0f, 0f, 0f),
+            MovementComponent.MovementInfo(Vector3f.forward(), MovementComponent.Phase.MOVING)
+        )
         caster.onUpdate(100)
-        assertEquals(Spell.SpellState.PREPARING, caster.getTrait<SpellCasterTrait>().get().getLastSpellCasted().get().state)
+        assertEquals(
+            Spell.SpellState.PREPARING,
+            caster.getTrait<SpellCasterTrait>().get().getLastSpellCasted().get().state
+        )
         assertEquals(100, target.getComponent<HealthComponent>()?.value)
 
         // 2 more seconds casting
@@ -132,7 +155,8 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
     fun `Ended spell should not be updated anymore`() {
         val counterTrait = CounterTrait()
         caster.addTrait(counterTrait)
-        caster.getTrait(SpellCasterTrait::class).get().castSpell(5, SpellTargetParameter(target.guid, caster.mapInstance))
+        caster.getTrait(SpellCasterTrait::class).get()
+            .castSpell(5, SpellTargetParameter(target.guid, caster.mapInstance))
 
         assertEquals(1, counterTrait.counter)
         caster.onUpdate(100)
@@ -165,7 +189,8 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
         targetRiggedDiceEngine.nextRollResult = rollResult
 
         // Act
-        caster.getTrait(SpellCasterTrait::class).get().castSpell(1, SpellTargetParameter(target.guid, caster.mapInstance))
+        caster.getTrait(SpellCasterTrait::class).get()
+            .castSpell(1, SpellTargetParameter(target.guid, caster.mapInstance))
 
         // Assert
         assertEquals(healthRemaining, target.getComponent<HealthComponent>()?.value)
@@ -188,12 +213,39 @@ class SpellCasterTraitTest : SpellCasterEnvironmentBaseTest() {
     override fun createSpellBook(): SpellBook =
         SpellBook(
             hashMapOf(
-                1 to SpellInfo(1, InstantLaunchInfo(ApplyEffectsSpellTrigger(arrayOf(InstantDamageEffect.InstantDamageEffectInfo(3))))),
-                2 to SpellInfo(2, GhostProjectileLaunchInfo(3f, ApplyEffectsSpellTrigger(arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1))))),
-                3 to SpellInfo(3, TimedProjectileLaunchInfo(3f, ApplyEffectsSpellTrigger(arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1))))),
-                4 to SpellInfo(4, InstantLaunchInfo(ApplyEffectsSpellTrigger(arrayOf(InstantDamageEffect.InstantDamageEffectInfo(6)))), CASTING_TIME_2_SECONDS),
-                5 to SpellInfo(5, InstantLaunchInfo(ApplyEffectsSpellTrigger(arrayOf(CounterEffect.CounterEffectInfo())))),
-                6 to SpellInfo(6, InstantLaunchInfo(ApplyEffectsSpellTrigger(arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1)))), CASTING_TIME_2_SECONDS, flags = EnumSet.of(SpellInfo.FLAGS.ALLOW_CAST_WHILE_MOVING)),
+                1 to SpellInfo(
+                    1,
+                    InstantLaunchInfo(ApplyEffectsSpellTrigger(arrayOf(InstantDamageEffect.InstantDamageEffectInfo(3))))
+                ),
+                2 to SpellInfo(
+                    2,
+                    GhostProjectileLaunchInfo(
+                        3f,
+                        ApplyEffectsSpellTrigger(arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1)))
+                    )
+                ),
+                3 to SpellInfo(
+                    3,
+                    TimedProjectileLaunchInfo(
+                        3f,
+                        ApplyEffectsSpellTrigger(arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1)))
+                    )
+                ),
+                4 to SpellInfo(
+                    4,
+                    InstantLaunchInfo(ApplyEffectsSpellTrigger(arrayOf(InstantDamageEffect.InstantDamageEffectInfo(6)))),
+                    CASTING_TIME_2_SECONDS
+                ),
+                5 to SpellInfo(
+                    5,
+                    InstantLaunchInfo(ApplyEffectsSpellTrigger(arrayOf(CounterEffect.CounterEffectInfo())))
+                ),
+                6 to SpellInfo(
+                    6,
+                    InstantLaunchInfo(ApplyEffectsSpellTrigger(arrayOf(InstantDamageEffect.InstantDamageEffectInfo(1)))),
+                    CASTING_TIME_2_SECONDS,
+                    flags = EnumSet.of(SpellInfo.FLAGS.ALLOW_CAST_WHILE_MOVING)
+                ),
             ),
         )
 }

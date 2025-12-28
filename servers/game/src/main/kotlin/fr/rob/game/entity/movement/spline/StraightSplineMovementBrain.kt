@@ -1,8 +1,8 @@
 package fr.rob.game.entity.movement.spline
 
+import fr.rob.game.component.MovementComponent
 import fr.rob.game.entity.Position
 import fr.rob.game.entity.WorldObject
-import fr.rob.game.entity.movement.Movable
 import fr.rob.game.map.maths.Vector3f
 
 /**
@@ -13,7 +13,7 @@ class StraightSplineMovementBrain : SplineMovementBrainInterface {
         val movement = SplineMovement()
 
         movement.position = destination
-        movement.movement = Movable.Movement(Vector3f.forward(), Movable.Phase.MOVING)
+        movement.movement = MovementComponent.MovementInfo(Vector3f.forward(), MovementComponent.Phase.MOVING)
 
         stepHandler(movement)
     }

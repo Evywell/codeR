@@ -1,8 +1,9 @@
 package fr.rob.game.entity.controller
 
+import fr.rob.game.behavior.MovableBehavior
+import fr.rob.game.component.MovementComponent
 import fr.rob.game.entity.Position
 import fr.rob.game.entity.WorldObject
-import fr.rob.game.entity.movement.Movable
 import fr.rob.game.entity.movement.spline.SplineMovementBrainInterface
 
 class SplineMovementController(
@@ -10,7 +11,7 @@ class SplineMovementController(
     private val splineMovementBrain: SplineMovementBrainInterface
 ) {
     fun initiateMovementToPosition(destination: Position) {
-        if (source.getTrait<Movable>().isEmpty) {
+        if (!source.hasComponent(MovementComponent::class)) {
             throw Exception("Trying to initiate a spline movement on non movable object")
         }
 
@@ -26,9 +27,8 @@ class SplineMovementController(
                 return@moveToDestination
             }
 
-            val movableTrait = source.getTrait<Movable>()
-
-            movableTrait.get().moveToPosition(splineMovement.position!!, splineMovement.movement!!)
+            val movableBehavior = source.getBehavior<MovableBehavior>()
+            movableBehavior?.moveObjectToPosition(source, splineMovement.position!!, splineMovement.movement!!)
 
             if (splineMovement.hasReachDestination) {
                 splineMovement.closeSplineMovement()

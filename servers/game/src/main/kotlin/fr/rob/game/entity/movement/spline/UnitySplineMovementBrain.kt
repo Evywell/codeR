@@ -4,10 +4,10 @@ import fr.raven.proto.message.physicbridge.PhysicProto
 import fr.raven.proto.message.physicbridge.PhysicProto.ObjectMoveTo
 import fr.raven.proto.message.physicbridge.PhysicProto.ObjectMoved
 import fr.raven.proto.message.physicbridge.PhysicProto.ObjectReachDestination
+import fr.rob.game.component.MovementComponent
 import fr.rob.game.player.message.ObjectMovingToDestinationMessage
 import fr.rob.game.entity.Position
 import fr.rob.game.entity.WorldObject
-import fr.rob.game.entity.movement.Movable
 import fr.rob.game.map.maths.Vector3f
 import fr.rob.game.map.grid.query.predicate.CanSeeObject
 import fr.rob.game.map.grid.query.predicate.IsAPlayer
@@ -49,7 +49,7 @@ class UnitySplineMovementBrain(
             it as ObjectMoved
 
             splineMovement.position = Position(it.position.posX, it.position.posY, it.position.posZ, it.position.orientation)
-            splineMovement.movement = Movable.Movement(Vector3f.fromVec3Message(it.direction), Movable.Phase.MOVING)
+            splineMovement.movement = MovementComponent.MovementInfo(Vector3f.fromVec3Message(it.direction), MovementComponent.Phase.MOVING)
 
             delayedUpdateQueue.enqueueDelayedUpdate(SplineStepDelayedUpdate(stepHandler, splineMovement))
         }
@@ -58,7 +58,7 @@ class UnitySplineMovementBrain(
             it as ObjectReachDestination
 
             splineMovement.reachDestination()
-            splineMovement.movement = Movable.Movement(Vector3f.forward(), Movable.Phase.STOPPED)
+            splineMovement.movement = MovementComponent.MovementInfo(Vector3f.forward(), MovementComponent.Phase.STOPPED)
 
             delayedUpdateQueue.enqueueDelayedUpdate(SplineStepDelayedUpdate(stepHandler, splineMovement))
         }
