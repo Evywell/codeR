@@ -1,8 +1,8 @@
 package fr.rob.game.entity.notifier
 
+import fr.rob.game.component.MovementComponent
 import fr.rob.game.player.message.MovementHeartbeatMessage
 import fr.rob.game.entity.WorldObject
-import fr.rob.game.entity.movement.Movable
 import fr.rob.game.player.Player
 
 class WorldObjectUpdatedNotifier : WorldObjectVisitorInterface {
@@ -15,9 +15,8 @@ class WorldObjectUpdatedNotifier : WorldObjectVisitorInterface {
             playersToNotify.addAll(grid.getPlayersOfCell(cell))
         }
 
-        var movement: Movable.Movement? = null
+        val movement = gameObject.getComponent<MovementComponent>()?.movementInfo
 
-        gameObject.getTrait<Movable>().ifPresent { movement = it.currentMovement }
         val positionUpdatedMessage = MovementHeartbeatMessage(gameObject.guid, gameObject.position, movement)
 
         playersToNotify.forEach { player ->

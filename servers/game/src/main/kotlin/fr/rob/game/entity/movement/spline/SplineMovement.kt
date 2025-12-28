@@ -1,11 +1,11 @@
 package fr.rob.game.entity.movement.spline
 
+import fr.rob.game.component.MovementComponent
 import fr.rob.game.entity.Position
-import fr.rob.game.entity.movement.Movable
 
 open class SplineMovement {
     var position: Position? = null
-    var movement: Movable.Movement? = null
+    var movement: MovementComponent.MovementInfo? = null
     var hasReachDestination = false
         private set
 

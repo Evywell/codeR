@@ -1,8 +1,8 @@
 package fr.rob.game.spell
 
 import fr.rob.core.misc.clock.IntervalTimer
+import fr.rob.game.component.MovementComponent
 import fr.rob.game.entity.WorldObject
-import fr.rob.game.entity.movement.Movable
 import fr.rob.game.spell.target.SpellTargetParameter
 import fr.rob.game.spell.type.UpdatableLaunchInterface
 
@@ -61,9 +61,7 @@ class Spell(
     private fun checkCastingSequenceRequirements() {
         // Movement should cancel the cast unless it is authorized
         if (!spellInfo.flags.contains(SpellInfo.FLAGS.ALLOW_CAST_WHILE_MOVING)) {
-            val movableCaster = caster.getTrait<Movable>()
-
-            if (movableCaster.isPresent && movableCaster.get().isMoving()) {
+            if (caster.getComponent<MovementComponent>()?.isMoving() == true) {
                 state = SpellState.CANCELED
 
                 return

@@ -1,11 +1,12 @@
 package fr.rob.game.player
 
+import fr.rob.game.behavior.MovableBehavior
 import fr.rob.game.character.CharacterService
 import fr.rob.game.character.FetchCharacterInterface
 import fr.rob.game.combat.CombatTrait
+import fr.rob.game.component.MovementComponent
 import fr.rob.game.entity.Position
 import fr.rob.game.entity.guid.ObjectGuidGenerator
-import fr.rob.game.entity.movement.Movable
 import fr.rob.game.player.session.GameSession
 import fr.rob.game.spell.SpellBook
 import fr.rob.game.spell.SpellCasterTrait
@@ -31,8 +32,8 @@ class PlayerFactory(
         val guid = guidGenerator.createForPlayer(character.id)
 
         val player = Player(session, guid, character.name, character.level)
-        // player.addTrait(MovableTrait(player))
-        player.addTrait(Movable(player))
+        player.addComponent(MovementComponent())
+        player.addBehavior(MovableBehavior)
         player.addTrait(CombatTrait(player))
         // @todo change this
         player.addTrait(

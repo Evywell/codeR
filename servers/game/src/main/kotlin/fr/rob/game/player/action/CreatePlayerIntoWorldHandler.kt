@@ -1,6 +1,8 @@
 package fr.rob.game.player.action
 
+import fr.rob.game.behavior.MovableBehavior
 import fr.rob.game.behavior.ObjectSheetBehavior
+import fr.rob.game.component.MovementComponent
 import fr.rob.game.component.resource.HealthComponent
 import fr.rob.game.player.message.PlayerDescriptionMessage
 import fr.rob.game.entity.ObjectManager
@@ -8,7 +10,6 @@ import fr.rob.game.entity.Position
 import fr.rob.game.entity.WorldObject
 import fr.rob.game.entity.controller.SplineMovementController
 import fr.rob.game.entity.guid.ObjectGuid
-import fr.rob.game.entity.movement.Movable
 import fr.rob.game.entity.movement.spline.SplineMovementBrainInterface
 import fr.rob.game.instance.MapInstance
 import fr.rob.game.player.PlayerFactory
@@ -65,7 +66,9 @@ class CreatePlayerIntoWorldHandler(
         worldObject.ifPresent {
             it.addComponent(HealthComponent(100))
             it.addBehavior(ObjectSheetBehavior(RandomRollEngine()))
-            it.addTrait(Movable(it))
+
+            it.addComponent(MovementComponent())
+            it.addBehavior(MovableBehavior)
         }
 
         return worldObject
