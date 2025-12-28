@@ -90,13 +90,16 @@ open class WorldObject(
         isInWorld = false
     }
 
+    @Deprecated("Use ECS instead")
     fun addTrait(trait: Any) {
         traits[trait::class] = trait
     }
 
+    @Deprecated("Use ECS instead")
     @Suppress("UNCHECKED_CAST")
     fun <T : Any> getTrait(traitType: KClass<T>): Optional<T> = Optional.ofNullable(traits[traitType] as T?)
 
+    @Deprecated("Use ECS instead")
     inline fun <reified T : Any> getTrait(): Optional<T> = getTrait(T::class)
 
     fun registerAbilities(knownAbilities: List<Int>) {
