@@ -1,31 +1,20 @@
 package fr.rob.game.ability.resource
 
+import fr.rob.game.component.resource.ManaComponent
 import fr.rob.game.entity.WorldObject
-import fr.rob.game.entity.behavior.HoldPowerResourcesTrait
 
 class ManaResourceType(
     private val cost: Int,
 ) : ResourceTypeInterface {
     override fun hasEnoughResources(worldObject: WorldObject): Boolean {
-        val trait = worldObject.getTrait<HoldPowerResourcesTrait>()
+        val resource = worldObject.getComponent<ManaComponent>() ?: return false
 
-        if (trait.isEmpty) {
-            return false
-        }
-
-        return trait.get().manaPower.value >= cost
+        return resource.hasEnough(cost)
     }
 
     override fun computeResources(worldObject: WorldObject) {
-        val trait = worldObject.getTrait<HoldPowerResourcesTrait>()
+        val resource = worldObject.getComponent<ManaComponent>() ?: return
 
-        if (trait.isEmpty) {
-            return
-        }
-
-        trait
-            .get()
-            .manaPower
-            .reduce(cost)
+        resource.reduce(cost)
     }
 }
