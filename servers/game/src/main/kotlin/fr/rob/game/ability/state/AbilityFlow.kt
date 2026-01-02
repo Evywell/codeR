@@ -43,10 +43,6 @@ class AbilityFlow(
             }
 
             state<AbilityState.Launching> {
-                on<AbilityEvent.OnLaunchCompleted> {
-                    dontTransition(AbilitySideEffect.ComputeEffects)
-                }
-
                 on<AbilityEvent.OnAbilityResolved> {
                     transitionTo(AbilityState.Done)
                 }
@@ -63,7 +59,6 @@ class AbilityFlow(
                     AbilitySideEffect.HandleCasting -> handleCasting()
                     AbilitySideEffect.ComputeResources -> computeResources()
                     AbilitySideEffect.HandleLaunching -> handleLaunching()
-                    AbilitySideEffect.ComputeEffects -> computeEffects()
                     null -> {}
                 }
             }
@@ -83,7 +78,7 @@ class AbilityFlow(
 
     fun resumeLaunching() {
         if (launchType.isLaunchingCompleted()) {
-            abilityStateMachine.transition(AbilityEvent.OnLaunchCompleted)
+            abilityStateMachine.transition(AbilityEvent.OnAbilityResolved)
         }
     }
 
@@ -118,9 +113,5 @@ class AbilityFlow(
 
     private fun handleLaunching() {
         launchType.handleLaunch()
-    }
-
-    private fun computeEffects() {
-        abilityStateMachine.transition(AbilityEvent.OnAbilityResolved)
     }
 }

@@ -7,7 +7,5 @@ sealed class AbilitySideEffect {
 
     object ComputeResources : AbilitySideEffect()
 
-    object ComputeEffects : AbilitySideEffect()
-
     object HandleLaunching : AbilitySideEffect()
 }
