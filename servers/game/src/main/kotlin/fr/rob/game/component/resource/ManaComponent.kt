@@ -1,17 +1,20 @@
 package fr.rob.game.component.resource
 
-data class ManaComponent(private var value: Int) {
+data class ManaComponent(private var baseMana: Int) {
+    var currentMana: Int = baseMana
+        private set
+
     fun reduce(value: Int) {
-        if (this.value - value < 0) {
-            this.value = 0
+        if (currentMana - value < 0) {
+            currentMana = 0
 
             return
         }
 
-        this.value -= value
+        currentMana -= value
     }
 
     fun hasEnough(value: Int): Boolean {
-        return this.value >= value
+        return currentMana >= value
     }
 }

@@ -14,7 +14,7 @@ class InstantDamageEffect(
     private val caster: WorldObject,
 ) : EffectInterface {
     override fun cast(spellEffectSummary: SpellEffectSummary) {
-        target.getPrimaryTarget().ifPresent { tar ->
+        target.getPrimaryTarget()?.let { tar ->
             spellEffectSummary.addDamageSourceForTarget(tar, DamageSource(caster, spellEffectInfo.value))
         }
     }

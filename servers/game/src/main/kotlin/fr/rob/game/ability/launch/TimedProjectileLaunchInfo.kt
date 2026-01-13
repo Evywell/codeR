@@ -2,11 +2,11 @@ package fr.rob.game.ability.launch
 
 import fr.rob.game.ability.Ability
 import fr.rob.game.ability.trigger.AbilityTriggerInterface
-import fr.rob.game.ability.trigger.NoOpAbilityTrigger
 
-class InstantLaunchInfo(
-    private val onLaunchTrigger: AbilityTriggerInterface = NoOpAbilityTrigger(),
+class TimedProjectileLaunchInfo(
+    val travelTimeMs: Int,
+    val onHitTargetTrigger: AbilityTriggerInterface,
 ) : LaunchInfoInterface {
     override fun createAbilityLauncher(ability: Ability): LaunchTypeInterface =
-        InstantLaunchType(ability, onLaunchTrigger)
+        TimedProjectileLaunchType(this)
 }

@@ -14,5 +14,7 @@ data class AbilityRequirements(
         return resources.contentEquals(other.resources)
     }
 
-    override fun hashCode(): Int = resources.contentHashCode()
+    override fun hashCode(): Int {
+        return resources.contentHashCode()
+    }
 }

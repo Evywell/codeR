@@ -40,11 +40,6 @@ open class WorldObject(
         }
 
         behaviors.update(this, deltaTime)
-
-        ongoingAbilities.removeIf {
-            it.resume(deltaTime)
-            it.isDone()
-        }
     }
 
     open fun onAfterUpdate() {
@@ -113,10 +108,11 @@ open class WorldObject(
 
     fun hasAbility(abilityInfo: AbilityInfo): Boolean = knownAbilities.contains(abilityInfo.identifier)
 
-    fun performAbility(ability: Ability) {
+    fun addOngoingAbility(ability: Ability) {
         ongoingAbilities.add(ability)
-        ability.use()
     }
+
+    fun getOngoingAbilities(): MutableList<Ability> = ongoingAbilities
 
     fun addBehavior(behavior: BehaviorInterface) {
         behaviors.addBehavior(behavior)

@@ -13,6 +13,11 @@ import fr.rob.game.ability.AbilityRequirements
 import fr.rob.game.ability.AbilityType
 import fr.rob.game.ability.ObjectAbilityManager
 import fr.rob.game.ability.launch.InstantLaunchInfo
+import fr.rob.game.ability.service.AbilityExecutor
+import fr.rob.game.ability.service.AbilityRequirementChecker
+import fr.rob.game.ability.service.phase.AbilityPhaseHandlerInterface
+import fr.rob.game.ability.service.phase.CastingPhaseHandler
+import fr.rob.game.ability.service.phase.ResolvingPhaseHandler
 import fr.rob.game.player.action.CreatePlayerIntoWorldHandler
 import fr.rob.game.character.CharacterService
 import fr.rob.game.character.waitingroom.CharacterWaitingRoom
@@ -135,8 +140,17 @@ val opcodeModule =
         single { CharacterWaitingRoom() }
         single { CreatePlayerIntoWorldHandler(get(), get(), get()) }
 
+        single { AbilityRequirementChecker() }
+        single<List<AbilityPhaseHandlerInterface>> {
+            listOf(
+                CastingPhaseHandler(get()),
+                ResolvingPhaseHandler(),
+            )
+        }
+        single { AbilityExecutor(get(), get()) }
+
         single<ObjectAbilityManager> {
-            val manager = ObjectAbilityManager()
+            val manager = ObjectAbilityManager(get())
 
             // TODO: change this
             arrayOf(
