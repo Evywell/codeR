@@ -11,7 +11,6 @@ import fr.rob.game.event.DomainEventInterface
 import fr.rob.game.map.grid.Cell
 import fr.rob.game.map.grid.Grid
 import fr.rob.game.map.Map
-import java.util.Optional
 
 /**
  * We use MapInstance instead of Instance to avoid confusion with the entity
@@ -47,7 +46,7 @@ class MapInstance(val id: Int, val map: Map, val grid: Grid) : DomainEventCarrie
     }
 
     fun findObjectsInsideRadius(origin: Position, radius: Float): List<WorldObject> = grid.findObjectsInsideRadius(origin, radius)
-    fun findObjectByGuid(guid: ObjectGuid): Optional<WorldObject> = grid.findObjectByGuid(guid)
+    fun findObjectByGuid(guid: ObjectGuid): WorldObject? = grid.findObjectByGuid(guid)
 
     fun getWorldObjectCell(worldObject: WorldObject): Cell {
         return grid.getCellFromWorldPosition(worldObject.position)

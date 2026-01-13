@@ -12,7 +12,8 @@ class GhostProjectileLaunchType(private val launchInfo: GhostProjectileLaunchInf
 
     override fun createProjectile(spell: Spell): CarryProjectileInterface {
         val caster = spell.caster
-        val target = spell.target.getPrimaryTarget().get()
+        val target = spell.target.getPrimaryTarget()
+            ?: throw IllegalStateException("Cannot create projectile without a target")
 
         return GhostProjectile(
             Position(caster.position.x, caster.position.y, caster.position.z, caster.position.orientation),

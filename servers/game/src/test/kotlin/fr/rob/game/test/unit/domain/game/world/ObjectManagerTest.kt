@@ -38,7 +38,7 @@ class ObjectManagerTest {
         val lowGuid = ObjectGuid.LowGuid(1u, 1u)
 
         // Act
-        val obj = om.spawnObject(lowGuid, position, instance).get()
+        val obj = om.spawnObject(lowGuid, position, instance)!!
 
         // Assert
         assertTrue(obj.isInWorld)

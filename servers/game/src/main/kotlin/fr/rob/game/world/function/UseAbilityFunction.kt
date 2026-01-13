@@ -22,7 +22,7 @@ class UseAbilityFunction(
         val controlledWorldObject = sender.controlledWorldObject ?: return
         val target = controlledWorldObject.mapInstance.findObjectByGuid(ObjectGuid(message.explicitTargetGuid))
 
-        val targetGuid = if (target.isPresent) target.get().guid else null
+        val targetGuid = target?.guid
 
         try {
             abilityManager.useAbilityFromIdentifier(

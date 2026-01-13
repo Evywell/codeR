@@ -1,38 +1,38 @@
 package fr.rob.game.ability
 
+import fr.rob.game.ability.launch.LaunchTypeInterface
 import fr.rob.game.entity.WorldObject
 import fr.rob.core.misc.clock.IntervalTimer
-import fr.rob.game.ability.state.AbilityFlow
-import fr.rob.game.ability.state.AbilityState
 
 class Ability(
     val info: AbilityInfo,
     val source: WorldObject,
-    private val target: AbilityTargetParameter,
+    val target: AbilityTargetParameter,
 ) {
-    private val abilityLauncher = info.launchInfo.createAbilityLauncher(this)
-    private val flow = AbilityFlow(this, abilityLauncher)
+    var state = AbilityState.NOT_STARTED
+
+    private val abilityLauncher: LaunchTypeInterface = info.launchInfo.createAbilityLauncher(this)
     private val castingTimer = IntervalTimer(info.castingTimeMs)
 
-    fun use() {
-        flow.useAbility()
-    }
+    fun isCastCompleted(): Boolean = castingTimer.passed()
 
-    fun resume(elapsedTimeMs: Int) {
-        if (flow.getCurrentState() == AbilityState.PerformingAbility) {
-            castingTimer.update(elapsedTimeMs)
-
-            flow.resumeCasting(castingTimer.passed())
-        }
-
-        if (flow.getCurrentState() == AbilityState.Launching) {
-            flow.resumeLaunching()
-        }
-    }
-
-    fun isDone(): Boolean = flow.getCurrentState() == AbilityState.Done || failed()
+    fun isDone(): Boolean = state == AbilityState.DONE || failed()
 
     fun isInProgress(): Boolean = !isDone()
 
-    fun failed(): Boolean = flow.getCurrentState() == AbilityState.Failed
+    fun failed(): Boolean = state == AbilityState.FAILED
+
+    fun getLauncher(): LaunchTypeInterface = abilityLauncher
+
+    fun updateTimers(deltaTime: Int) {
+        castingTimer.update(deltaTime)
+    }
+
+    enum class AbilityState {
+        NOT_STARTED,
+        CASTING,
+        RESOLVING,
+        DONE,
+        FAILED,
+    }
 }
