@@ -14,7 +14,6 @@ import fr.rob.game.entity.movement.spline.SplineMovementBrainInterface
 import fr.rob.game.instance.MapInstance
 import fr.rob.game.player.PlayerFactory
 import fr.rob.game.world.RandomRollEngine
-import java.util.Optional
 
 class CreatePlayerIntoWorldHandler(
     private val playerFactory: PlayerFactory,
@@ -44,26 +43,26 @@ class CreatePlayerIntoWorldHandler(
         // @todo Send player info
         player.ownerGameSession.send(PlayerDescriptionMessage(player.guid, player.name))
 
-        worldObject.ifPresent {
+        worldObject?.let {
             // send info to unity + ask to move
             val controller = SplineMovementController(it, splineMovementBrain)
             controller.initiateMovementToPosition(Position(10f, 10f, 1f, 0f))
         }
-        worldObject2.ifPresent {
+        worldObject2?.let {
             // send info to unity + ask to move
             val controller = SplineMovementController(it, splineMovementBrain)
             controller.initiateMovementToPosition(Position(10f, 10f, 1f, 0f))
         }
     }
 
-    private fun createMobAroundPosition(lowGuid: ObjectGuid.LowGuid, mobPosition: Position, mapInstance: MapInstance): Optional<WorldObject> {
+    private fun createMobAroundPosition(lowGuid: ObjectGuid.LowGuid, mobPosition: Position, mapInstance: MapInstance): WorldObject? {
         val worldObject = objectManager.spawnObject(
             lowGuid,
             mobPosition,
             mapInstance,
         )
 
-        worldObject.ifPresent {
+        worldObject?.let {
             it.addComponent(HealthComponent(100))
             it.addBehavior(ObjectSheetBehavior(RandomRollEngine()))
 

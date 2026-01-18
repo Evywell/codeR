@@ -3,15 +3,14 @@ package fr.rob.game.spell.target
 import fr.rob.game.entity.WorldObject
 import fr.rob.game.entity.guid.ObjectGuid
 import fr.rob.game.instance.MapInstance
-import java.util.Optional
 
 class SpellTargetParameter(
     private val targetGuid: ObjectGuid?,
     private val targetingOnInstance: MapInstance,
 ) {
-    fun getPrimaryTarget(): Optional<WorldObject> {
+    fun getPrimaryTarget(): WorldObject? {
         if (targetGuid == null) {
-            return Optional.empty()
+            return null
         }
 
         return targetingOnInstance.findObjectByGuid(targetGuid)

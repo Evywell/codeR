@@ -16,13 +16,9 @@ class PlayerEngageCombatFunction : WorldFunctionInterface {
         message as PlayerEngageCombat
 
         val controlledWorldObject = sender.controlledWorldObject ?: return
-        val target = controlledWorldObject.mapInstance.findObjectByGuid(ObjectGuid(message.target))
+        val target = controlledWorldObject.mapInstance.findObjectByGuid(ObjectGuid(message.target)) ?: return
 
-        if (target.isEmpty) {
-            return
-        }
-
-        controlledWorldObject.getComponent<CombatComponent>()?.engageCombatWith(target.get())
+        controlledWorldObject.getComponent<CombatComponent>()?.engageCombatWith(target)
     }
 
     override fun parseFromByteString(data: ByteString): Message = PlayerEngageCombat.parseFrom(data)

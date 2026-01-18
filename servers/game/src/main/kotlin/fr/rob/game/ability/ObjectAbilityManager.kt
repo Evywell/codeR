@@ -3,10 +3,12 @@ package fr.rob.game.ability
 import fr.rob.game.ability.exception.AbilityNotConfiguredCorrectlyException
 import fr.rob.game.ability.exception.ObjectCannotUseAbilityException
 import fr.rob.game.ability.exception.UnknownAbilityException
+import fr.rob.game.ability.service.AbilityExecutor
 import fr.rob.game.entity.WorldObject
-import java.util.Optional
 
-class ObjectAbilityManager {
+class ObjectAbilityManager(
+    private val abilityExecutor: AbilityExecutor,
+) {
     private val abilityInfo = HashMap<Int, AbilityInfo>()
 
     fun defineAbility(info: AbilityInfo) {
@@ -18,13 +20,7 @@ class ObjectAbilityManager {
         abilityId: Int,
         targetParameter: AbilityTargetParameter,
     ) {
-        val abilityInfoQuery = tryGetAbilityInfo(abilityId)
-
-        if (abilityInfoQuery.isEmpty) {
-            throw UnknownAbilityException()
-        }
-
-        val abilityInfo = abilityInfoQuery.get()
+        val abilityInfo = abilityInfo[abilityId] ?: throw UnknownAbilityException()
 
         if (abilityId != abilityInfo.identifier) {
             throw AbilityNotConfiguredCorrectlyException(
@@ -38,8 +34,14 @@ class ObjectAbilityManager {
 
         val ability = Ability(abilityInfo, source, targetParameter)
 
-        source.performAbility(ability)
+        abilityExecutor.startAbility(ability)
+
+        if (ability.isInProgress()) {
+            source.addOngoingAbility(ability)
+        }
     }
 
-    private fun tryGetAbilityInfo(abilityId: Int): Optional<AbilityInfo> = Optional.ofNullable(abilityInfo[abilityId])
+    fun updateAbility(ability: Ability, deltaTime: Int) {
+        abilityExecutor.updateAbility(ability, deltaTime)
+    }
 }

@@ -7,7 +7,6 @@ import fr.rob.game.entity.WorldObjectContainer
 import fr.rob.game.entity.guid.ObjectGuid
 import fr.rob.game.player.Player
 import fr.rob.game.map.grid.query.GridQuery
-import java.util.Optional
 import kotlin.math.ceil
 
 /**
@@ -22,14 +21,14 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
 
     fun getObjectsByType(type: ObjectGuid.GUID_TYPE): WorldObjectContainer = worldObjectContainerList[type.value]
 
-    fun findObjectByGuid(guid: ObjectGuid): Optional<WorldObject> {
+    fun findObjectByGuid(guid: ObjectGuid): WorldObject? {
         for (worldObject in worldObjectContainerList[guid.getType().value]) {
             if (worldObject.guid == guid) {
-                return Optional.of(worldObject)
+                return worldObject
             }
         }
 
-        return Optional.empty()
+        return null
     }
 
     fun findObjectsInsideRadius(origin: Position, radius: Float): List<WorldObject> {

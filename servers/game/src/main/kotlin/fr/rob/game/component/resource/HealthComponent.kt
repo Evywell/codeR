@@ -1,6 +1,7 @@
 package fr.rob.game.component.resource
 
 import kotlin.math.max
+import kotlin.math.min
 
 data class HealthComponent(private var baseHealth: Int) {
     var value: Int = baseHealth
