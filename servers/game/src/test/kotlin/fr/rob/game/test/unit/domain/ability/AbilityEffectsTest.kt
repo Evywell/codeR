@@ -12,8 +12,8 @@ import fr.rob.game.ability.resource.ManaResourceType
 import fr.rob.game.ability.service.AbilityExecutor
 import fr.rob.game.ability.service.AbilityRequirementChecker
 import fr.rob.game.ability.service.phase.CastingPhaseHandler
+import fr.rob.game.ability.service.phase.LaunchingPhaseHandler
 import fr.rob.game.ability.service.phase.ResolvingPhaseHandler
-import fr.rob.game.ability.trigger.ApplyAbilityEffectsTrigger
 import fr.rob.game.behavior.ObjectSheetBehavior
 import fr.rob.game.component.resource.HealthComponent
 import fr.rob.game.component.resource.ManaComponent
@@ -40,7 +40,11 @@ class AbilityEffectsTest {
     private val requirementChecker = AbilityRequirementChecker()
     private val abilityExecutor = AbilityExecutor(
         requirementChecker,
-        listOf(CastingPhaseHandler(requirementChecker), ResolvingPhaseHandler()),
+        listOf(
+            CastingPhaseHandler(requirementChecker),
+            LaunchingPhaseHandler(listOf(InstantLaunchInfo(), GhostProjectileLaunchInfo(10f))),
+            ResolvingPhaseHandler()
+        ),
     )
 
     @BeforeEach
@@ -66,12 +70,9 @@ class AbilityEffectsTest {
                 identifier = 1,
                 type = AbilityType.MAGICAL,
                 abilityRequirement = AbilityRequirements(arrayOf(ManaResourceType(10))),
-                launchInfo = InstantLaunchInfo(
-                    ApplyAbilityEffectsTrigger(
-                        arrayOf(InstantDamageEffect.InstantDamageEffectInfo(damageValue))
-                    )
-                ),
                 castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
+                launchType = AbilityInfo.LaunchType.INSTANT,
+                effectsInfo = listOf(InstantDamageEffect.InstantDamageEffectInfo(damageValue)),
             ),
             source = caster,
             target = AbilityTargetParameter(target.guid, caster),
@@ -90,7 +91,6 @@ class AbilityEffectsTest {
     fun `Projectile ability should complete when projectile reaches target`() {
         // Arrange
         val damageValue = 40
-        val projectileSpeed = 10f // 10 meters per second
 
         // Rig dice to avoid critical hits
         riggedDiceEngine.nextRollResult = ObjectSheetBehavior.MAX_ROLL_FOR_PERCENTAGE
@@ -102,13 +102,9 @@ class AbilityEffectsTest {
                 identifier = 4,
                 type = AbilityType.MAGICAL,
                 abilityRequirement = AbilityRequirements(arrayOf(ManaResourceType(15))),
-                launchInfo = GhostProjectileLaunchInfo(
-                    projectileSpeed = projectileSpeed,
-                    onHitTargetTrigger = ApplyAbilityEffectsTrigger(
-                        arrayOf(InstantDamageEffect.InstantDamageEffectInfo(damageValue))
-                    ),
-                ),
                 castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
+                launchType = AbilityInfo.LaunchType.TRACKED_PROJECTILE,
+                effectsInfo = listOf(InstantDamageEffect.InstantDamageEffectInfo(damageValue)),
             ),
             source = caster,
             target = AbilityTargetParameter(target.guid, caster),
@@ -117,12 +113,13 @@ class AbilityEffectsTest {
         // Act
         abilityExecutor.startAbility(ability)
 
-        // Ability should be in resolving state (projectile flying)
+        // Ability should be in launching state (projectile flying)
         assertTrue(ability.isInProgress())
-        assertEquals(Ability.AbilityState.RESOLVING, ability.state)
+        assertEquals(Ability.AbilityState.LAUNCHING, ability.state)
 
         // Target at 5m, speed 10m/s, so after 300ms (3m traveled), still in progress
         abilityExecutor.updateAbility(ability, 300)
+        assertEquals(Ability.AbilityState.LAUNCHING, ability.state)
         assertTrue(ability.isInProgress())
 
         // After another 300ms (6m total traveled), should be done (target at 5m)
@@ -145,8 +142,8 @@ class AbilityEffectsTest {
                 identifier = 1,
                 type = AbilityType.MAGICAL,
                 abilityRequirement = AbilityRequirements(arrayOf(ManaResourceType(manaCost))),
-                launchInfo = InstantLaunchInfo(),
                 castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
+                launchType = AbilityInfo.LaunchType.INSTANT,
             ),
             source = caster,
             target = AbilityTargetParameter(null, caster),

@@ -27,7 +27,7 @@ class AbilityRequirementChecker {
     }
 
     private fun checkMovementRequirement(ability: Ability): Boolean {
-        if (!ability.info.flags.contains(AbilityInfo.FLAGS.ALLOW_CAST_WHILE_MOVING)) {
+        if (!ability.info.flags.contains(AbilityInfo.Flags.ALLOW_CAST_WHILE_MOVING)) {
             if (isMoving(ability.source)) {
                 failAbility(ability, "Movement interrupted casting")
                 return false

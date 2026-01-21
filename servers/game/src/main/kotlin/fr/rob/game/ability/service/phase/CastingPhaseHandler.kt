@@ -15,7 +15,7 @@ class CastingPhaseHandler(
         if (ability.isCastCompleted()) {
 
             consumeResources(ability)
-            ability.state = Ability.AbilityState.RESOLVING
+            ability.state = Ability.AbilityState.LAUNCHING
 
             return
         }
