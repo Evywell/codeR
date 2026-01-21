@@ -8,10 +8,6 @@ import fr.rob.game.entity.Position
 class GhostProjectileLaunchType(
     private val launchInfo: GhostProjectileLaunchInfo,
 ) : AbstractProjectileLaunchType() {
-    override fun onHitTarget(ability: Ability) {
-        launchInfo.onHitTargetTrigger.trigger(ability)
-    }
-
     override fun createProjectile(ability: Ability): CarryProjectileInterface {
         val caster = ability.source
         val target = ability.target.getPrimaryTarget()

@@ -5,11 +5,13 @@ import fr.rob.game.ability.AbilityInfo
 import fr.rob.game.ability.AbilityRequirements
 import fr.rob.game.ability.AbilityTargetParameter
 import fr.rob.game.ability.AbilityType
+import fr.rob.game.ability.launch.GhostProjectileLaunchInfo
 import fr.rob.game.ability.launch.InstantLaunchInfo
 import fr.rob.game.ability.resource.ManaResourceType
 import fr.rob.game.ability.service.AbilityExecutor
 import fr.rob.game.ability.service.AbilityRequirementChecker
 import fr.rob.game.ability.service.phase.CastingPhaseHandler
+import fr.rob.game.ability.service.phase.LaunchingPhaseHandler
 import fr.rob.game.ability.service.phase.ResolvingPhaseHandler
 import fr.rob.game.component.resource.ManaComponent
 import fr.rob.game.test.unit.tools.DummyWorldObjectBuilder
@@ -25,7 +27,11 @@ class AbilityTest : TestCaseWithContainer() {
     private val requirementChecker = AbilityRequirementChecker()
     private val abilityExecutor = AbilityExecutor(
         requirementChecker,
-        listOf(CastingPhaseHandler(requirementChecker), ResolvingPhaseHandler()),
+        listOf(
+            CastingPhaseHandler(requirementChecker),
+            LaunchingPhaseHandler(listOf(InstantLaunchInfo())),
+            ResolvingPhaseHandler()
+        ),
     )
 
     @Test
@@ -41,8 +47,8 @@ class AbilityTest : TestCaseWithContainer() {
                         identifier = 1,
                         type = AbilityType.MAGICAL,
                         abilityRequirement = AbilityRequirements(arrayOf(ManaResourceType(100))),
-                        launchInfo = InstantLaunchInfo(),
                         castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
+                        launchType = AbilityInfo.LaunchType.INSTANT,
                     ),
                 source = source,
                 target = AbilityTargetParameter(null, source),
@@ -70,8 +76,8 @@ class AbilityTest : TestCaseWithContainer() {
                         identifier = 1,
                         type = AbilityType.MAGICAL,
                         abilityRequirement = AbilityRequirements(arrayOf(ManaResourceType(100))),
-                        launchInfo = InstantLaunchInfo(),
                         castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
+                        launchType = AbilityInfo.LaunchType.INSTANT,
                     ),
                 source = source,
                 target = AbilityTargetParameter(null, source),
@@ -99,8 +105,8 @@ class AbilityTest : TestCaseWithContainer() {
                         identifier = 1,
                         type = AbilityType.MAGICAL,
                         abilityRequirement = AbilityRequirements(arrayOf(ManaResourceType(100))),
-                        launchInfo = InstantLaunchInfo(),
-                        castingTimeMs = 1000,
+                        castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
+                        launchType = AbilityInfo.LaunchType.INSTANT,
                     ),
                 source = source,
                 target = AbilityTargetParameter(null, source),
@@ -140,8 +146,8 @@ class AbilityTest : TestCaseWithContainer() {
                         identifier = 1,
                         type = AbilityType.MAGICAL,
                         abilityRequirement = AbilityRequirements(arrayOf(ManaResourceType(50))),
-                        launchInfo = InstantLaunchInfo(),
-                        castingTimeMs = 1000,
+                        castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
+                        launchType = AbilityInfo.LaunchType.INSTANT,
                     ),
                 source = source,
                 target = AbilityTargetParameter(null, source),

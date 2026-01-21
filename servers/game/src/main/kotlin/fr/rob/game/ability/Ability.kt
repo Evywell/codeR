@@ -1,8 +1,8 @@
 package fr.rob.game.ability
 
-import fr.rob.game.ability.launch.LaunchTypeInterface
 import fr.rob.game.entity.WorldObject
 import fr.rob.core.misc.clock.IntervalTimer
+import fr.rob.game.ability.launch.LaunchTypeInterface
 
 class Ability(
     val info: AbilityInfo,
@@ -10,8 +10,8 @@ class Ability(
     val target: AbilityTargetParameter,
 ) {
     var state = AbilityState.NOT_STARTED
+    var launchType: LaunchTypeInterface? = null
 
-    private val abilityLauncher: LaunchTypeInterface = info.launchInfo.createAbilityLauncher(this)
     private val castingTimer = IntervalTimer(info.castingTimeMs)
 
     fun isCastCompleted(): Boolean = castingTimer.passed()
@@ -22,8 +22,6 @@ class Ability(
 
     fun failed(): Boolean = state == AbilityState.FAILED
 
-    fun getLauncher(): LaunchTypeInterface = abilityLauncher
-
     fun updateTimers(deltaTime: Int) {
         castingTimer.update(deltaTime)
     }
@@ -31,6 +29,7 @@ class Ability(
     enum class AbilityState {
         NOT_STARTED,
         CASTING,
+        LAUNCHING,
         RESOLVING,
         DONE,
         FAILED,

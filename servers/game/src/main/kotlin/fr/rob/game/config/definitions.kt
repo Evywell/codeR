@@ -13,10 +13,12 @@ import fr.rob.game.ability.AbilityRequirements
 import fr.rob.game.ability.AbilityType
 import fr.rob.game.ability.ObjectAbilityManager
 import fr.rob.game.ability.launch.InstantLaunchInfo
+import fr.rob.game.ability.launch.LaunchInfoInterface
 import fr.rob.game.ability.service.AbilityExecutor
 import fr.rob.game.ability.service.AbilityRequirementChecker
 import fr.rob.game.ability.service.phase.AbilityPhaseHandlerInterface
 import fr.rob.game.ability.service.phase.CastingPhaseHandler
+import fr.rob.game.ability.service.phase.LaunchingPhaseHandler
 import fr.rob.game.ability.service.phase.ResolvingPhaseHandler
 import fr.rob.game.player.action.CreatePlayerIntoWorldHandler
 import fr.rob.game.character.CharacterService
@@ -141,9 +143,17 @@ val opcodeModule =
         single { CreatePlayerIntoWorldHandler(get(), get(), get()) }
 
         single { AbilityRequirementChecker() }
+
+        single<List<LaunchInfoInterface>> {
+            listOf(
+                InstantLaunchInfo(),
+            )
+        }
+
         single<List<AbilityPhaseHandlerInterface>> {
             listOf(
                 CastingPhaseHandler(get()),
+                LaunchingPhaseHandler(get()),
                 ResolvingPhaseHandler(),
             )
         }
@@ -159,7 +169,7 @@ val opcodeModule =
                     type = AbilityType.MAGICAL,
                     abilityRequirement = AbilityRequirements(emptyArray()),
                     castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
-                    launchInfo = InstantLaunchInfo(),
+                    launchType = AbilityInfo.LaunchType.INSTANT,
                 ),
             ).forEach { manager.defineAbility(it) }
 

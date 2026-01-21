@@ -5,14 +5,8 @@ import fr.rob.game.ability.projectile.CarryProjectileInterface
 
 abstract class AbstractProjectileLaunchType : UpdatableLaunchTypeInterface {
     private var projectile: CarryProjectileInterface? = null
-    private var hasLaunched = false
 
-    override fun handleLaunch() {
-        if (hasLaunched) {
-            return
-        }
-        hasLaunched = true
-    }
+    override fun handleLaunch() {}
 
     override fun isLaunchingCompleted(): Boolean {
         return projectile?.hasHitTarget() ?: false
@@ -24,12 +18,7 @@ abstract class AbstractProjectileLaunchType : UpdatableLaunchTypeInterface {
         }
 
         projectile?.update(deltaTime)
-
-        if (projectile?.hasHitTarget() == true) {
-            onHitTarget(ability)
-        }
     }
 
-    protected abstract fun onHitTarget(ability: Ability)
     protected abstract fun createProjectile(ability: Ability): CarryProjectileInterface
 }
