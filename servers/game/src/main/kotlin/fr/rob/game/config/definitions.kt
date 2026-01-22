@@ -144,20 +144,20 @@ val opcodeModule =
 
         single { AbilityRequirementChecker() }
 
-        single<List<LaunchInfoInterface>> {
+        single(named("ABILITY_LAUNCH_INFO_LIST")){
             listOf(
                 InstantLaunchInfo(),
             )
         }
 
-        single<List<AbilityPhaseHandlerInterface>> {
+        single(named("ABILITY_PHASE_HANDLERS")) {
             listOf(
                 CastingPhaseHandler(get()),
-                LaunchingPhaseHandler(get()),
+                LaunchingPhaseHandler(get(named("ABILITY_LAUNCH_INFO_LIST"))),
                 ResolvingPhaseHandler(),
             )
         }
-        single { AbilityExecutor(get(), get()) }
+        single { AbilityExecutor(get(), get(named("ABILITY_PHASE_HANDLERS"))) }
 
         single<ObjectAbilityManager> {
             val manager = ObjectAbilityManager(get())
