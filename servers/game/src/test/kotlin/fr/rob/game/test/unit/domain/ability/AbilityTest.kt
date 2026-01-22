@@ -105,7 +105,7 @@ class AbilityTest : TestCaseWithContainer() {
                         identifier = 1,
                         type = AbilityType.MAGICAL,
                         abilityRequirement = AbilityRequirements(arrayOf(ManaResourceType(100))),
-                        castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
+                        castingTimeMs = 800,
                         launchType = AbilityInfo.LaunchType.INSTANT,
                     ),
                 source = source,
@@ -137,7 +137,6 @@ class AbilityTest : TestCaseWithContainer() {
         // Arrange
         val source = worldObjectBuilder.createPlayer()
         source.addComponent(ManaComponent(100))
-        val initialMana = source.getComponent<ManaComponent>()!!.currentMana
 
         val ability =
             Ability(
@@ -146,7 +145,7 @@ class AbilityTest : TestCaseWithContainer() {
                         identifier = 1,
                         type = AbilityType.MAGICAL,
                         abilityRequirement = AbilityRequirements(arrayOf(ManaResourceType(50))),
-                        castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
+                        castingTimeMs = 500,
                         launchType = AbilityInfo.LaunchType.INSTANT,
                     ),
                 source = source,
@@ -157,11 +156,11 @@ class AbilityTest : TestCaseWithContainer() {
         abilityExecutor.startAbility(ability)
 
         // Mana should not be consumed during casting
-        assertEquals(initialMana, source.getComponent<ManaComponent>()!!.currentMana)
+        assertEquals(100, source.getComponent<ManaComponent>()!!.currentMana)
 
         abilityExecutor.updateAbility(ability, 1000)
 
         // Assert - Mana consumed after casting completes
-        assertEquals(initialMana - 50, source.getComponent<ManaComponent>()!!.currentMana)
+        assertEquals(50, source.getComponent<ManaComponent>()!!.currentMana)
     }
 }
