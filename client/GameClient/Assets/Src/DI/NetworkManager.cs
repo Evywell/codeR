@@ -1,8 +1,6 @@
 using Core.Networking.Gateway;
-using Core.Networking.Protocol;
 using Core.Networking.Routing;
 using Core.Networking.Services;
-using Game.Networking.Handlers;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -15,6 +13,9 @@ namespace DI
     ///
     /// Registered via builder.RegisterEntryPoint&lt;NetworkManager&gt;() in GameLifetimeScope.
     /// VContainer will call Initialize once after injection and Tick every frame.
+    ///
+    /// Packet handlers are auto-wired into the PacketRouter via IReadOnlyList injection —
+    /// NetworkManager does not need to know about individual handlers.
     /// </summary>
     public class NetworkManager : IInitializable, ITickable
     {
@@ -24,55 +25,27 @@ namespace DI
         private readonly RealmService _realmService;
         private readonly LoginConfig _loginConfig;
 
-        // Handlers injected to wire into the router
-        private readonly PlayerDescriptionHandler _playerDescriptionHandler;
-        private readonly NearbyObjectHandler _nearbyObjectHandler;
-        private readonly MovementHeartbeatHandler _movementHeartbeatHandler;
-        private readonly ObjectHealthHandler _objectHealthHandler;
-        private readonly ObjectDestinationHandler _objectDestinationHandler;
-        private readonly DebugSignalHandler _debugSignalHandler;
-
         [Inject]
         public NetworkManager(
             GatewayConnection gatewayConnection,
             PacketRouter router,
             AuthService authService,
             RealmService realmService,
-            LoginConfig loginConfig,
-            PlayerDescriptionHandler playerDescriptionHandler,
-            NearbyObjectHandler nearbyObjectHandler,
-            MovementHeartbeatHandler movementHeartbeatHandler,
-            ObjectHealthHandler objectHealthHandler,
-            ObjectDestinationHandler objectDestinationHandler,
-            DebugSignalHandler debugSignalHandler)
+            LoginConfig loginConfig)
         {
             _gatewayConnection = gatewayConnection;
             _router = router;
             _authService = authService;
             _realmService = realmService;
             _loginConfig = loginConfig;
-            _playerDescriptionHandler = playerDescriptionHandler;
-            _nearbyObjectHandler = nearbyObjectHandler;
-            _movementHeartbeatHandler = movementHeartbeatHandler;
-            _objectHealthHandler = objectHealthHandler;
-            _objectDestinationHandler = objectDestinationHandler;
-            _debugSignalHandler = debugSignalHandler;
         }
 
         /// <summary>
         /// Called once after all dependencies are injected.
-        /// Registers all packet handlers, wires the gateway to the router,
-        /// and kicks off the connect + auth + login sequence.
+        /// Wires the gateway to the router and kicks off the connect + auth + login sequence.
         /// </summary>
         public async void Initialize()
         {
-            _router.RegisterHandler(Opcodes.SMSG_PLAYER_DESCRIPTION, _playerDescriptionHandler);
-            _router.RegisterHandler(Opcodes.SMSG_NEARBY_OBJECT_UPDATE, _nearbyObjectHandler);
-            _router.RegisterHandler(Opcodes.SMSG_MOVEMENT_HEARTBEAT, _movementHeartbeatHandler);
-            _router.RegisterHandler(Opcodes.SMSG_OBJECT_HEALTH_UPDATED, _objectHealthHandler);
-            _router.RegisterHandler(Opcodes.SMSG_OBJECT_MOVING_TO_DESTINATION, _objectDestinationHandler);
-            _router.RegisterHandler(Opcodes.SMSG_DEBUG_SIGNAL, _debugSignalHandler);
-
             _gatewayConnection.PacketReceived += _router.Route;
 
             // Connect and authenticate

@@ -1,3 +1,4 @@
+using Core.Networking.Protocol;
 using Core.Networking.Routing;
 using Fr.Raven.Proto.Message.Game;
 using Game.State;
@@ -12,6 +13,8 @@ namespace Game.Networking.Handlers
     public class DebugSignalHandler : IPacketHandler
     {
         private readonly WorldState _worldState;
+
+        public int Opcode => Opcodes.SMSG_DEBUG_SIGNAL;
 
         public DebugSignalHandler(WorldState worldState)
         {

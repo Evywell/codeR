@@ -46,7 +46,7 @@ namespace Game.Entity
             Position = position;
             Orientation = orientation;
             Direction = Vector3.zero;
-            Speed = 3.0f;
+            Speed = 3.5f;
             IsMoving = false;
             LastRequestedDestination = null;
         }
