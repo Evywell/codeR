@@ -1,0 +1,22 @@
+{
+    "name": "DI",
+    "rootNamespace": "DI",
+    "references": [
+        "Core",
+        "Game",
+        "VContainer",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Google.Protobuf.dll",
+        "PhysicBridgeProto.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
