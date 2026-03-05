@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Core.Movement;
 using Game.State;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Game.Entity
 {
@@ -95,9 +96,27 @@ namespace Game.Entity
             EntityView view = go.AddComponent<EntityView>();
             view.Initialize(entity);
 
-            // Attach EntityMotion for smooth interpolation (NPCs)
+            // For non-player entities: add NavMeshAgent for server-driven pathfinding.
+            // The player entity will be upgraded later (CharacterController replaces this).
+            // Remove the CapsuleCollider on the child visual — it conflicts with NavMeshAgent.
+            CapsuleCollider childCollider = capsuleChild.GetComponent<CapsuleCollider>();
+
+            if (childCollider != null)
+            {
+                Object.Destroy(childCollider);
+            }
+
+            NavMeshAgent agent = go.AddComponent<NavMeshAgent>();
+            agent.height = 2f;
+            agent.radius = 0.5f;
+            agent.baseOffset = 0f;
+            agent.speed = entity.Speed;
+            agent.updateRotation = true;
+            agent.updatePosition = true;
+
+            // Attach EntityMotion for NavMeshAgent-driven movement
             EntityMotion motion = go.AddComponent<EntityMotion>();
-            motion.Initialize(entity);
+            motion.Initialize(entity, agent);
 
             // Color by entity type
             Color color;
@@ -153,7 +172,15 @@ namespace Game.Entity
                 Object.Destroy(motion);
             }
 
-            // Remove the CapsuleCollider on the child visual — it conflicts with CharacterController
+            // Remove NavMeshAgent — player uses CharacterController, not NavMesh pathfinding
+            NavMeshAgent agent = view.GetComponent<NavMeshAgent>();
+
+            if (agent != null)
+            {
+                Object.Destroy(agent);
+            }
+
+            // Remove the CapsuleCollider on the child visual if still present (defensive)
             Transform visualChild = view.transform.Find("Visual");
 
             if (visualChild != null)

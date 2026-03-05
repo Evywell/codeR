@@ -4,7 +4,8 @@
     "references": [
         "Core",
         "VContainer",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Unity.AI.Navigation"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
