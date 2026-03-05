@@ -1,0 +1,17 @@
+{
+    "name": "Core",
+    "rootNamespace": "Core",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Google.Protobuf.dll",
+        "PhysicBridgeProto.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
