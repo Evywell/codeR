@@ -8,17 +8,21 @@ namespace Core.Networking.Routing
     /// <summary>
     /// Routes incoming gateway packets to the appropriate handler based on context and opcode.
     /// Only processes packets with Context.Game.
+    ///
+    /// Handlers are auto-wired via constructor injection: VContainer collects all
+    /// IPacketHandler registrations into a single IReadOnlyList, and each handler
+    /// declares its own opcode via the Opcode property.
     /// </summary>
     public class PacketRouter
     {
         private readonly Dictionary<int, IPacketHandler> _handlers = new Dictionary<int, IPacketHandler>();
 
-        /// <summary>
-        /// Registers a handler for a specific opcode.
-        /// </summary>
-        public void RegisterHandler(int opcode, IPacketHandler handler)
+        public PacketRouter(IReadOnlyList<IPacketHandler> handlers)
         {
-            _handlers[opcode] = handler;
+            foreach (var handler in handlers)
+            {
+                _handlers[handler.Opcode] = handler;
+            }
         }
 
         /// <summary>

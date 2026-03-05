@@ -1,3 +1,4 @@
+using Core.Networking.Protocol;
 using Core.Networking.Routing;
 using Fr.Raven.Proto.Message.Game;
 using Game.Entity;
@@ -13,6 +14,8 @@ namespace Game.Networking.Handlers
     public class ObjectHealthHandler : IPacketHandler
     {
         private readonly WorldState _worldState;
+
+        public int Opcode => Opcodes.SMSG_OBJECT_HEALTH_UPDATED;
 
         public ObjectHealthHandler(WorldState worldState)
         {

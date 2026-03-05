@@ -1,5 +1,4 @@
 using Core.Networking.Gateway;
-using Core.Networking.Protocol;
 using Core.Networking.Routing;
 using Core.Networking.Services;
 using Game.Entity;
@@ -44,15 +43,15 @@ namespace DI
             // --- Game state ---
             builder.Register<WorldState>(Lifetime.Singleton);
 
-            // --- Packet handlers ---
-            builder.Register<PlayerDescriptionHandler>(Lifetime.Singleton);
-            builder.Register<NearbyObjectHandler>(Lifetime.Singleton);
-            builder.Register<MovementHeartbeatHandler>(Lifetime.Singleton);
-            builder.Register<ObjectHealthHandler>(Lifetime.Singleton);
-            builder.Register<ObjectDestinationHandler>(Lifetime.Singleton);
-            builder.Register<DebugSignalHandler>(Lifetime.Singleton);
+            // --- Packet handlers (auto-collected as IReadOnlyList<IPacketHandler> by VContainer) ---
+            builder.Register<PlayerDescriptionHandler>(Lifetime.Singleton).As<IPacketHandler>();
+            builder.Register<NearbyObjectHandler>(Lifetime.Singleton).As<IPacketHandler>();
+            builder.Register<MovementHeartbeatHandler>(Lifetime.Singleton).As<IPacketHandler>();
+            builder.Register<ObjectHealthHandler>(Lifetime.Singleton).As<IPacketHandler>();
+            builder.Register<ObjectDestinationHandler>(Lifetime.Singleton).As<IPacketHandler>();
+            builder.Register<DebugSignalHandler>(Lifetime.Singleton).As<IPacketHandler>();
 
-            // --- Packet router (wired after container build via entry point) ---
+            // --- Packet router (receives IReadOnlyList<IPacketHandler> via constructor) ---
             builder.Register<PacketRouter>(Lifetime.Singleton);
 
             // --- Auth services ---

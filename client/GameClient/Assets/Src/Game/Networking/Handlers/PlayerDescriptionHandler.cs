@@ -1,3 +1,4 @@
+using Core.Networking.Protocol;
 using Core.Networking.Routing;
 using Fr.Raven.Proto.Message.Game;
 using Game.Entity;
@@ -14,6 +15,8 @@ namespace Game.Networking.Handlers
     public class PlayerDescriptionHandler : IPacketHandler
     {
         private readonly WorldState _worldState;
+
+        public int Opcode => Opcodes.SMSG_PLAYER_DESCRIPTION;
 
         public PlayerDescriptionHandler(WorldState worldState)
         {
