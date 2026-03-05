@@ -37,12 +37,15 @@ namespace Game.Networking.Handlers
                 heartbeat.Direction.Y
             );
 
+            bool isMoving = heartbeat.Phase == MovementPhase.PhaseBegin;
+
             _worldState.UpdateEntityPosition(
                 ObjectGuid.From(heartbeat.Guid),
                 position,
                 heartbeat.Position.Orientation,
                 direction,
-                true
+                isMoving,
+                heartbeat.Speed
             );
         }
     }

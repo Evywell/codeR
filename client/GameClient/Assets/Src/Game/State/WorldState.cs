@@ -63,14 +63,15 @@ namespace Game.State
         }
 
         /// <summary>
-        /// Updates an entity's position, direction, and moving state. Fires a Position update.
+        /// Updates an entity's position, direction, speed, and moving state. Fires a Position update.
         /// </summary>
         public void UpdateEntityPosition(
             ObjectGuid guid,
             Vector3 position,
             float orientation,
             Vector3 direction,
-            bool isMoving)
+            bool isMoving,
+            float speed)
         {
             WorldEntity entity = GetEntityById(guid);
 
@@ -81,6 +82,7 @@ namespace Game.State
             entity.Orientation = orientation;
             entity.Direction = direction;
             entity.IsMoving = isMoving;
+            entity.Speed = speed;
             EntityUpdated?.Invoke(new WorldEntityUpdate(WorldUpdateType.Position, entity));
         }
 
@@ -113,6 +115,7 @@ namespace Game.State
 
         /// <summary>
         /// Sets the last movement destination for an entity (used for NavMesh pathfinding).
+        /// Fires a Position update so the view layer can react.
         /// </summary>
         public void UpdateEntityDestination(ObjectGuid guid, Vector3 destination)
         {
@@ -122,6 +125,7 @@ namespace Game.State
             {
                 entity.IsMoving = true;
                 entity.LastRequestedDestination = destination;
+                EntityUpdated?.Invoke(new WorldEntityUpdate(WorldUpdateType.Position, entity));
             }
         }
 
