@@ -49,6 +49,20 @@ game-server: game-server-build start-dependencies ## Builds and run the game ser
 	cd servers/game/build/distributions; unzip game-1.0.zip
 	cd servers/game/build/distributions/game-1.0; GAME_OPTS="-Dmysql_game.host=127.0.0.1 -Dmysql_game.tcp.3306=33060" ./bin/game
 
+servers/PhysicServer/build/PhysicServer:
+	$(UNITY_BIN) -batchmode -nographics -quit \
+		-projectPath $(CURDIR)/servers/PhysicServer \
+		-buildTarget LinuxHeadlessSimulation \
+		-buildLinux64Player $(CURDIR)/servers/PhysicServer/build/PhysicServer \
+		-logFile -
+
+.PHONY: build-physic-server-linux
+build-physic-server-linux: servers/PhysicServer/build/PhysicServer ## Builds the PhysicServer as a headless Linux server
+
+.PHONY: run-physic-server
+run-physic-server: servers/PhysicServer/build/PhysicServer ## Runs the PhysicServer headless build
+	./servers/PhysicServer/build/PhysicServer -batchmode -nographics
+
 .PHONY: migrate
 migrate: migrations/migrator/vendor/autoload.php
 	$(PHINX) migrate $(PHINX_WORLD_CONFIG_ARG) -e development
