@@ -29,9 +29,15 @@ namespace App {
                 return;
             }
 
-            InstantiateWaypoints(corners);
-
             _navMeshAgent.SetPath(path);
+
+            // A single corner means the agent is already at the destination.
+            // Skip waypoints and initial SendMovement, but let Update() handle completion.
+            if (corners.Length < 2) {
+                return;
+            }
+
+            InstantiateWaypoints(corners);
 
             SendMovement(corners[1]);
         }
