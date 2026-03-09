@@ -9,14 +9,17 @@ import org.apache.logging.log4j.core.config.ConfigurationSource
 import org.apache.logging.log4j.core.config.LoggerConfig
 import org.apache.logging.log4j.core.config.xml.XmlConfigurationFactory
 import org.apache.logging.log4j.core.layout.PatternLayout
+import java.io.ByteArrayInputStream
 import java.io.InputStream
 
-class LoggerFactory(private val configuration: InputStream) : LoggerFactoryInterface {
+class LoggerFactory(configuration: InputStream) : LoggerFactoryInterface {
+
+    private val configurationBytes: ByteArray = configuration.readAllBytes()
 
     override fun create(name: String): LoggerInterface {
         val configurationFactory = XmlConfigurationFactory.getInstance()
 
-        val configurationSource = ConfigurationSource(configuration)
+        val configurationSource = ConfigurationSource(ByteArrayInputStream(configurationBytes))
 
         val loggerContext = LoggerContext("GlobalConfigContext")
         val configuration = configurationFactory.getConfiguration(loggerContext, configurationSource)
