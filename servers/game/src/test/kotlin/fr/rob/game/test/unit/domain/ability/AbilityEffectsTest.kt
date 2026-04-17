@@ -171,7 +171,7 @@ class AbilityEffectsTest {
         )
         unitToCreate.addComponent(HealthComponent(100))
         unitToCreate.addBehavior(ObjectSheetBehavior(riggedDiceEngine))
-        unitToCreate.addIntoInstance(instance, position)
+        WorldBuilder.addIntoInstance(unitToCreate, instance, position)
 
         return unitToCreate
     }

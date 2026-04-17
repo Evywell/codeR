@@ -6,14 +6,8 @@ import fr.rob.game.character.CheckCharacterExistInterface
 import fr.rob.game.character.FetchCharacterInterface
 import fr.rob.game.entity.Position
 import fr.rob.game.entity.guid.ObjectGuidGenerator
-import fr.rob.game.instance.MapInstance
 import fr.rob.game.player.PlayerFactory
 import fr.rob.game.player.session.GameSession
-import fr.rob.game.map.grid.GridBuilder
-import fr.rob.game.map.grid.GridConstraintChecker
-import fr.rob.game.map.Map
-import fr.rob.game.map.MapInfo
-import fr.rob.game.map.ZoneInfo
 import fr.rob.game.test.unit.sandbox.network.session.NullMessageSender
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -62,19 +56,6 @@ class PlayerFactoryTest {
         // Assert
         assertFalse(result.isSuccess)
         assertNull(result.player)
-    }
-
-    private fun getMapInstance(): MapInstance {
-        val gridBuilder = GridBuilder(GridConstraintChecker())
-        val cellSize = 1
-        val width = 20
-        val height = 20
-
-        return MapInstance(
-            1,
-            Map(1, 2, MapInfo("Map info", width, width), ZoneInfo("Zone info", width, height, 0f, 0f)),
-            gridBuilder.buildGrid(cellSize, width, height),
-        )
     }
 
     class CharacterFoundForUser : CheckCharacterExistInterface {

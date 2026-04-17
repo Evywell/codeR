@@ -8,11 +8,14 @@ import fr.rob.game.entity.notifier.Scheduler
 import fr.rob.game.entity.notifier.WorldObjectUpdatedNotifier
 import fr.rob.game.event.ListEventDispatcher
 import fr.rob.game.instance.InstanceManager
+import fr.rob.game.instance.InstanceUpdateService
+import fr.rob.game.map.grid.chunk.ChunkTransitionListener
 import fr.rob.game.world.packet.WorldPacketQueue
 import fr.rob.game.ability.event.NotifyAbilityFailedListener
 
 class World(
     private val instanceManager: InstanceManager,
+    private val instanceUpdateService: InstanceUpdateService,
     private val worldPacketQueue: WorldPacketQueue,
     private val delayedUpdateQueue: DelayedUpdateQueue,
 ) {
@@ -27,6 +30,7 @@ class World(
         eventDispatcher.attachListener(GetNearbyObjectListener())
         eventDispatcher.attachListener(ObjectSheetUpdatedListener())
         eventDispatcher.attachListener(NotifyAbilityFailedListener())
+        eventDispatcher.attachListener(ChunkTransitionListener(instanceManager))
     }
 
     fun update(deltaTime: Int) {
@@ -35,6 +39,6 @@ class World(
 
         worldPacketQueue.dequeue()
         delayedUpdateQueue.dequeue(deltaTime)
-        instanceManager.getAllInstances().forEach { instance -> instance.update(deltaTime, eventDispatcher) }
+        instanceManager.getAllInstances().forEach { instance -> instanceUpdateService.update(instance, deltaTime, eventDispatcher) }
     }
 }

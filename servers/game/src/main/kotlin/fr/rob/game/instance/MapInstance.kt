@@ -2,47 +2,33 @@ package fr.rob.game.instance
 
 import fr.rob.game.entity.Position
 import fr.rob.game.entity.WorldObject
-import fr.rob.game.entity.event.AddedIntoWorldEvent
 import fr.rob.game.entity.guid.ObjectGuid
 import fr.rob.game.event.DomainEventCarrierInterface
 import fr.rob.game.event.DomainEventContainer
-import fr.rob.game.event.DomainEventDispatcherInterface
 import fr.rob.game.event.DomainEventInterface
 import fr.rob.game.map.grid.Cell
 import fr.rob.game.map.grid.Grid
 import fr.rob.game.map.Map
 
 /**
- * We use MapInstance instead of Instance to avoid confusion with the entity
+ * We use MapInstance instead of Instance to avoid confusion with the entity.
+ * MapInstance is a pure data entity — no service dependencies, no business logic.
  */
 class MapInstance(val id: Int, val map: Map, val grid: Grid) : DomainEventCarrierInterface {
     private val objectsToRemove = ArrayList<WorldObject>()
     private val domainEventContainer = DomainEventContainer()
 
-    fun update(deltaTime: Int, eventDispatcher: DomainEventDispatcherInterface) {
-        objectsToRemove.clear()
-
-        updateGameObjectOfType(ObjectGuid.GUID_TYPE.PLAYER, deltaTime, eventDispatcher)
-        updateGameObjectOfType(ObjectGuid.GUID_TYPE.SCRIPTABLE_OBJECT, deltaTime, eventDispatcher)
-        updateGameObjectOfType(ObjectGuid.GUID_TYPE.GAME_OBJECT, deltaTime, eventDispatcher)
-
-        getDomainEventContainer().forEach { event ->
-            eventDispatcher.dispatch(event)
-        }
-
-        domainEventContainer.resetContainer()
-
-        objectsToRemove.forEach { worldObject -> grid.removeWorldObject(worldObject) }
-    }
-
-    fun addInInstance(worldObject: WorldObject): Cell {
-        pushEvent(AddedIntoWorldEvent(worldObject))
-
-        return grid.addWorldObject(worldObject)
-    }
-
     fun scheduleRemoveFromInstance(worldObject: WorldObject) {
         objectsToRemove.add(worldObject)
+    }
+
+    /**
+     * Returns all objects scheduled for removal and clears the internal list.
+     */
+    fun consumeScheduledRemovals(): List<WorldObject> {
+        val removals = ArrayList(objectsToRemove)
+        objectsToRemove.clear()
+        return removals
     }
 
     fun findObjectsInsideRadius(origin: Position, radius: Float): List<WorldObject> = grid.findObjectsInsideRadius(origin, radius)
@@ -52,22 +38,8 @@ class MapInstance(val id: Int, val map: Map, val grid: Grid) : DomainEventCarrie
         return grid.getCellFromWorldPosition(worldObject.position)
     }
 
-    private fun updateGameObjectOfType(
-        type: ObjectGuid.GUID_TYPE,
-        deltaTime: Int,
-        eventDispatcher: DomainEventDispatcherInterface,
-    ) {
-        grid.getObjectsByType(type).forEach {
-            it.onUpdate(deltaTime)
-            handleGameObjectEvents(it, eventDispatcher)
-            it.onAfterUpdate()
-        }
-    }
-
-    private fun handleGameObjectEvents(worldObject: WorldObject, eventDispatcher: DomainEventDispatcherInterface) {
-        worldObject.getDomainEventContainer().forEach { event ->
-            eventDispatcher.dispatch(event)
-        }
+    fun resetDomainEvents() {
+        domainEventContainer.resetContainer()
     }
 
     override fun pushEvent(event: DomainEventInterface) {

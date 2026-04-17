@@ -52,21 +52,21 @@ class GridTest {
         // Create objects with ComponentA
         val objectWithA1 = objectBuilder.createUnit()
         objectWithA1.addComponent(TestComponentA())
-        objectWithA1.addIntoInstance(instance, Position(5f, 5f, 0f, 0f))
+        WorldBuilder.addIntoInstance(objectWithA1, instance, Position(5f, 5f, 0f, 0f))
 
         val objectWithA2 = objectBuilder.createUnit()
         objectWithA2.addComponent(TestComponentA())
-        objectWithA2.addIntoInstance(instance, Position(8f, 5f, 0f, 0f))
+        WorldBuilder.addIntoInstance(objectWithA2, instance, Position(8f, 5f, 0f, 0f))
 
         // Create objects with ComponentB (not A)
         val objectWithB = objectBuilder.createUnit()
         objectWithB.addComponent(TestComponentB())
-        objectWithB.addIntoInstance(instance, Position(6f, 6f, 0f, 0f))
+        WorldBuilder.addIntoInstance(objectWithB, instance, Position(6f, 6f, 0f, 0f))
 
         // Create object with ComponentA but outside radius
         val objectWithAOutside = objectBuilder.createUnit()
         objectWithAOutside.addComponent(TestComponentA())
-        objectWithAOutside.addIntoInstance(instance, Position(50f, 50f, 0f, 0f))
+        WorldBuilder.addIntoInstance(objectWithAOutside, instance, Position(50f, 50f, 0f, 0f))
 
         val origin = Position(5f, 5f, 0f, 0f)
         val radius = 5f
@@ -90,7 +90,7 @@ class GridTest {
 
         val objectWithB = objectBuilder.createUnit()
         objectWithB.addComponent(TestComponentB())
-        objectWithB.addIntoInstance(instance, Position(5f, 5f, 0f, 0f))
+        WorldBuilder.addIntoInstance(objectWithB, instance, Position(5f, 5f, 0f, 0f))
 
         val origin = Position(5f, 5f, 0f, 0f)
         val radius = 10f
@@ -110,7 +110,7 @@ class GridTest {
 
         val objectWithA = objectBuilder.createUnit()
         objectWithA.addComponent(TestComponentA())
-        objectWithA.addIntoInstance(instance, Position(50f, 50f, 0f, 0f))
+        WorldBuilder.addIntoInstance(objectWithA, instance, Position(50f, 50f, 0f, 0f))
 
         val origin = Position(5f, 5f, 0f, 0f)
         val radius = 5f
@@ -132,23 +132,23 @@ class GridTest {
         val objectWithAB = objectBuilder.createUnit()
         objectWithAB.addComponent(TestComponentA())
         objectWithAB.addComponent(TestComponentB())
-        objectWithAB.addIntoInstance(instance, Position(5f, 5f, 0f, 0f))
+        WorldBuilder.addIntoInstance(objectWithAB, instance, Position(5f, 5f, 0f, 0f))
 
         // Object with only ComponentA
         val objectWithOnlyA = objectBuilder.createUnit()
         objectWithOnlyA.addComponent(TestComponentA())
-        objectWithOnlyA.addIntoInstance(instance, Position(6f, 6f, 0f, 0f))
+        WorldBuilder.addIntoInstance(objectWithOnlyA, instance, Position(6f, 6f, 0f, 0f))
 
         // Object with only ComponentB
         val objectWithOnlyB = objectBuilder.createUnit()
         objectWithOnlyB.addComponent(TestComponentB())
-        objectWithOnlyB.addIntoInstance(instance, Position(7f, 5f, 0f, 0f))
+        WorldBuilder.addIntoInstance(objectWithOnlyB, instance, Position(7f, 5f, 0f, 0f))
 
         // Object with both components but outside radius
         val objectWithABOutside = objectBuilder.createUnit()
         objectWithABOutside.addComponent(TestComponentA())
         objectWithABOutside.addComponent(TestComponentB())
-        objectWithABOutside.addIntoInstance(instance, Position(50f, 50f, 0f, 0f))
+        WorldBuilder.addIntoInstance(objectWithABOutside, instance, Position(50f, 50f, 0f, 0f))
 
         val origin = Position(5f, 5f, 0f, 0f)
         val radius = 5f
@@ -177,7 +177,7 @@ class GridTest {
 
         val obj = objectBuilder.createUnit()
         obj.addComponent(TestComponentA())
-        obj.addIntoInstance(instance, Position(5f, 5f, 0f, 0f))
+        WorldBuilder.addIntoInstance(obj, instance, Position(5f, 5f, 0f, 0f))
 
         val origin = Position(5f, 5f, 0f, 0f)
         val radius = 10f
@@ -197,11 +197,11 @@ class GridTest {
 
         val objectWithA = objectBuilder.createUnit()
         objectWithA.addComponent(TestComponentA())
-        objectWithA.addIntoInstance(instance, Position(5f, 5f, 0f, 0f))
+        WorldBuilder.addIntoInstance(objectWithA, instance, Position(5f, 5f, 0f, 0f))
 
         val objectWithB = objectBuilder.createUnit()
         objectWithB.addComponent(TestComponentB())
-        objectWithB.addIntoInstance(instance, Position(6f, 6f, 0f, 0f))
+        WorldBuilder.addIntoInstance(objectWithB, instance, Position(6f, 6f, 0f, 0f))
 
         val origin = Position(5f, 5f, 0f, 0f)
         val radius = 10f
@@ -226,13 +226,13 @@ class GridTest {
         objectWithABC.addComponent(TestComponentA())
         objectWithABC.addComponent(TestComponentB())
         objectWithABC.addComponent(TestComponentC())
-        objectWithABC.addIntoInstance(instance, Position(5f, 5f, 0f, 0f))
+        WorldBuilder.addIntoInstance(objectWithABC, instance, Position(5f, 5f, 0f, 0f))
 
         // Object with only two components
         val objectWithAB = objectBuilder.createUnit()
         objectWithAB.addComponent(TestComponentA())
         objectWithAB.addComponent(TestComponentB())
-        objectWithAB.addIntoInstance(instance, Position(6f, 6f, 0f, 0f))
+        WorldBuilder.addIntoInstance(objectWithAB, instance, Position(6f, 6f, 0f, 0f))
 
         val origin = Position(5f, 5f, 0f, 0f)
         val radius = 10f
@@ -264,17 +264,17 @@ class GridTest {
         // Object exactly at radius (distance = 5)
         val objectAtBoundary = objectBuilder.createUnit()
         objectAtBoundary.addComponent(TestComponentA())
-        objectAtBoundary.addIntoInstance(instance, Position(3f, 4f, 0f, 0f)) // 3-4-5 triangle
+        WorldBuilder.addIntoInstance(objectAtBoundary, instance, Position(3f, 4f, 0f, 0f)) // 3-4-5 triangle
 
         // Object just inside radius
         val objectInside = objectBuilder.createUnit()
         objectInside.addComponent(TestComponentA())
-        objectInside.addIntoInstance(instance, Position(2f, 2f, 0f, 0f))
+        WorldBuilder.addIntoInstance(objectInside, instance, Position(2f, 2f, 0f, 0f))
 
         // Object just outside radius
         val objectOutside = objectBuilder.createUnit()
         objectOutside.addComponent(TestComponentA())
-        objectOutside.addIntoInstance(instance, Position(4f, 4f, 0f, 0f))
+        WorldBuilder.addIntoInstance(objectOutside, instance, Position(4f, 4f, 0f, 0f))
 
         // Act
         val result = instance.grid.findObjectsWithComponentInRadius(origin, radius, TestComponentA::class)

@@ -1,15 +1,18 @@
 package fr.rob.game.entity
 
 import fr.rob.game.entity.OutOfBoundsException
+import fr.rob.game.entity.event.AddedIntoWorldEvent
 import fr.rob.game.entity.guid.ObjectGuid
 import fr.rob.game.entity.guid.ObjectGuid.LowGuid
 import fr.rob.game.entity.guid.ObjectGuidGenerator
+import fr.rob.game.instance.InstanceManager
 import fr.rob.game.instance.MapInstance
 import fr.rob.game.map.grid.Grid
 import fr.rob.game.map.Map
 
 class ObjectManager(
     private val objectGuidGenerator: ObjectGuidGenerator,
+    private val instanceManager: InstanceManager,
 ) {
     fun spawnObject(lowGuid: LowGuid, position: Position, instance: MapInstance): WorldObject? {
         // Check out of bounds
@@ -30,13 +33,31 @@ class ObjectManager(
         return createWorldObject(guid, instance, position)
     }
 
+    fun addEntityIntoInstance(worldObject: WorldObject, instance: MapInstance, position: Position) {
+        worldObject.mapInstance = instance
+        worldObject.position = position
+        worldObject.isInWorld = true
+
+        instance.pushEvent(AddedIntoWorldEvent(worldObject))
+        instance.grid.addWorldObject(worldObject)
+
+        val chunkManager = instanceManager.getChunkManager(instance.id)
+        val chunkId = chunkManager.getChunkIdForPosition(position)
+        worldObject.cachedChunkId = chunkId
+        chunkManager.registerEntity(worldObject, chunkId)
+
+        if (worldObject.guid.isPlayer()) {
+            chunkManager.onPlayerEntered(worldObject)
+        }
+    }
+
     private fun isObjectAlreadyInGrid(guid: ObjectGuid, grid: Grid): Boolean =
         grid.findObjectByGuid(guid) != null
 
     private fun createWorldObject(guid: ObjectGuid, instance: MapInstance, position: Position): WorldObject {
         val worldObject = WorldObject(guid)
 
-        worldObject.addIntoInstance(instance, position)
+        addEntityIntoInstance(worldObject, instance, position)
 
         return worldObject
     }

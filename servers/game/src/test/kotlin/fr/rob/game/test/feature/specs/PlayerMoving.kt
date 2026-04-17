@@ -6,6 +6,7 @@ import fr.raven.proto.message.game.setup.LogIntoWorldProto
 import fr.rob.game.player.message.MovementHeartbeatMessage
 import fr.rob.game.entity.guid.ObjectGuid
 import fr.rob.game.instance.InstanceManager
+import fr.rob.game.instance.InstanceUpdateService
 import fr.rob.game.player.session.GameSession
 import fr.rob.game.map.Map
 import fr.rob.game.map.MapInfo
@@ -29,7 +30,7 @@ class PlayerMoving : DatabaseTestApplication() {
 
         val instanceManager = get<InstanceManager>()
         val worldPacketQueue = get<WorldPacketQueue>()
-        val world = World(instanceManager, worldPacketQueue, get<DelayedUpdateQueue>())
+        val world = World(instanceManager, InstanceUpdateService(instanceManager), worldPacketQueue, get<DelayedUpdateQueue>())
 
         instanceManager.create(
             PlayerJoiningWorld.DEFAULT_TEST_INSTANCE_ID,
