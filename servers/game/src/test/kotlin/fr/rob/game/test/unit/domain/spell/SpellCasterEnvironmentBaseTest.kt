@@ -6,6 +6,11 @@ import fr.rob.game.entity.ObjectManager
 import fr.rob.game.entity.Position
 import fr.rob.game.entity.guid.ObjectGuid
 import fr.rob.game.entity.guid.ObjectGuidGenerator
+import fr.rob.game.instance.InstanceManager
+import fr.rob.game.instance.InstanceUpdateService
+import fr.rob.game.map.grid.GridBuilder
+import fr.rob.game.map.grid.GridConstraintChecker
+import fr.rob.game.map.grid.chunk.ChunkManager
 import fr.rob.game.spell.SpellBook
 import fr.rob.game.spell.SpellCasterTrait
 import fr.rob.game.test.unit.tools.RiggedDiceEngine
@@ -18,10 +23,15 @@ abstract class SpellCasterEnvironmentBaseTest {
     protected lateinit var target: WorldUnit
     protected val targetRiggedDiceEngine = RiggedDiceEngine()
     protected val instance = WorldBuilder.buildBasicWorld()
+    private val testInstanceManager = InstanceManager(GridBuilder(GridConstraintChecker())).also { im ->
+        val cm = ChunkManager(instance.grid, ChunkManager.DEFAULT_CHUNK_SIZE)
+        im.registerChunkManager(instance.id, cm)
+    }
+    protected val instanceUpdateService = InstanceUpdateService(testInstanceManager)
 
     private lateinit var spellBook: SpellBook
     private val guidGenerator = ObjectGuidGenerator()
-    private val objectManager = ObjectManager(guidGenerator)
+    private val objectManager = ObjectManager(guidGenerator, testInstanceManager)
     private var entryGuid: UInt = 1u
 
     @BeforeEach
@@ -44,7 +54,7 @@ abstract class SpellCasterEnvironmentBaseTest {
         )
         unitToCreate.addComponent(HealthComponent(100))
         unitToCreate.addBehavior(ObjectSheetBehavior(targetRiggedDiceEngine))
-        unitToCreate.addIntoInstance(instance, position)
+        WorldBuilder.addIntoInstance(unitToCreate, instance, position)
 
         return unitToCreate
     }

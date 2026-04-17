@@ -5,13 +5,16 @@ import fr.rob.game.entity.Position
 import fr.rob.game.entity.OutOfBoundsException
 import fr.rob.game.entity.guid.ObjectGuid
 import fr.rob.game.entity.guid.ObjectGuidGenerator
+import fr.rob.game.instance.InstanceManager
 import fr.rob.game.instance.MapInstance
 import fr.rob.game.map.grid.Grid
 import fr.rob.game.map.grid.GridBuilder
 import fr.rob.game.map.grid.GridConstraintChecker
+import fr.rob.game.map.grid.chunk.ChunkManager
 import fr.rob.game.map.Map
 import fr.rob.game.map.MapInfo
 import fr.rob.game.map.ZoneInfo
+import fr.rob.game.test.unit.tools.WorldBuilder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -24,6 +27,8 @@ import java.util.stream.Stream
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ObjectManagerTest {
+    private val testInstanceManager = InstanceManager(GridBuilder(GridConstraintChecker()))
+
     @Test
     fun `As OM, I should successfully create an object in a specific instance`() {
         // Arrange
@@ -33,7 +38,10 @@ class ObjectManagerTest {
         val map = Map(1, 1, mapInfo, zoneInfo)
         val gridBuilder = GridBuilder(GridConstraintChecker())
         val grid = gridBuilder.buildGrid(10, zoneInfo.width, zoneInfo.height)
+        val chunkManager = ChunkManager(grid, ChunkManager.DEFAULT_CHUNK_SIZE)
         val instance = MapInstance(13, map, grid)
+        testInstanceManager.registerChunkManager(instance.id, chunkManager)
+        WorldBuilder.registerChunkManager(instance.id, chunkManager)
         val position = Position(10f, 0f, 15f, 0f)
         val lowGuid = ObjectGuid.LowGuid(1u, 1u)
 
@@ -58,7 +66,10 @@ class ObjectManagerTest {
         val mapInfo = MapInfo("A testing map", 200, 200)
         val map = Map(1, 1, mapInfo, zoneInfo)
         val grid = Grid(100, 100, 10, emptyArray())
+        val chunkManager = ChunkManager(grid, ChunkManager.DEFAULT_CHUNK_SIZE)
         val instance = MapInstance(13, map, grid)
+        testInstanceManager.registerChunkManager(instance.id, chunkManager)
+        WorldBuilder.registerChunkManager(instance.id, chunkManager)
         val lowGuid = ObjectGuid.LowGuid(1u, 1u)
 
         // Act & Assert
@@ -88,5 +99,5 @@ class ObjectManagerTest {
         )
     )
 
-    private fun getObjectManager(): ObjectManager = ObjectManager(ObjectGuidGenerator())
+    private fun getObjectManager(): ObjectManager = ObjectManager(ObjectGuidGenerator(), testInstanceManager)
 }

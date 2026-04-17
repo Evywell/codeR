@@ -38,7 +38,7 @@ class CreatePlayerIntoWorldHandler(
         val worldObject = createMobAroundPosition(ObjectGuid.LowGuid(1u, 1u), Position(10f, 0f, 1f, 0f), command.mapInstance)
         val worldObject2 = createMobAroundPosition(ObjectGuid.LowGuid(1u, 2u), Position(10f, 10f, 1f, 0f), command.mapInstance)
 
-        player.addIntoInstance(command.mapInstance, createPlayerResult.position!!)
+        objectManager.addEntityIntoInstance(player, command.mapInstance, createPlayerResult.position!!)
 
         // @todo Send player info
         player.ownerGameSession.send(PlayerDescriptionMessage(player.guid, player.name))

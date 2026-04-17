@@ -7,6 +7,7 @@ import fr.rob.game.character.waitingroom.CharacterWaitingRoom
 import fr.rob.game.config.DB_REALM
 import fr.rob.game.config.DB_WORLD
 import fr.rob.game.instance.InstanceManager
+import fr.rob.game.instance.InstanceUpdateService
 import fr.rob.game.node.NodeBuilder
 import fr.rob.game.map.MapManager
 import fr.rob.game.world.DelayedUpdateQueue
@@ -21,6 +22,7 @@ class App(private val config: GameConfig) : KoinComponent {
 
     private val loggerFactory: LoggerFactoryInterface by inject()
     private val instanceManager: InstanceManager by inject()
+    private val instanceUpdateService: InstanceUpdateService by inject()
     private val mapManager: MapManager by inject()
     private val connectionPoolManager: ConnectionPoolManager by inject { parametersOf(6) } // @todo Change this hard coded value
     private val characterWaitingRoom: CharacterWaitingRoom by inject()
@@ -39,6 +41,7 @@ class App(private val config: GameConfig) : KoinComponent {
             delayedUpdateQueue,
             FakeInstanceBuilder(mapManager, instanceManager),
             instanceManager,
+            instanceUpdateService,
             characterWaitingRoom,
         ).run(config.nodesConfig.nodeConfig)
     }

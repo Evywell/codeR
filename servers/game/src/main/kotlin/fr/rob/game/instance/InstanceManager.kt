@@ -1,21 +1,30 @@
 package fr.rob.game.instance
 
 import fr.rob.game.map.grid.GridBuilder
+import fr.rob.game.map.grid.chunk.ChunkManager
 import fr.rob.game.map.Map
 
 class InstanceManager(private val gridBuilder: GridBuilder) {
 
     private val instances = ArrayList<MapInstance>()
+    private val chunkManagers = mutableMapOf<Int, ChunkManager>()
 
     fun create(id: Int, map: Map): MapInstance {
-        val instance = MapInstance(
-            id,
-            map,
-            gridBuilder.buildGrid(GridBuilder.DEFAULT_CELL_SIZE, map.zoneInfo.width, map.zoneInfo.height),
-        )
+        val grid = gridBuilder.buildGrid(GridBuilder.DEFAULT_CELL_SIZE, map.zoneInfo.width, map.zoneInfo.height)
+        val chunkManager = ChunkManager(grid, ChunkManager.DEFAULT_CHUNK_SIZE)
+
+        val instance = MapInstance(id, map, grid)
         instances.add(instance)
+        registerChunkManager(id, chunkManager)
 
         return instance
+    }
+
+    fun getChunkManager(instanceId: Int): ChunkManager =
+        chunkManagers[instanceId] ?: throw RuntimeException("No ChunkManager for instance $instanceId")
+
+    fun registerChunkManager(instanceId: Int, chunkManager: ChunkManager) {
+        chunkManagers[instanceId] = chunkManager
     }
 
     fun retrieve(id: Int): MapInstance {

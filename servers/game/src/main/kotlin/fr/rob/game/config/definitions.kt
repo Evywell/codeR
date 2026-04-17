@@ -29,6 +29,7 @@ import fr.rob.game.entity.movement.spline.SplineMovementBrainInterface
 import fr.rob.game.entity.movement.spline.UnitySplineMovementBrain
 import fr.rob.game.entity.template.Creature
 import fr.rob.game.instance.InstanceManager
+import fr.rob.game.instance.InstanceUpdateService
 import fr.rob.game.player.InstanceFinderInterface
 import fr.rob.game.player.PlayerFactory
 import fr.rob.game.map.grid.GridBuilder
@@ -80,6 +81,7 @@ val globalModule =
         single<EventManagerInterface> { EventManager() }
         singleOf<LoggerFactoryInterface> { LoggerFactory({}.javaClass.classLoader.getResourceAsStream("log4j.config.xml")!!) }
         single { InstanceManager(GridBuilder(GridConstraintChecker())) }
+        single { InstanceUpdateService(get()) }
         single<InstanceFinderInterface> { FakeInstanceFinder(get()) }
     }
 
@@ -119,7 +121,7 @@ val opcodeModule =
             )
         }
 
-        single { ObjectManager(get()) }
+        single { ObjectManager(get(), get()) }
 
         single { DelayedUpdateQueue() }
 

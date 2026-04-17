@@ -9,6 +9,7 @@ import fr.rob.game.event.DomainEventInterface
 import fr.rob.game.instance.MapInstance
 import fr.rob.game.player.session.GameSession
 import fr.rob.game.map.grid.Cell
+import fr.rob.game.map.grid.chunk.ChunkId
 import fr.rob.game.ability.Ability
 import fr.rob.game.ability.AbilityInfo
 import fr.rob.game.behavior.BehaviorInterface
@@ -22,6 +23,7 @@ open class WorldObject(
     var isInWorld = false
     lateinit var mapInstance: MapInstance
     lateinit var position: Position
+    var cachedChunkId: ChunkId? = null
 
     var controlledByGameSession: GameSession? = null
 
@@ -75,14 +77,6 @@ open class WorldObject(
 
     fun getCell(): Cell {
         return mapInstance.getWorldObjectCell(this)
-    }
-
-    fun addIntoInstance(instance: MapInstance, toPosition: Position) {
-        mapInstance = instance
-        position = toPosition
-        isInWorld = true
-
-        mapInstance.addInInstance(this)
     }
 
     fun scheduleRemoveFromInstance() {

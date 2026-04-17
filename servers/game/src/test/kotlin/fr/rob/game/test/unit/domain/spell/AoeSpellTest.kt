@@ -45,25 +45,25 @@ class AoeSpellTest : SpellCasterEnvironmentBaseTest() {
         assertEquals(100, target.getComponent<HealthComponent>()?.value)
 
         // Let's jump after the first tick
-        instance.update(500, eventDispatcher)
+        instanceUpdateService.update(instance, 500, eventDispatcher)
 
         assertEquals(90, caster.getComponent<HealthComponent>()?.value)
         assertEquals(90, target.getComponent<HealthComponent>()?.value)
 
         // Let's jump 200 ms => the second tick is not ready yet, no changes
-        instance.update(200, eventDispatcher)
+        instanceUpdateService.update(instance, 200, eventDispatcher)
 
         assertEquals(90, caster.getComponent<HealthComponent>()?.value)
         assertEquals(90, target.getComponent<HealthComponent>()?.value)
 
         // Let's jump 400 ms => the second tick is past since 100ms
-        instance.update(400, eventDispatcher)
+        instanceUpdateService.update(instance, 400, eventDispatcher)
 
         assertEquals(80, caster.getComponent<HealthComponent>()?.value)
         assertEquals(80, target.getComponent<HealthComponent>()?.value)
 
         // Let's jump 400 ms => the script should be ending
-        instance.update(400, eventDispatcher)
+        instanceUpdateService.update(instance, 400, eventDispatcher)
 
         assertEquals(80, caster.getComponent<HealthComponent>()?.value)
         assertEquals(80, target.getComponent<HealthComponent>()?.value)

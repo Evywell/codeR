@@ -7,6 +7,7 @@ import fr.rob.game.entity.ObjectManager
 import fr.rob.game.entity.Position
 import fr.rob.game.entity.guid.ObjectGuid
 import fr.rob.game.instance.InstanceManager
+import fr.rob.game.instance.InstanceUpdateService
 import fr.rob.game.player.session.GameSession
 import fr.rob.game.map.Map
 import fr.rob.game.map.MapInfo
@@ -34,7 +35,7 @@ class PlayerJoiningWorld : DatabaseTestApplication() {
         val instanceManager = get<InstanceManager>()
         val worldPacketQueue = get<WorldPacketQueue>()
         val objectManager = get<ObjectManager>()
-        val world = World(instanceManager, worldPacketQueue, get<DelayedUpdateQueue>())
+        val world = World(instanceManager, InstanceUpdateService(instanceManager), worldPacketQueue, get<DelayedUpdateQueue>())
 
         val instance = instanceManager.create(
             DEFAULT_TEST_INSTANCE_ID,
