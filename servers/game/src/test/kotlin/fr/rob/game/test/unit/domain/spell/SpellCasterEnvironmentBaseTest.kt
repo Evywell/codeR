@@ -10,7 +10,6 @@ import fr.rob.game.instance.InstanceManager
 import fr.rob.game.instance.InstanceUpdateService
 import fr.rob.game.map.grid.GridBuilder
 import fr.rob.game.map.grid.GridConstraintChecker
-import fr.rob.game.map.grid.chunk.ChunkManager
 import fr.rob.game.spell.SpellBook
 import fr.rob.game.spell.SpellCasterTrait
 import fr.rob.game.test.unit.tools.RiggedDiceEngine
@@ -22,10 +21,10 @@ abstract class SpellCasterEnvironmentBaseTest {
     protected lateinit var caster: WorldUnit
     protected lateinit var target: WorldUnit
     protected val targetRiggedDiceEngine = RiggedDiceEngine()
-    protected val instance = WorldBuilder.buildBasicWorld()
+    protected val worldBuilder = WorldBuilder()
+    protected val instance = worldBuilder.buildBasicWorld()
     private val testInstanceManager = InstanceManager(GridBuilder(GridConstraintChecker())).also { im ->
-        val cm = ChunkManager(instance.grid, ChunkManager.DEFAULT_CHUNK_SIZE)
-        im.registerChunkManager(instance.id, cm)
+        im.registerChunkManager(instance.id, worldBuilder.getChunkManager(instance.id)!!)
     }
     protected val instanceUpdateService = InstanceUpdateService(testInstanceManager)
 
@@ -54,7 +53,7 @@ abstract class SpellCasterEnvironmentBaseTest {
         )
         unitToCreate.addComponent(HealthComponent(100))
         unitToCreate.addBehavior(ObjectSheetBehavior(targetRiggedDiceEngine))
-        WorldBuilder.addIntoInstance(unitToCreate, instance, position)
+        worldBuilder.addIntoInstance(unitToCreate, instance, position)
 
         return unitToCreate
     }

@@ -33,7 +33,8 @@ class AbilityEffectsTest {
     private lateinit var caster: WorldUnit
     private lateinit var target: WorldUnit
     private val riggedDiceEngine = RiggedDiceEngine()
-    private val instance = WorldBuilder.buildBasicWorld()
+    private val worldBuilder = WorldBuilder()
+    private val instance = worldBuilder.buildBasicWorld()
     private val guidGenerator = ObjectGuidGenerator()
     private var entryGuid: UInt = 1u
 
@@ -171,7 +172,7 @@ class AbilityEffectsTest {
         )
         unitToCreate.addComponent(HealthComponent(100))
         unitToCreate.addBehavior(ObjectSheetBehavior(riggedDiceEngine))
-        WorldBuilder.addIntoInstance(unitToCreate, instance, position)
+        worldBuilder.addIntoInstance(unitToCreate, instance, position)
 
         return unitToCreate
     }

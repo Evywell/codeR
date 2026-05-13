@@ -19,7 +19,6 @@ import fr.rob.game.map.grid.chunk.ChunkTransitionListener
 import fr.rob.game.test.unit.tools.DummyWorldObjectBuilder
 import fr.rob.game.test.unit.tools.VoidEventDispatcher
 import fr.rob.game.test.unit.tools.WorldBuilder
-import fr.rob.game.test.unit.domain.game.world.grid.chunk.ChunkManagerTest.Companion.createInstanceWithChunkManager
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -35,6 +34,7 @@ import org.junit.jupiter.api.Test
  */
 class InstanceUpdateServiceTest {
 
+    private val worldBuilder = WorldBuilder()
     private val instanceManager = createTestInstanceManager()
     private val service = InstanceUpdateService(instanceManager)
     private val eventDispatcher = VoidEventDispatcher()
@@ -64,10 +64,8 @@ class InstanceUpdateServiceTest {
      * chunk manager in the test InstanceManager.
      */
     private fun buildTestInstance(): MapInstance {
-        val instance = WorldBuilder.buildBasicWorld()
-        val grid = instance.grid
-        val chunkManager = ChunkManager(grid, ChunkManager.DEFAULT_CHUNK_SIZE)
-        WorldBuilder.registerChunkManager(instance.id, chunkManager)
+        val instance = worldBuilder.buildBasicWorld()
+        val chunkManager = worldBuilder.getChunkManager(instance.id)!!
         instanceManager.registerChunkManager(instance.id, chunkManager)
         return instance
     }
@@ -76,7 +74,7 @@ class InstanceUpdateServiceTest {
         grid: fr.rob.game.map.grid.Grid,
         cm: ChunkManager,
     ): MapInstance {
-        val instance = createInstanceWithChunkManager(grid, cm)
+        val instance = worldBuilder.buildInstanceWithChunkManager(grid, cm)
         instanceManager.registerChunkManager(instance.id, cm)
         return instance
     }
@@ -91,12 +89,12 @@ class InstanceUpdateServiceTest {
         fun `entities in active chunks are ticked`() {
             val instance = buildTestInstance()
             val player = objectBuilder.createPlayer()
-            WorldBuilder.addIntoInstance(player, instance, posInChunk00())
+            worldBuilder.addIntoInstance(player, instance, posInChunk00())
 
             val unit = objectBuilder.createUnit()
             val spy = TickCountBehavior()
             unit.addBehavior(spy)
-            WorldBuilder.addIntoInstance(unit, instance, posInChunk00Alt())
+            worldBuilder.addIntoInstance(unit, instance, posInChunk00Alt())
 
             service.update(instance, 20, eventDispatcher)
 
@@ -111,7 +109,7 @@ class InstanceUpdateServiceTest {
             val unit = objectBuilder.createUnit()
             val spy = TickCountBehavior()
             unit.addBehavior(spy)
-            WorldBuilder.addIntoInstance(unit, instance, posInChunk00())
+            worldBuilder.addIntoInstance(unit, instance, posInChunk00())
 
             service.update(instance, 20, eventDispatcher)
 
@@ -122,12 +120,12 @@ class InstanceUpdateServiceTest {
         fun `entities in shutting-down chunks are still ticked`() {
             val instance = buildTestInstance()
             val player = objectBuilder.createPlayer()
-            WorldBuilder.addIntoInstance(player, instance, posInChunk00())
+            worldBuilder.addIntoInstance(player, instance, posInChunk00())
 
             val unit = objectBuilder.createUnit()
             val spy = TickCountBehavior()
             unit.addBehavior(spy)
-            WorldBuilder.addIntoInstance(unit, instance, posInChunk00Alt())
+            worldBuilder.addIntoInstance(unit, instance, posInChunk00Alt())
 
             val cm = instanceManager.getChunkManager(instance.id)
             cm.onPlayerLeft(player)
@@ -143,7 +141,7 @@ class InstanceUpdateServiceTest {
             val player = objectBuilder.createPlayer()
             val spy = TickCountBehavior()
             player.addBehavior(spy)
-            WorldBuilder.addIntoInstance(player, instance, posInChunk00())
+            worldBuilder.addIntoInstance(player, instance, posInChunk00())
 
             service.update(instance, 20, eventDispatcher)
 
@@ -164,7 +162,7 @@ class InstanceUpdateServiceTest {
             val scripted = createScriptedWorldObject()
             val spy = TickCountBehavior()
             scripted.addBehavior(spy)
-            WorldBuilder.addIntoInstance(scripted, instance, posInChunk00())
+            worldBuilder.addIntoInstance(scripted, instance, posInChunk00())
 
             // No player → all chunks dormant
             service.update(instance, 20, eventDispatcher)
@@ -176,17 +174,17 @@ class InstanceUpdateServiceTest {
         fun `scripted world objects are ticked alongside active chunk entities`() {
             val instance = buildTestInstance()
             val player = objectBuilder.createPlayer()
-            WorldBuilder.addIntoInstance(player, instance, posInChunk00())
+            worldBuilder.addIntoInstance(player, instance, posInChunk00())
 
             val scripted = createScriptedWorldObject()
             val spyScripted = TickCountBehavior()
             scripted.addBehavior(spyScripted)
-            WorldBuilder.addIntoInstance(scripted, instance, posInChunk33()) // far away chunk, dormant
+            worldBuilder.addIntoInstance(scripted, instance, posInChunk33()) // far away chunk, dormant
 
             val unit = objectBuilder.createUnit()
             val spyUnit = TickCountBehavior()
             unit.addBehavior(spyUnit)
-            WorldBuilder.addIntoInstance(unit, instance, posInChunk00Alt())
+            worldBuilder.addIntoInstance(unit, instance, posInChunk00Alt())
 
             service.update(instance, 20, eventDispatcher)
 
@@ -209,10 +207,10 @@ class InstanceUpdateServiceTest {
             val instance = buildCustomInstance(grid, cm)
 
             val player = objectBuilder.createPlayer()
-            WorldBuilder.addIntoInstance(player, instance, posInChunk00())
+            worldBuilder.addIntoInstance(player, instance, posInChunk00())
 
             val unit = objectBuilder.createUnit()
-            WorldBuilder.addIntoInstance(unit, instance, posInChunk00Alt())
+            worldBuilder.addIntoInstance(unit, instance, posInChunk00Alt())
 
             cm.onPlayerLeft(player)
             assertTrue(unit.isInWorld)
@@ -236,10 +234,10 @@ class InstanceUpdateServiceTest {
         fun `scheduled removals are processed and entities removed from grid`() {
             val instance = buildTestInstance()
             val player = objectBuilder.createPlayer()
-            WorldBuilder.addIntoInstance(player, instance, posInChunk00())
+            worldBuilder.addIntoInstance(player, instance, posInChunk00())
 
             val unit = objectBuilder.createUnit()
-            WorldBuilder.addIntoInstance(unit, instance, posInChunk00Alt())
+            worldBuilder.addIntoInstance(unit, instance, posInChunk00Alt())
 
             unit.scheduleRemoveFromInstance()
 
@@ -253,7 +251,7 @@ class InstanceUpdateServiceTest {
         fun `player removal triggers onPlayerLeft on chunk manager`() {
             val instance = buildTestInstance()
             val player = objectBuilder.createPlayer()
-            WorldBuilder.addIntoInstance(player, instance, posInChunk00())
+            worldBuilder.addIntoInstance(player, instance, posInChunk00())
 
             val cm = instanceManager.getChunkManager(instance.id)
             val chunkId = ChunkId(0, 0)
@@ -280,12 +278,12 @@ class InstanceUpdateServiceTest {
             val instance = buildCustomInstance(grid, cm)
 
             val player = objectBuilder.createPlayer()
-            WorldBuilder.addIntoInstance(player, instance, posInChunk00())
+            worldBuilder.addIntoInstance(player, instance, posInChunk00())
 
             val unit = objectBuilder.createUnit()
             val spy = TickCountBehavior()
             unit.addBehavior(spy)
-            WorldBuilder.addIntoInstance(unit, instance, posInChunk00Alt())
+            worldBuilder.addIntoInstance(unit, instance, posInChunk00Alt())
 
             // Tick 1: everything active
             service.update(instance, 50, eventDispatcher)
@@ -334,7 +332,7 @@ class InstanceUpdateServiceTest {
             val dispatcher = buildEventDispatcherWithChunkTransition()
 
             val player = objectBuilder.createPlayer()
-            WorldBuilder.addIntoInstance(player, instance, posInChunk00())
+            worldBuilder.addIntoInstance(player, instance, posInChunk00())
             assertEquals(ChunkId(0, 0), player.cachedChunkId)
 
             player.addBehavior(MoveOnUpdateBehavior(posInChunk33()))
@@ -354,10 +352,10 @@ class InstanceUpdateServiceTest {
             val dispatcher = buildEventDispatcherWithChunkTransition()
 
             val player = objectBuilder.createPlayer()
-            WorldBuilder.addIntoInstance(player, instance, posInChunk00())
+            worldBuilder.addIntoInstance(player, instance, posInChunk00())
 
             val unit = objectBuilder.createUnit()
-            WorldBuilder.addIntoInstance(unit, instance, posInChunk00Alt())
+            worldBuilder.addIntoInstance(unit, instance, posInChunk00Alt())
             assertEquals(ChunkId(0, 0), unit.cachedChunkId)
 
             unit.addBehavior(MoveOnUpdateBehavior(posInChunk10()))

@@ -24,6 +24,8 @@ class TestComponentC
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class GridTest {
 
+    private val worldBuilder = WorldBuilder()
+
     @ParameterizedTest
     @MethodSource("neighborCellDataProvider")
     fun `I must give the neighbor cells`(baseCellIndex: Int, neighbor: Array<Cell>) {
@@ -46,27 +48,27 @@ class GridTest {
     @Test
     fun `findObjectsWithComponentInRadius should return only objects with specified component within radius`() {
         // Arrange
-        val instance = WorldBuilder.buildBasicWorld()
+        val instance = worldBuilder.buildBasicWorld()
         val objectBuilder = DummyWorldObjectBuilder(ObjectGuidGenerator())
 
         // Create objects with ComponentA
         val objectWithA1 = objectBuilder.createUnit()
         objectWithA1.addComponent(TestComponentA())
-        WorldBuilder.addIntoInstance(objectWithA1, instance, Position(5f, 5f, 0f, 0f))
+        worldBuilder.addIntoInstance(objectWithA1, instance, Position(5f, 5f, 0f, 0f))
 
         val objectWithA2 = objectBuilder.createUnit()
         objectWithA2.addComponent(TestComponentA())
-        WorldBuilder.addIntoInstance(objectWithA2, instance, Position(8f, 5f, 0f, 0f))
+        worldBuilder.addIntoInstance(objectWithA2, instance, Position(8f, 5f, 0f, 0f))
 
         // Create objects with ComponentB (not A)
         val objectWithB = objectBuilder.createUnit()
         objectWithB.addComponent(TestComponentB())
-        WorldBuilder.addIntoInstance(objectWithB, instance, Position(6f, 6f, 0f, 0f))
+        worldBuilder.addIntoInstance(objectWithB, instance, Position(6f, 6f, 0f, 0f))
 
         // Create object with ComponentA but outside radius
         val objectWithAOutside = objectBuilder.createUnit()
         objectWithAOutside.addComponent(TestComponentA())
-        WorldBuilder.addIntoInstance(objectWithAOutside, instance, Position(50f, 50f, 0f, 0f))
+        worldBuilder.addIntoInstance(objectWithAOutside, instance, Position(50f, 50f, 0f, 0f))
 
         val origin = Position(5f, 5f, 0f, 0f)
         val radius = 5f
@@ -85,12 +87,12 @@ class GridTest {
     @Test
     fun `findObjectsWithComponentInRadius should return empty list when no objects have the component`() {
         // Arrange
-        val instance = WorldBuilder.buildBasicWorld()
+        val instance = worldBuilder.buildBasicWorld()
         val objectBuilder = DummyWorldObjectBuilder(ObjectGuidGenerator())
 
         val objectWithB = objectBuilder.createUnit()
         objectWithB.addComponent(TestComponentB())
-        WorldBuilder.addIntoInstance(objectWithB, instance, Position(5f, 5f, 0f, 0f))
+        worldBuilder.addIntoInstance(objectWithB, instance, Position(5f, 5f, 0f, 0f))
 
         val origin = Position(5f, 5f, 0f, 0f)
         val radius = 10f
@@ -105,12 +107,12 @@ class GridTest {
     @Test
     fun `findObjectsWithComponentInRadius should return empty list when objects are outside radius`() {
         // Arrange
-        val instance = WorldBuilder.buildBasicWorld()
+        val instance = worldBuilder.buildBasicWorld()
         val objectBuilder = DummyWorldObjectBuilder(ObjectGuidGenerator())
 
         val objectWithA = objectBuilder.createUnit()
         objectWithA.addComponent(TestComponentA())
-        WorldBuilder.addIntoInstance(objectWithA, instance, Position(50f, 50f, 0f, 0f))
+        worldBuilder.addIntoInstance(objectWithA, instance, Position(50f, 50f, 0f, 0f))
 
         val origin = Position(5f, 5f, 0f, 0f)
         val radius = 5f
@@ -125,30 +127,30 @@ class GridTest {
     @Test
     fun `findObjectsWithComponentsInRadius should return only objects with all specified components within radius`() {
         // Arrange
-        val instance = WorldBuilder.buildBasicWorld()
+        val instance = worldBuilder.buildBasicWorld()
         val objectBuilder = DummyWorldObjectBuilder(ObjectGuidGenerator())
 
         // Object with both ComponentA and ComponentB
         val objectWithAB = objectBuilder.createUnit()
         objectWithAB.addComponent(TestComponentA())
         objectWithAB.addComponent(TestComponentB())
-        WorldBuilder.addIntoInstance(objectWithAB, instance, Position(5f, 5f, 0f, 0f))
+        worldBuilder.addIntoInstance(objectWithAB, instance, Position(5f, 5f, 0f, 0f))
 
         // Object with only ComponentA
         val objectWithOnlyA = objectBuilder.createUnit()
         objectWithOnlyA.addComponent(TestComponentA())
-        WorldBuilder.addIntoInstance(objectWithOnlyA, instance, Position(6f, 6f, 0f, 0f))
+        worldBuilder.addIntoInstance(objectWithOnlyA, instance, Position(6f, 6f, 0f, 0f))
 
         // Object with only ComponentB
         val objectWithOnlyB = objectBuilder.createUnit()
         objectWithOnlyB.addComponent(TestComponentB())
-        WorldBuilder.addIntoInstance(objectWithOnlyB, instance, Position(7f, 5f, 0f, 0f))
+        worldBuilder.addIntoInstance(objectWithOnlyB, instance, Position(7f, 5f, 0f, 0f))
 
         // Object with both components but outside radius
         val objectWithABOutside = objectBuilder.createUnit()
         objectWithABOutside.addComponent(TestComponentA())
         objectWithABOutside.addComponent(TestComponentB())
-        WorldBuilder.addIntoInstance(objectWithABOutside, instance, Position(50f, 50f, 0f, 0f))
+        worldBuilder.addIntoInstance(objectWithABOutside, instance, Position(50f, 50f, 0f, 0f))
 
         val origin = Position(5f, 5f, 0f, 0f)
         val radius = 5f
@@ -172,12 +174,12 @@ class GridTest {
     @Test
     fun `findObjectsWithComponentsInRadius should return empty list when given no components`() {
         // Arrange
-        val instance = WorldBuilder.buildBasicWorld()
+        val instance = worldBuilder.buildBasicWorld()
         val objectBuilder = DummyWorldObjectBuilder(ObjectGuidGenerator())
 
         val obj = objectBuilder.createUnit()
         obj.addComponent(TestComponentA())
-        WorldBuilder.addIntoInstance(obj, instance, Position(5f, 5f, 0f, 0f))
+        worldBuilder.addIntoInstance(obj, instance, Position(5f, 5f, 0f, 0f))
 
         val origin = Position(5f, 5f, 0f, 0f)
         val radius = 10f
@@ -192,16 +194,16 @@ class GridTest {
     @Test
     fun `findObjectsWithComponentsInRadius should delegate to findObjectsWithComponentInRadius when given single component`() {
         // Arrange
-        val instance = WorldBuilder.buildBasicWorld()
+        val instance = worldBuilder.buildBasicWorld()
         val objectBuilder = DummyWorldObjectBuilder(ObjectGuidGenerator())
 
         val objectWithA = objectBuilder.createUnit()
         objectWithA.addComponent(TestComponentA())
-        WorldBuilder.addIntoInstance(objectWithA, instance, Position(5f, 5f, 0f, 0f))
+        worldBuilder.addIntoInstance(objectWithA, instance, Position(5f, 5f, 0f, 0f))
 
         val objectWithB = objectBuilder.createUnit()
         objectWithB.addComponent(TestComponentB())
-        WorldBuilder.addIntoInstance(objectWithB, instance, Position(6f, 6f, 0f, 0f))
+        worldBuilder.addIntoInstance(objectWithB, instance, Position(6f, 6f, 0f, 0f))
 
         val origin = Position(5f, 5f, 0f, 0f)
         val radius = 10f
@@ -218,7 +220,7 @@ class GridTest {
     @Test
     fun `findObjectsWithComponentsInRadius should handle three or more components correctly`() {
         // Arrange
-        val instance = WorldBuilder.buildBasicWorld()
+        val instance = worldBuilder.buildBasicWorld()
         val objectBuilder = DummyWorldObjectBuilder(ObjectGuidGenerator())
 
         // Object with all three components
@@ -226,13 +228,13 @@ class GridTest {
         objectWithABC.addComponent(TestComponentA())
         objectWithABC.addComponent(TestComponentB())
         objectWithABC.addComponent(TestComponentC())
-        WorldBuilder.addIntoInstance(objectWithABC, instance, Position(5f, 5f, 0f, 0f))
+        worldBuilder.addIntoInstance(objectWithABC, instance, Position(5f, 5f, 0f, 0f))
 
         // Object with only two components
         val objectWithAB = objectBuilder.createUnit()
         objectWithAB.addComponent(TestComponentA())
         objectWithAB.addComponent(TestComponentB())
-        WorldBuilder.addIntoInstance(objectWithAB, instance, Position(6f, 6f, 0f, 0f))
+        worldBuilder.addIntoInstance(objectWithAB, instance, Position(6f, 6f, 0f, 0f))
 
         val origin = Position(5f, 5f, 0f, 0f)
         val radius = 10f
@@ -255,7 +257,7 @@ class GridTest {
     @Test
     fun `findObjectsWithComponentInRadius should respect exact radius boundary`() {
         // Arrange
-        val instance = WorldBuilder.buildBasicWorld()
+        val instance = worldBuilder.buildBasicWorld()
         val objectBuilder = DummyWorldObjectBuilder(ObjectGuidGenerator())
 
         val origin = Position(0f, 0f, 0f, 0f)
@@ -264,17 +266,17 @@ class GridTest {
         // Object exactly at radius (distance = 5)
         val objectAtBoundary = objectBuilder.createUnit()
         objectAtBoundary.addComponent(TestComponentA())
-        WorldBuilder.addIntoInstance(objectAtBoundary, instance, Position(3f, 4f, 0f, 0f)) // 3-4-5 triangle
+        worldBuilder.addIntoInstance(objectAtBoundary, instance, Position(3f, 4f, 0f, 0f)) // 3-4-5 triangle
 
         // Object just inside radius
         val objectInside = objectBuilder.createUnit()
         objectInside.addComponent(TestComponentA())
-        WorldBuilder.addIntoInstance(objectInside, instance, Position(2f, 2f, 0f, 0f))
+        worldBuilder.addIntoInstance(objectInside, instance, Position(2f, 2f, 0f, 0f))
 
         // Object just outside radius
         val objectOutside = objectBuilder.createUnit()
         objectOutside.addComponent(TestComponentA())
-        WorldBuilder.addIntoInstance(objectOutside, instance, Position(4f, 4f, 0f, 0f))
+        worldBuilder.addIntoInstance(objectOutside, instance, Position(4f, 4f, 0f, 0f))
 
         // Act
         val result = instance.grid.findObjectsWithComponentInRadius(origin, radius, TestComponentA::class)
