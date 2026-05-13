@@ -247,6 +247,25 @@ class ChunkManagerTest {
             // Chunk (1,1) is neighbor of both (0,0) and (1,1) → count = 2
             assertEquals(2, chunkManager.getPlayerCount(ChunkId(1, 1)))
         }
+
+        @Test
+        fun `onPlayerLeft uses cachedChunkId even if position has drifted`() {
+            // Regression: onPlayerLeft must decrement the chunk where the player
+            // was registered (cachedChunkId), not where position happens to be now.
+            val player = objectBuilder.createPlayer()
+            worldBuilder.addIntoInstance(player, instance, posInChunk00())
+
+            // Simulate position drift without a chunk change event having been
+            // processed yet (e.g. a movement happened just before despawn).
+            player.position = posInChunk33()
+
+            chunkManager.onPlayerLeft(player)
+
+            // (0,0) and its neighbors must be decremented, NOT (3,3)'s neighbors.
+            for (chunk in chunkManager.getNeighborChunkIds(ChunkId(0, 0))) {
+                assertEquals(0, chunkManager.getPlayerCount(chunk))
+            }
+        }
     }
 
     // ──────────────────────────────────────────────
