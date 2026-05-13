@@ -39,7 +39,7 @@ class ChunkManager(
     }
 
     fun onPlayerLeft(player: WorldObject) {
-        val oldChunkId = getChunkIdForPosition(player.position)
+        val oldChunkId = player.cachedChunkId ?: return
         val nearbyChunks = getNeighborChunkIds(oldChunkId)
 
         for (chunk in nearbyChunks) {
