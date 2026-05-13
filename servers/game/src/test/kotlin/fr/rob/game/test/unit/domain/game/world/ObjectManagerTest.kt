@@ -14,7 +14,6 @@ import fr.rob.game.map.grid.chunk.ChunkManager
 import fr.rob.game.map.Map
 import fr.rob.game.map.MapInfo
 import fr.rob.game.map.ZoneInfo
-import fr.rob.game.test.unit.tools.WorldBuilder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -41,7 +40,6 @@ class ObjectManagerTest {
         val chunkManager = ChunkManager(grid, ChunkManager.DEFAULT_CHUNK_SIZE)
         val instance = MapInstance(13, map, grid)
         testInstanceManager.registerChunkManager(instance.id, chunkManager)
-        WorldBuilder.registerChunkManager(instance.id, chunkManager)
         val position = Position(10f, 0f, 15f, 0f)
         val lowGuid = ObjectGuid.LowGuid(1u, 1u)
 
@@ -69,7 +67,6 @@ class ObjectManagerTest {
         val chunkManager = ChunkManager(grid, ChunkManager.DEFAULT_CHUNK_SIZE)
         val instance = MapInstance(13, map, grid)
         testInstanceManager.registerChunkManager(instance.id, chunkManager)
-        WorldBuilder.registerChunkManager(instance.id, chunkManager)
         val lowGuid = ObjectGuid.LowGuid(1u, 1u)
 
         // Act & Assert
