@@ -28,6 +28,13 @@ namespace DI
         [SerializeField] private int _userId = 1;
         [SerializeField] private int _characterId = 1;
 
+        [Header("Player Visual")]
+        [Tooltip("Prefab instantiated as the visual body of the controlled player. " +
+                 "Expected to be the StarterAssets PlayerArmature (or any humanoid root with an Animator). " +
+                 "StarterAssets scripts (ThirdPersonController, BasicRigidBodyPush, StarterAssetsInputs, PlayerInput) " +
+                 "and any CharacterController on the prefab root will be stripped at runtime.")]
+        [SerializeField] private GameObject _playerVisualPrefab;
+
         protected override void Configure(IContainerBuilder builder)
         {
             // --- Networking ---
@@ -68,7 +75,8 @@ namespace DI
             builder.RegisterInstance(new GameInput());
 
             // --- Entity spawning ---
-            builder.Register<EntitySpawner>(Lifetime.Singleton);
+            builder.Register<EntitySpawner>(Lifetime.Singleton)
+                .WithParameter("playerVisualPrefab", _playerVisualPrefab);
 
             // --- Player input ---
             builder.Register<PlayerInputController>(Lifetime.Singleton);

@@ -9,11 +9,14 @@ namespace Game.Entity
     /// <summary>
     /// Listens to WorldState entity updates and instantiates/manages GameObjects in the scene.
     /// Creates a basic capsule for each entity on first spawn. When the controlled player entity
-    /// is identified, upgrades it with a CharacterController for input-driven movement.
+    /// is identified, upgrades it: replaces the capsule visual with the configured humanoid
+    /// prefab (typically StarterAssets PlayerArmature) and adds a CharacterController on the root
+    /// for input-driven movement.
     /// </summary>
     public class EntitySpawner
     {
         private readonly WorldState _worldState;
+        private readonly GameObject _playerVisualPrefab;
         private readonly Dictionary<ulong, EntityView> _entityViews = new Dictionary<ulong, EntityView>();
 
         private bool _isPlayerSpawned;
@@ -28,9 +31,16 @@ namespace Game.Entity
         /// </summary>
         public CharacterController PlayerCharacterController { get; private set; }
 
-        public EntitySpawner(WorldState worldState)
+        /// <summary>
+        /// The Animator on the instantiated player visual (humanoid armature).
+        /// Null if the configured prefab has no Animator (e.g. in pure-capsule fallback).
+        /// </summary>
+        public Animator PlayerAnimator { get; private set; }
+
+        public EntitySpawner(WorldState worldState, GameObject playerVisualPrefab)
         {
             _worldState = worldState;
+            _playerVisualPrefab = playerVisualPrefab;
             _worldState.EntityUpdated += OnEntityUpdated;
         }
 
@@ -41,7 +51,8 @@ namespace Game.Entity
 
         /// <summary>
         /// Called each frame to check if the player entity needs upgrading from a basic NPC
-        /// capsule to a player-controlled entity (with CharacterController, no EntityMotion).
+        /// capsule to a player-controlled entity (with humanoid visual + CharacterController,
+        /// no EntityMotion).
         /// </summary>
         public void Tick()
         {
@@ -180,32 +191,122 @@ namespace Game.Entity
                 Object.Destroy(agent);
             }
 
-            // Remove the CapsuleCollider on the child visual if still present (defensive)
+            // Remove the capsule visual (and its collider) created by CreateBasicEntityView.
+            // It will be replaced by the humanoid armature instance below.
             Transform visualChild = view.transform.Find("Visual");
 
             if (visualChild != null)
             {
-                CapsuleCollider childCollider = visualChild.GetComponent<CapsuleCollider>();
+                Object.Destroy(visualChild.gameObject);
+            }
 
-                if (childCollider != null)
+            // Instantiate the humanoid prefab as a child of the entity root.
+            // The prefab's local origin is at the feet (Y=0), matching our root convention.
+            if (_playerVisualPrefab != null)
+            {
+                GameObject visualInstance = Object.Instantiate(_playerVisualPrefab, view.transform);
+                visualInstance.name = "Visual";
+                visualInstance.transform.localPosition = Vector3.zero;
+                visualInstance.transform.localRotation = Quaternion.identity;
+                visualInstance.transform.localScale = Vector3.one;
+
+                StripStarterAssetsScripts(visualInstance);
+                StripCharacterControllerOnVisual(visualInstance);
+
+                PlayerAnimator = visualInstance.GetComponentInChildren<Animator>();
+
+                // The animator's GameObject is where Unity dispatches AnimationEvents.
+                // Attach a stub receiver to silence "OnFootstep/OnLand has no receiver" warnings.
+                if (PlayerAnimator != null)
                 {
-                    Object.Destroy(childCollider);
+                    PlayerAnimator.gameObject.AddComponent<AnimationEventReceiver>();
                 }
+            }
+            else
+            {
+                Debug.LogWarning("[EntitySpawner] No player visual prefab configured — player will be invisible. " +
+                                 "Assign a humanoid prefab on GameLifetimeScope.");
             }
 
             // Add CharacterController on the root GO.
-            // center = (0, 1, 0) matches the child capsule mesh offset, so the physics
-            // collider aligns with the visual. Root transform.y = 0 means "on the ground".
+            // Values match the StarterAssets PlayerArmature so the physics collider
+            // wraps the humanoid mesh correctly (feet at Y=0, head ~1.8).
             CharacterController cc = view.gameObject.AddComponent<CharacterController>();
-            cc.height = 2f;
-            cc.radius = 0.5f;
-            cc.center = new Vector3(0f, 1f, 0f);
+            cc.height = 1.8f;
+            cc.radius = 0.28f;
+            cc.center = new Vector3(0f, 0.93f, 0f);
+            cc.slopeLimit = 45f;
+            cc.stepOffset = 0.25f;
+            cc.skinWidth = 0.02f;
+            cc.minMoveDistance = 0f;
 
             PlayerGameObject = view.gameObject;
             PlayerCharacterController = cc;
             _isPlayerSpawned = true;
 
-            Debug.Log($"[EntitySpawner] Player entity upgraded: {view.gameObject.name}");
+            Debug.Log($"[EntitySpawner] Player entity upgraded: {view.gameObject.name}" +
+                      (PlayerAnimator != null ? " (with Animator)" : ""));
+        }
+
+        /// <summary>
+        /// Removes StarterAssets scripts from the instantiated player visual so they don't
+        /// fight our PlayerInputController for movement, look, jump, etc.
+        /// Looked up by full type name to avoid an asmdef dependency on StarterAssets.
+        /// </summary>
+        private static void StripStarterAssetsScripts(GameObject root)
+        {
+            string[] typeNames =
+            {
+                "StarterAssets.ThirdPersonController",
+                "StarterAssets.BasicRigidBodyPush",
+                "StarterAssets.StarterAssetsInputs",
+                "UnityEngine.InputSystem.PlayerInput",
+            };
+
+            foreach (string typeName in typeNames)
+            {
+                System.Type t = FindType(typeName);
+
+                if (t == null)
+                    continue;
+
+                Component[] comps = root.GetComponentsInChildren(t, includeInactive: true);
+
+                foreach (Component c in comps)
+                {
+                    if (c != null)
+                    {
+                        Object.Destroy(c);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// The PlayerArmature prefab ships with a CharacterController on its root.
+        /// We add our own on the entity root, so strip the prefab's one to avoid duplicates.
+        /// </summary>
+        private static void StripCharacterControllerOnVisual(GameObject visual)
+        {
+            CharacterController cc = visual.GetComponent<CharacterController>();
+
+            if (cc != null)
+            {
+                Object.Destroy(cc);
+            }
+        }
+
+        private static System.Type FindType(string fullName)
+        {
+            foreach (System.Reflection.Assembly asm in System.AppDomain.CurrentDomain.GetAssemblies())
+            {
+                System.Type t = asm.GetType(fullName, throwOnError: false);
+
+                if (t != null)
+                    return t;
+            }
+
+            return null;
         }
 
         private static void SetColor(GameObject go, Color color)

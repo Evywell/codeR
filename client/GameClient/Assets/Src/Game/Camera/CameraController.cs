@@ -21,13 +21,13 @@ namespace Game.Camera
 
         private float _yaw;
         private float _pitch = 20f;
-        private float _distance = 10f;
-        private Vector3 _targetOffset = new Vector3(0f, 1.5f, 0f);
+        private float _distance = 4.5f;
+        private Vector3 _targetOffset = new Vector3(0f, 1.4f, 0f);
 
         private const float MouseSensitivity = 0.15f;
         private const float ScrollSensitivity = 3f;
-        private const float MinDistance = 3f;
-        private const float MaxDistance = 25f;
+        private const float MinDistance = 1.5f;
+        private const float MaxDistance = 12f;
         private const float MinPitch = -30f;
         private const float MaxPitch = 70f;
         private const float FollowSmoothSpeed = 10f;

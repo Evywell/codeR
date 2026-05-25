@@ -27,14 +27,23 @@ namespace Game.Input
         private readonly GameInput _input;
 
         private const float MoveSpeed = 5f;
-        private const float RotationSmoothSpeed = 12f;
+        private const float TurnSpeed = 140f; // deg/s for A/D yaw turning
         private const float Gravity = -15f;
         private const float ServerUpdateInterval = 0.2f; // 5Hz
+        private const float AnimatorSpeedSmoothing = 10f;
+
+        // StarterAssets animator parameter hashes (controller: StarterAssetsThirdPerson)
+        private static readonly int AnimSpeedHash = Animator.StringToHash("Speed");
+        private static readonly int AnimGroundedHash = Animator.StringToHash("Grounded");
+        private static readonly int AnimJumpHash = Animator.StringToHash("Jump");
+        private static readonly int AnimFreeFallHash = Animator.StringToHash("FreeFall");
+        private static readonly int AnimMotionSpeedHash = Animator.StringToHash("MotionSpeed");
 
         private float _verticalVelocity;
         private float _timeSinceLastServerUpdate;
         private Vector3 _lastSentPosition;
         private bool _hasSentInitialPosition;
+        private float _animatorSpeed;
 
         public PlayerInputController(
             WorldState worldState,
@@ -68,33 +77,29 @@ namespace Game.Input
         {
             Transform playerTransform = cc.transform;
 
-            // Read WASD / stick input as Vector2
+            // WoW-style controls (the StarterAssets pack only ships forward/backward
+            // animations — no strafe clips — so A/D rotates the character instead of
+            // strafing, keeping animations coherent with the actual motion).
+            //   moveInput.y (W/S) -> forward/backward translation
+            //   moveInput.x (A/D) -> yaw rotation
             Vector2 moveInput = _input.Gameplay.Move.ReadValue<Vector2>();
-            Vector3 inputDir = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
+            float forwardInput = moveInput.y;     // -1..1
+            float turnInput = moveInput.x;        // -1..1
+            bool isMoving = Mathf.Abs(forwardInput) > 0.01f;
+            bool isTurning = Mathf.Abs(turnInput) > 0.01f;
 
-            // Compute camera-relative direction
+            // Apply yaw rotation from A/D
+            if (isTurning)
+            {
+                playerTransform.Rotate(0f, turnInput * TurnSpeed * Time.deltaTime, 0f);
+            }
+
+            // Translate along the player's local forward axis
             Vector3 moveDir = Vector3.zero;
 
-            if (inputDir.sqrMagnitude > 0.01f)
+            if (isMoving)
             {
-                UnityCamera mainCam = UnityCamera.main;
-
-                if (mainCam != null)
-                {
-                    float cameraYaw = mainCam.transform.eulerAngles.y;
-                    moveDir = Quaternion.Euler(0f, cameraYaw, 0f) * inputDir;
-                    moveDir.y = 0f;
-                    moveDir.Normalize();
-
-                    // Rotate player to face movement direction
-                    float targetAngle = Mathf.Atan2(moveDir.x, moveDir.z) * Mathf.Rad2Deg;
-                    float smoothedAngle = Mathf.LerpAngle(
-                        playerTransform.eulerAngles.y,
-                        targetAngle,
-                        Time.deltaTime * RotationSmoothSpeed
-                    );
-                    playerTransform.rotation = Quaternion.Euler(0f, smoothedAngle, 0f);
-                }
+                moveDir = playerTransform.forward * Mathf.Sign(forwardInput);
             }
 
             // Apply gravity
@@ -105,7 +110,9 @@ namespace Game.Input
 
             _verticalVelocity += Gravity * Time.deltaTime;
 
-            Vector3 velocity = moveDir * MoveSpeed + Vector3.up * _verticalVelocity;
+            // Backward speed is reduced, like most MMOs
+            float forwardSpeed = forwardInput >= 0f ? MoveSpeed : MoveSpeed * 0.6f;
+            Vector3 velocity = moveDir * forwardSpeed + Vector3.up * _verticalVelocity;
             cc.Move(velocity * Time.deltaTime);
 
             // Update the WorldEntity data model so the server stays in sync
@@ -115,15 +122,47 @@ namespace Game.Input
             {
                 playerEntity.Position = playerTransform.position;
                 playerEntity.Orientation = playerTransform.eulerAngles.y * Mathf.Deg2Rad;
-                playerEntity.IsMoving = inputDir.sqrMagnitude > 0.01f;
+                playerEntity.IsMoving = isMoving;
                 playerEntity.Direction = moveDir;
             }
 
-            // Send movement to server at 5Hz
-            SendMovementToServer(playerTransform, moveDir);
+            // Send movement to server at 5Hz (also send when only turning, so server
+            // sees the new orientation even without translation).
+            SendMovementToServer(playerTransform, moveDir, isMoving || isTurning);
+
+            // Drive humanoid animator. Signed forwardInput drives the bipolar 1D blend
+            // tree (negative -> Run_S backpedal, positive -> Walk_N / Run_N).
+            UpdateAnimator(cc, forwardInput);
         }
 
-        private void SendMovementToServer(Transform playerTransform, Vector3 direction)
+        private void UpdateAnimator(CharacterController cc, float forwardInput)
+        {
+            Animator animator = _entitySpawner.PlayerAnimator;
+
+            if (animator == null)
+                return;
+
+            // Map input to Speed parameter range expected by the blend tree:
+            //   forwardInput  1  -> +5 (Run_N region)
+            //   forwardInput  0  ->  0 (Idle)
+            //   forwardInput -1  -> -5 (Run_S region, backpedal)
+            float targetSpeed = forwardInput * MoveSpeed;
+            _animatorSpeed = Mathf.Lerp(_animatorSpeed, targetSpeed, Time.deltaTime * AnimatorSpeedSmoothing);
+
+            if (Mathf.Abs(_animatorSpeed) < 0.01f)
+            {
+                _animatorSpeed = 0f;
+            }
+
+            animator.SetFloat(AnimSpeedHash, _animatorSpeed);
+            animator.SetFloat(AnimMotionSpeedHash, Mathf.Abs(forwardInput) > 0.01f ? 1f : 0f);
+            animator.SetBool(AnimGroundedHash, cc.isGrounded);
+            // Jump/FreeFall not used yet — keep them off so we stay in the locomotion blend tree.
+            animator.SetBool(AnimJumpHash, false);
+            animator.SetBool(AnimFreeFallHash, !cc.isGrounded && _verticalVelocity < -2f);
+        }
+
+        private void SendMovementToServer(Transform playerTransform, Vector3 direction, bool isActive)
         {
             _timeSinceLastServerUpdate += Time.deltaTime;
 
@@ -132,8 +171,9 @@ namespace Game.Input
 
             Vector3 currentPos = playerTransform.position;
 
-            // Skip if position hasn't changed and we've already sent the initial position
-            if (_hasSentInitialPosition && currentPos == _lastSentPosition)
+            // Skip if neither moving nor turning, and we've already sent the initial position.
+            // (Without this, idle would still keep the gate open after the first send.)
+            if (!isActive && _hasSentInitialPosition && currentPos == _lastSentPosition)
                 return;
 
             _timeSinceLastServerUpdate = 0f;

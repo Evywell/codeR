@@ -156,6 +156,7 @@ MonoBehaviour:
   _gatewayPort: 11111
   _userId: 1
   _characterId: 1
+  _playerVisualPrefab: {fileID: 4416926081852918481, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
 --- !u!4 &180944238
 Transform:
   m_ObjectHideFlags: 0
