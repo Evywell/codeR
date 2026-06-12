@@ -1,4 +1,6 @@
-package fr.rob.game.ability.launch
+package fr.rob.game.ability.launch.instant
+
+import fr.rob.game.ability.launch.LaunchTypeInterface
 
 class InstantLaunchType : LaunchTypeInterface {
     private var isDone = false

@@ -16,11 +16,11 @@ class InstantDamageEffect(
     }
 
     class InstantDamageEffectInfo(val damageValue: Int) : AbilityEffectInfoInterface {
-        override fun createEffectFromAbility(abilityEffectInfo: Ability): EffectInterface =
+        override fun createEffectFromAbility(ability: Ability): EffectInterface =
             InstantDamageEffect(
                 this,
-                abilityEffectInfo.target.getPrimaryTarget(),
-                abilityEffectInfo.source,
+                ability.target.getPrimaryTarget(),
+                ability.source,
             )
     }
 }

@@ -20,7 +20,6 @@ import fr.rob.game.player.message.PlayerDescriptionMessage
 import fr.rob.game.player.session.GameMessageHolder
 import fr.rob.game.player.session.GameSession
 import fr.rob.game.player.session.SessionMessageSenderInterface
-import fr.rob.game.network.session.GatewayGameSession
 import fr.rob.game.network.opcode.OPCODES_MAP
 import fr.rob.game.network.opcode.SMSG_MOVEMENT_HEARTBEAT
 

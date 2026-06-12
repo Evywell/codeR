@@ -12,11 +12,13 @@ import fr.rob.game.ability.AbilityInfo
 import fr.rob.game.ability.AbilityRequirements
 import fr.rob.game.ability.AbilityType
 import fr.rob.game.ability.ObjectAbilityManager
-import fr.rob.game.ability.launch.InstantLaunchInfo
-import fr.rob.game.ability.launch.LaunchInfoInterface
+import fr.rob.game.ability.effect.InstantDamageEffect
+import fr.rob.game.ability.launch.instant.InstantLaunchInfo
+import fr.rob.game.ability.launch.LaunchType
+import fr.rob.game.ability.launch.projectile.FixedTimeProjectileLaunchInfo
+import fr.rob.game.ability.launch.projectile.FixedTimeProjectileParameters
 import fr.rob.game.ability.service.AbilityExecutor
 import fr.rob.game.ability.service.AbilityRequirementChecker
-import fr.rob.game.ability.service.phase.AbilityPhaseHandlerInterface
 import fr.rob.game.ability.service.phase.CastingPhaseHandler
 import fr.rob.game.ability.service.phase.LaunchingPhaseHandler
 import fr.rob.game.ability.service.phase.ResolvingPhaseHandler
@@ -118,6 +120,7 @@ val opcodeModule =
                 ),
                 MysqlFetchCharacter(get<ConnectionPool>(named(DB_WORLD)).getNextConnection()),
                 get(),
+                get(),
             )
         }
 
@@ -149,6 +152,7 @@ val opcodeModule =
         single(named("ABILITY_LAUNCH_INFO_LIST")){
             listOf(
                 InstantLaunchInfo(),
+                FixedTimeProjectileLaunchInfo()
             )
         }
 
@@ -171,8 +175,16 @@ val opcodeModule =
                     type = AbilityType.MAGICAL,
                     abilityRequirement = AbilityRequirements(emptyArray()),
                     castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
-                    launchType = AbilityInfo.LaunchType.INSTANT,
+                    launchType = LaunchType(LaunchType.Name.INSTANT),
                 ),
+                AbilityInfo(
+                    identifier = 2,
+                    type = AbilityType.MAGICAL,
+                    abilityRequirement = AbilityRequirements.createNoRequirement(),
+                    castingTimeMs = 1000,
+                    launchType = LaunchType(LaunchType.Name.FIXED_TIME_PROJECTILE, FixedTimeProjectileParameters(2000)),
+                    effectsInfo = listOf(InstantDamageEffect.InstantDamageEffectInfo(40)),
+                )
             ).forEach { manager.defineAbility(it) }
 
             manager

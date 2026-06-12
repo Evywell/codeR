@@ -17,4 +17,10 @@ data class AbilityRequirements(
     override fun hashCode(): Int {
         return resources.contentHashCode()
     }
+
+    companion object {
+        fun createNoRequirement(): AbilityRequirements {
+            return AbilityRequirements(emptyArray())
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package fr.rob.game.ability
 
 import fr.rob.game.ability.effect.AbilityEffectInfoInterface
+import fr.rob.game.ability.launch.LaunchType
 import java.util.EnumSet
 
 data class AbilityInfo(
@@ -14,12 +15,6 @@ data class AbilityInfo(
 ) {
     enum class Flags {
         ALLOW_CAST_WHILE_MOVING,
-    }
-
-    enum class LaunchType {
-        INSTANT,
-        TIMED_PROJECTILE,
-        TRACKED_PROJECTILE,
     }
 
     companion object {
