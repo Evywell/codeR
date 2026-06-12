@@ -28,7 +28,10 @@ namespace Game.Input
             public InputAction Zoom { get; }
             public InputAction CastSpell { get; }
             public InputAction EngageCombat { get; }
+            public InputAction SelectMainTarget { get; }
             public InputAction ToggleCursor { get; }
+
+            public InputAction UseAbility1 { get; }
 
             public GameplayActions()
             {
@@ -60,10 +63,18 @@ namespace Game.Input
                 EngageCombat.AddBinding("<Keyboard>/e");
                 EngageCombat.AddBinding("<Gamepad>/buttonEast");
 
+                // Left mouse button → Button (click-to-target)
+                SelectMainTarget = new InputAction("SelectMainTarget", InputActionType.Button);
+                SelectMainTarget.AddBinding("<Mouse>/leftButton");
+
                 // Escape / Gamepad Start → Button
                 ToggleCursor = new InputAction("ToggleCursor", InputActionType.Button);
                 ToggleCursor.AddBinding("<Keyboard>/escape");
                 ToggleCursor.AddBinding("<Gamepad>/start");
+
+                // Abilities
+                UseAbility1 = new InputAction("UseAbility1", InputActionType.Button);
+                UseAbility1.AddBinding("<Keyboard>/r");
             }
 
             /// <summary>
@@ -76,7 +87,9 @@ namespace Game.Input
                 Zoom.Enable();
                 CastSpell.Enable();
                 EngageCombat.Enable();
+                SelectMainTarget.Enable();
                 ToggleCursor.Enable();
+                UseAbility1.Enable();
             }
 
             /// <summary>
@@ -89,7 +102,9 @@ namespace Game.Input
                 Zoom.Disable();
                 CastSpell.Disable();
                 EngageCombat.Disable();
+                SelectMainTarget.Disable();
                 ToggleCursor.Disable();
+                UseAbility1.Disable();
             }
         }
     }

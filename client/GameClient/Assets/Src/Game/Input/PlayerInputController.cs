@@ -24,6 +24,8 @@ namespace Game.Input
         private readonly MovementSender _movementSender;
         private readonly SpellCaster _spellCaster;
         private readonly CombatEngager _combatEngager;
+        private readonly MainTargetSelector _mainTargetSelector;
+        private readonly AbilityPerformer _abilityPerformer;
         private readonly GameInput _input;
 
         private const float MoveSpeed = 5f;
@@ -44,6 +46,7 @@ namespace Game.Input
         private Vector3 _lastSentPosition;
         private bool _hasSentInitialPosition;
         private float _animatorSpeed;
+        private bool _isLastMovementSendToServerInProgress = false;
 
         public PlayerInputController(
             WorldState worldState,
@@ -51,13 +54,17 @@ namespace Game.Input
             MovementSender movementSender,
             SpellCaster spellCaster,
             CombatEngager combatEngager,
-            GameInput input)
-        {
+            MainTargetSelector mainTargetSelector,
+            AbilityPerformer abilityPerformer,
+            GameInput input
+        ) {
             _worldState = worldState;
             _entitySpawner = entitySpawner;
             _movementSender = movementSender;
             _spellCaster = spellCaster;
             _combatEngager = combatEngager;
+            _mainTargetSelector = mainTargetSelector;
+            _abilityPerformer = abilityPerformer;
             _input = input;
         }
 
@@ -166,32 +173,53 @@ namespace Game.Input
         {
             _timeSinceLastServerUpdate += Time.deltaTime;
 
-            if (_timeSinceLastServerUpdate < ServerUpdateInterval)
-                return;
-
+            // The server think we are still moving but we stopped the movement
+            bool stoppedTransition = _isLastMovementSendToServerInProgress && !isActive;
             Vector3 currentPos = playerTransform.position;
 
-            // Skip if neither moving nor turning, and we've already sent the initial position.
-            // (Without this, idle would still keep the gate open after the first send.)
-            if (!isActive && _hasSentInitialPosition && currentPos == _lastSentPosition)
-                return;
+            if (!stoppedTransition)
+            {
+                if (_timeSinceLastServerUpdate < ServerUpdateInterval)
+                    return;
+
+                // Skip if neither moving nor turning, and we've already sent the initial position.
+                // (Without this, idle would still keep the gate open after the first send.)
+                if (!isActive && _hasSentInitialPosition && currentPos == _lastSentPosition)
+                    return;
+            }
 
             _timeSinceLastServerUpdate = 0f;
             _lastSentPosition = currentPos;
             _hasSentInitialPosition = true;
+            _isLastMovementSendToServerInProgress = isActive;
 
             // Convert Unity orientation to server orientation
             float unityOrientationRad = playerTransform.eulerAngles.y * Mathf.Deg2Rad;
             float serverOrientation = PositionNormalizer.TransformUnityOrientationToServerOrientation(unityOrientationRad);
-            serverOrientation = serverOrientation % (2f * Mathf.PI);
+            serverOrientation %= 2f * Mathf.PI;
 
             // Unity(x,y,z) -> Server(x,z,y)
-            _movementSender.SendMovement(
+            Vector3 serverDirection = new Vector3(direction.x, direction.z, 0f);
+
+            if (isActive)
+            {
+                _movementSender.SendInProgressMovement(
+                    currentPos.x,
+                    currentPos.z,
+                    currentPos.y,
+                    serverOrientation,
+                    serverDirection
+                );
+
+                return;
+            }
+
+            _movementSender.SendStoppedMovement(
                 currentPos.x,
                 currentPos.z,
                 currentPos.y,
                 serverOrientation,
-                new Vector3(direction.x, direction.z, 0f)
+                serverDirection
             );
         }
 
@@ -208,6 +236,52 @@ namespace Game.Input
             if (_input.Gameplay.EngageCombat.WasPerformedThisFrame())
             {
                 TryEngageCombat();
+            }
+
+            // Left click = select main target (raycast from cursor, purely client-side)
+            if (_input.Gameplay.SelectMainTarget.WasPerformedThisFrame())
+            {
+                TrySelectMainTarget();
+            }
+
+            // Abilities
+            if (_input.Gameplay.UseAbility1.WasPerformedThisFrame())
+            {
+                var controlledEntity = _worldState.GetControlledEntity();
+                var targetGuid = controlledEntity?.MainTargetGuid;
+
+                if (targetGuid == null)
+                {
+                    Debug.LogWarning("[Ability] No main target selected — cannot cast Fireball.");
+                } 
+                else
+                {
+                    Debug.Log($"[Ability] Casting Fireball (id 2) on {targetGuid.GetRawValue()}");
+                    _abilityPerformer.UseAbility(2, targetGuid);
+                }
+            }
+        }
+
+        private void TrySelectMainTarget()
+        {
+            UnityCamera mainCam = UnityCamera.main;
+
+            if (mainCam == null)
+                return;
+
+            Vector2 mousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : Vector2.zero;
+            _mainTargetSelector.SelectFromScreenPoint(mousePos, mainCam);
+
+            WorldEntity controlled = _worldState.GetControlledEntity();
+            ObjectGuid target = controlled?.MainTargetGuid;
+
+            if (target != null)
+            {
+                Debug.Log($"[PlayerInput] Main target set to {target.GetRawValue()}");
+            }
+            else
+            {
+                Debug.Log("[PlayerInput] Main target cleared");
             }
         }
 
@@ -235,20 +309,13 @@ namespace Game.Input
 
         private void HandleCursorLock()
         {
-            // Escape unlocks the cursor
+            // Escape unlocks the cursor.
+            // Note: left click no longer re-locks the cursor — it is now used for target
+            // selection (see SelectMainTarget), which requires a visible cursor to aim.
             if (_input.Gameplay.ToggleCursor.WasPerformedThisFrame())
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
-            }
-
-            // Left click re-locks the cursor when it's unlocked
-            if (Cursor.lockState != CursorLockMode.Locked
-                && Mouse.current != null
-                && Mouse.current.leftButton.wasPressedThisFrame)
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
             }
         }
     }
