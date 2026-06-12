@@ -1,6 +1,7 @@
-package fr.rob.game.ability.launch
+package fr.rob.game.ability.launch.projectile
 
 import fr.rob.game.ability.Ability
+import fr.rob.game.ability.launch.UpdatableLaunchTypeInterface
 import fr.rob.game.ability.projectile.CarryProjectileInterface
 
 abstract class AbstractProjectileLaunchType : UpdatableLaunchTypeInterface {

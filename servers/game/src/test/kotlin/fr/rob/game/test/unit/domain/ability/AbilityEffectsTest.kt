@@ -6,8 +6,9 @@ import fr.rob.game.ability.AbilityRequirements
 import fr.rob.game.ability.AbilityTargetParameter
 import fr.rob.game.ability.AbilityType
 import fr.rob.game.ability.effect.InstantDamageEffect
-import fr.rob.game.ability.launch.GhostProjectileLaunchInfo
-import fr.rob.game.ability.launch.InstantLaunchInfo
+import fr.rob.game.ability.launch.LaunchType
+import fr.rob.game.ability.launch.projectile.GhostProjectileLaunchInfo
+import fr.rob.game.ability.launch.instant.InstantLaunchInfo
 import fr.rob.game.ability.resource.ManaResourceType
 import fr.rob.game.ability.service.AbilityExecutor
 import fr.rob.game.ability.service.AbilityRequirementChecker
@@ -72,7 +73,7 @@ class AbilityEffectsTest {
                 type = AbilityType.MAGICAL,
                 abilityRequirement = AbilityRequirements(arrayOf(ManaResourceType(10))),
                 castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
-                launchType = AbilityInfo.LaunchType.INSTANT,
+                launchType = LaunchType(LaunchType.Name.INSTANT),
                 effectsInfo = listOf(InstantDamageEffect.InstantDamageEffectInfo(damageValue)),
             ),
             source = caster,
@@ -104,7 +105,7 @@ class AbilityEffectsTest {
                 type = AbilityType.MAGICAL,
                 abilityRequirement = AbilityRequirements(arrayOf(ManaResourceType(15))),
                 castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
-                launchType = AbilityInfo.LaunchType.TRACKED_PROJECTILE,
+                launchType = LaunchType(LaunchType.Name.TRACKED_PROJECTILE),
                 effectsInfo = listOf(InstantDamageEffect.InstantDamageEffectInfo(damageValue)),
             ),
             source = caster,
@@ -144,7 +145,7 @@ class AbilityEffectsTest {
                 type = AbilityType.MAGICAL,
                 abilityRequirement = AbilityRequirements(arrayOf(ManaResourceType(manaCost))),
                 castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
-                launchType = AbilityInfo.LaunchType.INSTANT,
+                launchType = LaunchType(LaunchType.Name.INSTANT),
             ),
             source = caster,
             target = AbilityTargetParameter(null, caster),

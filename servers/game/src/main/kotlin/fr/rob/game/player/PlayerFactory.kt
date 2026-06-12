@@ -1,5 +1,7 @@
 package fr.rob.game.player
 
+import fr.rob.game.ability.AbilityBehavior
+import fr.rob.game.ability.ObjectAbilityManager
 import fr.rob.game.behavior.CombatBehavior
 import fr.rob.game.behavior.MovableBehavior
 import fr.rob.game.character.CharacterService
@@ -20,6 +22,7 @@ class PlayerFactory(
     private val characterService: CharacterService,
     private val fetchCharacter: FetchCharacterInterface,
     private val guidGenerator: ObjectGuidGenerator,
+    private val objectAbilityManager: ObjectAbilityManager? = null,
 ) {
     fun createFromGameSession(
         session: GameSession,
@@ -39,6 +42,10 @@ class PlayerFactory(
         player.addComponent(CombatComponent())
         player.addBehavior(CombatBehavior)
 
+        if (objectAbilityManager != null) {
+            player.addBehavior(AbilityBehavior(objectAbilityManager))
+        }
+
         // @todo change this
         player.addTrait(
             SpellCasterTrait(
@@ -56,7 +63,7 @@ class PlayerFactory(
                 ),
             ),
         )
-        player.registerAbilities(listOf(1))
+        player.registerAbilities(listOf(1, 2))
 
         return PlayerInitResult(true, player, character.position)
     }
