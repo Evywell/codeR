@@ -19,11 +19,21 @@ namespace Game.Interaction
             _sender = sender;
         }
 
+        public void SendInProgressMovement(float posX, float posY, float posZ, float orientation, Vector3 direction)
+        {
+            Send(posX, posY, posZ, orientation, direction, MovementPhase.PhaseBegin);
+        }
+
+        public void SendStoppedMovement(float posX, float posY, float posZ, float orientation, Vector3 direction)
+        {
+            Send(posX, posY, posZ, orientation, direction, MovementPhase.PhaseEnd);
+        }
+
         /// <summary>
         /// Sends the player's current position, orientation, and movement direction to the server.
         /// Coordinates should already be in server space (Unity Y/Z swapped).
         /// </summary>
-        public void SendMovement(float posX, float posY, float posZ, float orientation, Vector3 direction)
+        public void Send(float posX, float posY, float posZ, float orientation, Vector3 direction, MovementPhase phase)
         {
             var position = new Position
             {
@@ -35,7 +45,7 @@ namespace Game.Interaction
 
             var movement = new SMovementInfo
             {
-                Phase = MovementPhase.PhaseBegin,
+                Phase = phase,
                 Position = position,
                 Direction = new Direction
                 {

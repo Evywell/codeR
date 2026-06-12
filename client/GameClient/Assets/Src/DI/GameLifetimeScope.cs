@@ -6,6 +6,7 @@ using Game.Input;
 using Game.Interaction;
 using Game.Networking.Handlers;
 using Game.State;
+using Game.UI;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -69,6 +70,8 @@ namespace DI
             builder.Register<MovementSender>(Lifetime.Singleton);
             builder.Register<SpellCaster>(Lifetime.Singleton);
             builder.Register<CombatEngager>(Lifetime.Singleton);
+            builder.Register<MainTargetSelector>(Lifetime.Singleton);
+            builder.Register<AbilityPerformer>(Lifetime.Singleton);
 
             // --- Input (new Input System, hand-coded InputAction bindings) ---
             // NOTE: Do not call Enable() here — deferred to GameWorldManager first Tick().
@@ -84,6 +87,15 @@ namespace DI
             // --- Entry points ---
             builder.RegisterEntryPoint<NetworkManager>();
             builder.RegisterEntryPoint<GameWorldManager>();
+
+            // --- HUD: create GameObject + inject after container is built ---
+            builder.RegisterBuildCallback(container =>
+            {
+                var hudGo = new GameObject("MainTargetHud");
+                Object.DontDestroyOnLoad(hudGo);
+                var hud = hudGo.AddComponent<MainTargetHud>();
+                container.Inject(hud);
+            });
         }
     }
 }

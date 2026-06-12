@@ -107,6 +107,18 @@ namespace Game.Entity
             EntityView view = go.AddComponent<EntityView>();
             view.Initialize(entity);
 
+            // Add a CapsuleCollider on the ROOT (not the child visual) for raycast picking
+            // (e.g. main target selection). The child capsule collider is removed below to
+            // avoid conflicting with NavMeshAgent, so we put a picking collider here instead.
+            // Root position sits at Y=0 (ground); the visual is offset to localY=1, so the
+            // collider center matches that offset.
+            CapsuleCollider pickingCollider = go.AddComponent<CapsuleCollider>();
+            pickingCollider.center = new Vector3(0f, 1f, 0f);
+            pickingCollider.radius = 0.5f;
+            pickingCollider.height = 2f;
+            pickingCollider.direction = 1; // Y-axis
+            pickingCollider.isTrigger = true; // not a physics blocker; only for raycasts
+
             // For non-player entities: add NavMeshAgent for server-driven pathfinding.
             // The player entity will be upgraded later (CharacterController replaces this).
             // Remove the CapsuleCollider on the child visual — it conflicts with NavMeshAgent.

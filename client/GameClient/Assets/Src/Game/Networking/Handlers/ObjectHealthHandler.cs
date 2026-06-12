@@ -30,6 +30,8 @@ namespace Game.Networking.Handlers
                 ObjectGuid.From(update.Guid),
                 update.Health
             );
+
+            UnityEngine.Debug.Log($"[Health] Entity {update.Guid} now has {update.Health} HP");
         }
     }
 }

@@ -38,6 +38,29 @@ namespace Game.Entity
         /// </summary>
         public Vector3? LastRequestedDestination { get; set; }
 
+        private ObjectGuid _mainTargetGuid;
+
+        /// <summary>
+        /// The current main target of this entity (purely client-side for now).
+        /// Null if no target is selected.
+        /// </summary>
+        public ObjectGuid MainTargetGuid
+        {
+            get => _mainTargetGuid;
+            set
+            {
+                if (Equals(_mainTargetGuid, value)) return;
+                _mainTargetGuid = value;
+                MainTargetChanged?.Invoke(value);
+            }
+        }
+
+        /// <summary>
+        /// Fired whenever this entity's main target changes. The argument is the new target
+        /// (null when the target is cleared).
+        /// </summary>
+        public event Action<ObjectGuid> MainTargetChanged;
+
         private readonly Dictionary<Type, object> _components = new Dictionary<Type, object>();
 
         public WorldEntity(ObjectGuid guid, Vector3 position, float orientation)
