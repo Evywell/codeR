@@ -5,6 +5,7 @@ import fr.rob.game.event.DomainEventInterface
 import fr.rob.game.event.DomainEventListenerInterface
 import fr.rob.game.player.Player
 import fr.rob.game.map.grid.query.predicate.CanSeeObject
+import fr.rob.game.player.message.ObjectDescriptionMessage
 
 /**
  * When a new player is added into world, send every near visible objects to it (except itself)
@@ -40,6 +41,7 @@ class GetNearbyObjectListener : DomainEventListenerInterface {
             }
 
             player.controlledByGameSession?.send(NearbyObjectMessage(visibleObject.guid, visibleObject.position))
+            player.controlledByGameSession?.send(ObjectDescriptionMessage(visibleObject))
         }
     }
 }

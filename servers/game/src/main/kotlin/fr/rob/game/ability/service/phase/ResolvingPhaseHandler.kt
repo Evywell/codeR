@@ -26,6 +26,6 @@ class ResolvingPhaseHandler : AbilityPhaseHandlerInterface {
             }
         }
 
-        ability.state = Ability.AbilityState.DONE
+        ability.setState(Ability.AbilityState.DONE)
     }
 }

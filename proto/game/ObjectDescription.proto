@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package fr.raven.proto.message.game;
+
+import "game/Position.proto";
+
+option java_outer_classname = "ObjectDescriptionProto";
+
+message ObjectDescription {
+    uint64 guid = 1;
+    Position position = 2;
+
+    message Ability {
+      uint32 abilityId = 1;
+      uint64 explicitTargetGuid = 2;
+      uint32 abilityState = 3;
+      bool isInProgress = 4;
+      uint32 remainingCastingTimeMs = 5;
+    }
+
+    repeated Ability ongoingAbilities = 3;
+}
+

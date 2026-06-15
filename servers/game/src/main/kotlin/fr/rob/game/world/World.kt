@@ -11,7 +11,7 @@ import fr.rob.game.instance.InstanceManager
 import fr.rob.game.instance.InstanceUpdateService
 import fr.rob.game.map.grid.chunk.ChunkTransitionListener
 import fr.rob.game.world.packet.WorldPacketQueue
-import fr.rob.game.ability.event.NotifyAbilityFailedListener
+import fr.rob.game.ability.event.NotifyAbilityStateUpdateListener
 
 class World(
     private val instanceManager: InstanceManager,
@@ -29,7 +29,7 @@ class World(
         eventDispatcher.attachListener(NotifyAddedIntoWorldListener())
         eventDispatcher.attachListener(GetNearbyObjectListener())
         eventDispatcher.attachListener(ObjectSheetUpdatedListener())
-        eventDispatcher.attachListener(NotifyAbilityFailedListener())
+        eventDispatcher.attachListener(NotifyAbilityStateUpdateListener())
         eventDispatcher.attachListener(ChunkTransitionListener(instanceManager))
     }
 

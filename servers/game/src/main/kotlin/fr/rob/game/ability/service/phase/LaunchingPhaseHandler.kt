@@ -30,7 +30,7 @@ class LaunchingPhaseHandler(private val launchersInfo: List<LaunchInfoInterface>
         }
 
         if (abilityLauncher.isLaunchingCompleted()) {
-            ability.state = Ability.AbilityState.RESOLVING
+            ability.setState(Ability.AbilityState.RESOLVING)
         }
     }
 }

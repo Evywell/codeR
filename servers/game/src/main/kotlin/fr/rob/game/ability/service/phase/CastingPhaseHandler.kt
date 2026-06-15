@@ -13,9 +13,8 @@ class CastingPhaseHandler(
 
     override fun handle(ability: Ability, deltaTime: Int) {
         if (ability.isCastCompleted()) {
-
             consumeResources(ability)
-            ability.state = Ability.AbilityState.LAUNCHING
+            ability.setState(Ability.AbilityState.LAUNCHING)
 
             return
         }

@@ -8,6 +8,7 @@ import fr.raven.proto.message.game.MovementProto
 import fr.raven.proto.message.game.MovementProto.Direction
 import fr.raven.proto.message.game.MovementProto.MovementHeartbeat
 import fr.raven.proto.message.game.NearbyObjectOpcodeProto
+import fr.raven.proto.message.game.ObjectDescriptionProto
 import fr.raven.proto.message.game.ObjectSheetProto.ObjectSheetUpdate
 import fr.raven.proto.message.game.PlayerProto.PlayerDescription
 import fr.raven.proto.message.game.PositionProto
@@ -22,6 +23,7 @@ import fr.rob.game.player.session.GameSession
 import fr.rob.game.player.session.SessionMessageSenderInterface
 import fr.rob.game.network.opcode.OPCODES_MAP
 import fr.rob.game.network.opcode.SMSG_MOVEMENT_HEARTBEAT
+import fr.rob.game.player.message.ObjectDescriptionMessage
 
 class GatewaySessionMessageSender(
     private val gatewaySession: GatewayGameSession,
@@ -108,6 +110,37 @@ class GatewaySessionMessageSender(
             )
             .build()
 
+    private fun fromObjectDescriptionMessage(message: ObjectDescriptionMessage): Message {
+        val worldObject = message.worldObject
+        val descriptionBuilder = ObjectDescriptionProto.ObjectDescription.newBuilder()
+            .setGuid(worldObject.guid.getRawValue())
+            .setPosition(
+                PositionProto.Position.newBuilder()
+                    .setPosX(worldObject.position.x)
+                    .setPosY(worldObject.position.y)
+                    .setPosZ(worldObject.position.z)
+                    .setOrientation(worldObject.position.orientation)
+            )
+
+        if (worldObject.hasOngoingAbilities()) {
+            worldObject.getOngoingAbilities().forEach {
+                val ability = ObjectDescriptionProto.ObjectDescription.Ability.newBuilder()
+                    .setAbilityId(it.info.identifier)
+                    .setAbilityState(it.state.value)
+                    .setIsInProgress(it.isInProgress())
+                    .setRemainingCastingTimeMs(it.getRemainingCastingTimeMs())
+
+                if (it.target.targetGuid != null) {
+                    ability.setExplicitTargetGuid(it.target.targetGuid.getRawValue())
+                }
+
+                descriptionBuilder.addOngoingAbilities(ability)
+            }
+        }
+
+        return descriptionBuilder.build()
+    }
+
     private fun toProtoMessage(message: Any): Message {
         when (message) {
             is PlayerDescriptionMessage -> return fromPlayerDescriptionMessage(message)
@@ -116,6 +149,7 @@ class GatewaySessionMessageSender(
             is HealthMessage -> return fromHealthMessage(message)
             is DebugSignalMessage -> return fromDebugSignalMessage(message)
             is ObjectMovingToDestinationMessage -> return fromTravelPlanDefinedMessage(message)
+            is ObjectDescriptionMessage -> return fromObjectDescriptionMessage(message)
         }
 
         throw RuntimeException("No message builder found for ${message.javaClass.name}")

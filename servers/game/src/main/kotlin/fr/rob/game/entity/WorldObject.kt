@@ -108,6 +108,8 @@ open class WorldObject(
 
     fun getOngoingAbilities(): MutableList<Ability> = ongoingAbilities
 
+    fun hasOngoingAbilities(): Boolean = ongoingAbilities.isNotEmpty()
+
     fun addBehavior(behavior: BehaviorInterface) {
         behaviors.addBehavior(behavior)
     }
