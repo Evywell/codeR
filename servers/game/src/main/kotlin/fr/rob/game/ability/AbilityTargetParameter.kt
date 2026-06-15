@@ -4,7 +4,7 @@ import fr.rob.game.entity.WorldObject
 import fr.rob.game.entity.guid.ObjectGuid
 
 class AbilityTargetParameter(
-    private val targetGuid: ObjectGuid?,
+    val targetGuid: ObjectGuid?,
     private val source: WorldObject,
 ) {
     fun getPrimaryTarget(): WorldObject? {

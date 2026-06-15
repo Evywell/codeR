@@ -2,7 +2,6 @@ package fr.rob.game.ability.service
 
 import fr.rob.game.ability.Ability
 import fr.rob.game.ability.AbilityInfo
-import fr.rob.game.ability.event.AbilityFailedEvent
 import fr.rob.game.entity.WorldObject
 
 class AbilityRequirementChecker {
@@ -42,7 +41,8 @@ class AbilityRequirementChecker {
     }
 
     private fun failAbility(ability: Ability, reason: String) {
-        ability.state = Ability.AbilityState.FAILED
-        ability.source.pushEvent(AbilityFailedEvent(ability, reason))
+        ability.setState(Ability.AbilityState.FAILED)
+        println("Ability failed $reason")
+        // ability.source.pushEvent(AbilityFailedEvent(ability, reason))
     }
 }

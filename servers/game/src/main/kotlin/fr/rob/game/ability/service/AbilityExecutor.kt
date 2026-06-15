@@ -17,7 +17,7 @@ class AbilityExecutor(
             return
         }
 
-        ability.state = Ability.AbilityState.CASTING
+        ability.setState(Ability.AbilityState.CASTING)
         processAbility(ability, 0)
     }
 
