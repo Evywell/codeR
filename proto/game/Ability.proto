@@ -8,3 +8,9 @@ message UseAbility {
   uint32 abilityId = 1;
   uint64 explicitTargetGuid = 2;
 }
+
+message AbilityStateUpdate {
+    uint64 sourceGuid = 1;
+    uint32 abilityId = 2;
+    uint32 abilityState = 3;
+}
