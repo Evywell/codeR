@@ -56,6 +56,11 @@ servers/PhysicServer/build/PhysicServer:
 		-buildLinux64Player $(CURDIR)/servers/PhysicServer/build/PhysicServer \
 		-logFile -
 
+.PHONY: build-proto-client
+build-proto-client: ## Builds the proto DLL and installs it into the Unity GameClient plugins
+	dotnet build client/PhysicBridgeProto/PhysicBridgeProto.csproj
+	cp servers/PhysicServer/Assets/Plugins/PhysicBridgeProto.dll client/GameClient/Assets/Plugins/PhysicBridgeProto.dll
+
 .PHONY: build-physic-server-linux
 build-physic-server-linux: servers/PhysicServer/build/PhysicServer ## Builds the PhysicServer as a headless Linux server
 
