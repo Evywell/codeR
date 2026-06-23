@@ -6,7 +6,6 @@ import fr.rob.game.ability.AbilityRequirements
 import fr.rob.game.ability.AbilityTargetParameter
 import fr.rob.game.ability.AbilityType
 import fr.rob.game.ability.launch.LaunchType
-import fr.rob.game.ability.launch.instant.InstantLaunchInfo
 import fr.rob.game.ability.resource.ManaResourceType
 import fr.rob.game.ability.service.AbilityExecutor
 import fr.rob.game.ability.service.AbilityRequirementChecker
@@ -29,7 +28,7 @@ class AbilityTest : TestCaseWithContainer() {
         requirementChecker,
         listOf(
             CastingPhaseHandler(requirementChecker),
-            LaunchingPhaseHandler(listOf(InstantLaunchInfo())),
+            LaunchingPhaseHandler(),
             ResolvingPhaseHandler()
         ),
     )
@@ -48,7 +47,7 @@ class AbilityTest : TestCaseWithContainer() {
                         type = AbilityType.MAGICAL,
                         abilityRequirement = AbilityRequirements(arrayOf(ManaResourceType(100))),
                         castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
-                        launchType = LaunchType(LaunchType.Name.INSTANT),
+                        launchType = LaunchType.Instant,
                     ),
                 source = source,
                 target = AbilityTargetParameter(null, source),
@@ -77,7 +76,7 @@ class AbilityTest : TestCaseWithContainer() {
                         type = AbilityType.MAGICAL,
                         abilityRequirement = AbilityRequirements(arrayOf(ManaResourceType(100))),
                         castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
-                        launchType = LaunchType(LaunchType.Name.INSTANT),
+                        launchType = LaunchType.Instant,
                     ),
                 source = source,
                 target = AbilityTargetParameter(null, source),
@@ -106,7 +105,7 @@ class AbilityTest : TestCaseWithContainer() {
                         type = AbilityType.MAGICAL,
                         abilityRequirement = AbilityRequirements(arrayOf(ManaResourceType(100))),
                         castingTimeMs = 800,
-                        launchType = LaunchType(LaunchType.Name.INSTANT),
+                        launchType = LaunchType.Instant,
                     ),
                 source = source,
                 target = AbilityTargetParameter(null, source),
@@ -146,7 +145,7 @@ class AbilityTest : TestCaseWithContainer() {
                         type = AbilityType.MAGICAL,
                         abilityRequirement = AbilityRequirements(arrayOf(ManaResourceType(50))),
                         castingTimeMs = 500,
-                        launchType = LaunchType(LaunchType.Name.INSTANT),
+                        launchType = LaunchType.Instant,
                     ),
                 source = source,
                 target = AbilityTargetParameter(null, source),

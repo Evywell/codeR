@@ -7,8 +7,6 @@ import fr.rob.game.ability.AbilityTargetParameter
 import fr.rob.game.ability.AbilityType
 import fr.rob.game.ability.effect.InstantDamageEffect
 import fr.rob.game.ability.launch.LaunchType
-import fr.rob.game.ability.launch.projectile.GhostProjectileLaunchInfo
-import fr.rob.game.ability.launch.instant.InstantLaunchInfo
 import fr.rob.game.ability.resource.ManaResourceType
 import fr.rob.game.ability.service.AbilityExecutor
 import fr.rob.game.ability.service.AbilityRequirementChecker
@@ -44,7 +42,7 @@ class AbilityEffectsTest {
         requirementChecker,
         listOf(
             CastingPhaseHandler(requirementChecker),
-            LaunchingPhaseHandler(listOf(InstantLaunchInfo(), GhostProjectileLaunchInfo(10f))),
+            LaunchingPhaseHandler(),
             ResolvingPhaseHandler()
         ),
     )
@@ -73,7 +71,7 @@ class AbilityEffectsTest {
                 type = AbilityType.MAGICAL,
                 abilityRequirement = AbilityRequirements(arrayOf(ManaResourceType(10))),
                 castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
-                launchType = LaunchType(LaunchType.Name.INSTANT),
+                launchType = LaunchType.Instant,
                 effectsInfo = listOf(InstantDamageEffect.InstantDamageEffectInfo(damageValue)),
             ),
             source = caster,
@@ -105,7 +103,7 @@ class AbilityEffectsTest {
                 type = AbilityType.MAGICAL,
                 abilityRequirement = AbilityRequirements(arrayOf(ManaResourceType(15))),
                 castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
-                launchType = LaunchType(LaunchType.Name.TRACKED_PROJECTILE),
+                launchType = LaunchType.TrackedProjectile(10f),
                 effectsInfo = listOf(InstantDamageEffect.InstantDamageEffectInfo(damageValue)),
             ),
             source = caster,
@@ -145,7 +143,7 @@ class AbilityEffectsTest {
                 type = AbilityType.MAGICAL,
                 abilityRequirement = AbilityRequirements(arrayOf(ManaResourceType(manaCost))),
                 castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
-                launchType = LaunchType(LaunchType.Name.INSTANT),
+                launchType = LaunchType.Instant,
             ),
             source = caster,
             target = AbilityTargetParameter(null, caster),

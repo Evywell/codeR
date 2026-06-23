@@ -13,9 +13,7 @@ import fr.rob.game.ability.AbilityRequirements
 import fr.rob.game.ability.AbilityType
 import fr.rob.game.ability.ObjectAbilityManager
 import fr.rob.game.ability.effect.InstantDamageEffect
-import fr.rob.game.ability.launch.instant.InstantLaunchInfo
 import fr.rob.game.ability.launch.LaunchType
-import fr.rob.game.ability.launch.projectile.FixedTimeProjectileLaunchInfo
 import fr.rob.game.ability.launch.projectile.FixedTimeProjectileParameters
 import fr.rob.game.ability.service.AbilityExecutor
 import fr.rob.game.ability.service.AbilityRequirementChecker
@@ -149,17 +147,10 @@ val opcodeModule =
 
         single { AbilityRequirementChecker() }
 
-        single(named("ABILITY_LAUNCH_INFO_LIST")){
-            listOf(
-                InstantLaunchInfo(),
-                FixedTimeProjectileLaunchInfo()
-            )
-        }
-
         single(named("ABILITY_PHASE_HANDLERS")) {
             listOf(
                 CastingPhaseHandler(get()),
-                LaunchingPhaseHandler(get(named("ABILITY_LAUNCH_INFO_LIST"))),
+                LaunchingPhaseHandler(),
                 ResolvingPhaseHandler(),
             )
         }
@@ -175,14 +166,14 @@ val opcodeModule =
                     type = AbilityType.MAGICAL,
                     abilityRequirement = AbilityRequirements(emptyArray()),
                     castingTimeMs = AbilityInfo.INSTANT_CASTING_TIME,
-                    launchType = LaunchType(LaunchType.Name.INSTANT),
+                    launchType = LaunchType.Instant,
                 ),
                 AbilityInfo(
                     identifier = 2,
                     type = AbilityType.MAGICAL,
                     abilityRequirement = AbilityRequirements.createNoRequirement(),
                     castingTimeMs = 1000,
-                    launchType = LaunchType(LaunchType.Name.FIXED_TIME_PROJECTILE, FixedTimeProjectileParameters(2000)),
+                    launchType = LaunchType.FixedTimeProjectile(FixedTimeProjectileParameters(2000)),
                     effectsInfo = listOf(InstantDamageEffect.InstantDamageEffectInfo(40)),
                 )
             ).forEach { manager.defineAbility(it) }

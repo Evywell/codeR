@@ -6,7 +6,7 @@ import fr.rob.game.ability.projectile.GhostProjectile
 import fr.rob.game.entity.Position
 
 class GhostProjectileLaunchType(
-    private val launchInfo: GhostProjectileLaunchInfo,
+    private val projectileSpeed: Float,
 ) : AbstractProjectileLaunchType() {
     override fun createProjectile(ability: Ability): CarryProjectileInterface {
         val caster = ability.source
@@ -16,7 +16,7 @@ class GhostProjectileLaunchType(
         return GhostProjectile(
             Position(caster.position.x, caster.position.y, caster.position.z, caster.position.orientation),
             target,
-            launchInfo.projectileSpeed,
+            projectileSpeed,
         )
     }
 }
