@@ -29,7 +29,7 @@ namespace Core.Networking.Protocol
         public const int SMSG_MOVEMENT_HEARTBEAT = 0x04;
         public const int SMSG_OBJECT_HEALTH_UPDATED = 0x08;
         public const int SMSG_OBJECT_MOVING_TO_DESTINATION = 0x0A;
-        public const int SMSG_ABILITY_FAILED = 0x0C;
+        public const int SMSG_ABILITY_STATE_UPDATE = 0x0C;
         public const int SMSG_DEBUG_SIGNAL = 0x97;
         public const int SMSG_GAME_INITIALIZATION_SUCCEED = 0x99;
     }

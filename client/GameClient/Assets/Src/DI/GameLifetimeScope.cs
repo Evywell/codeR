@@ -58,6 +58,7 @@ namespace DI
             builder.Register<ObjectHealthHandler>(Lifetime.Singleton).As<IPacketHandler>();
             builder.Register<ObjectDestinationHandler>(Lifetime.Singleton).As<IPacketHandler>();
             builder.Register<DebugSignalHandler>(Lifetime.Singleton).As<IPacketHandler>();
+            builder.Register<AbilityStateUpdateHandler>(Lifetime.Singleton).As<IPacketHandler>();
 
             // --- Packet router (receives IReadOnlyList<IPacketHandler> via constructor) ---
             builder.Register<PacketRouter>(Lifetime.Singleton);
