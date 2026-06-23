@@ -2,6 +2,7 @@ package fr.rob.game.network.session
 
 import com.google.protobuf.Message
 import fr.raven.log.LoggerInterface
+import fr.raven.proto.message.game.AbilityProto
 import fr.raven.proto.message.game.DebugProto.DebugSignal
 import fr.raven.proto.message.game.GameProto
 import fr.raven.proto.message.game.MovementProto
@@ -12,6 +13,7 @@ import fr.raven.proto.message.game.ObjectDescriptionProto
 import fr.raven.proto.message.game.ObjectSheetProto.ObjectSheetUpdate
 import fr.raven.proto.message.game.PlayerProto.PlayerDescription
 import fr.raven.proto.message.game.PositionProto
+import fr.rob.game.ability.Ability.AbilityState
 import fr.rob.game.player.message.DebugSignalMessage
 import fr.rob.game.player.message.HealthMessage
 import fr.rob.game.player.message.MovementHeartbeatMessage
@@ -23,6 +25,7 @@ import fr.rob.game.player.session.GameSession
 import fr.rob.game.player.session.SessionMessageSenderInterface
 import fr.rob.game.network.opcode.OPCODES_MAP
 import fr.rob.game.network.opcode.SMSG_MOVEMENT_HEARTBEAT
+import fr.rob.game.player.message.AbilityFailedMessage
 import fr.rob.game.player.message.ObjectDescriptionMessage
 
 class GatewaySessionMessageSender(
@@ -141,6 +144,13 @@ class GatewaySessionMessageSender(
         return descriptionBuilder.build()
     }
 
+    private fun fromAbilityFailedMessage(message: AbilityFailedMessage): Message =
+        AbilityProto.AbilityStateUpdate.newBuilder()
+            .setSourceGuid(message.caster.getRawValue())
+            .setAbilityId(message.abilityId)
+            .setAbilityState(AbilityState.FAILED.value)
+            .build()
+
     private fun toProtoMessage(message: Any): Message {
         when (message) {
             is PlayerDescriptionMessage -> return fromPlayerDescriptionMessage(message)
@@ -150,6 +160,7 @@ class GatewaySessionMessageSender(
             is DebugSignalMessage -> return fromDebugSignalMessage(message)
             is ObjectMovingToDestinationMessage -> return fromTravelPlanDefinedMessage(message)
             is ObjectDescriptionMessage -> return fromObjectDescriptionMessage(message)
+            is AbilityFailedMessage -> return fromAbilityFailedMessage(message)
         }
 
         throw RuntimeException("No message builder found for ${message.javaClass.name}")
