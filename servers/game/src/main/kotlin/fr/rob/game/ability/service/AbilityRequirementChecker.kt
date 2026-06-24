@@ -42,7 +42,5 @@ class AbilityRequirementChecker {
 
     private fun failAbility(ability: Ability, reason: String) {
         ability.setState(Ability.AbilityState.FAILED)
-        println("Ability failed $reason")
-        // ability.source.pushEvent(AbilityFailedEvent(ability, reason))
     }
 }
