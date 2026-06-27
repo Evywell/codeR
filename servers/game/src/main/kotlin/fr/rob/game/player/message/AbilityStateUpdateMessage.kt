@@ -8,7 +8,7 @@ import fr.rob.game.player.session.GameMessageInterface
 
 data class AbilityStateUpdateMessage(
     val caster: ObjectGuid,
-    val abilityId: Int,
+    val ability: Ability,
     val state: Ability.AbilityState,
 ) : GameMessageInterface {
     override fun createGameMessageHolder(): GameMessageHolder = GameMessageHolder(SMSG_ABILITY_STATE_UPDATE, this)

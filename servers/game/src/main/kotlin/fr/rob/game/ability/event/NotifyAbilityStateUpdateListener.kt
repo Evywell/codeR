@@ -16,7 +16,7 @@ class NotifyAbilityStateUpdateListener : DomainEventListenerInterface {
 
         assert(worldObject.isInWorld)
 
-        val message = AbilityStateUpdateMessage(worldObject.guid, event.ability.info.identifier, event.newState)
+        val message = AbilityStateUpdateMessage(worldObject.guid, event.ability, event.newState)
 
         val grid = worldObject.mapInstance.grid
         val visiblePlayers =

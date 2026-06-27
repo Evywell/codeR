@@ -127,7 +127,8 @@ class GatewaySessionMessageSender(
         if (worldObject.hasOngoingAbilities()) {
             worldObject.getOngoingAbilities().forEach {
                 val ability = ObjectDescriptionProto.ObjectDescription.Ability.newBuilder()
-                    .setAbilityId(it.info.identifier)
+                    .setAbilityId(it.entryId)
+                    .setAbilityInfoId(it.info.identifier)
                     .setAbilityState(it.state.value)
                     .setIsInProgress(it.isInProgress())
                     .setRemainingCastingTimeMs(it.getRemainingCastingTimeMs())
@@ -146,7 +147,8 @@ class GatewaySessionMessageSender(
     private fun fromAbilityStateUpdateMessage(message: AbilityStateUpdateMessage): Message =
         AbilityProto.AbilityStateUpdate.newBuilder()
             .setSourceGuid(message.caster.getRawValue())
-            .setAbilityId(message.abilityId)
+            .setAbilityId(message.ability.entryId)
+            .setAbilityInfoId(message.ability.info.identifier)
             .setAbilityState(message.state.value)
             .build()
 
