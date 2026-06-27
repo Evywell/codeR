@@ -1,13 +1,16 @@
 using Core.Networking.Gateway;
 using Core.Networking.Routing;
 using Core.Networking.Services;
+using Game.Ability;
 using Game.Entity;
 using Game.Input;
 using Game.Interaction;
 using Game.Networking.Handlers;
 using Game.State;
 using Game.UI;
+using Game.UI.CastBar;
 using UnityEngine;
+using UnityEngine.UIElements;
 using VContainer;
 using VContainer.Unity;
 
@@ -35,6 +38,8 @@ namespace DI
                  "StarterAssets scripts (ThirdPersonController, BasicRigidBodyPush, StarterAssetsInputs, PlayerInput) " +
                  "and any CharacterController on the prefab root will be stripped at runtime.")]
         [SerializeField] private GameObject _playerVisualPrefab;
+        
+        [SerializeField] private AbilityDatabase _abilityDatabase;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -97,6 +102,9 @@ namespace DI
                 var hud = hudGo.AddComponent<MainTargetHud>();
                 container.Inject(hud);
             });
+
+            builder.RegisterInstance(_abilityDatabase);
+            builder.RegisterComponentInHierarchy<CastBarController>();
         }
     }
 }

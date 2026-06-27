@@ -1,6 +1,8 @@
 using Core.Networking.Protocol;
 using Core.Networking.Routing;
 using Fr.Raven.Proto.Message.Game;
+using Game.Ability;
+using Game.State;
 using Google.Protobuf;
 using UnityEngine;
 
@@ -14,9 +16,18 @@ namespace Game.Networking.Handlers
     {
         public int Opcode => Opcodes.SMSG_ABILITY_STATE_UPDATE;
 
+        private readonly WorldState _worldState;
+
+        public AbilityStateUpdateHandler(WorldState worldState)
+        {
+            _worldState = worldState;
+        }
+
         public void Handle(ByteString body)
         {
             AbilityStateUpdate update = AbilityStateUpdate.Parser.ParseFrom(body);
+
+            _worldState.UpdateAbilityState(update.SourceGuid, (uint)update.AbilityId, (AbilityState)update.AbilityState);
 
             Debug.Log($"[Ability] Entity {update.SourceGuid} ability {update.AbilityId} state: {update.AbilityState}");
         }
