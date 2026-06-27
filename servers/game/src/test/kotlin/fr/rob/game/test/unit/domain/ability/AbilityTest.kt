@@ -41,6 +41,7 @@ class AbilityTest : TestCaseWithContainer() {
 
         val ability =
             Ability(
+                0,
                 info =
                     AbilityInfo(
                         identifier = 1,
@@ -70,6 +71,7 @@ class AbilityTest : TestCaseWithContainer() {
 
         val ability =
             Ability(
+                0,
                 info =
                     AbilityInfo(
                         identifier = 1,
@@ -99,6 +101,7 @@ class AbilityTest : TestCaseWithContainer() {
 
         val ability =
             Ability(
+                0,
                 info =
                     AbilityInfo(
                         identifier = 1,
@@ -139,6 +142,7 @@ class AbilityTest : TestCaseWithContainer() {
 
         val ability =
             Ability(
+                0,
                 info =
                     AbilityInfo(
                         identifier = 1,

@@ -27,7 +27,7 @@ namespace Game.Networking.Handlers
         {
             AbilityStateUpdate update = AbilityStateUpdate.Parser.ParseFrom(body);
 
-            _worldState.UpdateAbilityState(update.SourceGuid, (uint)update.AbilityId, (AbilityState)update.AbilityState);
+            _worldState.UpdateAbilityState(update.SourceGuid, (uint)update.AbilityId, (uint)update.AbilityInfoId, (AbilityState)update.AbilityState);
 
             Debug.Log($"[Ability] Entity {update.SourceGuid} ability {update.AbilityId} state: {update.AbilityState}");
         }

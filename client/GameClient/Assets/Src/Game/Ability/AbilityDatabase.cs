@@ -7,11 +7,11 @@ namespace Game.Ability
     {
         [SerializeField] private AbilityDefinition[] _definitions;
 
-        public AbilityDefinition GetDefinition(uint abilityId)
+        public AbilityDefinition GetDefinition(uint abilityInfoId)
         {
             foreach (var def in _definitions)
             {
-                if (def.AbilityId == abilityId)
+                if (def.AbilityInfoId == abilityInfoId)
                 {
                     return def;
                 }

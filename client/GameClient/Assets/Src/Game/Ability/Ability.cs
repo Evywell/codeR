@@ -2,14 +2,16 @@ namespace Game.Ability
 {
     public class Ability
     {
-        public ulong SourceGuid { get; }
         public uint AbilityId { get; }
+        public uint AbilityInfoId { get; }
+        public ulong SourceGuid { get; }
         public AbilityState State { get; private set; }
 
-        public Ability(ulong sourceGuid, uint abilityId, AbilityState state)
+        public Ability(uint abilityId, uint abilityInfoId, ulong sourceGuid, AbilityState state)
         {
-            SourceGuid = sourceGuid;
             AbilityId = abilityId;
+            AbilityInfoId = abilityInfoId;
+            SourceGuid = sourceGuid;
             State = state;
         }
 

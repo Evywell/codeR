@@ -6,11 +6,12 @@ import fr.rob.game.ability.event.AbilityStateUpdateEvent
 import fr.rob.game.ability.launch.LaunchTypeInterface
 
 class Ability(
+    val entryId: Int,
     val info: AbilityInfo,
     val source: WorldObject,
     val target: AbilityTargetParameter,
-) {var launchType: LaunchTypeInterface? = null
-
+) {
+    var launchType: LaunchTypeInterface? = null
     private var _state: AbilityState = AbilityState.NOT_STARTED
     val state: AbilityState get() = _state
 

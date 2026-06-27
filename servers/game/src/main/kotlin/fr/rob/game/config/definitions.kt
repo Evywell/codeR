@@ -8,6 +8,7 @@ import fr.rob.core.database.pool.ConnectionPoolManager
 import fr.rob.core.event.EventManager
 import fr.rob.core.event.EventManagerInterface
 import fr.rob.core.opcode.v2.OpcodeFunctionRegistryInterface
+import fr.rob.game.ability.AbilityIncrementalIdentifierGenerator
 import fr.rob.game.ability.AbilityInfo
 import fr.rob.game.ability.AbilityRequirements
 import fr.rob.game.ability.AbilityType
@@ -157,7 +158,7 @@ val opcodeModule =
         single { AbilityExecutor(get(), get(named("ABILITY_PHASE_HANDLERS"))) }
 
         single<ObjectAbilityManager> {
-            val manager = ObjectAbilityManager(get())
+            val manager = ObjectAbilityManager(get(), AbilityIncrementalIdentifierGenerator())
 
             // TODO: change this
             arrayOf(

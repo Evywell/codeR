@@ -12,10 +12,11 @@ message ObjectDescription {
 
     message Ability {
       uint32 abilityId = 1;
-      uint64 explicitTargetGuid = 2;
-      uint32 abilityState = 3;
-      bool isInProgress = 4;
-      uint32 remainingCastingTimeMs = 5;
+      uint32 abilityInfoId = 2;
+      uint64 explicitTargetGuid = 3;
+      uint32 abilityState = 4;
+      bool isInProgress = 5;
+      uint32 remainingCastingTimeMs = 6;
     }
 
     repeated Ability ongoingAbilities = 3;

@@ -14,6 +14,7 @@ namespace Game.UI.CastBar
         private Coroutine _castCoroutine;
 
         public ulong? WatchedEntityGuid { get; private set; }
+        public uint? WatchedAbilityId { get; private set; }
 
         [Inject]
         public void Construct(WorldState worldState, AbilityDatabase abilityDatabase)
@@ -50,7 +51,7 @@ namespace Game.UI.CastBar
 
             if (ability.State == AbilityState.Casting)
             {
-                var definition = _abilityDatabase.GetDefinition(ability.AbilityId);
+                var definition = _abilityDatabase.GetDefinition(ability.AbilityInfoId);
                 var durationMs = definition?.CastDurationMs ?? 0;
 
                 if (_castCoroutine != null)
@@ -58,9 +59,10 @@ namespace Game.UI.CastBar
                     StopCoroutine(_castCoroutine);
                 }
 
+                WatchedAbilityId = ability.AbilityId;
                 _castCoroutine = StartCoroutine(RunCastBar(durationMs));
             }
-            else
+            else if (WatchedAbilityId == ability.AbilityId)
             {
                 HideCastBar();
             }

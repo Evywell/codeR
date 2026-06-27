@@ -66,6 +66,7 @@ class AbilityEffectsTest {
         riggedDiceEngine.nextRollResult = ObjectSheetBehavior.MAX_ROLL_FOR_PERCENTAGE
 
         val ability = Ability(
+            0,
             info = AbilityInfo(
                 identifier = 1,
                 type = AbilityType.MAGICAL,
@@ -98,6 +99,7 @@ class AbilityEffectsTest {
         val initialHealth = target.getComponent<HealthComponent>()!!.value
 
         val ability = Ability(
+            0,
             info = AbilityInfo(
                 identifier = 4,
                 type = AbilityType.MAGICAL,
@@ -138,6 +140,7 @@ class AbilityEffectsTest {
         val manaCost = 25
 
         val ability = Ability(
+            0,
             info = AbilityInfo(
                 identifier = 1,
                 type = AbilityType.MAGICAL,

@@ -8,6 +8,7 @@ import fr.rob.game.entity.WorldObject
 
 class ObjectAbilityManager(
     private val abilityExecutor: AbilityExecutor,
+    private val abilityIncrementalIdentifierGenerator: AbilityIncrementalIdentifierGenerator,
 ) {
     private val abilityInfo = HashMap<Int, AbilityInfo>()
 
@@ -32,7 +33,12 @@ class ObjectAbilityManager(
             throw ObjectCannotUseAbilityException("Object ${source.guid.getRawValue()} cannot use ability $abilityId")
         }
 
-        val ability = Ability(abilityInfo, source, targetParameter)
+        val ability = Ability(
+            abilityIncrementalIdentifierGenerator.getNextIdentifier(),
+            abilityInfo,
+            source,
+            targetParameter
+        )
 
         abilityExecutor.startAbility(ability)
 

@@ -12,5 +12,6 @@ message UseAbility {
 message AbilityStateUpdate {
     uint64 sourceGuid = 1;
     uint32 abilityId = 2;
-    uint32 abilityState = 3;
+    uint32 abilityInfoId = 3;
+    uint32 abilityState = 4;
 }

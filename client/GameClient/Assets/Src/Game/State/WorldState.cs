@@ -33,7 +33,10 @@ namespace Game.State
         /// </summary>
         public event Action<DebugSignalEvent> DebugSignalReceived;
 
-        private readonly Dictionary<ulong, Ability.Ability> _ongoingAbility = new();
+        /// <summary>
+        /// Key is the ability instance identifier
+        /// </summary>
+        private readonly Dictionary<uint, Ability.Ability> _ongoingAbility = new();
         private readonly Dictionary<ulong, WorldEntity> _entities = new();
 
         /// <summary>
@@ -133,24 +136,31 @@ namespace Game.State
             }
         }
 
-        public void UpdateAbilityState(ulong sourceGuid, uint abilityId, AbilityState state)
+        public void UpdateAbilityState(ulong sourceGuid, uint abilityId, uint abilityInfoId, AbilityState state)
         {
-            if (_ongoingAbility.TryGetValue(sourceGuid, out var ability))
+            if (_ongoingAbility.TryGetValue(abilityId, out var ability))
             {
                 ability.SetState(state);    
             } 
             else
             {
-                ability = new Ability.Ability(sourceGuid, abilityId, state);
-                _ongoingAbility[sourceGuid] = ability;
+                ability = new Ability.Ability(abilityId, abilityInfoId, sourceGuid, state);
+                _ongoingAbility[abilityId] = ability;
             }
             
             AbilityStateChanged?.Invoke(ability);
 
             if (state == AbilityState.Done || state == AbilityState.Failed)
             {
-                _ongoingAbility.Remove(sourceGuid);
+                _ongoingAbility.Remove(abilityId);
             }
+        }
+
+        public Ability.Ability GetOngoingAbility(uint abilityId)
+        {
+            _ongoingAbility.TryGetValue(abilityId, out var ability);
+
+            return ability;
         }
 
         /// <summary>

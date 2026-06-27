@@ -15,11 +15,11 @@ namespace Game.Interaction
             _sender = sender;
         }
 
-        public void UseAbility(uint abilityId, ObjectGuid target)
+        public void UseAbility(uint abilityInfoId, ObjectGuid target)
         {
             var message = new UseAbility
             {
-                AbilityId = abilityId,
+                AbilityId = abilityInfoId,
                 ExplicitTargetGuid = target.GetRawValue()
             };
 
