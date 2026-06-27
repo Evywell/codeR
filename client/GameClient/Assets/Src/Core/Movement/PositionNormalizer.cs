@@ -10,50 +10,28 @@ namespace Core.Movement
     public static class PositionNormalizer
     {
         private const float PI_2 = Mathf.PI / 2;
-        private const float PI = Mathf.PI;
-        private const float A3_PI_2 = 3 * PI / 2;
-        private const float A2_PI = 2 * PI;
+        private const float A2_PI = 2 * Mathf.PI;
 
         /// <summary>
         /// Converts a Unity euler Y rotation (in radians) to server orientation.
+        /// Unity uses Y-up with clockwise rotation from +Z; the server uses Z-up with
+        /// counter-clockwise rotation from +X, with Unity's +Z mapped to the server's +Y.
+        /// The conversion is therefore a single mirror: (π/2 − x) mod 2π.
         /// </summary>
         public static float TransformUnityOrientationToServerOrientation(float orientation)
         {
-            if (orientation <= PI_2)
-            {
-                return PI_2 - orientation;
-            }
-            else if (orientation > PI_2 && orientation <= PI)
-            {
-                return PI + orientation;
-            }
-            else if (orientation >= A3_PI_2 && orientation <= A2_PI)
-            {
-                return orientation - A3_PI_2 + (2 * (A2_PI - orientation));
-            }
-
-            return PI + (A3_PI_2 - orientation);
+            float result = (PI_2 - orientation) % A2_PI;
+            return result < 0f ? result + A2_PI : result;
         }
 
         /// <summary>
         /// Converts a server orientation to Unity euler Y rotation (in radians).
+        /// The mapping is an involution, so the same formula is used in both directions.
         /// </summary>
         public static float TransformServerOrientationToUnityOrientation(float orientation)
         {
-            if (orientation <= PI_2)
-            {
-                return PI_2 - orientation;
-            }
-            else if (orientation > PI_2 && orientation <= PI)
-            {
-                return PI + (A3_PI_2 - orientation);
-            }
-            else if (orientation >= A3_PI_2 && orientation <= A2_PI)
-            {
-                return PI - (orientation - A3_PI_2);
-            }
-
-            return (orientation - PI) + A3_PI_2;
+            float result = (PI_2 - orientation) % A2_PI;
+            return result < 0f ? result + A2_PI : result;
         }
     }
 }

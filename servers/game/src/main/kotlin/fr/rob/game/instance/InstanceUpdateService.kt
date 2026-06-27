@@ -56,7 +56,7 @@ class InstanceUpdateService(
     }
 
     private fun updateActiveEntitiesOfType(
-        entities: Sequence<WorldObject>,
+        entities: List<WorldObject>,
         deltaTime: Int,
         eventDispatcher: DomainEventDispatcherInterface,
     ) {

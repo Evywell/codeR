@@ -105,11 +105,13 @@ class ChunkManager(
         return despawned
     }
 
-    fun getActiveEntitiesByType(type: ObjectGuid.GUID_TYPE): Sequence<WorldObject> = sequence {
+    fun getActiveEntitiesByType(type: ObjectGuid.GUID_TYPE): List<WorldObject> {
+        val snapshot = ArrayList<WorldObject>()
         for ((chunkId, typeSets) in entitiesByChunk) {
             if (!isChunkActive(chunkId)) continue
-            yieldAll(typeSets[type.value])
+            snapshot.addAll(typeSets[type.value])
         }
+        return snapshot
     }
 
     fun getChunkState(chunkId: ChunkId): ChunkState =
