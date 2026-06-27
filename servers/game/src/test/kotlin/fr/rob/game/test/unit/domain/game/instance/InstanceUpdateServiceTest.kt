@@ -366,6 +366,33 @@ class InstanceUpdateServiceTest {
             val activeUnits = cm.getActiveEntitiesByType(ObjectGuid.GUID_TYPE.GAME_OBJECT).toList()
             assertTrue(activeUnits.contains(unit))
         }
+
+        @Test
+        fun `updating entity during a chunk transition should work`() {
+            val instance = buildTestInstance()
+            val dispatcher = buildEventDispatcherWithChunkTransition()
+
+            val movingPlayer = objectBuilder.createPlayer()
+            worldBuilder.addIntoInstance(movingPlayer, instance, posInChunk00())
+            // posInChunk33() is currently dormant — moving there forces a chunk
+            // mutation (`registerEntity` + `activateChunk`) mid-iteration.
+            movingPlayer.addBehavior(MoveOnUpdateBehavior(posInChunk33()))
+
+            val secondPlayer = objectBuilder.createPlayer()
+            val secondSpy = TickCountBehavior()
+            secondPlayer.addBehavior(secondSpy)
+            worldBuilder.addIntoInstance(secondPlayer, instance, posInChunk00Alt())
+
+            // Must not throw.
+            service.update(instance, 20, dispatcher)
+
+            assertEquals(ChunkId(3, 3), movingPlayer.cachedChunkId)
+            assertEquals(
+                1,
+                secondSpy.tickCount,
+                "second player should still be ticked even though the iteration list was mutated underneath",
+            )
+        }
     }
 
     // ──────────────────────────────────────────────
