@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="CastBar.uss" />
+    <ui:VisualElement name="cast-bar-root" class="cast-bar-root">
+        <ui:ProgressBar name="cast-progress" class="cast-progress" value="0" />
+    </ui:VisualElement>
+</ui:UXML>

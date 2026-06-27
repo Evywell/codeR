@@ -1,0 +1,15 @@
+:root {
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 120px;
+}
+
+.cast-bar-root {
+    width: 300px;
+    display: none;
+}
+
+.cast-progress {
+    width: 100%;
+    height: 24px;
+}

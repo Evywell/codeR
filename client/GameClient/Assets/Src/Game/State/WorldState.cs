@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Game.Entity;
 using Game.Entity.Components;
+using Game.Ability;
 using UnityEngine;
 
 namespace Game.State
@@ -25,12 +26,15 @@ namespace Game.State
         /// </summary>
         public event Action<WorldEntityUpdate> EntityUpdated;
 
+        public event Action<Ability.Ability> AbilityStateChanged;
+
         /// <summary>
         /// Fired when the server sends a debug signal.
         /// </summary>
         public event Action<DebugSignalEvent> DebugSignalReceived;
 
-        private readonly Dictionary<ulong, WorldEntity> _entities = new Dictionary<ulong, WorldEntity>();
+        private readonly Dictionary<ulong, Ability.Ability> _ongoingAbility = new();
+        private readonly Dictionary<ulong, WorldEntity> _entities = new();
 
         /// <summary>
         /// Adds the local player to the world and sets them as the controlled entity.
@@ -126,6 +130,26 @@ namespace Game.State
                 entity.IsMoving = true;
                 entity.LastRequestedDestination = destination;
                 EntityUpdated?.Invoke(new WorldEntityUpdate(WorldUpdateType.Position, entity));
+            }
+        }
+
+        public void UpdateAbilityState(ulong sourceGuid, uint abilityId, AbilityState state)
+        {
+            if (_ongoingAbility.TryGetValue(sourceGuid, out var ability))
+            {
+                ability.SetState(state);    
+            } 
+            else
+            {
+                ability = new Ability.Ability(sourceGuid, abilityId, state);
+                _ongoingAbility[sourceGuid] = ability;
+            }
+            
+            AbilityStateChanged?.Invoke(ability);
+
+            if (state == AbilityState.Done || state == AbilityState.Failed)
+            {
+                _ongoingAbility.Remove(sourceGuid);
             }
         }
 
