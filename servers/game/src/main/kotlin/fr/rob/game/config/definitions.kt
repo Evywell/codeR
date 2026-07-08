@@ -173,7 +173,7 @@ val opcodeModule =
                     identifier = 2,
                     type = AbilityType.MAGICAL,
                     abilityRequirement = AbilityRequirements.createNoRequirement(),
-                    castingTimeMs = 1000,
+                    castingTimeMs = 4000,
                     launchType = LaunchType.FixedTimeProjectile(FixedTimeProjectileParameters(2000)),
                     effectsInfo = listOf(InstantDamageEffect.InstantDamageEffectInfo(40)),
                 )

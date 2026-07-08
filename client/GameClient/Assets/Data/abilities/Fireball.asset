@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c2d39bd089792141863aaf1b51ec6f7, type: 3}
   m_Name: Fireball
   m_EditorClassIdentifier: Game::Game.Ability.AbilityDefinition
-  AbilityId: 2
-  CastDurationMs: 1000
+  AbilityInfoId: 2
+  CastDurationMs: 4000

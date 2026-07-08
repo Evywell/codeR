@@ -14,4 +14,6 @@ message AbilityStateUpdate {
     uint32 abilityId = 2;
     uint32 abilityInfoId = 3;
     uint32 abilityState = 4;
+    uint32 castingTimeMs = 5;
+    uint32 elapsedCastingTimeMs = 6;
 }

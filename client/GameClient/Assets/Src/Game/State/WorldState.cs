@@ -4,6 +4,7 @@ using Game.Entity;
 using Game.Entity.Components;
 using Game.Ability;
 using UnityEngine;
+using Fr.Raven.Proto.Message.Game;
 
 namespace Game.State
 {
@@ -136,23 +137,32 @@ namespace Game.State
             }
         }
 
-        public void UpdateAbilityState(ulong sourceGuid, uint abilityId, uint abilityInfoId, AbilityState state)
+        public void UpdateAbilityState(AbilityStateUpdate update)
         {
-            if (_ongoingAbility.TryGetValue(abilityId, out var ability))
+            var state = (AbilityState)update.AbilityState;
+
+            if (_ongoingAbility.TryGetValue(update.AbilityId, out var ability))
             {
                 ability.SetState(state);    
             } 
             else
             {
-                ability = new Ability.Ability(abilityId, abilityInfoId, sourceGuid, state);
-                _ongoingAbility[abilityId] = ability;
+                ability = new Ability.Ability(
+                    update.AbilityId, 
+                    update.AbilityInfoId, 
+                    update.SourceGuid, 
+                    state,
+                    update.CastingTimeMs,
+                    update.ElapsedCastingTimeMs
+                );
+                _ongoingAbility[update.AbilityId] = ability;
             }
             
             AbilityStateChanged?.Invoke(ability);
 
             if (state == AbilityState.Done || state == AbilityState.Failed)
             {
-                _ongoingAbility.Remove(abilityId);
+                _ongoingAbility.Remove(update.AbilityId);
             }
         }
 
