@@ -51,8 +51,8 @@ namespace Game.UI.CastBar
 
             if (ability.State == AbilityState.Casting)
             {
-                var definition = _abilityDatabase.GetDefinition(ability.AbilityInfoId);
-                var durationMs = definition?.CastDurationMs ?? 0;
+                var durationMs = (int)ability.CastingTimeMs;
+                float progress = Mathf.Clamp01(ability.ElapsedCastingTimeMs / durationMs);
 
                 if (_castCoroutine != null)
                 {
@@ -61,6 +61,7 @@ namespace Game.UI.CastBar
 
                 WatchedAbilityId = ability.AbilityId;
                 _castCoroutine = StartCoroutine(RunCastBar(durationMs));
+                _view.SetProgress(progress);
             }
             else if (WatchedAbilityId == ability.AbilityId)
             {
