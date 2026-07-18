@@ -68,8 +68,8 @@ namespace App {
                 Guid = entityGuid,
                 Destination = new Vec3 {
                     X = position.x,
-                    Y = position.y,
-                    Z = position.z,
+                    Y = position.z,
+                    Z = position.y,
                 }
             };
 

@@ -2,6 +2,7 @@ using Core.Networking.Gateway;
 using Core.Networking.Routing;
 using Core.Networking.Services;
 using Game.Ability;
+using Game.Animation;
 using Game.Entity;
 using Game.Input;
 using Game.Interaction;
@@ -93,6 +94,7 @@ namespace DI
             // --- Entry points ---
             builder.RegisterEntryPoint<NetworkManager>();
             builder.RegisterEntryPoint<GameWorldManager>();
+            builder.RegisterEntryPoint<PlayerAnimationController>();
 
             // --- HUD: create GameObject + inject after container is built ---
             builder.RegisterBuildCallback(container =>
