@@ -1,3 +1,4 @@
+using System;
 using Core.Movement;
 using Game.Entity;
 using Game.Interaction;
@@ -19,6 +20,8 @@ namespace Game.Input
     /// </summary>
     public class PlayerInputController : ITickable
     {
+        public event Action OnAbilityCast;
+
         private readonly WorldState _worldState;
         private readonly EntitySpawner _entitySpawner;
         private readonly MovementSender _movementSender;
@@ -258,6 +261,7 @@ namespace Game.Input
                 {
                     Debug.Log($"[Ability] Casting Fireball (id 2) on {targetGuid.GetRawValue()}");
                     _abilityPerformer.UseAbility(2, targetGuid);
+                    OnAbilityCast?.Invoke();
                 }
             }
         }

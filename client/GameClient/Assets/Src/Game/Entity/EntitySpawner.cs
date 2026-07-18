@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using Core.Movement;
 using Game.State;
 using UnityEngine;
 using UnityEngine.AI;
+using Object = UnityEngine.Object;
 
 namespace Game.Entity
 {
@@ -36,6 +38,7 @@ namespace Game.Entity
         /// Null if the configured prefab has no Animator (e.g. in pure-capsule fallback).
         /// </summary>
         public Animator PlayerAnimator { get; private set; }
+        public event Action<Animator> OnPlayerAnimatorReady;
 
         public EntitySpawner(WorldState worldState, GameObject playerVisualPrefab)
         {
@@ -232,6 +235,7 @@ namespace Game.Entity
                 if (PlayerAnimator != null)
                 {
                     PlayerAnimator.gameObject.AddComponent<AnimationEventReceiver>();
+                    OnPlayerAnimatorReady?.Invoke(PlayerAnimator);
                 }
             }
             else
