@@ -34,8 +34,6 @@ namespace App.Network {
             var opcode = msg.Opcode;
             var session = _sessionHolder.GetSession(context.Channel.GetHashCode());
 
-            Debug.Log($"Message received with opcode {opcode}");
-
             var handler = _packetHandlerMapping.GetHandler(opcode);
             var message = handler.CreateMessageFromPayload(msg.Body);
 

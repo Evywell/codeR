@@ -27,14 +27,10 @@ namespace Game.Networking.Handlers
         {
             ObjectMovingToDestination msg = ObjectMovingToDestination.Parser.ParseFrom(body);
 
-            // Waypoints arrive in Unity space (PhysicServer sends raw Vec3 from
-            // ObjectController.SendMovement, game server relays without swap).
-            // No Y/Z swap needed here — unlike heartbeats which go through
-            // TransformSyncOverNetwork and ARE in server convention.
             var destination = new Vector3(
                 msg.Destination.PosX,
-                msg.Destination.PosY,
-                msg.Destination.PosZ
+                msg.Destination.PosZ,
+                msg.Destination.PosY
             );
 
             _worldState.UpdateEntityDestination(

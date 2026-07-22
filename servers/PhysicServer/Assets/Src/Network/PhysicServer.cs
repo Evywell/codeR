@@ -4,6 +4,7 @@ using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using DotNetty.Codecs.Protobuf;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using App.Handlers;
 using App.Managers;
@@ -18,11 +19,11 @@ namespace App.Network {
         public ObjectSpawner spawner;
         public ActorsManager actorsManager;
 
-        private Dictionary<int, Session> _sessions = new Dictionary<int, Session>();
+        private readonly ConcurrentDictionary<int, Session> _sessions = new ConcurrentDictionary<int, Session>();
 
         public void SendMessageToEveryone(IMessage message) {
             foreach (var session in _sessions.Values) {
-                session.Send(message);
+                session.Write(message);
             }
         }
 
@@ -76,6 +77,14 @@ namespace App.Network {
             }
         }
 
+        private void LateUpdate()
+        {
+            foreach (var session in _sessions.Values)
+            {
+                session.Flush();
+            }
+        }
+
         private void HandlePacketsOfSession(Session session)
         {
             if (session.PacketQueue.IsEmpty) {
@@ -88,14 +97,13 @@ namespace App.Network {
             while (currentPacketIndex < queueLength && session.PacketQueue.TryDequeue(out SessionPacket packet)) {
                 currentPacketIndex++;
 
-                Debug.Log($"Handle packet {packet.Opcode}");
                 packet.PacketHandler.HandleOpcode(packet.Opcode, packet.Data);
             }
         }
 
         public void AddSession(Session session)
         {
-            _sessions.Add(session.Identifier, session);
+            _sessions.TryAdd(session.Identifier, session);
         }
 
         public IEnumerable<Session> GetSessionEnumerable()
@@ -115,7 +123,7 @@ namespace App.Network {
 
         public void RemoveSession(int identifier)
         {
-            _sessions.Remove(identifier);
+            _sessions.TryRemove(identifier, out _);
         }
     }
 }

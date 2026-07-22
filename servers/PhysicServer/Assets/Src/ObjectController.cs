@@ -7,11 +7,10 @@ using Google.Protobuf;
 namespace App {
     public class ObjectController : MonoBehaviour {
         public ulong entityGuid;
-        public GameObject waypointPrefab;
 
         private NavMeshAgent _navMeshAgent;
         private bool _hasOngoingMovement = false;
-        private GameObject[] _waypoints;
+        private Vector3 _lastSteeringTarget;
 
         public void MoveToPosition(Vector3 position)
         {
@@ -30,36 +29,6 @@ namespace App {
             }
 
             _navMeshAgent.SetPath(path);
-
-            // A single corner means the agent is already at the destination.
-            // Skip waypoints and initial SendMovement, but let Update() handle completion.
-            if (corners.Length < 2) {
-                return;
-            }
-
-            InstantiateWaypoints(corners);
-
-            SendMovement(corners[1]);
-        }
-
-        public void OnWaypointEntered(int index)
-        {
-            Destroy(_waypoints[index]);
-
-            var isLastWaypoint = _waypoints.Length - 1 == index;
-
-            if (isLastWaypoint) {
-                Debug.Log($"Last waypoint reached by {entityGuid}");
-
-                _navMeshAgent.ResetPath();
-                return;
-            }
-
-            Debug.Log($"Current index {index} / Next index {index + 1} for {entityGuid}");
-
-            var nextWaypoint = _waypoints[index + 1];
-
-            SendMovement(nextWaypoint.transform.position);
         }
 
         private void SendMovement(Vector3 position)
@@ -77,20 +46,6 @@ namespace App {
                 Opcode = 0x03,
                 Body = objectMoveTo.ToByteString()
             });
-        }
-
-        private void InstantiateWaypoints(Vector3[] corners)
-        {
-            GameObject[] waypoints = new GameObject[corners.Length - 1];
-
-            for (int i = 0; i < corners.Length - 1; i++) {
-                GameObject waypoint = Instantiate(waypointPrefab, corners[i + 1], Quaternion.identity);
-                waypoint.GetComponent<WaypointTrigger>().RegisterWaypoint(this, i);
-
-                waypoints[i] = waypoint;
-            }
-
-            _waypoints = waypoints;
         }
 
         private void Start()
@@ -113,6 +68,12 @@ namespace App {
 
             if (!_hasOngoingMovement) {
                 return;
+            }
+
+            if (_lastSteeringTarget != _navMeshAgent.steeringTarget) {
+                _lastSteeringTarget = _navMeshAgent.steeringTarget;
+
+                SendMovement(_lastSteeringTarget);
             }
 
             if (_navMeshAgent.remainingDistance > 0) {
