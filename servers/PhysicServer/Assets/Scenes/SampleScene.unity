@@ -223,6 +223,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Original: {fileID: 6527092318700169533, guid: 2522c4a012a45a33e8bfb26f14805e34, type: 3}
+  actorsManager: {fileID: 46936579}
 --- !u!1 &351826006
 GameObject:
   m_ObjectHideFlags: 0

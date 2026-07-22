@@ -19,8 +19,12 @@ namespace App.Network {
             _channel = channel;
         }
 
-        public void Send(IMessage message) {
-            _channel.WriteAndFlushAsync(message);
+        public void Write(IMessage message) {
+            _channel.WriteAsync(message);
+        }
+
+        public void Flush() {
+            _channel.Flush();
         }
     }
 }

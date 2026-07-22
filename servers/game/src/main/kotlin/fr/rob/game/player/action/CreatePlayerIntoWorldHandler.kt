@@ -36,7 +36,6 @@ class CreatePlayerIntoWorldHandler(
 
         // @todo remove this
         val worldObject = createMobAroundPosition(ObjectGuid.LowGuid(1u, 1u), Position(10f, 0f, 1f, 0f), command.mapInstance)
-        val worldObject2 = createMobAroundPosition(ObjectGuid.LowGuid(1u, 2u), Position(10f, 10f, 1f, 0f), command.mapInstance)
 
         objectManager.addEntityIntoInstance(player, command.mapInstance, createPlayerResult.position!!)
 
@@ -44,11 +43,6 @@ class CreatePlayerIntoWorldHandler(
         player.ownerGameSession.send(PlayerDescriptionMessage(player.guid, player.name))
 
         worldObject?.let {
-            // send info to unity + ask to move
-            val controller = SplineMovementController(it, splineMovementBrain)
-            controller.initiateMovementToPosition(Position(10f, 10f, 1f, 0f))
-        }
-        worldObject2?.let {
             // send info to unity + ask to move
             val controller = SplineMovementController(it, splineMovementBrain)
             controller.initiateMovementToPosition(Position(10f, 10f, 1f, 0f))
