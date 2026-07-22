@@ -30,5 +30,10 @@ namespace Game.Ability
         {
             State = state;
         }
+
+        public bool IsEnded()
+        {
+            return State == AbilityState.Done || State == AbilityState.Failed;
+        }
     }
 }
