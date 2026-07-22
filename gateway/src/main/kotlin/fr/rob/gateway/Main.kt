@@ -7,7 +7,6 @@ import fr.rob.gateway.extension.game.GameExtension
 import fr.rob.gateway.extension.realm.RealmExtension
 import fr.rob.gateway.network.GatewayBuilder
 import fr.rob.gateway.network.netty.NettyServer
-import java.io.File
 
 class Main {
     companion object {
@@ -15,10 +14,10 @@ class Main {
         fun main(args: Array<String>) {
             println("Gateway: Hello !")
 
-            val logConfigResource = requireNotNull({}.javaClass.classLoader.getResource("log4j.config.xml")) {
+            val logConfigStream = requireNotNull({}.javaClass.classLoader.getResourceAsStream("log4j.config.xml")) {
                 "log4j.config.xml not found in classpath"
             }
-            val loggerFactory = LoggerFactory(File(logConfigResource.path).inputStream())
+            val loggerFactory = LoggerFactory(logConfigStream)
             val logger = loggerFactory
                 .create("GATEWAY")
 
