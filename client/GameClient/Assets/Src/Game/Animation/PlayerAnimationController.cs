@@ -51,8 +51,9 @@ namespace Game.Animation
                 _animator?.SetBool(AnimIsCastingHash, false);
             }
             
-            if (ability.State == AbilityState.Failed)
+            if (ability.IsEnded())
             {
+                _animator?.SetBool(AnimIsCastingHash, false);
                 _animator?.ResetTrigger(AnimCastRaiseHash);
             }
         }
