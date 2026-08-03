@@ -1,0 +1,11 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "unity-gameclient": {
+      "type": "local",
+      "command": ["unity", "mcp"],
+      "cwd": "client/GameClient",
+      "enabled": false
+    }
+  }
+}
