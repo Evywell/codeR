@@ -15,5 +15,4 @@ include(
     ":core",
     "servers:game",
     ":gateway",
-    ":world:service"
 )

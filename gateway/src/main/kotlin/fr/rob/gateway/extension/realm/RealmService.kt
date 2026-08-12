@@ -16,7 +16,8 @@ import io.grpc.ManagedChannelBuilder
 class RealmService(
     private val gateway: Gateway,
     private val logger: LoggerInterface,
-    private val gameNodeBuilder: GameNodeBuilder
+    private val gameNodeBuilder: GameNodeBuilder,
+    private val characterRepository: CharacterRepository
 ) {
     private val gameNodeChannel: ManagedChannel = ManagedChannelBuilder
         .forAddress("localhost", 12347)
@@ -48,7 +49,7 @@ class RealmService(
     fun reserveCharacterForSession(session: GatewaySession, character: CharacterInfo) {
         val stub = CharacterGrpc.newBlockingStub(gameNodeChannel)
 
-        val reservationStatus = stub.reserve(
+        stub.reserve(
             ReservationRequest.newBuilder()
                 .setCharacterId(character.characterId)
                 .setMapId(1)
@@ -56,5 +57,13 @@ class RealmService(
                 .setAccountId(session.accountId.toString())
                 .build()
         )
+    }
+
+    fun retrieveCharacter(characterId: Int): CharacterInfo {
+        if (!characterRepository.exists(characterId)) {
+            throw RuntimeException("Cannot find character $characterId")
+        }
+
+        return CharacterInfo.newBuilder().setCharacterId(characterId).build()
     }
 }

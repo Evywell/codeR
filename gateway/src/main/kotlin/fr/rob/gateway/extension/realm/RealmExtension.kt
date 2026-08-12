@@ -9,10 +9,11 @@ import fr.rob.gateway.network.dispatcher.PacketDispatcherInterface
 
 class RealmExtension(
     private val logger: LoggerInterface,
-    private val loggerFactory: LoggerFactoryInterface
+    private val loggerFactory: LoggerFactoryInterface,
+    private val characterRepository: CharacterRepository
 ) : ExtensionInterface {
     override fun createDispatcher(gateway: Gateway): PacketDispatcherInterface {
-        val realmService = RealmService(gateway, logger, GameNodeBuilder(gateway, loggerFactory.create("GAME_NODE_CLIENT")))
+        val realmService = RealmService(gateway, logger, GameNodeBuilder(gateway, loggerFactory.create("GAME_NODE_CLIENT")), characterRepository)
         val realmClient = RealmClient(gateway.gameNodes, realmService)
 
         return RealmPacketDispatcher(realmClient, realmService, gateway.gameNodes)
