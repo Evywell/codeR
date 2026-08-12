@@ -8,6 +8,8 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":utilities"))
 
+    implementation("mysql:mysql-connector-java:8.0.25")
+
     implementation("io.netty:netty-all:4.1.74.Final")
 
     implementation("com.google.protobuf:protobuf-java:4.33.1")

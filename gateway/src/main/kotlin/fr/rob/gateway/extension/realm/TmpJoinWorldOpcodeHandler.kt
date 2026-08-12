@@ -1,29 +1,18 @@
 package fr.rob.gateway.extension.realm
 
-import fr.raven.proto.message.game.grpc.character.CharacterGrpc
-import fr.raven.proto.message.game.grpc.character.CharacterInfo
-import fr.raven.proto.message.game.grpc.character.DescribeRequest
 import fr.raven.proto.message.gateway.GatewayProto
 import fr.raven.proto.message.realm.RealmProto
 import fr.raven.proto.message.realm.RealmProto.BindCharacterToNode
 import fr.rob.gateway.extension.realm.gamenode.GameNodes
 import fr.rob.gateway.extension.realm.opcode.SMSG_REALM_GAME_NODE_READY_TO_COMMUNICATE
 import fr.rob.gateway.network.GatewaySession
-import io.grpc.ManagedChannel
-import io.grpc.ManagedChannelBuilder
-import io.grpc.Status
 
 class TmpJoinWorldOpcodeHandler(private val realmClient: RealmClient, private val realmService: RealmService) {
-    private val channel: ManagedChannel = ManagedChannelBuilder
-        .forAddress("localhost", 12346)
-        .usePlaintext()
-        .build()
-
     fun run(packet: GatewayProto.Packet, session: GatewaySession, gameNodes: GameNodes) {
         // Retrieve char info
         val charInfo = RealmProto.JoinTheWorld.parseFrom(packet.body)
 
-        val character = retrieveCharacter(charInfo)
+        val character = realmService.retrieveCharacter(charInfo.characterId)
 
         // Ask orchestrator to retrieve the node corresponding the char map info
 
@@ -65,21 +54,5 @@ class TmpJoinWorldOpcodeHandler(private val realmClient: RealmClient, private va
         println("Simulate realm transmission of BindCharacterToNode data...")
         realmClient.onPacketReceived(Packet(1, bindData))
          */
-    }
-
-    private fun retrieveCharacter(characterInfo: RealmProto.JoinTheWorld): CharacterInfo {
-        val stub = CharacterGrpc.newBlockingStub(channel)
-
-        try {
-            return stub.describe(DescribeRequest.newBuilder().setCharacterId(characterInfo.characterId).build())
-        } catch (e: RuntimeException) {
-            val errorStatus = Status.fromThrowable(e)
-
-            if (errorStatus.code != Status.NOT_FOUND.code) {
-                throw e
-            }
-
-            throw RuntimeException("Cannot find character ${characterInfo.characterId}")
-        }
     }
 }

@@ -55,18 +55,10 @@ gateway-build: ## Builds the gateway project
 	${GRADLE_CMD} :gateway:build
 
 .PHONY: gateway
-gateway: ## Runs the gateway jar (build it first with `make gateway-build` if needed)
-	test -d gateway/build/distributions/gateway || (cd gateway/build/distributions; unzip gateway.zip)
-	cd gateway/build/distributions/gateway; ./bin/gateway
-
-.PHONY: world-build
-world-build: ## Builds the world service project
-	${GRADLE_CMD} :world:service:build
-
-.PHONY: world
-world: ## Runs the world service jar (build it first with `make world-build` if needed)
-	test -d world/service/build/distributions/service || (cd world/service/build/distributions; unzip service.zip)
-	cd world/service/build/distributions/service; ./bin/service
+gateway: gateway-build start-dependencies ## Builds and runs the gateway jar with minimal configuration
+	rm -rf gateway/build/distributions/gateway
+	cd gateway/build/distributions; unzip gateway.zip
+	cd gateway/build/distributions/gateway; GATEWAY_OPTS="-Dmysql_game.host=127.0.0.1 -Dmysql_game.tcp.3306=33060" ./bin/gateway
 
 .PHONY: build-proto-client
 build-proto-client: ## Builds the proto DLL and installs it into the Unity GameClient plugins

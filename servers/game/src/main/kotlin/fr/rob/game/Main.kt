@@ -3,11 +3,9 @@ package fr.rob.game
 import fr.rob.core.config.Config
 import fr.rob.core.config.commons.configuration2.ConfigLoader
 import fr.rob.core.config.database.DatabaseConfig
-import fr.rob.game.App
 import fr.rob.game.config.Databases
 import fr.rob.game.config.GameConfig
 import fr.rob.game.config.ServerNodesConfig
-import fr.rob.game.config.Orchestrator
 import fr.rob.game.config.databaseModule
 import fr.rob.game.config.globalModule
 import fr.rob.game.config.mapModule
@@ -38,10 +36,6 @@ class Main {
         }
 
         private fun fromGlobal(config: Config): GameConfig = GameConfig(
-            Orchestrator(
-                requireNotNull(config.getString("orchestrator.host")) { "Missing config: orchestrator.host" },
-                requireNotNull(config.getInteger("orchestrator.port")) { "Missing config: orchestrator.port" },
-            ),
             Databases(
                 DatabaseConfig(
                     System.getProperty("mysql_game.host"),
