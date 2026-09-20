@@ -67,15 +67,25 @@ build-proto-client: ## Builds the proto DLL and installs it into the Unity GameC
 
 .PHONY: build-physic-server-linux
 build-physic-server-linux: # Builds the PhysicServer as a headless Linux server
-	$(UNITY_BIN) -batchmode -nographics -quit \
-		-projectPath $(CURDIR)/servers/PhysicServer \
-		-buildTarget LinuxHeadlessSimulation \
-		-buildLinux64Player $(CURDIR)/servers/PhysicServer/build/PhysicServer \
-		-logFile -
+	$(UNITY_BIN) build $(CURDIR)/servers/PhysicServer \
+		--target StandaloneLinux64 \
+		--output-path $(CURDIR)/servers/PhysicServer/build/PhysicServer \
+		$(UNITY_BUILD_ARGS)
+
+.PHONY: build-physic-server-macos
+build-physic-server-macos: # Builds the PhysicServer as a headless macOS server
+	$(UNITY_BIN) build $(CURDIR)/servers/PhysicServer \
+		--target StandaloneOSX \
+		--output-path $(CURDIR)/servers/PhysicServer/build/PhysicServer.app \
+		$(UNITY_BUILD_ARGS)
 
 .PHONY: run-physic-server
 run-physic-server: servers/PhysicServer/build/PhysicServer ## Runs the PhysicServer headless build
 	./servers/PhysicServer/build/PhysicServer -batchmode -nographics
+
+.PHONY: run-physic-server-macos
+run-physic-server-macos: servers/PhysicServer/build/PhysicServer.app ## Runs the PhysicServer macOS build
+	./servers/PhysicServer/build/PhysicServer.app/Contents/MacOS/PhysicServer -batchmode -nographics
 
 .PHONY: migrate
 migrate: migrations/migrator/vendor/autoload.php

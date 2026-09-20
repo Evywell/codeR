@@ -13,4 +13,5 @@ ifdef CI_SERVER
 DOCKER_COMPOSE_RUN_ARGS += -T
 endif
 
-UNITY_BIN ?= Unity
+UNITY_BIN ?= unity
+UNITY_BUILD_ARGS ?= --allow-install
