@@ -35,12 +35,12 @@ application {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.25.3:linux-x86_64@exe"
+        artifact = "com.google.protobuf:protoc:3.25.3"
     }
 
     plugins {
         create("grpc") {
-            artifact = "io.grpc:protoc-gen-grpc-java:1.77.0:linux-x86_64@exe"
+            artifact = "io.grpc:protoc-gen-grpc-java:1.77.0"
         }
     }
 
