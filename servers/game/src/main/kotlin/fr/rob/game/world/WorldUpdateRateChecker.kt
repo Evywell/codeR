@@ -1,8 +1,9 @@
 package fr.rob.game.world
 
+import fr.raven.log.LoggerInterface
 import fr.rob.core.misc.clock.IntervalTimer
 
-class WorldUpdateRateChecker : UpdatableInterface {
+class WorldUpdateRateChecker(private val logger: LoggerInterface) : UpdatableInterface {
     private var worldUps = 0
     private val worldRateTimer = IntervalTimer(1000)
 
@@ -12,7 +13,7 @@ class WorldUpdateRateChecker : UpdatableInterface {
 
         if (worldRateTimer.passed()) {
             if (worldUps <= WORLD_UPDATE_THRESHOLD_ERROR) {
-                println("[ERROR] World update rate too low: $worldUps")
+                logger.error("World update rate too low: {} ups (target {})", worldUps, WorldUpdater.WORLD_UPDATE_PER_SECOND)
             }
 
             worldUps = 0

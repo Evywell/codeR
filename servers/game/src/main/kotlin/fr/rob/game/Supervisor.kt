@@ -69,8 +69,9 @@ class Supervisor(
             val worldUpdater = WorldUpdater(
                 world,
                 arrayOf(
-                    WorldUpdateRateChecker(),
+                    WorldUpdateRateChecker(logger),
                 ),
+                logger,
             )
 
             worldUpdater.initialize()
