@@ -1,6 +1,7 @@
 networks:
   gamedb:
   atlas:
+  test:
 
 volumes:
   mysqldata:
@@ -32,8 +33,10 @@ services:
     networks:
      - gamedb
      - atlas
+     - test
     volumes:
      - ./atlas-migrations:/migrations
+     - ./atlas-migrations-seed-dev:/migrations-seed-dev
 
   mysql_atlas:
     profiles:

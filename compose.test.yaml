@@ -1,3 +1,6 @@
+networks:
+  test:
+
 services:
   mysql_unit:
     image: mysql:8.0.32
@@ -5,6 +8,8 @@ services:
       - ./docker/mysql/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
     ports:
       - '33061:3306'
+    networks:
+      - test
     environment:
       MYSQL_ROOT_PASSWORD: pass
       TZ: Europe/Paris
