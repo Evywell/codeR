@@ -1,5 +1,6 @@
 networks:
   gamedb:
+  atlas:
 
 volumes:
   mysqldata:
@@ -23,6 +24,34 @@ services:
       - .:/mnt/app
     networks:
       - gamedb
+
+  atlas:
+    profiles:
+      - migration
+    image: arigaio/atlas:1.3.3-community
+    networks:
+     - gamedb
+     - atlas
+    volumes:
+     - ./atlas-migrations:/migrations
+
+  mysql_atlas:
+    profiles:
+      - migration
+    image: mysql:8.0.32
+    networks:
+      - atlas
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      TZ: Europe/Paris
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: secret
+      MYSQL_DATABASE: dev
+    healthcheck:
+      test: "mysql -uroot -ppass -h127.0.0.1 -e 'SELECT 1;'"
+      interval: 6s
+      timeout: 10s
+      retries: 10
 
   mysql_game:
     image: mysql:8.0.32

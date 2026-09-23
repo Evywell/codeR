@@ -1,3 +1,6 @@
+SHELL := bash
+
+include Makefile.utils.mk
 include Makefile.cmds.mk
 
 # @todo: replace this by variables
@@ -8,7 +11,7 @@ ifneq "$(SUPPORTS_MAKE_ARGS)" ""
   $(eval $(COMMAND_ARGS):;@:)
 endif
 
-##> Migrator
+#> Migrator
 MIGRATOR = ${DOCKER_COMPOSE_RUN_CMD} migrator
 PHINX = $(MIGRATOR) migrations/migrator/vendor/bin/phinx
 PHINX_CONFIG_ARG = --configuration migrations/migrator
@@ -18,11 +21,11 @@ PHINX_CONFIG_CONFIG_ARG = $(PHINX_CONFIG_ARG)/phinx-config.php
 
 MIGRATOR_SEED_NAME :=
 MIGRATOR_DB :=
-##< Migrator
+#< Migrator
 
 .PHONY: help
 help: ## Outputs this help message
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@grep -hE '(^[a-zA-Z0-9_-]+:.*?##.*$$)|(^##)' ${MAKEFILE_LIST} | awk 'BEGIN {FS = ":.*?## "}{printf "${GREEN}%-30s${RESET} %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
 
 .PHONY: lint-fix
 lint-fix:
@@ -124,6 +127,20 @@ install-ci: servers/login/src/test/resources/private.pem
 
 start-dependencies: .env ## Runs all the docker containers
 	${DOCKER_COMPOSE_CMD} up -d
+
+## —— 🌍 Atlas —————————————————————————————————————————————————————————————
+.PHONY: atlas-migrate-apply
+atlas-migrate-apply: ## Apply atlas migrations
+	${ATLAS_BIN} migrate apply --url mysql://dev:secret@mysql_game:3306/coder --baseline 20260923153317
+
+.PHONY: atlas-migrate-new
+atlas-migrate-new: ## Create a new empty migration file (usage: make atlas-migrate-new NAME=my_migration_name)
+	@if [[ -z "${NAME}" ]]; then echo -e "${RED}Error:${RESET} You should provide a migration name such as ${GREEN}NAME=create_table_players${RESET}";  exit 1; fi
+	${ATLAS_BIN} migrate new ${NAME}
+
+.PHONY: atlas-migrate-hash
+atlas-migrate-hash: ## Update the migration order hash after creating a new migration
+	${ATLAS_BIN} migrate hash
 
 migrations/migrator/vendor/autoload.php: start-dependencies
 	$(MIGRATOR) composer install -d migrations/migrator
