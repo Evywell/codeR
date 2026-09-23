@@ -142,6 +142,30 @@ atlas-migrate-new: ## Create a new empty migration file (usage: make atlas-migra
 atlas-migrate-hash: ## Update the migration order hash after creating a new migration
 	${ATLAS_BIN} migrate hash
 
+## —— 🌱 Atlas dev seeding (manual, dev-only, never run against test/prod) ———
+.PHONY: atlas-seed-dev-new
+atlas-seed-dev-new: ## Create a new dev fixture seed migration (usage: make atlas-seed-dev-new NAME=seed_accounts)
+	@if [[ -z "${NAME}" ]]; then echo -e "${RED}Error:${RESET} You should provide a seed migration name such as ${GREEN}NAME=seed_accounts${RESET}";  exit 1; fi
+	${ATLAS_BIN} migrate new --dir file:///migrations-seed-dev ${NAME}
+
+.PHONY: atlas-seed-dev-hash
+atlas-seed-dev-hash: ## Update the dev seed migration order hash after creating a new one
+	${ATLAS_BIN} migrate hash --dir file:///migrations-seed-dev
+
+.PHONY: atlas-seed-dev-apply
+atlas-seed-dev-apply: ## Seed the dev database with fixture data (manual, dev-only)
+	${ATLAS_BIN} migrate apply --dir file:///migrations-seed-dev --url mysql://dev:secret@mysql_game:3306/coder --allow-dirty
+
+## —— 🧪 Testing env setup —————————————————————————————————————————————————
+env-cleanup: DOCKER_COMPOSE_ARGS += -f compose.test.yaml
+env-cleanup:
+	${DOCKER_COMPOSE_CMD} rm -sf mysql_unit
+	${DOCKER_COMPOSE_CMD} up --wait -d
+
+.PHONY: test-env-reset
+test-env-reset: env-cleanup ## Reset testing database environment
+	${ATLAS_BIN} migrate apply --url mysql://dev:secret@mysql_unit:3306/coder --baseline 20260923153317
+
 migrations/migrator/vendor/autoload.php: start-dependencies
 	$(MIGRATOR) composer install -d migrations/migrator
 
