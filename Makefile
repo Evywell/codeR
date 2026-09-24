@@ -11,18 +11,6 @@ ifneq "$(SUPPORTS_MAKE_ARGS)" ""
   $(eval $(COMMAND_ARGS):;@:)
 endif
 
-#> Migrator
-MIGRATOR = ${DOCKER_COMPOSE_RUN_CMD} migrator
-PHINX = $(MIGRATOR) migrations/migrator/vendor/bin/phinx
-PHINX_CONFIG_ARG = --configuration migrations/migrator
-PHINX_WORLD_CONFIG_ARG = $(PHINX_CONFIG_ARG)/phinx-world.php
-PHINX_PLAYERS_CONFIG_ARG = $(PHINX_CONFIG_ARG)/phinx-players.php
-PHINX_CONFIG_CONFIG_ARG = $(PHINX_CONFIG_ARG)/phinx-config.php
-
-MIGRATOR_SEED_NAME :=
-MIGRATOR_DB :=
-#< Migrator
-
 .PHONY: help
 help: ## Outputs this help message
 	@grep -hE '(^[a-zA-Z0-9_-]+:.*?##.*$$)|(^##)' ${MAKEFILE_LIST} | awk 'BEGIN {FS = ":.*?## "}{printf "${GREEN}%-30s${RESET} %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
@@ -89,38 +77,6 @@ run-physic-server: servers/PhysicServer/build/PhysicServer ## Runs the PhysicSer
 .PHONY: run-physic-server-macos
 run-physic-server-macos: servers/PhysicServer/build/PhysicServer.app ## Runs the PhysicServer macOS build
 	./servers/PhysicServer/build/PhysicServer.app/Contents/MacOS/PhysicServer -batchmode -nographics
-
-.PHONY: migrate
-migrate: migrations/migrator/vendor/autoload.php
-	$(PHINX) migrate $(PHINX_WORLD_CONFIG_ARG) -e development
-	$(PHINX) migrate $(PHINX_PLAYERS_CONFIG_ARG) -e development
-	$(PHINX) migrate $(PHINX_CONFIG_CONFIG_ARG) -e development
-
-.PHONY: seed
-seed: migrations/migrator/vendor/autoload.php
-	$(PHINX) seed:run $(PHINX_WORLD_CONFIG_ARG) -e development
-	$(PHINX) seed:run $(PHINX_PLAYERS_CONFIG_ARG) -e development
-	$(PHINX) seed:run $(PHINX_CONFIG_CONFIG_ARG) -e development
-
-.PHONY: migration-players-create
-migration-players-create: migrations/migrator/vendor/autoload.php
-	$(PHINX) create $(COMMAND_ARGS) $(PHINX_PLAYERS_CONFIG_ARG)
-
-.PHONY: migration-config-create
-migration-config-create: migrations/migrator/vendor/autoload.php
-	$(PHINX) create $(COMMAND_ARGS) $(PHINX_CONFIG_CONFIG_ARG)
-
-.PHONY: migration-world-create
-migration-world-create: migrations/migrator/vendor/autoload.php
-	$(PHINX) create $(COMMAND_ARGS) $(PHINX_WORLD_CONFIG_ARG)
-
-.PHONY: seed-create
-seed-create: migrations/migrator/vendor/autoload.php
-	$(PHINX) seed:create $(MIGRATOR_SEED_NAME) $(PHINX_CONFIG_ARG)/phinx-$(MIGRATOR_DB).php
-
-.PHONY: migration-status
-migration-status: start-dependencies
-	$(PHINX) status --configuration migrator/phinx.php
 
 .PHONY: install-ci
 install-ci: servers/login/src/test/resources/private.pem
