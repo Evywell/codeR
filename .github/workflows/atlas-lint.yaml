@@ -28,6 +28,7 @@ jobs:
       - uses: ariga/atlas-action/migrate/lint@v1
         with:
           dir: 'file://migrations'
+          dir-name: 'coder'
           dev-url: 'mysql://root:pass@localhost:3306/dev'
       - uses: ariga/atlas-action/migrate/lint@v1
         with:
