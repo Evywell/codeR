@@ -1,0 +1,35 @@
+name: Atlas lint
+on:
+  pull_request:
+    paths:
+      - 'migrations/*'
+      - 'migrations-seed-dev/*'
+jobs:
+  lint:
+    services:
+      # Spin up a mysql:8 container to be used as the dev-database for analysis.
+      mysql:
+        image: mysql:8.0.32
+        env:
+          MYSQL_DATABASE: dev
+          MYSQL_ROOT_PASSWORD: pass
+        ports:
+          - '3306:3306'
+        options: >-
+          --health-cmd "mysqladmin ping -ppass"
+          --health-interval 10s
+          --health-start-period 10s
+          --health-timeout 5s
+          --health-retries 10
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ariga/setup-atlas@v0
+      - uses: ariga/atlas-action/migrate/lint@v1
+        with:
+          dir: 'file://migrations'
+          dev-url: 'mysql://root:pass@localhost:3306/dev'
+      - uses: ariga/atlas-action/migrate/lint@v1
+        with:
+          dir: 'file://migrations-seed-dev'
+          dev-url: 'mysql://root:pass@localhost:3306/dev'
