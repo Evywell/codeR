@@ -26,6 +26,8 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 100
+      - name: Fetch base branch
+        run: git fetch origin "${{ github.base_ref }}"
       - name: Install Atlas (Community Edition)
         run: curl -sSf https://atlasgo.sh | sh -s -- --community -y
       - name: Lint migrations
