@@ -100,7 +100,7 @@ atlas-migrate-hash: ## Update the migration order hash after creating a new migr
 
 .PHONY: atlas-migrate-lint
 atlas-migrate-lint: DOCKER_COMPOSE_ARGS = --profile migration
-atlas-migrate-lint: ## Lint latest migrations
+atlas-migrate-lint: ## Lint latest migration
 	${DOCKER_COMPOSE_CMD} up mysql_atlas --wait -d
 	${ATLAS_BIN} migrate lint --dev-url mysql://dev:secret@mysql_atlas:3306/dev --latest 1
 
