@@ -24,13 +24,19 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v3
-      - uses: ariga/setup-atlas@v0
-      - uses: ariga/atlas-action/migrate/lint@v1
         with:
-          dir: 'file://migrations'
-          dir-name: 'coder'
-          dev-url: 'mysql://root:pass@localhost:3306/dev'
-      - uses: ariga/atlas-action/migrate/lint@v1
-        with:
-          dir: 'file://migrations-seed-dev'
-          dev-url: 'mysql://root:pass@localhost:3306/dev'
+          fetch-depth: 100
+      - name: Install Atlas (Community Edition)
+        run: curl -sSf https://atlasgo.sh | sh -s -- --community -y
+      - name: Lint migrations
+        run: |
+          atlas migrate lint \
+            --dir 'file://migrations' \
+            --dev-url 'mysql://root:pass@localhost:3306/dev' \
+            --git-base "origin/${{ github.base_ref }}"
+      - name: Lint seed-dev migrations
+        run: |
+          atlas migrate lint \
+            --dir 'file://migrations-seed-dev' \
+            --dev-url 'mysql://root:pass@localhost:3306/dev' \
+            --git-base "origin/${{ github.base_ref }}"
