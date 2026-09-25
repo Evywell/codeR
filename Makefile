@@ -98,6 +98,12 @@ atlas-migrate-new: ## Create a new empty migration file (usage: make atlas-migra
 atlas-migrate-hash: ## Update the migration order hash after creating a new migration
 	${ATLAS_BIN} migrate hash
 
+.PHONY: atlas-migrate-lint
+atlas-migrate-lint: DOCKER_COMPOSE_ARGS = --profile migration
+atlas-migrate-lint: ## Lint latest migrations
+	${DOCKER_COMPOSE_CMD} up mysql_atlas --wait -d
+	${ATLAS_BIN} migrate lint --dev-url mysql://dev:secret@mysql_atlas:3306/dev --latest 1
+
 ## —— 🌱 Atlas dev seeding (manual, dev-only, never run against test/prod) ———
 .PHONY: atlas-seed-dev-new
 atlas-seed-dev-new: ## Create a new dev fixture seed migration (usage: make atlas-seed-dev-new NAME=seed_accounts)
