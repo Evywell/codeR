@@ -4,8 +4,6 @@ import fr.rob.game.ability.AbilityBehavior
 import fr.rob.game.ability.ObjectAbilityManager
 import fr.rob.game.behavior.CombatBehavior
 import fr.rob.game.behavior.MovableBehavior
-import fr.rob.game.character.CharacterService
-import fr.rob.game.character.FetchCharacterInterface
 import fr.rob.game.component.CombatComponent
 import fr.rob.game.component.MovementComponent
 import fr.rob.game.entity.Position
@@ -17,22 +15,16 @@ import fr.rob.game.spell.SpellInfo
 import fr.rob.game.spell.effect.InstantAoeDamageEffect
 import fr.rob.game.spell.trigger.ApplyEffectsSpellTrigger
 import fr.rob.game.spell.type.instant.InstantLaunchInfo
+import fr.rob.game.character.Character
 
 class PlayerFactory(
-    private val characterService: CharacterService,
-    private val fetchCharacter: FetchCharacterInterface,
     private val guidGenerator: ObjectGuidGenerator,
     private val objectAbilityManager: ObjectAbilityManager? = null,
 ) {
-    fun createFromGameSession(
+    fun createFromCharacterForSession(
         session: GameSession,
-        characterId: Int,
+        character: Character,
     ): PlayerInitResult {
-        if (!characterService.checkCharacterBelongsToAccount(characterId, session.accountId)) {
-            return PlayerInitResult(false)
-        }
-
-        val character = fetchCharacter.retrieveCharacter(characterId)
         val guid = guidGenerator.createForPlayer(character.id)
 
         val player = Player(session, guid, character.name, character.level)
@@ -65,12 +57,11 @@ class PlayerFactory(
         )
         player.registerAbilities(listOf(1, 2))
 
-        return PlayerInitResult(true, player, character.position)
+        return PlayerInitResult(player, character.position)
     }
 
     data class PlayerInitResult(
-        val isSuccess: Boolean,
-        val player: Player? = null,
-        val position: Position? = null,
+        val player: Player,
+        val position: Position,
     )
 }

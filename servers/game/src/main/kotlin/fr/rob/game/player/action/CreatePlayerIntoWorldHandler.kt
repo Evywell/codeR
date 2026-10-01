@@ -2,6 +2,8 @@ package fr.rob.game.player.action
 
 import fr.rob.game.behavior.MovableBehavior
 import fr.rob.game.behavior.ObjectSheetBehavior
+import fr.rob.game.character.Character
+import fr.rob.game.character.CharacterService
 import fr.rob.game.component.MovementComponent
 import fr.rob.game.component.resource.HealthComponent
 import fr.rob.game.player.message.PlayerDescriptionMessage
@@ -13,31 +15,39 @@ import fr.rob.game.entity.guid.ObjectGuid
 import fr.rob.game.entity.movement.spline.SplineMovementBrainInterface
 import fr.rob.game.instance.MapInstance
 import fr.rob.game.player.PlayerFactory
+import fr.rob.game.world.GameCoroutines
 import fr.rob.game.world.RandomRollEngine
 
 class CreatePlayerIntoWorldHandler(
     private val playerFactory: PlayerFactory,
+    private val characterService: CharacterService,
     private val objectManager: ObjectManager,
-    private val splineMovementBrain: SplineMovementBrainInterface
+    private val splineMovementBrain: SplineMovementBrainInterface,
+    private val coroutines: GameCoroutines,
 ) {
     fun execute(command: CreatePlayerIntoWorldCommand) {
+        coroutines.launch("load-character-${command.characterId}") {
+            val character = coroutines.database {
+                characterService.loadFromCharacterIdForAccountId(command.gameSession.accountId, command.characterId)
+            } ?: return@launch
+
+            createPlayerIntoWorld(command, character)
+        }
+    }
+
+    private fun createPlayerIntoWorld(command: CreatePlayerIntoWorldCommand, character: Character) {
         val playerGameSession = command.gameSession
-        val createPlayerResult = playerFactory.createFromGameSession(
+        val (player, position) = playerFactory.createFromCharacterForSession(
             playerGameSession,
-            command.characterId,
+            character,
         )
 
-        if (!createPlayerResult.isSuccess) {
-            return
-        }
-
-        val player = createPlayerResult.player!!
         playerGameSession.assignToPlayer(player)
 
         // @todo remove this
         val worldObject = createMobAroundPosition(ObjectGuid.LowGuid(1u, 1u), Position(10f, 0f, 1f, 0f), command.mapInstance)
 
-        objectManager.addEntityIntoInstance(player, command.mapInstance, createPlayerResult.position!!)
+        objectManager.addEntityIntoInstance(player, command.mapInstance, position)
 
         // @todo Send player info
         player.ownerGameSession.send(PlayerDescriptionMessage(player.guid, player.name))

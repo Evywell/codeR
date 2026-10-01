@@ -18,6 +18,7 @@ class World(
     private val instanceUpdateService: InstanceUpdateService,
     private val worldPacketQueue: WorldPacketQueue,
     private val delayedUpdateQueue: DelayedUpdateQueue,
+    private val worldTaskQueue: WorldTaskQueue,
 ) {
     private val updateState: WorldUpdateState = WorldUpdateState()
     private val eventDispatcher = ListEventDispatcher()
@@ -37,6 +38,7 @@ class World(
         updateState.timeElapsedSinceLastUpdate = deltaTime
         updateState.timeElapsedSinceStartup += deltaTime
 
+        worldTaskQueue.dequeue()
         worldPacketQueue.dequeue()
         delayedUpdateQueue.dequeue(deltaTime)
         instanceManager.getAllInstances().forEach { instance -> instanceUpdateService.update(instance, deltaTime, eventDispatcher) }
