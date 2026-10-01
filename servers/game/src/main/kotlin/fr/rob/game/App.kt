@@ -14,6 +14,8 @@ import fr.rob.game.world.DelayedUpdateQueue
 import fr.rob.game.world.function.WorldFunctionRegistry
 import fr.rob.game.world.packet.WorldPacketQueue
 import fr.rob.game.config.GameConfig
+import fr.rob.game.world.GameCoroutines
+import fr.rob.game.world.WorldTaskQueue
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
@@ -29,9 +31,12 @@ class App(private val config: GameConfig) : KoinComponent {
     private val worldFunctionRegistry: WorldFunctionRegistry by inject()
     private val worldPacketQueue: WorldPacketQueue by inject()
     private val delayedUpdateQueue: DelayedUpdateQueue by inject()
+    private val worldTaskQueue: WorldTaskQueue by inject()
+    private val gameCoroutines: GameCoroutines by inject()
 
     fun run() {
         createDatabasePools()
+        Runtime.getRuntime().addShutdownHook(Thread { gameCoroutines.close() })
 
         Supervisor(
             NodeBuilder(),
@@ -43,6 +48,7 @@ class App(private val config: GameConfig) : KoinComponent {
             instanceManager,
             instanceUpdateService,
             characterWaitingRoom,
+            worldTaskQueue,
         ).run(config.nodesConfig.nodeConfig)
     }
 

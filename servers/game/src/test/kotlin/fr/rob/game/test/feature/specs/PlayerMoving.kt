@@ -20,6 +20,7 @@ import fr.rob.game.network.opcode.CMSG_PLAYER_MOVEMENT
 import fr.rob.game.network.opcode.SMSG_MOVEMENT_HEARTBEAT
 import fr.rob.game.test.feature.DatabaseTestApplication
 import fr.rob.game.test.unit.sandbox.network.session.StoreMessageSender
+import fr.rob.game.world.WorldTaskQueue
 import org.junit.jupiter.api.Test
 import org.koin.test.get
 
@@ -30,7 +31,7 @@ class PlayerMoving : DatabaseTestApplication() {
 
         val instanceManager = get<InstanceManager>()
         val worldPacketQueue = get<WorldPacketQueue>()
-        val world = World(instanceManager, InstanceUpdateService(instanceManager), worldPacketQueue, get<DelayedUpdateQueue>())
+        val world = World(instanceManager, InstanceUpdateService(instanceManager), worldPacketQueue, get<DelayedUpdateQueue>(), get<WorldTaskQueue>())
 
         instanceManager.create(
             PlayerJoiningWorld.DEFAULT_TEST_INSTANCE_ID,

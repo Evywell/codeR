@@ -70,11 +70,16 @@ import fr.rob.game.network.opcode.CMSG_PLAYER_ENGAGE_COMBAT
 import fr.rob.game.network.opcode.CMSG_PLAYER_MOVEMENT
 import fr.rob.game.network.opcode.CMSG_PLAYER_USE_ABILITY
 import fr.rob.game.network.opcode.CMSG_REMOVE_FROM_WORLD
+import fr.rob.game.world.GameCoroutines
+import fr.rob.game.world.WorldDispatcher
+import fr.rob.game.world.WorldTaskQueue
 import fr.rob.game.world.function.UseAbilityFunction
+import kotlinx.coroutines.asCoroutineDispatcher
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.withOptions
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import java.util.concurrent.Executors
 
 val globalModule =
     module {
@@ -95,6 +100,18 @@ val databaseModule =
         single<ConnectionPoolManager> { params -> ConnectionPoolManager(params.get(), get()) }
         single<ConnectionPool>(named(DB_WORLD)) { get<ConnectionPoolManager>().getPool(DB_WORLD)!! }
         single<ConnectionPool>(named(DB_REALM)) { get<ConnectionPoolManager>().getPool(DB_REALM)!! }
+        single {
+            // Single thread on purpose: MySQL repositories share one non thread-safe JDBC connection each
+            val databaseDispatcher = Executors.newSingleThreadExecutor(
+                Thread.ofPlatform().name("database-worker").factory(),
+            ).asCoroutineDispatcher()
+
+            GameCoroutines(
+                WorldDispatcher(get()),
+                databaseDispatcher,
+                get<LoggerFactoryInterface>().create("coroutines"),
+            ) { databaseDispatcher.close() }
+        }
     }
 
 val mapModule =
@@ -113,11 +130,14 @@ val opcodeModule =
         single { ObjectGuidGenerator() }
 
         single {
-            PlayerFactory(
-                CharacterService(
-                    MysqlCheckCharacterExist(get<ConnectionPool>(named(DB_WORLD)).getNextConnection()),
-                ),
+            CharacterService(
+                MysqlCheckCharacterExist(get<ConnectionPool>(named(DB_WORLD)).getNextConnection()),
                 MysqlFetchCharacter(get<ConnectionPool>(named(DB_WORLD)).getNextConnection()),
+            )
+        }
+
+        single {
+            PlayerFactory(
                 get(),
                 get(),
             )
@@ -126,6 +146,8 @@ val opcodeModule =
         single { ObjectManager(get(), get()) }
 
         single { DelayedUpdateQueue() }
+
+        single { WorldTaskQueue() }
 
         single { PhysicObjectInteraction() }
 
@@ -144,7 +166,7 @@ val opcodeModule =
         single<SplineMovementBrainInterface> { UnitySplineMovementBrain(get(), get(), get()) }
 
         single { CharacterWaitingRoom() }
-        single { CreatePlayerIntoWorldHandler(get(), get(), get()) }
+        single { CreatePlayerIntoWorldHandler(get(), get(), get(), get(), get()) }
 
         single { AbilityRequirementChecker() }
 

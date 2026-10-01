@@ -23,6 +23,7 @@ import fr.rob.game.world.packet.WorldPacketQueue
 import fr.rob.game.network.grpc.CharacterServiceImpl
 import fr.rob.game.network.packet.BytesToMessageBuilder
 import fr.rob.game.network.GameNodeServer
+import fr.rob.game.world.WorldTaskQueue
 import io.grpc.ServerBuilder
 import kotlin.concurrent.thread
 
@@ -36,6 +37,7 @@ class Supervisor(
     private val instanceManager: InstanceManager,
     private val instanceUpdateService: InstanceUpdateService,
     private val characterWaitingRoom: CharacterWaitingRoom,
+    private val worldTaskQueue: WorldTaskQueue,
 ) {
 
     fun run(nodeConfig: NodeConfig) {
@@ -64,7 +66,7 @@ class Supervisor(
         rpcServer.start()
 
         thread(true) {
-            val world = World(instanceManager, instanceUpdateService, worldPacketQueue, delayedUpdateQueue)
+            val world = World(instanceManager, instanceUpdateService, worldPacketQueue, delayedUpdateQueue, worldTaskQueue)
 
             val worldUpdater = WorldUpdater(
                 world,

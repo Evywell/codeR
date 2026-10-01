@@ -21,6 +21,7 @@ import fr.rob.game.network.opcode.SMSG_NEARBY_OBJECT_UPDATE
 import fr.rob.game.network.opcode.SMSG_PLAYER_DESCRIPTION
 import fr.rob.game.test.feature.DatabaseTestApplication
 import fr.rob.game.test.unit.sandbox.network.session.StoreMessageSender
+import fr.rob.game.world.WorldTaskQueue
 import org.junit.jupiter.api.Test
 import org.koin.test.get
 
@@ -35,7 +36,7 @@ class PlayerJoiningWorld : DatabaseTestApplication() {
         val instanceManager = get<InstanceManager>()
         val worldPacketQueue = get<WorldPacketQueue>()
         val objectManager = get<ObjectManager>()
-        val world = World(instanceManager, InstanceUpdateService(instanceManager), worldPacketQueue, get<DelayedUpdateQueue>())
+        val world = World(instanceManager, InstanceUpdateService(instanceManager), worldPacketQueue, get<DelayedUpdateQueue>(), get<WorldTaskQueue>())
 
         val instance = instanceManager.create(
             DEFAULT_TEST_INSTANCE_ID,

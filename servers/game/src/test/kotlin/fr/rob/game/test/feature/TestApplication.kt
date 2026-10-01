@@ -13,6 +13,8 @@ import fr.rob.game.config.globalModule
 import fr.rob.game.config.mapModule
 import fr.rob.game.config.opcodeModule
 import fr.rob.game.test.unit.sandbox.network.session.StoreMessageSender
+import fr.rob.game.world.GameCoroutines
+import kotlinx.coroutines.Dispatchers
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.TestInstance
@@ -33,6 +35,8 @@ open class TestApplication : KoinTest {
     open fun launchApp() {
         val testModule = module {
             single<SplineMovementBrainInterface> { StraightSplineMovementBrain() }
+            // Synchronous execution: async logic completes within the same world tick
+            single { GameCoroutines(Dispatchers.Unconfined, Dispatchers.Unconfined) }
         }
 
         startKoin {

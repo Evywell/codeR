@@ -8,6 +8,8 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":utilities"))
 
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+
     implementation("mysql:mysql-connector-java:8.0.25")
 
     implementation("io.netty:netty-all:4.1.74.Final")
@@ -32,6 +34,11 @@ dependencies {
 
 application {
     mainClass = "fr.rob.game.Main"
+}
+
+tasks.named<JavaExec>("run") {
+    // Coroutine names in thread names + stack traces across suspensions (dev only)
+    jvmArgs("-Dkotlinx.coroutines.debug")
 }
 
 dockerCompose {
