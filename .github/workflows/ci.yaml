@@ -14,3 +14,109 @@ jobs:
       - name: Builds the projects
         run: |
           ./gradlew build
+      - name: Upload backend distributions
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-dist
+          path: |
+            servers/game/build/distributions/game.zip
+            gateway/build/distributions/gateway.zip
+          retention-days: 1
+
+  e2e-client:
+    runs-on: ubuntu-24.04
+    needs: build
+    if: "!contains(github.event.head_commit.message, 'wip')"
+    permissions:
+      contents: read
+      checks: write
+    services:
+      mysql:
+        image: mysql:8.0.32
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: coder
+          MYSQL_USER: dev
+          MYSQL_PASSWORD: secret
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Download backend distributions
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-dist
+          path: dist
+
+      - name: Unzip backend distributions
+        working-directory: dist
+        run: |
+          unzip -q "$(find . -name game.zip)" -d .
+          unzip -q "$(find . -name gateway.zip)" -d .
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '24'
+
+      - name: Install Atlas
+        run: curl -sSf https://atlasgo.sh | sh -s -- -y
+
+      - name: Apply migrations
+        run: atlas migrate apply --dir file://migrations --url "mysql://dev:secret@127.0.0.1:3306/coder"
+
+      - name: Apply dev seed
+        run: atlas migrate apply --dir file://migrations-seed-dev --url "mysql://dev:secret@127.0.0.1:3306/coder" --allow-dirty
+
+      - name: Start game server
+        run: |
+          mkdir -p e2e-logs
+          GAME_OPTS="-Dmysql_game.host=127.0.0.1 -Dmysql_game.tcp.3306=3306" nohup dist/game/bin/game > e2e-logs/game.log 2>&1 &
+          timeout 60 bash -c 'until nc -z 127.0.0.1 22222; do sleep 1; done' || { cat e2e-logs/game.log; exit 1; }
+
+      - name: Start gateway
+        run: |
+          GATEWAY_OPTS="-Dmysql_game.host=127.0.0.1 -Dmysql_game.tcp.3306=3306" nohup dist/gateway/bin/gateway > e2e-logs/gateway.log 2>&1 &
+          timeout 60 bash -c 'until nc -z 127.0.0.1 11111; do sleep 1; done' || { cat e2e-logs/gateway.log; exit 1; }
+
+      - name: Cache Unity Library
+        uses: actions/cache@v4
+        with:
+          path: client/GameClient/Library
+          key: Library-GameClient-${{ hashFiles('client/GameClient/Packages/manifest.json', 'client/GameClient/ProjectSettings/ProjectVersion.txt', 'client/GameClient/Assets/**/*.asmdef') }}
+          restore-keys: |
+            Library-GameClient-
+
+      - name: Run Unity E2E tests
+        id: tests
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: client/GameClient
+          testMode: PlayMode
+          useHostNetwork: true
+          coverageEnabled: false
+          customParameters: -testCategory E2E
+          artifactsPath: e2e-artifacts
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: E2E Client
+
+      - name: Upload E2E results and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results
+          path: |
+            e2e-logs
+            e2e-artifacts
