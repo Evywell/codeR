@@ -17,7 +17,4 @@ INSERT INTO `maps` (`id`, `name`, `width`, `height`) VALUES
 
 -- Zones
 INSERT INTO `zones` (`map_id`, `name`, `width`, `height`, `offset_x`, `offset_y`) VALUES
-  (1, 'Nowhere top-left', 100, 50, -100, -50),
-  (1, 'Nowhere top-right', 100, 50, 0, -50),
-  (1, 'Nowhere bottom-left', 100, 50, -100, 0),
-  (1, 'Nowhere bottom-right', 100, 50, 0, 0);
+  (1, 'Entire zone', 200, 200, 0, 0);
