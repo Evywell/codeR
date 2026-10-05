@@ -62,7 +62,7 @@ jobs:
           unzip -q "$(find . -name gateway.zip)" -d .
 
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '24'
@@ -106,7 +106,7 @@ jobs:
           projectPath: client/GameClient
           testMode: PlayMode
           useHostNetwork: true
-          coverageEnabled: false
+          coverageOptions: 'assemblyFilters:+Game,+Core,+DI'
           customParameters: -testCategory E2E
           artifactsPath: e2e-artifacts
           githubToken: ${{ secrets.GITHUB_TOKEN }}
