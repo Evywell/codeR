@@ -36,9 +36,30 @@ jobs:
             --dir 'file://migrations' \
             --dev-url 'mysql://root:pass@localhost:3306/dev' \
             --git-base "origin/${{ github.base_ref }}"
-      - name: Lint seed-dev migrations
+      - name: Check seed-dev has no schema changes
         run: |
-          atlas migrate lint \
-            --dir 'file://migrations-seed-dev' \
-            --dev-url 'mysql://root:pass@localhost:3306/dev' \
-            --git-base "origin/${{ github.base_ref }}"
+          status=0
+          for f in migrations-seed-dev/*.sql; do
+            awk -v file="$f" '
+              BEGIN { RS = ";"; bad = 0 }
+              {
+                stmt = $0
+                gsub(/\/\*([^*]|\*+[^*\/])*\*+\//, "", stmt)
+                gsub(/--[^\n]*/, "", stmt)
+                gsub(/^[ \t\r\n]+|[ \t\r\n]+$/, "", stmt)
+                if (stmt == "") next
+                if (toupper(stmt) !~ /^(INSERT|UPDATE|DELETE|REPLACE|SET)[ \t\r\n(]/) {
+                  split(stmt, lines, "\n")
+                  printf "::error file=%s::Only data statements (INSERT/UPDATE/DELETE/REPLACE/SET) are allowed in seed-dev migrations, found: %s\n", file, lines[1]
+                  bad = 1
+                }
+              }
+              END { exit bad }
+            ' "$f" || status=1
+          done
+          exit $status
+      - name: Check seed-dev atlas.sum is up to date
+        run: |
+          atlas migrate hash --dir 'file://migrations-seed-dev'
+          git diff --exit-code migrations-seed-dev/atlas.sum \
+            || { echo "::error file=migrations-seed-dev/atlas.sum::atlas.sum is outdated, run 'make atlas-seed-dev-hash'"; exit 1; }
