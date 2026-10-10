@@ -15,4 +15,5 @@ include(
     ":core",
     "servers:game",
     ":gateway",
+    ":tools:e2e-orchestrator",
 )
