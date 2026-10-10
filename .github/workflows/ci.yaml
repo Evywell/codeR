@@ -21,6 +21,7 @@ jobs:
           path: |
             servers/game/build/distributions/game.zip
             gateway/build/distributions/gateway.zip
+            tools/e2e-orchestrator/build/distributions/e2e-orchestrator.zip
           retention-days: 1
 
   e2e-client:
@@ -60,6 +61,7 @@ jobs:
         run: |
           unzip -q "$(find . -name game.zip)" -d .
           unzip -q "$(find . -name gateway.zip)" -d .
+          unzip -q "$(find . -name e2e-orchestrator.zip)" -d .
 
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -73,14 +75,15 @@ jobs:
       - name: Apply migrations
         run: atlas migrate apply --dir file://migrations --url "mysql://dev:secret@127.0.0.1:3306/coder"
 
-      - name: Apply dev seed
-        run: atlas migrate apply --dir file://migrations-seed-dev --url "mysql://dev:secret@127.0.0.1:3306/coder" --allow-dirty
-
-      - name: Start game server
+      - name: Start E2E orchestrator (loads reference data and runs the game server)
+        env:
+          E2E_DB_PORT: "3306"
+          E2E_GAME_BINARY: dist/game/bin/game
+          E2E_LOGS_DIR: e2e-logs/game
         run: |
           mkdir -p e2e-logs
-          GAME_OPTS="-Dmysql_game.host=127.0.0.1 -Dmysql_game.tcp.3306=3306" nohup dist/game/bin/game > e2e-logs/game.log 2>&1 &
-          timeout 60 bash -c 'until nc -z 127.0.0.1 22222; do sleep 1; done' || { cat e2e-logs/game.log; exit 1; }
+          nohup dist/e2e-orchestrator/bin/e2e-orchestrator > e2e-logs/orchestrator.log 2>&1 &
+          timeout 90 bash -c 'until curl -sf http://127.0.0.1:18080/health; do sleep 1; done' || { cat e2e-logs/orchestrator.log; exit 1; }
 
       - name: Start gateway
         run: |

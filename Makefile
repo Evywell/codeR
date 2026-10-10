@@ -154,3 +154,24 @@ e2e-db-up: ## Start a fresh E2E database and apply migrations
 .PHONY: e2e-db-down
 e2e-db-down: ## Stop and remove the E2E database
 	${DOCKER_COMPOSE_BIN} -f compose.e2e.yaml rm -sf mysql_e2e
+
+.PHONY: e2e-up
+e2e-up: e2e-db-up ## Start the E2E env (database, gateway, orchestrator running the game server)
+	${GRADLE_CMD} :servers:game:installDist :gateway:installDist :tools:e2e-orchestrator:installDist
+	mkdir -p ${E2E_DIR}
+	GATEWAY_OPTS="${E2E_DB_OPTS}" nohup gateway/build/install/gateway/bin/gateway > ${E2E_DIR}/gateway.log 2>&1 & echo $$! > ${E2E_DIR}/gateway.pid
+	nohup tools/e2e-orchestrator/build/install/e2e-orchestrator/bin/e2e-orchestrator > ${E2E_DIR}/orchestrator.log 2>&1 & echo $$! > ${E2E_DIR}/orchestrator.pid
+	@for i in $$(seq 90); do curl -sf http://127.0.0.1:18080/health > /dev/null && break; sleep 1; done; curl -sf http://127.0.0.1:18080/health > /dev/null || { cat ${E2E_DIR}/orchestrator.log; exit 1; }
+	@for i in $$(seq 60); do nc -z 127.0.0.1 11111 && break; sleep 1; done; nc -z 127.0.0.1 11111 || { cat ${E2E_DIR}/gateway.log; exit 1; }
+	@echo "E2E env ready"
+
+.PHONY: e2e-test
+e2e-test: ## Run Unity E2E tests in batchmode (requires make e2e-up)
+	mkdir -p ${E2E_DIR}
+	$(UNITY_BIN) -batchmode -projectPath $(CURDIR)/client/GameClient -runTests -testPlatform PlayMode \
+		-testCategory E2E -testResults $(CURDIR)/${E2E_DIR}/results.xml -logFile $(CURDIR)/${E2E_DIR}/unity.log
+
+.PHONY: e2e-down
+e2e-down: ## Stop the E2E env
+	-for f in ${E2E_DIR}/orchestrator.pid ${E2E_DIR}/gateway.pid; do [ -f $$f ] && kill $$(cat $$f); rm -f $$f; done
+	$(MAKE) e2e-db-down
