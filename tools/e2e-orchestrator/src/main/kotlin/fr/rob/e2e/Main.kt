@@ -15,7 +15,8 @@ fun main() {
 
     Runtime.getRuntime().addShutdownHook(Thread { gameServer.stop() })
 
-    log("Starting game server")
+    log("Loading reference data and starting game server")
+    resetter.reset(null)
     gameServer.start("boot")
 
     val server = HttpServer.create(InetSocketAddress("127.0.0.1", config.httpPort), 0)
