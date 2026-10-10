@@ -1,0 +1,25 @@
+networks:
+  e2e:
+
+services:
+  mysql_e2e:
+    image: mysql:8.0.32
+    volumes:
+      - ./docker/mysql/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+    tmpfs:
+      - /var/lib/mysql
+    ports:
+      - '33062:3306'
+    networks:
+      - e2e
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      TZ: Europe/Paris
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: secret
+      MYSQL_DATABASE: coder
+    healthcheck:
+      test: "mysql -u$$MYSQL_USER -p$$MYSQL_PASSWORD -h127.0.0.1 -e 'SELECT 1;'"
+      interval: 3s
+      timeout: 10s
+      retries: 20

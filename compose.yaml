@@ -2,6 +2,7 @@ networks:
   gamedb:
   atlas:
   test:
+  e2e:
 
 volumes:
   mysqldata:
@@ -34,6 +35,7 @@ services:
      - gamedb
      - atlas
      - test
+     - e2e
     volumes:
      - ./migrations:/migrations
      - ./migrations-seed-dev:/migrations-seed-dev

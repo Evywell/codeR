@@ -142,3 +142,15 @@ composer: servers/webclient/vendor/autoload.php
 
 .env:
 	cp .env.dev .env
+
+## —— 🎮 E2E env setup ————————————————————————————————————————————————————
+.PHONY: e2e-db-up
+e2e-db-up: DOCKER_COMPOSE_E2E_CMD = ${DOCKER_COMPOSE_BIN} -f compose.e2e.yaml
+e2e-db-up: ## Start a fresh E2E database and apply migrations
+	${DOCKER_COMPOSE_E2E_CMD} rm -sf mysql_e2e
+	${DOCKER_COMPOSE_E2E_CMD} up --wait -d mysql_e2e
+	${ATLAS_BIN} migrate apply --url mysql://dev:secret@mysql_e2e:3306/coder --baseline 20260923153317
+
+.PHONY: e2e-db-down
+e2e-db-down: ## Stop and remove the E2E database
+	${DOCKER_COMPOSE_BIN} -f compose.e2e.yaml rm -sf mysql_e2e
