@@ -11,12 +11,12 @@ using VContainer;
 namespace Tests.E2E
 {
     /// <summary>
-    /// End-to-end test: requires MySQL (migrated + dev seed), the game server and the gateway
-    /// (127.0.0.1:11111) to be running before execution.
+    /// End-to-end test: requires the E2E database, the E2E orchestrator (which runs the game server)
+    /// and the gateway (127.0.0.1:11111) to be running before execution.
     /// </summary>
     [TestFixture]
-    [Category("E2E")]
-    public class PlayerSpawnE2ETest
+    [E2EFixture("player_spawn")]
+    public class PlayerSpawnE2ETest : E2ETestBase
     {
         private const string BootSceneName = "Boot";
         private const float SpawnTimeoutSeconds = 30f;
@@ -50,7 +50,7 @@ namespace Tests.E2E
                 {
                     Assert.Fail(
                         $"Player did not spawn within {SpawnTimeoutSeconds}s. " +
-                        "Are MySQL, the game server and the gateway (127.0.0.1:11111) running?");
+                        "Are the E2E orchestrator and the gateway (127.0.0.1:11111) running?");
                 }
 
                 yield return null;
