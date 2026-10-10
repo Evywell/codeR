@@ -18,3 +18,6 @@ ATLAS_BIN = ${DOCKER_COMPOSE_ATLAS_RUN}
 
 UNITY_BIN ?= unity
 UNITY_BUILD_ARGS ?= --allow-install
+
+E2E_DIR = build/e2e
+E2E_DB_OPTS = -Dmysql_game.host=127.0.0.1 -Dmysql_game.tcp.3306=33062
