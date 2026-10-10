@@ -12,14 +12,14 @@ class DatabaseResetter(
     private val preservedTables: Set<String> = setOf("atlas_schema_revisions"),
 ) {
     /**
-     * Truncates every table, then loads `_reference.sql` and `<fixture>.sql`.
+     * Truncates every table, then loads `_reference.sql` and `<fixture>.sql` (if a fixture is given).
      *
      * @throws FixtureNotFoundException if the fixture file does not exist
      * @throws java.sql.SQLException on any database error
      */
-    fun reset(fixture: String) {
+    fun reset(fixture: String?) {
         val reference = File(fixturesDir, REFERENCE_FILE)
-        val fixtureFile = fixtureFile(fixture)
+        val fixtureFile = fixture?.let(::fixtureFile)
 
         DriverManager.getConnection(jdbcUrl, user, password).use { connection ->
             connection.createStatement().use { it.execute("SET FOREIGN_KEY_CHECKS=0") }
@@ -28,7 +28,7 @@ class DatabaseResetter(
                 if (reference.exists()) {
                     executeScript(connection, reference.readText())
                 }
-                executeScript(connection, fixtureFile.readText())
+                fixtureFile?.let { executeScript(connection, it.readText()) }
             } finally {
                 connection.createStatement().use { it.execute("SET FOREIGN_KEY_CHECKS=1") }
             }
