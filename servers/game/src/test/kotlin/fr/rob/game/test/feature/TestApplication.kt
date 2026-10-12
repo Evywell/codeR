@@ -7,7 +7,7 @@ import fr.rob.game.config.DB_WORLD
 import fr.rob.game.entity.guid.ObjectGuid
 import fr.rob.game.entity.guid.ObjectGuidGenerator
 import fr.rob.game.entity.movement.spline.SplineMovementBrainInterface
-import fr.rob.game.entity.movement.spline.StraightSplineMovementBrain
+import fr.rob.game.entity.movement.spline.TeleportToDestinationSplineMovementBrain
 import fr.rob.game.config.databaseModule
 import fr.rob.game.config.globalModule
 import fr.rob.game.config.mapModule
@@ -34,7 +34,7 @@ open class TestApplication : KoinTest {
     @BeforeAll
     open fun launchApp() {
         val testModule = module {
-            single<SplineMovementBrainInterface> { StraightSplineMovementBrain() }
+            single<SplineMovementBrainInterface> { TeleportToDestinationSplineMovementBrain() }
             // Synchronous execution: async logic completes within the same world tick
             single { GameCoroutines(Dispatchers.Unconfined, Dispatchers.Unconfined) }
         }

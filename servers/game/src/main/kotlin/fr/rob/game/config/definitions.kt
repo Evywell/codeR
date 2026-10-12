@@ -27,6 +27,8 @@ import fr.rob.game.character.waitingroom.CharacterWaitingRoom
 import fr.rob.game.entity.ObjectManager
 import fr.rob.game.entity.guid.ObjectGuidGenerator
 import fr.rob.game.entity.movement.spline.SplineMovementBrainInterface
+import fr.rob.game.entity.movement.spline.SplineWithFallbackMovementBrain
+import fr.rob.game.entity.movement.spline.TeleportToDestinationSplineMovementBrain
 import fr.rob.game.entity.movement.spline.UnitySplineMovementBrain
 import fr.rob.game.entity.template.Creature
 import fr.rob.game.instance.InstanceManager
@@ -163,7 +165,12 @@ val opcodeModule =
 
         single { UnityIntegration(get()) }
 
-        single<SplineMovementBrainInterface> { UnitySplineMovementBrain(get(), get(), get()) }
+        single<SplineMovementBrainInterface> {
+            val unityBrain = UnitySplineMovementBrain(get(), get(), get())
+            val straightBrain = TeleportToDestinationSplineMovementBrain()
+
+            SplineWithFallbackMovementBrain(arrayOf(unityBrain, straightBrain), get<LoggerFactoryInterface>().create("spline_brain"))
+        }
 
         single { CharacterWaitingRoom() }
         single { CreatePlayerIntoWorldHandler(get(), get(), get(), get(), get()) }
