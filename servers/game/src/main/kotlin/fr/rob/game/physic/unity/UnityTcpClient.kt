@@ -24,7 +24,9 @@ class UnityTcpClient(private val hostname: String, private val port: Int, privat
 
             clientBootstrap.connect().sync()
         } catch (e: Exception) {
-            e.printStackTrace()
+            group.shutdownGracefully()
+
+            throw e
         }
     }
 }
