@@ -1,37 +1,34 @@
 package fr.rob.game.world
 
 import fr.raven.log.LoggerInterface
+import fr.rob.game.world.clock.GameClock
+import fr.rob.game.world.clock.TickClock
+import fr.rob.game.world.clock.WorldTime
 
 class WorldUpdater(
     private val world: World,
     private val updatableObjects: Array<UpdatableInterface>,
     private val logger: LoggerInterface,
+    private val clock: GameClock,
+    private val worldTime: WorldTime,
 ) {
 
     private var isRunning: Boolean = false
-    var deltaTime: Int = 0
-        private set
 
     fun initialize() {
         isRunning = true
     }
 
     fun loop() {
-        var realCurrentTime: Long
-        var realPreviousTime = System.currentTimeMillis()
-        var nextTickAt = realPreviousTime
+        val tickClock = TickClock(clock, worldTime)
+        var nextTickAt = clock.monotonicMillis()
 
         while (isRunning) {
-            realCurrentTime = System.currentTimeMillis()
-
-            deltaTime = (realCurrentTime - realPreviousTime).toInt()
-
-            tick(deltaTime)
-
-            realPreviousTime = realCurrentTime
+            tickClock.advance()
+            tick()
 
             nextTickAt += WORLD_UPDATE_INTERVAL
-            val remaining = nextTickAt - System.currentTimeMillis()
+            val remaining = nextTickAt - clock.monotonicMillis()
 
             if (remaining > 0) {
                 sleepPrecisely(remaining)
@@ -43,7 +40,7 @@ class WorldUpdater(
                     -remaining,
                     WORLD_UPDATE_INTERVAL,
                 )
-                nextTickAt = System.currentTimeMillis()
+                nextTickAt = clock.monotonicMillis()
             }
         }
     }
@@ -52,7 +49,9 @@ class WorldUpdater(
      * Runs one world tick. Exceptions are logged and swallowed so a single faulty update can't kill the world thread.
      * Errors (OOM, StackOverflow...) are deliberately not caught.
      */
-    internal fun tick(deltaTime: Int) {
+    internal fun tick() {
+        val deltaTime = worldTime.deltaMs
+
         try {
             world.update(deltaTime)
         } catch (e: Exception) {

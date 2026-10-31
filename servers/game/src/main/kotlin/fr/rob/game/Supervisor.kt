@@ -20,6 +20,8 @@ import fr.rob.game.world.WorldUpdateRateChecker
 import fr.rob.game.world.WorldUpdater
 import fr.rob.game.world.function.WorldFunctionRegistry
 import fr.rob.game.world.packet.WorldPacketQueue
+import fr.rob.game.world.clock.GameClock
+import fr.rob.game.world.clock.WorldTime
 import fr.rob.game.network.grpc.CharacterServiceImpl
 import fr.rob.game.network.packet.BytesToMessageBuilder
 import fr.rob.game.network.GameNodeServer
@@ -38,6 +40,8 @@ class Supervisor(
     private val instanceUpdateService: InstanceUpdateService,
     private val characterWaitingRoom: CharacterWaitingRoom,
     private val worldTaskQueue: WorldTaskQueue,
+    private val clock: GameClock,
+    private val worldTime: WorldTime,
 ) {
 
     fun run(nodeConfig: NodeConfig) {
@@ -74,6 +78,8 @@ class Supervisor(
                     WorldUpdateRateChecker(logger),
                 ),
                 logger,
+                clock,
+                worldTime,
             )
 
             worldUpdater.initialize()

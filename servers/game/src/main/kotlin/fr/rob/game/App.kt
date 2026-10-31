@@ -13,6 +13,8 @@ import fr.rob.game.map.MapManager
 import fr.rob.game.world.DelayedUpdateQueue
 import fr.rob.game.world.function.WorldFunctionRegistry
 import fr.rob.game.world.packet.WorldPacketQueue
+import fr.rob.game.world.clock.GameClock
+import fr.rob.game.world.clock.WorldTime
 import fr.rob.game.config.GameConfig
 import fr.rob.game.world.GameCoroutines
 import fr.rob.game.world.WorldTaskQueue
@@ -33,6 +35,8 @@ class App(private val config: GameConfig) : KoinComponent {
     private val delayedUpdateQueue: DelayedUpdateQueue by inject()
     private val worldTaskQueue: WorldTaskQueue by inject()
     private val gameCoroutines: GameCoroutines by inject()
+    private val clock: GameClock by inject()
+    private val worldTime: WorldTime by inject()
 
     fun run() {
         createDatabasePools()
@@ -49,6 +53,8 @@ class App(private val config: GameConfig) : KoinComponent {
             instanceUpdateService,
             characterWaitingRoom,
             worldTaskQueue,
+            clock,
+            worldTime,
         ).run(config.nodesConfig.nodeConfig)
     }
 
