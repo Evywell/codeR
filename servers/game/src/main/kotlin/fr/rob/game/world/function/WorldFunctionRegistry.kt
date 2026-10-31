@@ -1,15 +1,23 @@
 package fr.rob.game.world.function
 
+import fr.rob.game.player.session.SessionState
+
 class WorldFunctionRegistry(functionsToRegister: Array<WorldFunctionItem>) {
-    private val functions = HashMap<Int, WorldFunctionInterface>()
+    private val functions = HashMap<Int, WorldFunctionItem>()
 
     init {
-        for ((opcode, function) in functionsToRegister) {
-            functions[opcode] = function
+        for (item in functionsToRegister) {
+            functions[item.opcode] = item
         }
     }
 
-    fun findFunction(opcode: Int): WorldFunctionInterface? = functions[opcode]
+    fun findItem(opcode: Int): WorldFunctionItem? = functions[opcode]
 
-    data class WorldFunctionItem(val opcode: Int, val function: WorldFunctionInterface)
+    fun findFunction(opcode: Int): WorldFunctionInterface? = functions[opcode]?.function
+
+    data class WorldFunctionItem(
+        val opcode: Int,
+        val function: WorldFunctionInterface,
+        val requiredState: SessionState,
+    )
 }

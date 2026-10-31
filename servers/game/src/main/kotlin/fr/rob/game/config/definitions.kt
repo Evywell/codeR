@@ -55,6 +55,7 @@ import fr.rob.game.world.function.PlayerEngageCombatFunction
 import fr.rob.game.world.function.RemoveFromWorldFunction
 import fr.rob.game.world.function.WorldFunctionRegistry
 import fr.rob.game.world.packet.WorldPacketQueue
+import fr.rob.game.player.session.SessionState
 import fr.rob.game.player.FakeInstanceFinder
 import fr.rob.game.persistence.character.MysqlCheckCharacterExist
 import fr.rob.game.persistence.character.MysqlFetchCharacter
@@ -213,13 +214,13 @@ val opcodeModule =
 
         single(named("FUNCTION_DEFINITIONS")) {
             arrayOf(
-                WorldFunctionRegistry.WorldFunctionItem(CMSG_LOG_INTO_WORLD, LogIntoWorldFunction(get(), get())),
-                WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_MOVEMENT, MovePlayerFunction()),
-                WorldFunctionRegistry.WorldFunctionItem(CMSG_REMOVE_FROM_WORLD, RemoveFromWorldFunction()),
-                WorldFunctionRegistry.WorldFunctionItem(CMSG_CHEAT_TELEPORT, CheatTeleportFunction()),
-                WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_CAST_SPELL, CastSpellFunction()),
-                WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_ENGAGE_COMBAT, PlayerEngageCombatFunction()),
-                WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_USE_ABILITY, UseAbilityFunction(get())),
+                WorldFunctionRegistry.WorldFunctionItem(CMSG_LOG_INTO_WORLD, LogIntoWorldFunction(get(), get()), SessionState.AUTHENTICATED),
+                WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_MOVEMENT, MovePlayerFunction(), SessionState.IN_WORLD),
+                WorldFunctionRegistry.WorldFunctionItem(CMSG_REMOVE_FROM_WORLD, RemoveFromWorldFunction(), SessionState.IN_WORLD),
+                WorldFunctionRegistry.WorldFunctionItem(CMSG_CHEAT_TELEPORT, CheatTeleportFunction(), SessionState.IN_WORLD),
+                WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_CAST_SPELL, CastSpellFunction(), SessionState.IN_WORLD),
+                WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_ENGAGE_COMBAT, PlayerEngageCombatFunction(), SessionState.IN_WORLD),
+                WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_USE_ABILITY, UseAbilityFunction(get()), SessionState.IN_WORLD),
             )
         }
         single { WorldFunctionRegistry(get(named("FUNCTION_DEFINITIONS"))) }

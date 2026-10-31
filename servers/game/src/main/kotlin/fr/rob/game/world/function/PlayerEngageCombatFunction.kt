@@ -5,20 +5,16 @@ import com.google.protobuf.Message
 import fr.raven.proto.message.game.CombatProto.PlayerEngageCombat
 import fr.rob.game.component.CombatComponent
 import fr.rob.game.entity.guid.ObjectGuid
+import fr.rob.game.entity.WorldObject
 import fr.rob.game.player.session.GameSession
 
-class PlayerEngageCombatFunction : WorldFunctionInterface {
-    override fun invoke(
-        sender: GameSession,
-        opcode: Int,
-        message: Message,
-    ) {
+class PlayerEngageCombatFunction : InWorldFunctionInterface {
+    override fun invoke(sender: GameSession, controlled: WorldObject, message: Message) {
         message as PlayerEngageCombat
 
-        val controlledWorldObject = sender.controlledWorldObject ?: return
-        val target = controlledWorldObject.mapInstance.findObjectByGuid(ObjectGuid(message.target)) ?: return
+        val target = controlled.mapInstance.findObjectByGuid(ObjectGuid(message.target)) ?: return
 
-        controlledWorldObject.getComponent<CombatComponent>()?.engageCombatWith(target)
+        controlled.getComponent<CombatComponent>()?.engageCombatWith(target)
     }
 
     override fun parseFromByteString(data: ByteString): Message = PlayerEngageCombat.parseFrom(data)
