@@ -15,6 +15,7 @@ import fr.rob.game.entity.guid.ObjectGuid
 import fr.rob.game.entity.movement.spline.SplineMovementBrainInterface
 import fr.rob.game.instance.MapInstance
 import fr.rob.game.player.PlayerFactory
+import fr.rob.game.player.session.SessionState
 import fr.rob.game.world.GameCoroutines
 import fr.rob.game.world.RandomRollEngine
 
@@ -25,13 +26,36 @@ class CreatePlayerIntoWorldHandler(
     private val splineMovementBrain: SplineMovementBrainInterface,
     private val coroutines: GameCoroutines,
 ) {
+    /**
+     * @throws fr.rob.game.player.session.IllegalSessionStateTransitionException when the session is not authenticated
+     */
     fun execute(command: CreatePlayerIntoWorldCommand) {
-        coroutines.launch("load-character-${command.characterId}") {
-            val character = coroutines.database {
-                characterService.loadFromCharacterIdForAccountId(command.gameSession.accountId, command.characterId)
-            } ?: return@launch
+        // Synchronous, before launching: a second login in the same tick must already see LOADING.
+        command.gameSession.beginLoading()
 
-            createPlayerIntoWorld(command, character)
+        coroutines.launch("load-character-${command.characterId}") {
+            val character = try {
+                coroutines.database {
+                    characterService.loadFromCharacterIdForAccountId(command.gameSession.accountId, command.characterId)
+                }
+            } catch (e: Exception) {
+                command.gameSession.cancelLoading()
+                throw e
+            }
+
+            if (character == null) {
+                command.gameSession.cancelLoading()
+                return@launch
+            }
+
+            try {
+                createPlayerIntoWorld(command, character)
+            } catch (e: Exception) {
+                if (command.gameSession.state == SessionState.LOADING) {
+                    command.gameSession.cancelLoading()
+                }
+                throw e
+            }
         }
     }
 
@@ -42,7 +66,7 @@ class CreatePlayerIntoWorldHandler(
             character,
         )
 
-        playerGameSession.assignToPlayer(player)
+        playerGameSession.enterWorld(player)
 
         // @todo remove this
         val worldObject = createMobAroundPosition(ObjectGuid.LowGuid(1u, 1u), Position(10f, 0f, 1f, 0f), command.mapInstance)

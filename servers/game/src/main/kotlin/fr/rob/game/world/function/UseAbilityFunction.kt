@@ -7,28 +7,24 @@ import fr.rob.game.ability.AbilityTargetParameter
 import fr.rob.game.ability.ObjectAbilityManager
 import fr.rob.game.ability.exception.ObjectCannotUseAbilityException
 import fr.rob.game.entity.guid.ObjectGuid
+import fr.rob.game.entity.WorldObject
 import fr.rob.game.player.session.GameSession
 
 class UseAbilityFunction(
     private val abilityManager: ObjectAbilityManager,
-) : WorldFunctionInterface {
-    override fun invoke(
-        sender: GameSession,
-        opcode: Int,
-        message: Message,
-    ) {
+) : InWorldFunctionInterface {
+    override fun invoke(sender: GameSession, controlled: WorldObject, message: Message) {
         message as AbilityProto.UseAbility
 
-        val controlledWorldObject = sender.controlledWorldObject ?: return
-        val target = controlledWorldObject.mapInstance.findObjectByGuid(ObjectGuid(message.explicitTargetGuid))
+        val target = controlled.mapInstance.findObjectByGuid(ObjectGuid(message.explicitTargetGuid))
 
         val targetGuid = target?.guid
 
         try {
             abilityManager.useAbilityFromIdentifier(
-                controlledWorldObject,
+                controlled,
                 message.abilityId,
-                AbilityTargetParameter(targetGuid, controlledWorldObject),
+                AbilityTargetParameter(targetGuid, controlled),
             )
         } catch (e: ObjectCannotUseAbilityException) {
             println("[ObjectCannotUseAbilityException] ${e.message}")

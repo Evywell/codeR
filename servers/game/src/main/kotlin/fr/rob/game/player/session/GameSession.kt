@@ -10,8 +10,14 @@ import fr.rob.game.network.opcode.GameNodeFunctionParameters
 import fr.rob.game.network.opcode.GameNodeOpcodeFunction
 
 class GameSession(val accountId: Int, private val messageSender: SessionMessageSenderInterface) {
+    var state: SessionState = SessionState.AUTHENTICATED
+        private set
     var loggedAsPlayer: Player? = null
+        private set
     var controlledWorldObject: WorldObject? = null
+        private set
+    var rejectedPacketCount: Int = 0
+        private set
 
     private val messageQueue = LockedQueue<MessageHolder>()
     private val queueConsumer = LockedQueueConsumer(MAX_PACKET_PROCESSING_ON_UPDATE, messageQueue)
@@ -22,9 +28,49 @@ class GameSession(val accountId: Int, private val messageSender: SessionMessageS
         }
     }
 
-    fun assignToPlayer(player: Player) {
+    /**
+     * @throws IllegalSessionStateTransitionException
+     */
+    fun beginLoading() {
+        transition(SessionState.AUTHENTICATED, SessionState.LOADING)
+    }
+
+    /**
+     * @throws IllegalSessionStateTransitionException
+     */
+    fun cancelLoading() {
+        transition(SessionState.LOADING, SessionState.AUTHENTICATED)
+    }
+
+    /**
+     * @throws IllegalSessionStateTransitionException
+     */
+    fun enterWorld(player: Player) {
+        transition(SessionState.LOADING, SessionState.IN_WORLD)
         loggedAsPlayer = player
         controlledWorldObject = player
+    }
+
+    /**
+     * @throws IllegalSessionStateTransitionException
+     */
+    fun leaveWorld() {
+        transition(SessionState.IN_WORLD, SessionState.AUTHENTICATED)
+        loggedAsPlayer = null
+        controlledWorldObject = null
+    }
+
+    /**
+     * @return the new rejected packet count
+     */
+    fun recordRejectedPacket(): Int = ++rejectedPacketCount
+
+    private fun transition(from: SessionState, to: SessionState) {
+        if (state != from) {
+            throw IllegalSessionStateTransitionException("Cannot go from $state to $to for account $accountId (expected $from)")
+        }
+
+        state = to
     }
 
     fun send(message: GameMessageInterface) {

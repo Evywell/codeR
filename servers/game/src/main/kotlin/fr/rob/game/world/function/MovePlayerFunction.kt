@@ -9,14 +9,15 @@ import fr.rob.game.behavior.MovableBehavior
 import fr.rob.game.component.MovementComponent
 import fr.rob.game.entity.Position
 import fr.rob.game.map.maths.Vector3f
+import fr.rob.game.entity.WorldObject
 import fr.rob.game.player.session.GameSession
 
-class MovePlayerFunction : WorldFunctionInterface {
-    override fun invoke(sender: GameSession, opcode: Int, message: Message) {
+class MovePlayerFunction : InWorldFunctionInterface {
+    override fun invoke(sender: GameSession, controlled: WorldObject, message: Message) {
         message as SMovementInfo
 
-        sender.controlledWorldObject?.getBehavior<MovableBehavior>()?.moveObjectToPosition(
-            sender.controlledWorldObject!!,
+        controlled.getBehavior<MovableBehavior>()?.moveObjectToPosition(
+            controlled,
             Position(message.position.posX, message.position.posY, message.position.posZ, message.position.orientation),
             MovementComponent.MovementInfo(getDirectionFromMessage(message.direction), getPhaseFromMessage(message.phase))
         )
