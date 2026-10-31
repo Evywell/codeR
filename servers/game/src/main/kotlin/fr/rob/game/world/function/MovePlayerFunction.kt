@@ -8,17 +8,26 @@ import fr.raven.proto.message.game.MovementProto.SMovementInfo
 import fr.rob.game.behavior.MovableBehavior
 import fr.rob.game.component.MovementComponent
 import fr.rob.game.entity.Position
+import fr.rob.game.entity.movement.MovementValidator
+import fr.rob.game.player.message.MovementHeartbeatMessage
 import fr.rob.game.map.maths.Vector3f
 import fr.rob.game.entity.WorldObject
 import fr.rob.game.player.session.GameSession
 
-class MovePlayerFunction : InWorldFunctionInterface {
+class MovePlayerFunction(private val movementValidator: MovementValidator) : InWorldFunctionInterface {
     override fun invoke(sender: GameSession, controlled: WorldObject, message: Message) {
         message as SMovementInfo
 
+        val destination = Position(message.position.posX, message.position.posY, message.position.posZ, message.position.orientation)
+
+        if (!movementValidator.isValidDestination(controlled, destination)) {
+            sender.send(MovementHeartbeatMessage(controlled.guid, controlled.position, controlled.getComponent<MovementComponent>()?.movementInfo))
+            return
+        }
+
         controlled.getBehavior<MovableBehavior>()?.moveObjectToPosition(
             controlled,
-            Position(message.position.posX, message.position.posY, message.position.posZ, message.position.orientation),
+            destination,
             MovementComponent.MovementInfo(getDirectionFromMessage(message.direction), getPhaseFromMessage(message.phase))
         )
     }

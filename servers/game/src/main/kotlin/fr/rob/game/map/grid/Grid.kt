@@ -163,8 +163,23 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
         return cells[index]
     }
 
-    fun getCellFromWorldPosition(position: Position): Cell {
-        val cellPosition = PositionNormalizer.fromMapPositionToGridCellCoordinate(
+    /**
+     * True when the position is finite and maps to a cell of this grid, i.e. [getCellFromWorldPosition] won't throw.
+     */
+    fun contains(position: Position): Boolean {
+        if (!position.x.isFinite() || !position.y.isFinite() || !position.z.isFinite()) {
+            return false
+        }
+
+        val cellPosition = toCellPosition(position)
+
+        return cellPosition.x in 0 until width && cellPosition.y in 0 until height
+    }
+
+    fun getCellFromWorldPosition(position: Position): Cell = getCellFromCellPosition(toCellPosition(position))
+
+    private fun toCellPosition(position: Position): Cell.CellPosition =
+        PositionNormalizer.fromMapPositionToGridCellCoordinate(
             PositionNormalizer.MapInfoForPosition(
                 position,
                 width * cellSize,
@@ -174,9 +189,6 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
                 cellSize,
             ),
         )
-
-        return getCellFromCellPosition(cellPosition)
-    }
 
     private fun isInsideRadius(origin: Position, radius: Float, subject: Position): Boolean {
         val distance = ((origin.x - subject.x) * (origin.x - subject.x)) + ((origin.y - subject.y) * (origin.y - subject.y))
