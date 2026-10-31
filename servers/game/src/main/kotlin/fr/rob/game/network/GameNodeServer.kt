@@ -9,8 +9,8 @@ import fr.rob.game.world.packet.WorldPacket
 import fr.rob.game.world.packet.WorldPacketQueue
 import fr.rob.game.network.packet.BytesToMessageBuilder
 import fr.rob.game.network.session.GatewayGameSession
-import fr.rob.game.network.session.GameSessionNotFoundException
 import fr.rob.game.network.opcode.OPCODES_MAP
+import com.google.protobuf.InvalidProtocolBufferException
 
 class GameNodeServer(
     private val worldPacketQueue: WorldPacketQueue,
@@ -22,13 +22,32 @@ class GameNodeServer(
         session as GatewayGameSession
         logger.debug("[GameNodeServer] Packet received with code ${OPCODES_MAP[packet.opcode]} (${packet.opcode})")
 
-        val gameSession = try {
-            session.findGameSession(packet.sender)
-        } catch (_: GameSessionNotFoundException) {
-            session.createGameSession(packet.sender)
+        val message = try {
+            bytesToMessageBuilder.fromPacket(packet)
+        } catch (e: InvalidProtocolBufferException) {
+            logger.warning("[GameNodeServer] Malformed packet with opcode {} from account {}", packet.opcode, packet.sender, e)
+            return
         }
 
-        worldPacketQueue.enqueue(WorldPacket(gameSession, packet.opcode, bytesToMessageBuilder.fromPacket(packet)))
+        if (message == null) {
+            logger.warning("[GameNodeServer] Unknown opcode {} from account {}", packet.opcode, packet.sender)
+            return
+        }
+
+        val gameSession = session.findOrCreateGameSession(packet.sender)
+
+        worldPacketQueue.enqueue(WorldPacket(gameSession, packet.opcode, message))
+    }
+
+    override fun onConnectionClosed(session: Session) {
+        if (session !is GatewayGameSession) {
+            return
+        }
+
+        session.getGameSessions().forEach { gameSession ->
+            worldPacketQueue.removeQueue(gameSession)
+            session.removeGameSessionFromAccountId(gameSession.accountId)
+        }
     }
 
     override fun createSession(socket: SessionSocketInterface): Session =

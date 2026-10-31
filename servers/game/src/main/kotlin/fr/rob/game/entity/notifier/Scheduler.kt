@@ -23,6 +23,12 @@ class Scheduler {
         }
     }
 
+    fun unschedule(identifier: ObjectGuid) {
+        timers.remove(identifier)
+    }
+
+    fun size(): Int = timers.size
+
     private fun invokeScheduledNotification(scheduledItem: ScheduledItem) {
         scheduledItem.function.invoke()
     }

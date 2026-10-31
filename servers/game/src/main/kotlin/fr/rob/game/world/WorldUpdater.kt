@@ -26,8 +26,7 @@ class WorldUpdater(
 
             deltaTime = (realCurrentTime - realPreviousTime).toInt()
 
-            world.update(deltaTime)
-            updatableObjects.forEach { it.update(deltaTime) }
+            tick(deltaTime)
 
             realPreviousTime = realCurrentTime
 
@@ -45,6 +44,26 @@ class WorldUpdater(
                     WORLD_UPDATE_INTERVAL,
                 )
                 nextTickAt = System.currentTimeMillis()
+            }
+        }
+    }
+
+    /**
+     * Runs one world tick. Exceptions are logged and swallowed so a single faulty update can't kill the world thread.
+     * Errors (OOM, StackOverflow...) are deliberately not caught.
+     */
+    internal fun tick(deltaTime: Int) {
+        try {
+            world.update(deltaTime)
+        } catch (e: Exception) {
+            logger.error("World update failed", e)
+        }
+
+        updatableObjects.forEach {
+            try {
+                it.update(deltaTime)
+            } catch (e: Exception) {
+                logger.error("Update of {} failed", it::class.simpleName ?: "anonymous", e)
             }
         }
     }

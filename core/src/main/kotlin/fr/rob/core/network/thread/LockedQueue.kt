@@ -21,11 +21,21 @@ class LockedQueue<T> {
     fun next(filter: Filter<T>): T? {
         lock.lock()
 
-        val result = getElementIfValid(filter)
+        try {
+            return getElementIfValid(filter)
+        } finally {
+            lock.unlock()
+        }
+    }
 
-        lock.unlock()
+    fun isEmpty(): Boolean {
+        lock.lock()
 
-        return result
+        try {
+            return internalQueue.isEmpty()
+        } finally {
+            lock.unlock()
+        }
     }
 
     private fun getElementIfValid(filter: Filter<T>): T? {
