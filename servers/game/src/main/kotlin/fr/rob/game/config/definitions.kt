@@ -223,5 +223,5 @@ val opcodeModule =
             )
         }
         single { WorldFunctionRegistry(get(named("FUNCTION_DEFINITIONS"))) }
-        single { WorldPacketQueue(get()) }
+        single { WorldPacketQueue(get(), get<LoggerFactoryInterface>().create("world")) }
     }

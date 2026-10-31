@@ -55,7 +55,7 @@ open class WorldObject(
 
     fun isInMeleeRangeOf(target: WorldObject): Boolean =
         position.getSquaredDistanceWith(target.position) <=
-            DEFAULT_MELEE_RANGE_METERS * DEFAULT_MELEE_RANGE_METERS * DEFAULT_MELEE_RANGE_METERS
+            DEFAULT_MELEE_RANGE_METERS * DEFAULT_MELEE_RANGE_METERS
 
     fun isInFrontOf(target: WorldObject): Boolean = position.hasInArc(Position.ANGLE_2_PI_3, target.position)
 
