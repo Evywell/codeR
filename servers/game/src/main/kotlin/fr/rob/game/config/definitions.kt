@@ -56,6 +56,9 @@ import fr.rob.game.world.function.PlayerEngageCombatFunction
 import fr.rob.game.world.function.RemoveFromWorldFunction
 import fr.rob.game.world.function.WorldFunctionRegistry
 import fr.rob.game.world.packet.WorldPacketQueue
+import fr.rob.game.world.clock.GameClock
+import fr.rob.game.world.clock.SystemGameClock
+import fr.rob.game.world.clock.WorldTime
 import fr.rob.game.player.session.SessionState
 import fr.rob.game.player.FakeInstanceFinder
 import fr.rob.game.persistence.character.MysqlCheckCharacterExist
@@ -90,6 +93,8 @@ val globalModule =
         single<EventManagerInterface>(named("EVENT_MANAGER_DATABASE")) { EventManager() }
         single<EventManagerInterface> { EventManager() }
         singleOf<LoggerFactoryInterface> { LoggerFactory({}.javaClass.classLoader.getResourceAsStream("log4j.config.xml")!!) }
+        single<GameClock> { SystemGameClock() }
+        single { WorldTime() }
         single { InstanceManager(GridBuilder(GridConstraintChecker())) }
         single { InstanceUpdateService(get()) }
         single<InstanceFinderInterface> { FakeInstanceFinder(get()) }

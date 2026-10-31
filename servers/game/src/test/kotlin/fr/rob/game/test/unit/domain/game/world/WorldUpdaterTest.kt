@@ -10,6 +10,8 @@ import fr.rob.game.world.UpdatableInterface
 import fr.rob.game.world.World
 import fr.rob.game.world.WorldTaskQueue
 import fr.rob.game.world.WorldUpdater
+import fr.rob.game.world.clock.WorldTime
+import fr.rob.game.test.unit.tools.ManualGameClock
 import fr.rob.game.world.function.WorldFunctionRegistry
 import fr.rob.game.world.packet.WorldPacketQueue
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -36,11 +38,11 @@ class WorldUpdaterTest {
                 updated++
             }
         }
-        val updater = WorldUpdater(world, arrayOf(failing, counting), NullLogger())
+        val updater = WorldUpdater(world, arrayOf(failing, counting), NullLogger(), ManualGameClock(), WorldTime())
 
         taskQueue.enqueue { throw IllegalStateException("boom") }
-        updater.tick(20)
-        updater.tick(20)
+        updater.tick()
+        updater.tick()
 
         assertEquals(2, updated)
     }
