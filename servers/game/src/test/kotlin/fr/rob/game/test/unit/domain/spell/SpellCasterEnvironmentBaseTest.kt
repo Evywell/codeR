@@ -1,5 +1,6 @@
 package fr.rob.game.test.unit.domain.spell
 
+import fr.rob.game.entity.visibility.VisibilityService
 import fr.rob.game.behavior.ObjectSheetBehavior
 import fr.rob.game.component.resource.HealthComponent
 import fr.rob.game.entity.ObjectManager
@@ -26,7 +27,7 @@ abstract class SpellCasterEnvironmentBaseTest {
     private val testInstanceManager = InstanceManager(GridBuilder(GridConstraintChecker())).also { im ->
         im.registerChunkManager(instance.id, worldBuilder.getChunkManager(instance.id)!!)
     }
-    protected val instanceUpdateService = InstanceUpdateService(testInstanceManager)
+    protected val instanceUpdateService = InstanceUpdateService(testInstanceManager, VisibilityService())
 
     private lateinit var spellBook: SpellBook
     private val guidGenerator = ObjectGuidGenerator()

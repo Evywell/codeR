@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package fr.raven.proto.message.game;
+
+option java_outer_classname = "ObjectDestroyProto";
+
+// The object left the visibility range of the player (or left the world): the client must remove it.
+message ObjectDestroy {
+  uint64 guid = 1;
+}

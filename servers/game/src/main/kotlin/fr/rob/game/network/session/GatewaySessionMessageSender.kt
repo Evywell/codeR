@@ -10,6 +10,7 @@ import fr.raven.proto.message.game.MovementProto.Direction
 import fr.raven.proto.message.game.MovementProto.MovementHeartbeat
 import fr.raven.proto.message.game.NearbyObjectOpcodeProto
 import fr.raven.proto.message.game.ObjectDescriptionProto
+import fr.raven.proto.message.game.ObjectDestroyProto
 import fr.raven.proto.message.game.ObjectSheetProto.ObjectSheetUpdate
 import fr.raven.proto.message.game.PlayerProto.PlayerDescription
 import fr.raven.proto.message.game.PositionProto
@@ -26,6 +27,7 @@ import fr.rob.game.network.opcode.OPCODES_MAP
 import fr.rob.game.network.opcode.SMSG_MOVEMENT_HEARTBEAT
 import fr.rob.game.player.message.AbilityStateUpdateMessage
 import fr.rob.game.player.message.ObjectDescriptionMessage
+import fr.rob.game.player.message.ObjectDestroyMessage
 
 class GatewaySessionMessageSender(
     private val gatewaySession: GatewayGameSession,
@@ -64,6 +66,11 @@ class GatewaySessionMessageSender(
             .setPosY(message.position.y)
             .setPosZ(message.position.z)
             .setOrientation(message.position.orientation)
+            .build()
+
+    private fun fromObjectDestroyMessage(message: ObjectDestroyMessage): Message =
+        ObjectDestroyProto.ObjectDestroy.newBuilder()
+            .setGuid(message.objectId.getRawValue())
             .build()
 
     private fun fromMovementHeartbeatMessage(message: MovementHeartbeatMessage): Message {
@@ -164,6 +171,7 @@ class GatewaySessionMessageSender(
             is ObjectMovingToDestinationMessage -> return fromTravelPlanDefinedMessage(message)
             is ObjectDescriptionMessage -> return fromObjectDescriptionMessage(message)
             is AbilityStateUpdateMessage -> return fromAbilityStateUpdateMessage(message)
+            is ObjectDestroyMessage -> return fromObjectDestroyMessage(message)
         }
 
         throw RuntimeException("No message builder found for ${message.javaClass.name}")

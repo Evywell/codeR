@@ -1,8 +1,6 @@
 package fr.rob.game.world
 
 import fr.rob.game.combat.ObjectSheetUpdatedListener
-import fr.rob.game.entity.event.GetNearbyObjectListener
-import fr.rob.game.entity.event.NotifyAddedIntoWorldListener
 import fr.rob.game.entity.movement.NotifyWorldObjectMovedListener
 import fr.rob.game.entity.notifier.Scheduler
 import fr.rob.game.entity.notifier.WorldObjectUpdatedNotifier
@@ -19,16 +17,15 @@ class World(
     private val worldPacketQueue: WorldPacketQueue,
     private val delayedUpdateQueue: DelayedUpdateQueue,
     private val worldTaskQueue: WorldTaskQueue,
+    private val worldObjectUpdatedNotifier: WorldObjectUpdatedNotifier,
 ) {
     private val updateState: WorldUpdateState = WorldUpdateState()
     private val eventDispatcher = ListEventDispatcher()
 
     init {
         eventDispatcher.attachListener(
-            NotifyWorldObjectMovedListener(Scheduler(), WorldObjectUpdatedNotifier(), updateState),
+            NotifyWorldObjectMovedListener(Scheduler(), worldObjectUpdatedNotifier, updateState),
         )
-        eventDispatcher.attachListener(NotifyAddedIntoWorldListener())
-        eventDispatcher.attachListener(GetNearbyObjectListener())
         eventDispatcher.attachListener(ObjectSheetUpdatedListener())
         eventDispatcher.attachListener(NotifyAbilityStateUpdateListener())
         eventDispatcher.attachListener(ChunkTransitionListener(instanceManager))

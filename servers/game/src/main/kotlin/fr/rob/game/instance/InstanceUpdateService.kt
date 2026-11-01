@@ -2,10 +2,12 @@ package fr.rob.game.instance
 
 import fr.rob.game.entity.WorldObject
 import fr.rob.game.entity.guid.ObjectGuid
+import fr.rob.game.entity.visibility.VisibilityService
 import fr.rob.game.event.DomainEventDispatcherInterface
 
 class InstanceUpdateService(
     private val instanceManager: InstanceManager,
+    private val visibilityService: VisibilityService,
 ) {
 
     fun update(instance: MapInstance, deltaTime: Int, eventDispatcher: DomainEventDispatcherInterface) {
@@ -38,6 +40,8 @@ class InstanceUpdateService(
 
             instance.grid.removeWorldObject(worldObject)
         }
+
+        visibilityService.update(instance, deltaTime)
     }
 
     /**

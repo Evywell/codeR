@@ -15,6 +15,7 @@ import fr.rob.game.world.function.WorldFunctionRegistry
 import fr.rob.game.world.packet.WorldPacketQueue
 import fr.rob.game.world.clock.GameClock
 import fr.rob.game.world.clock.WorldTime
+import fr.rob.game.entity.notifier.WorldObjectUpdatedNotifier
 import fr.rob.game.config.GameConfig
 import fr.rob.game.world.GameCoroutines
 import fr.rob.game.world.WorldTaskQueue
@@ -37,6 +38,7 @@ class App(private val config: GameConfig) : KoinComponent {
     private val gameCoroutines: GameCoroutines by inject()
     private val clock: GameClock by inject()
     private val worldTime: WorldTime by inject()
+    private val worldObjectUpdatedNotifier: WorldObjectUpdatedNotifier by inject()
 
     fun run() {
         createDatabasePools()
@@ -55,6 +57,7 @@ class App(private val config: GameConfig) : KoinComponent {
             worldTaskQueue,
             clock,
             worldTime,
+            worldObjectUpdatedNotifier,
         ).run(config.nodesConfig.nodeConfig)
     }
 
