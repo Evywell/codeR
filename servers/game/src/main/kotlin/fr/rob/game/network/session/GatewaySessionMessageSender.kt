@@ -158,7 +158,7 @@ class GatewaySessionMessageSender(
             .setAbilityInfoId(message.ability.info.identifier)
             .setAbilityState(message.state.value)
             .setCastingTimeMs(message.ability.info.castingTimeMs)
-            .setElapsedCastingTimeMs(message.ability.getRemainingCastingTimeMs())
+            .setElapsedCastingTimeMs(message.ability.getElapsedCastingTimeMs())
             .build()
 
     private fun toProtoMessage(message: Any): Message {

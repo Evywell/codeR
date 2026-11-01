@@ -166,4 +166,46 @@ class AbilityTest : TestCaseWithContainer() {
         // Assert - Mana consumed after casting completes
         assertEquals(50, source.getComponent<ManaComponent>()!!.currentMana)
     }
+
+    @Test
+    fun `remaining casting time decreases while elapsed time increases`() {
+        val ability = abilityWithCastingTime(2000)
+
+        assertEquals(0, ability.getElapsedCastingTimeMs())
+        assertEquals(2000, ability.getRemainingCastingTimeMs())
+
+        ability.updateTimers(500)
+
+        assertEquals(500, ability.getElapsedCastingTimeMs())
+        assertEquals(1500, ability.getRemainingCastingTimeMs())
+    }
+
+    @Test
+    fun `casting times are capped once the cast is completed`() {
+        val ability = abilityWithCastingTime(2000)
+
+        ability.updateTimers(2600)
+
+        assertEquals(2000, ability.getElapsedCastingTimeMs())
+        assertEquals(0, ability.getRemainingCastingTimeMs())
+    }
+
+    @Test
+    fun `an instant ability has no remaining casting time`() {
+        val ability = abilityWithCastingTime(AbilityInfo.INSTANT_CASTING_TIME)
+
+        assertEquals(0, ability.getElapsedCastingTimeMs())
+        assertEquals(0, ability.getRemainingCastingTimeMs())
+    }
+
+    private fun abilityWithCastingTime(castingTimeMs: Int): Ability {
+        val source = worldObjectBuilder.createUnit()
+
+        return Ability(
+            1,
+            AbilityInfo(1, AbilityType.MAGICAL, AbilityRequirements(arrayOf()), castingTimeMs, LaunchType.Instant),
+            source,
+            AbilityTargetParameter(null, source),
+        )
+    }
 }
