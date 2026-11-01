@@ -6,16 +6,16 @@ import kotlin.reflect.KClass
 class GridComponent {
     private val cellComponentIndexes = mutableMapOf<Cell, CellComponentIndex>()
 
-    fun addWorldObject(obj: WorldObject) {
-        getOrCreateCellComponentIndex(obj.getCell()).addWorldObject(obj)
+    fun addWorldObjectToCell(obj: WorldObject, cell: Cell) {
+        getOrCreateCellComponentIndex(cell).addWorldObject(obj)
     }
 
-    fun updateWorldObject(obj: WorldObject) {
-        cellComponentIndexes[obj.getCell()]?.updateWorldObject(obj)
+    fun updateWorldObjectFromCell(obj: WorldObject, cell: Cell) {
+        cellComponentIndexes[cell]?.updateWorldObject(obj)
     }
 
-    fun removeWorldObject(obj: WorldObject) {
-        cellComponentIndexes[obj.getCell()]?.removeWorldObject(obj)
+    fun removeWorldObjectFromCell(obj: WorldObject, cell: Cell) {
+        cellComponentIndexes[cell]?.removeWorldObject(obj)
     }
 
     fun getObjectsWithComponentInCells(cells: Array<Cell>, componentType: KClass<*>): Set<WorldObject> {

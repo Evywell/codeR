@@ -72,6 +72,10 @@ open class WorldObject(
         position.z = z
         position.orientation = orientation
 
+        if (this::mapInstance.isInitialized) {
+            mapInstance.grid.relocateWorldObject(this)
+        }
+
         pushEvent(WorldObjectMovedEvent(this))
     }
 

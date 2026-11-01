@@ -6,26 +6,7 @@ import fr.rob.game.map.grid.Grid
 
 class GridQuery(private val grid: Grid) {
     fun getObjects(cell: Cell, predicates: Array<GridQueryPredicateInterface>): List<WorldObject> {
-        val allCells = grid.retrieveNeighborCells(cell)
-        val objects = ArrayList<WorldObject>()
-
-        grid.iterateOverObjects { worldObject ->
-            if (allCells.contains(worldObject.getCell())) {
-                var isWorldObjectMatchingPredicate = true
-
-                for (predicate in predicates) {
-                    if (!predicate.resolve(worldObject)) {
-                        isWorldObjectMatchingPredicate = false
-                        break
-                    }
-                }
-
-                if (isWorldObjectMatchingPredicate) {
-                    objects.add(worldObject)
-                }
-            }
-        }
-
-        return objects
+        return grid.getObjectsOfCells(grid.retrieveNeighborCells(cell))
+            .filter { worldObject -> predicates.all { it.resolve(worldObject) } }
     }
 }
