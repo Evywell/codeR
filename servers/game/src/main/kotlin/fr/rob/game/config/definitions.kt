@@ -46,7 +46,6 @@ import fr.rob.game.map.loader.WorldObjectsLoaderInterface
 import fr.rob.game.map.loader.creature.CreatureLoader
 import fr.rob.game.persistence.map.CreatureRepository
 import fr.rob.game.persistence.map.CreatureRepositoryInterface
-import fr.rob.game.world.DelayedUpdateQueue
 import fr.rob.game.world.function.CastSpellFunction
 import fr.rob.game.world.function.CheatTeleportFunction
 import fr.rob.game.world.function.LogIntoWorldFunction
@@ -160,17 +159,15 @@ val opcodeModule =
 
         single { ObjectManager(get(), get()) }
 
-        single { DelayedUpdateQueue() }
-
         single { WorldTaskQueue() }
 
         single { PhysicObjectInteraction() }
 
         single(named("PHYSIC_FUNCTION_DEFINITIONS")) {
             arrayOf(
-                OpcodeFunctionRegistryInterface.OpcodeFunctionItem(0x01, ObjectMovedHandler(get())),
-                OpcodeFunctionRegistryInterface.OpcodeFunctionItem(0x02, ObjectReachedDestinationHandler(get())),
-                OpcodeFunctionRegistryInterface.OpcodeFunctionItem(0x03, ObjectMovingWithDestinationHandler(get())),
+                OpcodeFunctionRegistryInterface.OpcodeFunctionItem(0x01, ObjectMovedHandler(get(), get())),
+                OpcodeFunctionRegistryInterface.OpcodeFunctionItem(0x02, ObjectReachedDestinationHandler(get(), get())),
+                OpcodeFunctionRegistryInterface.OpcodeFunctionItem(0x03, ObjectMovingWithDestinationHandler(get(), get())),
             )
         }
 

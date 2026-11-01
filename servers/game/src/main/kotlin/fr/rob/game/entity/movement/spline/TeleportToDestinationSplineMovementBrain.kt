@@ -9,12 +9,13 @@ import fr.rob.game.map.maths.Vector3f
  * For the moment this is pretty dumb, it teleports the object instead of moving it gradually
  */
 class TeleportToDestinationSplineMovementBrain : SplineMovementBrainInterface {
-    override fun moveToDestination(source: WorldObject, destination: Position, stepHandler: (SplineMovement) -> Unit) {
-        val movement = SplineMovement()
-
-        movement.position = destination
-        movement.movement = MovementComponent.MovementInfo(Vector3f.forward(), MovementComponent.Phase.MOVING)
-
-        stepHandler(movement)
+    override fun moveToDestination(source: WorldObject, destination: Position, stepHandler: (SplineStep) -> Unit) {
+        stepHandler(
+            SplineStep(
+                destination,
+                MovementComponent.MovementInfo(Vector3f.forward(), MovementComponent.Phase.MOVING),
+                reachedDestination = true,
+            ),
+        )
     }
 }

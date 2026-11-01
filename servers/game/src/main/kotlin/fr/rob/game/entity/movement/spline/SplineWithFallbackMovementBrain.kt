@@ -12,7 +12,7 @@ class SplineWithFallbackMovementBrain(
     override fun moveToDestination(
         source: WorldObject,
         destination: Position,
-        stepHandler: (SplineMovement) -> Unit
+        stepHandler: (SplineStep) -> Unit
     ) {
         if (wrappedBrains.isEmpty()) {
             throw IllegalArgumentException("No wrapped brains provided")

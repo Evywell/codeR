@@ -7,7 +7,6 @@ import fr.rob.game.instance.InstanceManager
 import fr.rob.game.instance.InstanceUpdateService
 import fr.rob.game.map.grid.GridBuilder
 import fr.rob.game.map.grid.GridConstraintChecker
-import fr.rob.game.world.DelayedUpdateQueue
 import fr.rob.game.world.UpdatableInterface
 import fr.rob.game.world.World
 import fr.rob.game.world.WorldTaskQueue
@@ -28,7 +27,6 @@ class WorldUpdaterTest {
             instanceManager,
             InstanceUpdateService(instanceManager, VisibilityService()),
             WorldPacketQueue(WorldFunctionRegistry(arrayOf()), NullLogger()),
-            DelayedUpdateQueue(),
             taskQueue,
             WorldObjectUpdatedNotifier(VisibilityService()),
         )
