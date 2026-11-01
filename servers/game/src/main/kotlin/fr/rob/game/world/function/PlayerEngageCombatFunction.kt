@@ -3,7 +3,7 @@ package fr.rob.game.world.function
 import com.google.protobuf.ByteString
 import com.google.protobuf.Message
 import fr.raven.proto.message.game.CombatProto.PlayerEngageCombat
-import fr.rob.game.component.CombatComponent
+import fr.rob.game.behavior.CombatBehavior
 import fr.rob.game.entity.guid.ObjectGuid
 import fr.rob.game.entity.WorldObject
 import fr.rob.game.player.session.GameSession
@@ -14,7 +14,7 @@ class PlayerEngageCombatFunction : InWorldFunctionInterface {
 
         val target = controlled.mapInstance.findObjectByGuid(ObjectGuid(message.target)) ?: return
 
-        controlled.getComponent<CombatComponent>()?.engageCombatWith(target)
+        CombatBehavior.engage(controlled, target)
     }
 
     override fun parseFromByteString(data: ByteString): Message = PlayerEngageCombat.parseFrom(data)

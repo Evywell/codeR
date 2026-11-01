@@ -2,6 +2,7 @@ package fr.rob.game.entity.visibility
 
 import fr.rob.game.entity.WorldObject
 import fr.rob.game.entity.guid.ObjectGuid
+import fr.rob.game.entity.scheduler.TaskGroup
 import fr.rob.game.instance.MapInstance
 import fr.rob.game.player.Player
 import fr.rob.game.player.message.NearbyObjectMessage
@@ -18,7 +19,7 @@ class VisibilityService {
     /**
      * Refreshes the visibility of every player of the instance that changed cell or whose refresh interval elapsed.
      */
-    fun update(instance: MapInstance, deltaTime: Int) {
+    fun update(instance: MapInstance) {
         val grid = instance.grid
 
         grid.getObjectsByType(ObjectGuid.GUID_TYPE.PLAYER).forEach { worldObject ->
@@ -31,21 +32,20 @@ class VisibilityService {
             val visibility = player.getComponent<VisibilityComponent>() ?: VisibilityComponent().also { player.addComponent(it) }
             val cell = grid.getRegisteredCell(player)
 
-            visibility.refreshTimer.update(deltaTime)
-
-            if (visibility.initialized && cell == visibility.lastCell && !visibility.refreshTimer.passed()) {
+            if (visibility.initialized && cell == visibility.lastCell && !visibility.refreshDue) {
                 return@forEach
             }
 
             if (!visibility.initialized) {
                 player.controlledByGameSession?.send(NearbyObjectMessage(player.guid, player.position))
                 visibility.initialized = true
+                schedulePeriodicRefresh(player, visibility)
             }
 
             refresh(player, visibility)
 
             visibility.lastCell = cell
-            visibility.refreshTimer.reset()
+            visibility.refreshDue = false
         }
     }
 
@@ -56,6 +56,14 @@ class VisibilityService {
         worldObject.mapInstance.grid.findObjectsInsideRadius(worldObject.position, LEAVE_RADIUS)
             .filterIsInstance<Player>()
             .filter { it !== worldObject && it.getComponent<VisibilityComponent>()?.sees(worldObject.guid) == true }
+
+    // Catches objects moving around a player that doesn't move itself
+    private fun schedulePeriodicRefresh(player: Player, visibility: VisibilityComponent) {
+        player.scheduler.schedule(REFRESH_INTERVAL_MS, TaskGroup.VISIBILITY_REFRESH) { context ->
+            visibility.refreshDue = true
+            context.repeat()
+        }
+    }
 
     private fun refresh(player: Player, visibility: VisibilityComponent) {
         val candidates = player.mapInstance.grid.findObjectsInsideRadius(player.position, LEAVE_RADIUS)

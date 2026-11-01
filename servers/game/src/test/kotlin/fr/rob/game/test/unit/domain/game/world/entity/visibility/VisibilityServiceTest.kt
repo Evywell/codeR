@@ -60,7 +60,11 @@ class VisibilityServiceTest {
 
     private fun unit(position: Position): WorldObject = objectBuilder.createUnit().also { worldBuilder.addIntoInstance(it, instance, position) }
 
-    private fun tick(deltaTime: Int = 0) = service.update(instance, deltaTime)
+    // The refresh interval is driven by each player's scheduler, ticked by the entity update
+    private fun tick(deltaTime: Int = 0) {
+        instance.grid.getObjectsByType(ObjectGuid.GUID_TYPE.PLAYER).forEach { it.scheduler.update(deltaTime) }
+        service.update(instance)
+    }
 
     @Test
     fun `a player entering the world receives itself and the objects in range`() {
