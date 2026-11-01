@@ -23,6 +23,8 @@ import fr.rob.game.world.packet.WorldPacketQueue
 import fr.rob.game.world.clock.GameClock
 import fr.rob.game.world.clock.WorldTime
 import fr.rob.game.entity.notifier.WorldObjectUpdatedNotifier
+import fr.rob.game.player.action.DisconnectedSessionProcessor
+import fr.rob.game.player.session.DisconnectedSessionQueue
 import fr.rob.game.network.grpc.CharacterServiceImpl
 import fr.rob.game.network.packet.BytesToMessageBuilder
 import fr.rob.game.network.GameNodeServer
@@ -44,6 +46,8 @@ class Supervisor(
     private val clock: GameClock,
     private val worldTime: WorldTime,
     private val worldObjectUpdatedNotifier: WorldObjectUpdatedNotifier,
+    private val disconnectedSessionQueue: DisconnectedSessionQueue,
+    private val disconnectedSessionProcessor: DisconnectedSessionProcessor,
 ) {
 
     fun run(nodeConfig: NodeConfig) {
@@ -54,7 +58,7 @@ class Supervisor(
         fakeInstanceBuilder.buildInstance(1, 1, 1)
         val bytesToMessageBuilder = BytesToMessageBuilder(worldFunctionRegistry)
 
-        val server = GameNodeServer(worldPacketQueue, bytesToMessageBuilder, logger)
+        val server = GameNodeServer(worldPacketQueue, bytesToMessageBuilder, logger, disconnectedSessionQueue)
         val process = NettyServerBuilder<GameProto.Packet>(node.port, false)
             .build(
                 NioConfigShard(),
@@ -78,6 +82,7 @@ class Supervisor(
                 world,
                 arrayOf(
                     WorldUpdateRateChecker(logger),
+                    disconnectedSessionProcessor,
                 ),
                 logger,
                 clock,

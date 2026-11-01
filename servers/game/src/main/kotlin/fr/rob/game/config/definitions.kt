@@ -50,6 +50,9 @@ import fr.rob.game.world.function.CheatTeleportFunction
 import fr.rob.game.world.function.LogIntoWorldFunction
 import fr.rob.game.world.function.MovePlayerFunction
 import fr.rob.game.entity.movement.MovementValidator
+import fr.rob.game.player.action.RemovePlayerFromWorldHandler
+import fr.rob.game.player.action.DisconnectedSessionProcessor
+import fr.rob.game.player.session.DisconnectedSessionQueue
 import fr.rob.game.world.function.PlayerEngageCombatFunction
 import fr.rob.game.world.function.RemoveFromWorldFunction
 import fr.rob.game.world.function.WorldFunctionRegistry
@@ -219,7 +222,7 @@ val opcodeModule =
             arrayOf(
                 WorldFunctionRegistry.WorldFunctionItem(CMSG_LOG_INTO_WORLD, LogIntoWorldFunction(get(), get()), SessionState.AUTHENTICATED),
                 WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_MOVEMENT, MovePlayerFunction(get()), SessionState.IN_WORLD),
-                WorldFunctionRegistry.WorldFunctionItem(CMSG_REMOVE_FROM_WORLD, RemoveFromWorldFunction(), SessionState.IN_WORLD),
+                WorldFunctionRegistry.WorldFunctionItem(CMSG_REMOVE_FROM_WORLD, RemoveFromWorldFunction(get()), SessionState.IN_WORLD),
                 WorldFunctionRegistry.WorldFunctionItem(CMSG_CHEAT_TELEPORT, CheatTeleportFunction(get()), SessionState.IN_WORLD),
                 WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_CAST_SPELL, CastSpellFunction(), SessionState.IN_WORLD),
                 WorldFunctionRegistry.WorldFunctionItem(CMSG_PLAYER_ENGAGE_COMBAT, PlayerEngageCombatFunction(), SessionState.IN_WORLD),
@@ -227,6 +230,9 @@ val opcodeModule =
             )
         }
         single { MovementValidator() }
+        single { RemovePlayerFromWorldHandler() }
+        single { DisconnectedSessionQueue() }
+        single { DisconnectedSessionProcessor(get(), get()) }
         single { WorldFunctionRegistry(get(named("FUNCTION_DEFINITIONS"))) }
         single { WorldPacketQueue(get(), get<LoggerFactoryInterface>().create("world")) }
     }

@@ -43,7 +43,8 @@ class CreatePlayerIntoWorldHandler(
                 throw e
             }
 
-            if (character == null) {
+            // The connection may have closed while the character was loading.
+            if (character == null || command.gameSession.isClosed) {
                 command.gameSession.cancelLoading()
                 return@launch
             }
@@ -66,12 +67,13 @@ class CreatePlayerIntoWorldHandler(
             character,
         )
 
-        playerGameSession.enterWorld(player)
-
         // @todo remove this
         val worldObject = createMobAroundPosition(ObjectGuid.LowGuid(1u, 1u), Position(10f, 0f, 1f, 0f), command.mapInstance)
 
         objectManager.addEntityIntoInstance(player, command.mapInstance, position)
+
+        // Only once the player is really in the instance, so a failure above leaves the session in LOADING and is rolled back.
+        playerGameSession.enterWorld(player)
 
         // @todo Send player info
         player.ownerGameSession.send(PlayerDescriptionMessage(player.guid, player.name))

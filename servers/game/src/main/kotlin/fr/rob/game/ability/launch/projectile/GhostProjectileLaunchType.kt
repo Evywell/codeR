@@ -15,7 +15,8 @@ class GhostProjectileLaunchType(
 
         return GhostProjectile(
             Position(caster.position.x, caster.position.y, caster.position.z, caster.position.orientation),
-            target,
+            target.guid,
+            caster.mapInstance,
             projectileSpeed,
         )
     }

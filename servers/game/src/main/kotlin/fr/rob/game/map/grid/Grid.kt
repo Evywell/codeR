@@ -25,17 +25,14 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
     // Cell each object is currently registered in. WorldObject uses identity equality.
     private val objectCells = HashMap<WorldObject, Cell>()
 
+    private val objectsByGuid = HashMap<ObjectGuid, WorldObject>()
+
     fun getObjectsByType(type: ObjectGuid.GUID_TYPE): WorldObjectContainer = worldObjectContainerList[type.value]
 
-    fun findObjectByGuid(guid: ObjectGuid): WorldObject? {
-        for (worldObject in worldObjectContainerList[guid.getType().value]) {
-            if (worldObject.guid == guid) {
-                return worldObject
-            }
-        }
-
-        return null
-    }
+    /**
+     * Null when the object is not (or no longer) in this grid.
+     */
+    fun findObjectByGuid(guid: ObjectGuid): WorldObject? = objectsByGuid[guid]
 
     fun findObjectsInsideRadius(origin: Position, radius: Float): List<WorldObject> =
         getObjectsOfCells(cellsInRadius(origin, radius)).filter { isInsideRadius(origin, radius, it.position) }
@@ -81,6 +78,7 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
         val cell = getCellFromWorldPosition(obj.position)
 
         worldObjectContainerList[obj.guid.getType().value].add(obj)
+        objectsByGuid[obj.guid] = obj
         registerInCell(obj, cell)
 
         return cell
@@ -117,6 +115,7 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
 
     fun removeWorldObject(obj: WorldObject) {
         worldObjectContainerList[obj.guid.getType().value].remove(obj)
+        objectsByGuid.remove(obj.guid, obj)
 
         val cell = objectCells.remove(obj) ?: return
 

@@ -4,12 +4,14 @@ import com.google.protobuf.ByteString
 import com.google.protobuf.Empty
 import com.google.protobuf.Message
 import fr.rob.game.entity.WorldObject
+import fr.rob.game.player.action.RemovePlayerFromWorldHandler
 import fr.rob.game.player.session.GameSession
 
-class RemoveFromWorldFunction : InWorldFunctionInterface {
+class RemoveFromWorldFunction(
+    private val removePlayerFromWorldHandler: RemovePlayerFromWorldHandler,
+) : InWorldFunctionInterface {
     override fun invoke(sender: GameSession, controlled: WorldObject, message: Message) {
-        controlled.scheduleRemoveFromInstance()
-        sender.leaveWorld()
+        removePlayerFromWorldHandler.execute(sender)
     }
 
     override fun parseFromByteString(data: ByteString): Message = Empty.getDefaultInstance()
