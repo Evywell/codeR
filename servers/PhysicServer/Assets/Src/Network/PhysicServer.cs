@@ -39,8 +39,7 @@ namespace App.Network {
         private async void Start()
         {
             var packetHandlerMapping = new PacketHandlerMapping();
-            packetHandlerMapping.AddHandler(1, new SpawnHandler(spawner));
-            packetHandlerMapping.AddHandler(2, new MoveToHandler(actorsManager));
+            packetHandlerMapping.AddHandler(1, new MoveHandler(actorsManager, spawner));
 
             var bossGroup = new MultithreadEventLoopGroup(1);
             var workerGroup = new MultithreadEventLoopGroup();
