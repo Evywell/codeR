@@ -19,6 +19,12 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
 
     private val gridComponent = GridComponent()
 
+    // Objects of each cell, indexed like [cells]
+    private val cellObjects = Array(cells.size) { LinkedHashSet<WorldObject>() }
+
+    // Cell each object is currently registered in. WorldObject uses identity equality.
+    private val objectCells = HashMap<WorldObject, Cell>()
+
     fun getObjectsByType(type: ObjectGuid.GUID_TYPE): WorldObjectContainer = worldObjectContainerList[type.value]
 
     fun findObjectByGuid(guid: ObjectGuid): WorldObject? {
@@ -31,59 +37,30 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
         return null
     }
 
-    fun findObjectsInsideRadius(origin: Position, radius: Float): List<WorldObject> {
-        val neighborRadius = ceil(radius).toInt()
-        val cells = retrieveNeighborCells(getCellFromWorldPosition(origin), neighborRadius)
+    fun findObjectsInsideRadius(origin: Position, radius: Float): List<WorldObject> =
+        getObjectsOfCells(cellsInRadius(origin, radius)).filter { isInsideRadius(origin, radius, it.position) }
 
-        val objects = ArrayList<WorldObject>()
+    fun getObjectsOfCell(cell: Cell): Set<WorldObject> = cellObjects[indexOf(cell)]
 
-        iterateOverObjects { worldObject ->
-            if (
-                cells.contains(getCellFromWorldPosition(worldObject.position)) &&
-                isInsideRadius(origin, radius, worldObject.position)
-            ) {
-                objects.add(worldObject)
-            }
-        }
+    fun getObjectsOfCells(cells: Array<Cell>): List<WorldObject> = cells.flatMap { getObjectsOfCell(it) }
 
-        return objects
-    }
+    /**
+     * Cell the object is registered in, or null when it is not in this grid.
+     */
+    fun getRegisteredCell(obj: WorldObject): Cell? = objectCells[obj]
 
-    fun iterateOverObjects(callback: (worldObject: WorldObject) -> Unit) {
-        for (objectContainer in worldObjectContainerList) {
-            objectContainer.forEach {
-                callback(it)
-            }
-        }
-    }
+    fun getPlayersOfCell(cell: Cell): List<Player> = getObjectsOfCell(cell).filterIsInstance<Player>()
 
-    fun getPlayersOfCell(cell: Cell): List<Player> {
-        val players = ArrayList<Player>()
-
-        for (objectContainer in worldObjectContainerList) {
-            objectContainer.forEach {
-                if (it.guid.isPlayer() && it.getCell() == cell) {
-                    players.add(it as Player)
-                }
-            }
-        }
-
-        return players
-    }
-
+    /**
+     * Cells from (x - r, y - r) to (x + r, y + r) inclusive, clipped to the grid, ordered by x then y.
+     */
     fun retrieveNeighborCells(cell: Cell, neighborRadius: Int = GridBuilder.NEIGHBOR_RADIUS_CELLS): Array<Cell> {
-        val neighborSize = 8 * neighborRadius
-        val baseX = cell.x
-        val baseY = cell.y
         val neighborCells = ArrayList<Cell>()
 
-        for (i in 0 until neighborSize / 2 - 1) {
-            for (j in 0 until neighborSize / 2 - 1) {
-                val x = baseX - neighborRadius + i
-                val y = baseY - neighborRadius + j
-
+        for (x in cell.x - neighborRadius..cell.x + neighborRadius) {
+            for (y in cell.y - neighborRadius..cell.y + neighborRadius) {
                 if (isCellInsideMesh(x, y)) {
-                    neighborCells.add(cells[x + (y * width)])
+                    neighborCells.add(cells[x + y * width])
                 }
             }
         }
@@ -95,23 +72,67 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
         return GridQuery(this)
     }
 
+    /**
+     * @throws IllegalArgumentException when the object position is outside the grid
+     */
     fun addWorldObject(obj: WorldObject): Cell {
-        worldObjectContainerList[obj.guid.getType().value].add(obj)
+        require(contains(obj.position)) { "Cannot add ${obj.guid} outside the grid at ${obj.position.x},${obj.position.y}" }
 
         val cell = getCellFromWorldPosition(obj.position)
 
-        gridComponent.addWorldObject(obj)
+        worldObjectContainerList[obj.guid.getType().value].add(obj)
+        registerInCell(obj, cell)
 
         return cell
     }
 
+    /**
+     * Re-indexes the object components after they changed.
+     */
     fun updateWorldObject(obj: WorldObject) {
-        gridComponent.updateWorldObject(obj)
+        val cell = objectCells[obj] ?: return
+
+        gridComponent.updateWorldObjectFromCell(obj, cell)
+    }
+
+    /**
+     * Moves the object to the cell of its current position. A position outside the grid keeps the previous cell.
+     */
+    fun relocateWorldObject(obj: WorldObject) {
+        val previousCell = objectCells[obj] ?: return
+
+        if (!contains(obj.position)) {
+            return
+        }
+
+        val cell = getCellFromWorldPosition(obj.position)
+
+        if (cell == previousCell) {
+            return
+        }
+
+        unregisterFromCell(obj, previousCell)
+        registerInCell(obj, cell)
     }
 
     fun removeWorldObject(obj: WorldObject) {
         worldObjectContainerList[obj.guid.getType().value].remove(obj)
-        gridComponent.removeWorldObject(obj)
+
+        val cell = objectCells.remove(obj) ?: return
+
+        cellObjects[indexOf(cell)].remove(obj)
+        gridComponent.removeWorldObjectFromCell(obj, cell)
+    }
+
+    private fun registerInCell(obj: WorldObject, cell: Cell) {
+        objectCells[obj] = cell
+        cellObjects[indexOf(cell)].add(obj)
+        gridComponent.addWorldObjectToCell(obj, cell)
+    }
+
+    private fun unregisterFromCell(obj: WorldObject, cell: Cell) {
+        cellObjects[indexOf(cell)].remove(obj)
+        gridComponent.removeWorldObjectFromCell(obj, cell)
     }
 
     fun findObjectsWithComponentInRadius(
@@ -119,8 +140,7 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
         radius: Float,
         componentType: kotlin.reflect.KClass<*>
     ): List<WorldObject> {
-        val neighborRadius = ceil(radius).toInt()
-        val cells = retrieveNeighborCells(getCellFromWorldPosition(origin), neighborRadius)
+        val cells = cellsInRadius(origin, radius)
 
         // Get pre-filtered objects from component index
         val candidates = gridComponent.getObjectsWithComponentInCells(cells, componentType)
@@ -141,8 +161,7 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
             return findObjectsWithComponentInRadius(origin, radius, componentTypes[0])
         }
 
-        val neighborRadius = ceil(radius).toInt()
-        val cells = retrieveNeighborCells(getCellFromWorldPosition(origin), neighborRadius)
+        val cells = cellsInRadius(origin, radius)
 
         // Get pre-filtered objects from component index
         val candidates = gridComponent.getObjectsWithComponentsInCells(cells, *componentTypes)
@@ -153,14 +172,18 @@ class Grid(val width: Int, val height: Int, val cellSize: Int, val cells: Array<
         }
     }
 
+    private fun cellsInRadius(origin: Position, radius: Float): Array<Cell> =
+        retrieveNeighborCells(getCellFromWorldPosition(origin), ceil(radius / cellSize).toInt())
+
+    private fun indexOf(cell: Cell): Int = cell.x + cell.y * width
+
+    /**
+     * @throws IllegalArgumentException when the cell position is outside the grid
+     */
     private fun getCellFromCellPosition(cellPosition: Cell.CellPosition): Cell {
-        val index = cellPosition.x + (height * cellPosition.y)
+        require(isCellInsideMesh(cellPosition.x, cellPosition.y)) { "Cannot find cell for positions $cellPosition" }
 
-        if (index < 0 || index > cells.size - 1) {
-            throw Exception("Cannot find cell for positions $cellPosition")
-        }
-
-        return cells[index]
+        return cells[cellPosition.x + cellPosition.y * width]
     }
 
     /**

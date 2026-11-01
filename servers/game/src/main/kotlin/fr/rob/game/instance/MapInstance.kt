@@ -35,7 +35,7 @@ class MapInstance(val id: Int, val map: Map, val grid: Grid) : DomainEventCarrie
     fun findObjectByGuid(guid: ObjectGuid): WorldObject? = grid.findObjectByGuid(guid)
 
     fun getWorldObjectCell(worldObject: WorldObject): Cell {
-        return grid.getCellFromWorldPosition(worldObject.position)
+        return grid.getRegisteredCell(worldObject) ?: grid.getCellFromWorldPosition(worldObject.position)
     }
 
     fun resetDomainEvents() {

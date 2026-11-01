@@ -1,7 +1,5 @@
 package fr.rob.game.map.grid
 
-import kotlin.math.floor
-
 class GridBuilder(private val constraintChecker: GridConstraintChecker) {
 
     fun buildGrid(cellSize: Int, zoneWidth: Int, zoneHeight: Int): Grid {
@@ -11,8 +9,8 @@ class GridBuilder(private val constraintChecker: GridConstraintChecker) {
         val gridHeight = (zoneHeight / cellSize)
         val cellsNb = gridWith * gridHeight
         val cells = Array(cellsNb) {
-            val x = it % gridHeight
-            val y = floor(it / gridWith.toDouble()).toInt()
+            val x = it % gridWith
+            val y = it / gridWith
 
             Cell(x, y)
         }
