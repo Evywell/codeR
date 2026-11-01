@@ -31,7 +31,9 @@ class Ability(
 
     fun failed(): Boolean = state == AbilityState.FAILED
 
-    fun getRemainingCastingTimeMs(): Int = if (isCastCompleted()) 0 else castingTimer.localTime
+    fun getElapsedCastingTimeMs(): Int = castingTimer.localTime.coerceAtMost(info.castingTimeMs)
+
+    fun getRemainingCastingTimeMs(): Int = info.castingTimeMs - getElapsedCastingTimeMs()
 
     fun updateTimers(deltaTime: Int) {
         castingTimer.update(deltaTime)
