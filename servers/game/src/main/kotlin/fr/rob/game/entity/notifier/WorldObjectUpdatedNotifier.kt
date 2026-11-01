@@ -1,18 +1,22 @@
 package fr.rob.game.entity.notifier
 
 import fr.rob.game.component.MovementComponent
-import fr.rob.game.player.message.MovementHeartbeatMessage
 import fr.rob.game.entity.WorldObject
+import fr.rob.game.entity.visibility.VisibilityService
 import fr.rob.game.player.Player
+import fr.rob.game.player.message.MovementHeartbeatMessage
 
-class WorldObjectUpdatedNotifier : WorldObjectVisitorInterface {
+/**
+ * Sends the object position to the players that see it, and to the object itself when it is a player.
+ */
+class WorldObjectUpdatedNotifier(
+    private val visibilityService: VisibilityService,
+) : WorldObjectVisitorInterface {
     override fun visit(gameObject: WorldObject) {
-        val grid = gameObject.mapInstance.grid
-        val cells = grid.retrieveNeighborCells(gameObject.getCell())
-        val playersToNotify = ArrayList<Player>()
+        val playersToNotify = visibilityService.observersOf(gameObject).toMutableList()
 
-        for (cell in cells) {
-            playersToNotify.addAll(grid.getPlayersOfCell(cell))
+        if (gameObject is Player) {
+            playersToNotify.add(gameObject)
         }
 
         val movement = gameObject.getComponent<MovementComponent>()?.movementInfo

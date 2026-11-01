@@ -22,6 +22,7 @@ import fr.rob.game.world.function.WorldFunctionRegistry
 import fr.rob.game.world.packet.WorldPacketQueue
 import fr.rob.game.world.clock.GameClock
 import fr.rob.game.world.clock.WorldTime
+import fr.rob.game.entity.notifier.WorldObjectUpdatedNotifier
 import fr.rob.game.network.grpc.CharacterServiceImpl
 import fr.rob.game.network.packet.BytesToMessageBuilder
 import fr.rob.game.network.GameNodeServer
@@ -42,6 +43,7 @@ class Supervisor(
     private val worldTaskQueue: WorldTaskQueue,
     private val clock: GameClock,
     private val worldTime: WorldTime,
+    private val worldObjectUpdatedNotifier: WorldObjectUpdatedNotifier,
 ) {
 
     fun run(nodeConfig: NodeConfig) {
@@ -70,7 +72,7 @@ class Supervisor(
         rpcServer.start()
 
         thread(true) {
-            val world = World(instanceManager, instanceUpdateService, worldPacketQueue, delayedUpdateQueue, worldTaskQueue)
+            val world = World(instanceManager, instanceUpdateService, worldPacketQueue, delayedUpdateQueue, worldTaskQueue, worldObjectUpdatedNotifier)
 
             val worldUpdater = WorldUpdater(
                 world,

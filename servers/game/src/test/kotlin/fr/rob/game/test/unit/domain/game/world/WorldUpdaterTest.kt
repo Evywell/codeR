@@ -1,5 +1,7 @@
 package fr.rob.game.test.unit.domain.game.world
 
+import fr.rob.game.entity.visibility.VisibilityService
+import fr.rob.game.entity.notifier.WorldObjectUpdatedNotifier
 import fr.raven.log.NullLogger
 import fr.rob.game.instance.InstanceManager
 import fr.rob.game.instance.InstanceUpdateService
@@ -24,10 +26,11 @@ class WorldUpdaterTest {
         val taskQueue = WorldTaskQueue()
         val world = World(
             instanceManager,
-            InstanceUpdateService(instanceManager),
+            InstanceUpdateService(instanceManager, VisibilityService()),
             WorldPacketQueue(WorldFunctionRegistry(arrayOf()), NullLogger()),
             DelayedUpdateQueue(),
             taskQueue,
+            WorldObjectUpdatedNotifier(VisibilityService()),
         )
         var updated = 0
         val failing = object : UpdatableInterface {

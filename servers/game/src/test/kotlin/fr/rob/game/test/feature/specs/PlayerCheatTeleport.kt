@@ -21,6 +21,7 @@ import fr.rob.game.network.opcode.SMSG_MOVEMENT_HEARTBEAT
 import fr.rob.game.test.feature.DatabaseTestApplication
 import fr.rob.game.test.unit.sandbox.network.session.StoreMessageSender
 import fr.rob.game.world.WorldTaskQueue
+import fr.rob.game.entity.notifier.WorldObjectUpdatedNotifier
 import org.junit.jupiter.api.Test
 import org.koin.test.get
 import fr.raven.proto.message.game.PositionProto.Position as PositionProto
@@ -36,10 +37,11 @@ class PlayerCheatTeleport : DatabaseTestApplication() {
         val worldPacketQueue = get<WorldPacketQueue>()
         val world = World(
             instanceManager,
-            InstanceUpdateService(instanceManager),
+            get<InstanceUpdateService>(),
             worldPacketQueue,
             get<DelayedUpdateQueue>(),
-            get<WorldTaskQueue>()
+            get<WorldTaskQueue>(),
+            get<WorldObjectUpdatedNotifier>(),
         )
 
         instanceManager.create(

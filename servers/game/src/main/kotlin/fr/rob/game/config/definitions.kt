@@ -55,6 +55,8 @@ import fr.rob.game.world.function.RemoveFromWorldFunction
 import fr.rob.game.world.function.WorldFunctionRegistry
 import fr.rob.game.world.packet.WorldPacketQueue
 import fr.rob.game.world.clock.GameClock
+import fr.rob.game.entity.visibility.VisibilityService
+import fr.rob.game.entity.notifier.WorldObjectUpdatedNotifier
 import fr.rob.game.world.clock.SystemGameClock
 import fr.rob.game.world.clock.WorldTime
 import fr.rob.game.player.session.SessionState
@@ -94,7 +96,9 @@ val globalModule =
         single<GameClock> { SystemGameClock() }
         single { WorldTime() }
         single { InstanceManager(GridBuilder(GridConstraintChecker())) }
-        single { InstanceUpdateService(get()) }
+        single { VisibilityService() }
+        single { WorldObjectUpdatedNotifier(get()) }
+        single { InstanceUpdateService(get(), get()) }
         single<InstanceFinderInterface> { FakeInstanceFinder(get()) }
     }
 

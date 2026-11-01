@@ -1,5 +1,6 @@
 package fr.rob.game.test.unit.domain.game.instance
 
+import fr.rob.game.entity.visibility.VisibilityService
 import fr.rob.game.behavior.BehaviorInterface
 import fr.rob.game.entity.Position
 import fr.rob.game.entity.ScriptedWorldObject
@@ -36,7 +37,7 @@ class InstanceUpdateServiceTest {
 
     private val worldBuilder = WorldBuilder()
     private val instanceManager = createTestInstanceManager()
-    private val service = InstanceUpdateService(instanceManager)
+    private val service = InstanceUpdateService(instanceManager, VisibilityService())
     private val eventDispatcher = VoidEventDispatcher()
     private val objectBuilder = DummyWorldObjectBuilder(ObjectGuidGenerator())
     private val guidGenerator = ObjectGuidGenerator()
