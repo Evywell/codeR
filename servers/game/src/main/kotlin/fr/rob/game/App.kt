@@ -10,7 +10,6 @@ import fr.rob.game.instance.InstanceManager
 import fr.rob.game.instance.InstanceUpdateService
 import fr.rob.game.node.NodeBuilder
 import fr.rob.game.map.MapManager
-import fr.rob.game.world.DelayedUpdateQueue
 import fr.rob.game.world.function.WorldFunctionRegistry
 import fr.rob.game.world.packet.WorldPacketQueue
 import fr.rob.game.world.clock.GameClock
@@ -36,7 +35,6 @@ class App(private val config: GameConfig) : KoinComponent {
     private val characterWaitingRoom: CharacterWaitingRoom by inject()
     private val worldFunctionRegistry: WorldFunctionRegistry by inject()
     private val worldPacketQueue: WorldPacketQueue by inject()
-    private val delayedUpdateQueue: DelayedUpdateQueue by inject()
     private val worldTaskQueue: WorldTaskQueue by inject()
     private val gameCoroutines: GameCoroutines by inject()
     private val clock: GameClock by inject()
@@ -62,7 +60,6 @@ class App(private val config: GameConfig) : KoinComponent {
             loggerFactory.create("supervisor"),
             worldFunctionRegistry,
             worldPacketQueue,
-            delayedUpdateQueue,
             FakeInstanceBuilder(mapManager, instanceManager),
             instanceManager,
             instanceUpdateService,

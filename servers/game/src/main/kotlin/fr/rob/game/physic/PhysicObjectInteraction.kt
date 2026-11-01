@@ -4,28 +4,26 @@ import com.google.protobuf.Message
 import fr.rob.game.entity.guid.ObjectGuid
 import kotlin.reflect.KClass
 
+/**
+ * Callbacks of world objects for messages of the physic server.
+ * Only used from the world thread: the physic handlers hand messages over through [fr.rob.game.world.WorldTaskQueue].
+ */
 class PhysicObjectInteraction {
-    private val typeContainer = HashMap<String, HashMap<Long, (Message) -> Unit>>()
+    private val callbacks = HashMap<KClass<out Message>, HashMap<Long, (Message) -> Unit>>()
 
     fun registerObjectInteractionCallback(
         worldObjectGuid: ObjectGuid,
         interactionType: KClass<out Message>,
-        callback: (Message) -> Unit
+        callback: (Message) -> Unit,
     ) {
-        getOrCreateContainer(interactionType)[worldObjectGuid.getRawValue()] = callback
+        callbacks.getOrPut(interactionType) { HashMap() }[worldObjectGuid.getRawValue()] = callback
+    }
+
+    fun unregisterObjectInteractionCallbacks(worldObjectGuid: ObjectGuid) {
+        callbacks.values.forEach { it.remove(worldObjectGuid.getRawValue()) }
     }
 
     fun invokeObjectInteractionCallback(worldObjectGuid: ObjectGuid, interaction: Message) {
-        getOrCreateContainer(interaction::class)[worldObjectGuid.getRawValue()]?.invoke(interaction)
-    }
-
-    private fun getOrCreateContainer(type: KClass<out Message>): HashMap<Long, (Message) -> Unit> {
-        val typeName = type.qualifiedName!!
-
-        if (!typeContainer.containsKey(typeName)) {
-            typeContainer[typeName] = HashMap()
-        }
-
-        return typeContainer[typeName]!!
+        callbacks[interaction::class]?.get(worldObjectGuid.getRawValue())?.invoke(interaction)
     }
 }

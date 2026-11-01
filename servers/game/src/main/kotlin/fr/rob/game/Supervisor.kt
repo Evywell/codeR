@@ -14,7 +14,6 @@ import fr.rob.game.instance.InstanceManager
 import fr.rob.game.instance.InstanceUpdateService
 import fr.rob.game.node.NodeBuilder
 import fr.rob.game.node.NodeConfig
-import fr.rob.game.world.DelayedUpdateQueue
 import fr.rob.game.world.World
 import fr.rob.game.world.WorldUpdateRateChecker
 import fr.rob.game.world.WorldUpdater
@@ -37,7 +36,6 @@ class Supervisor(
     private val logger: LoggerInterface,
     private val worldFunctionRegistry: WorldFunctionRegistry,
     private val worldPacketQueue: WorldPacketQueue,
-    private val delayedUpdateQueue: DelayedUpdateQueue,
     private val fakeInstanceBuilder: FakeInstanceBuilder,
     private val instanceManager: InstanceManager,
     private val instanceUpdateService: InstanceUpdateService,
@@ -76,7 +74,7 @@ class Supervisor(
         rpcServer.start()
 
         thread(true) {
-            val world = World(instanceManager, instanceUpdateService, worldPacketQueue, delayedUpdateQueue, worldTaskQueue, worldObjectUpdatedNotifier)
+            val world = World(instanceManager, instanceUpdateService, worldPacketQueue, worldTaskQueue, worldObjectUpdatedNotifier)
 
             val worldUpdater = WorldUpdater(
                 world,

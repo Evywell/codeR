@@ -15,24 +15,12 @@ class SplineMovementController(
             throw Exception("Trying to initiate a spline movement on non movable object")
         }
 
-        splineMovementBrain.moveToDestination(source, destination) { splineMovement ->
-            if (!splineMovement.isInProgress()) {
+        splineMovementBrain.moveToDestination(source, destination) { step ->
+            if (source.position.isSameHas(step.position) && !step.reachedDestination) {
                 return@moveToDestination
             }
 
-            if (
-                source.position.isSameHas(splineMovement.position!!)
-                && !splineMovement.hasReachDestination
-            ) {
-                return@moveToDestination
-            }
-
-            val movableBehavior = source.getBehavior<MovableBehavior>()
-            movableBehavior?.moveObjectToPosition(source, splineMovement.position!!, splineMovement.movement!!)
-
-            if (splineMovement.hasReachDestination) {
-                splineMovement.closeSplineMovement()
-            }
+            source.getBehavior<MovableBehavior>()?.moveObjectToPosition(source, step.position, step.movement)
         }
     }
 }

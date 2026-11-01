@@ -12,7 +12,6 @@ import fr.rob.game.player.session.GameSession
 import fr.rob.game.map.Map
 import fr.rob.game.map.MapInfo
 import fr.rob.game.map.ZoneInfo
-import fr.rob.game.world.DelayedUpdateQueue
 import fr.rob.game.world.World
 import fr.rob.game.world.packet.WorldPacket
 import fr.rob.game.world.packet.WorldPacketQueue
@@ -37,7 +36,7 @@ class PlayerJoiningWorld : DatabaseTestApplication() {
         val instanceManager = get<InstanceManager>()
         val worldPacketQueue = get<WorldPacketQueue>()
         val objectManager = get<ObjectManager>()
-        val world = World(instanceManager, get<InstanceUpdateService>(), worldPacketQueue, get<DelayedUpdateQueue>(), get<WorldTaskQueue>(), get<WorldObjectUpdatedNotifier>())
+        val world = World(instanceManager, get<InstanceUpdateService>(), worldPacketQueue, get<WorldTaskQueue>(), get<WorldObjectUpdatedNotifier>())
 
         val instance = instanceManager.create(
             DEFAULT_TEST_INSTANCE_ID,

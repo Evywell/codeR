@@ -14,7 +14,6 @@ class World(
     private val instanceManager: InstanceManager,
     private val instanceUpdateService: InstanceUpdateService,
     private val worldPacketQueue: WorldPacketQueue,
-    private val delayedUpdateQueue: DelayedUpdateQueue,
     private val worldTaskQueue: WorldTaskQueue,
     private val worldObjectUpdatedNotifier: WorldObjectUpdatedNotifier,
 ) {
@@ -32,7 +31,6 @@ class World(
     fun update(deltaTime: Int) {
         worldTaskQueue.dequeue()
         worldPacketQueue.dequeue()
-        delayedUpdateQueue.dequeue(deltaTime)
         instanceManager.getAllInstances().forEach { instance -> instanceUpdateService.update(instance, deltaTime, eventDispatcher) }
     }
 }

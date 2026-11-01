@@ -14,6 +14,7 @@ import java.net.ServerSocket
 import java.net.Socket
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -28,29 +29,33 @@ class UnityIntegrationTest {
     }
 
     @Test
-    fun `send without physic server throws without blocking`() {
-        val port = ServerSocket(0).use { it.localPort }
-        val integration = integration(port)
+    fun `send without physic server does not block and reports the failed attempt`() {
+        val integration = integration(freePort(), retryDelayMs = 60_000)
+        val connectionLost = AtomicInteger()
+        integration.addConnectionLostListener { connectionLost.incrementAndGet() }
 
         val startedAt = System.nanoTime()
-        assertThrows<ActionNotHandledByBrainException> { integration.send(packet(1)) }
+        integration.send(packet(1))
         val elapsedMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startedAt)
 
         assertTrue(elapsedMs < 200, "send blocked for ${elapsedMs}ms")
+        awaitUntil { connectionLost.get() == 1 }
         assertFalse(integration.isConnected())
+
+        // Retry delay not over: nothing to keep the packet for
+        assertThrows<ActionNotHandledByBrainException> { integration.send(packet(2)) }
     }
 
     @Test
-    fun `first send opens the connection and later packets arrive in order`() {
+    fun `packets sent while connecting are kept and arrive in order`() {
         val server = FakePhysicServer()
         val integration = integration(server.port)
 
-        assertThrows<ActionNotHandledByBrainException> { integration.send(packet(0)) }
-        awaitUntil { integration.isConnected() }
-
         (1..5).forEach { integration.send(packet(it)) }
+        awaitUntil { integration.isConnected() }
+        (6..8).forEach { integration.send(packet(it)) }
 
-        assertEquals((1..5).toList(), (1..5).map { server.received.poll(2, TimeUnit.SECONDS)!!.opcode })
+        assertEquals((1..8).toList(), server.receive(8))
     }
 
     @Test
@@ -62,48 +67,45 @@ class UnityIntegrationTest {
         awaitUntil { integration.isConnected() }
 
         integration.send(packet(1))
-        assertEquals(1, server.received.poll(2, TimeUnit.SECONDS)!!.opcode)
+        assertEquals(listOf(1), server.receive(1))
     }
 
     @Test
-    fun `connection lost is detected and the next send reconnects`() {
+    fun `connection lost is reported and the next send reconnects`() {
         val server = FakePhysicServer()
         val integration = integration(server.port)
+        val connectionLost = AtomicInteger()
+        integration.addConnectionLostListener { connectionLost.incrementAndGet() }
 
-        assertThrows<ActionNotHandledByBrainException> { integration.send(packet(0)) }
+        integration.connect()
         awaitUntil { integration.isConnected() }
 
         server.closeClients()
-        awaitUntil { !integration.isConnected() }
-
-        assertThrows<ActionNotHandledByBrainException> { integration.send(packet(0)) }
-        awaitUntil { integration.isConnected() }
+        awaitUntil { connectionLost.get() == 1 }
+        assertFalse(integration.isConnected())
 
         integration.send(packet(7))
-        assertEquals(7, server.received.poll(2, TimeUnit.SECONDS)!!.opcode)
+        assertEquals(listOf(7), server.receive(1))
     }
 
     @Test
     fun `failed attempt waits for the retry delay before the next one`() {
         var now = 0L
-        val port = ServerSocket(0).use { it.localPort }
+        val port = freePort()
         val integration = integration(port, retryDelayMs = 1_000) { now }
+        val connectionLost = AtomicInteger()
+        integration.addConnectionLostListener { connectionLost.incrementAndGet() }
 
-        assertThrows<ActionNotHandledByBrainException> { integration.send(packet(0)) }
-        Thread.sleep(300) // let the refused connection complete
+        integration.connect()
+        awaitUntil { connectionLost.get() == 1 }
 
         val server = FakePhysicServer(port)
 
         assertThrows<ActionNotHandledByBrainException> { integration.send(packet(0)) }
-        Thread.sleep(300)
-        assertFalse(integration.isConnected())
 
         now = 1_000
-        assertThrows<ActionNotHandledByBrainException> { integration.send(packet(0)) }
-        awaitUntil { integration.isConnected() }
-
         integration.send(packet(3))
-        assertEquals(3, server.received.poll(2, TimeUnit.SECONDS)!!.opcode)
+        assertEquals(listOf(3), server.receive(1))
     }
 
     private fun integration(port: Int, retryDelayMs: Long = 0, currentTimeMillis: () -> Long = System::currentTimeMillis) =
@@ -113,6 +115,8 @@ class UnityIntegrationTest {
             NullLogger(),
             currentTimeMillis,
         ).also { closeables.add(it) }
+
+    private fun freePort(): Int = ServerSocket(0).use { it.localPort }
 
     private fun packet(opcode: Int): Packet = Packet.newBuilder().setOpcode(opcode).build()
 
@@ -129,8 +133,8 @@ class UnityIntegrationTest {
     private inner class FakePhysicServer(port: Int = 0) : AutoCloseable {
         private val serverSocket = ServerSocket(port)
         private val clients = mutableListOf<Socket>()
+        private val received = LinkedBlockingQueue<Packet>()
         val port: Int = serverSocket.localPort
-        val received = LinkedBlockingQueue<Packet>()
 
         init {
             closeables.add(this)
@@ -152,6 +156,10 @@ class UnityIntegrationTest {
                     }
                 }
             }
+        }
+
+        fun receive(count: Int): List<Int> = (1..count).map {
+            checkNotNull(received.poll(2, TimeUnit.SECONDS)) { "Packet $it of $count not received" }.opcode
         }
 
         fun closeClients() = synchronized(clients) { clients.forEach { it.close() } }
