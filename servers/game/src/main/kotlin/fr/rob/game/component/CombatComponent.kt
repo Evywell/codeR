@@ -2,18 +2,21 @@ package fr.rob.game.component
 
 import fr.rob.core.misc.clock.IntervalTimer
 import fr.rob.game.entity.WorldObject
+import fr.rob.game.entity.guid.ObjectGuid
 
 class CombatComponent {
-    var mainTarget: WorldObject? = null
+    var mainTargetGuid: ObjectGuid? = null
         private set
 
     private val mainHandAttacksInterval = IntervalTimer(MAIN_HAND_WEAPON_SPEED_MS)
 
     fun engageCombatWith(target: WorldObject) {
-        mainTarget = target
+        mainTargetGuid = target.guid
     }
 
-    fun isInCombatWithMainTarget(): Boolean = mainTarget != null
+    fun disengage() {
+        mainTargetGuid = null
+    }
 
     fun isWeaponSwingReady(timeElapsed: Int): Boolean {
         mainHandAttacksInterval.update(timeElapsed)

@@ -19,6 +19,12 @@ class GameSession(val accountId: Int, private val messageSender: SessionMessageS
     var rejectedPacketCount: Int = 0
         private set
 
+    /**
+     * True once the gateway connection carrying this session is gone. Only read and written on the world thread.
+     */
+    var isClosed: Boolean = false
+        private set
+
     private val messageQueue = LockedQueue<MessageHolder>()
     private val queueConsumer = LockedQueueConsumer(MAX_PACKET_PROCESSING_ON_UPDATE, messageQueue)
 
@@ -56,8 +62,13 @@ class GameSession(val accountId: Int, private val messageSender: SessionMessageS
      */
     fun leaveWorld() {
         transition(SessionState.IN_WORLD, SessionState.AUTHENTICATED)
+        controlledWorldObject?.controlledByGameSession = null
         loggedAsPlayer = null
         controlledWorldObject = null
+    }
+
+    fun close() {
+        isClosed = true
     }
 
     /**

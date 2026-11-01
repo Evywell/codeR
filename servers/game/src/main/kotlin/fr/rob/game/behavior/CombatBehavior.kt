@@ -10,37 +10,37 @@ object CombatBehavior : BehaviorInterface {
 
     override fun update(worldObject: WorldObject, deltaTime: Int) {
         val component = worldObject.getComponent<CombatComponent>() ?: return
+        val targetGuid = component.mainTargetGuid ?: return
+        val target = worldObject.mapInstance.findObjectByGuid(targetGuid)
 
-        if (!component.isInCombatWithMainTarget()) {
+        if (target == null) {
+            component.disengage()
             return
         }
 
         worldObject.controlledByGameSession?.send(
             DebugSignalMessage(
                 "IS_IN_FRONT_OF",
-                if (worldObject.isInFrontOf(component.mainTarget!!)) 1 else 0
+                if (worldObject.isInFrontOf(target)) 1 else 0
             )
         )
 
         if (component.isWeaponSwingReady(deltaTime)) {
-            performAttack(worldObject, component)
+            performAttack(worldObject, target, component)
 
             return
         }
     }
 
-    private fun performAttack(attacker: WorldObject, combatComponent: CombatComponent) {
-        if (
-            !attacker.isInMeleeRangeOf(combatComponent.mainTarget!!) ||
-            !attacker.isInFrontOf(combatComponent.mainTarget!!)
-        ) {
+    private fun performAttack(attacker: WorldObject, target: WorldObject, combatComponent: CombatComponent) {
+        if (!attacker.isInMeleeRangeOf(target) || !attacker.isInFrontOf(target)) {
             return
         }
 
         val objectSheetBehavior = attacker.getBehavior<ObjectSheetBehavior>() ?: return
 
         objectSheetBehavior.applySingleDamage(
-            combatComponent.mainTarget!!,
+            target,
             DamageSource(attacker, MAIN_HAND_WEAPON_DAMAGE_AMOUNT),
             objectSheetBehavior.isCriticalHit(attacker)
         )

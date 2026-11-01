@@ -16,6 +16,8 @@ import fr.rob.game.world.packet.WorldPacketQueue
 import fr.rob.game.world.clock.GameClock
 import fr.rob.game.world.clock.WorldTime
 import fr.rob.game.entity.notifier.WorldObjectUpdatedNotifier
+import fr.rob.game.player.action.DisconnectedSessionProcessor
+import fr.rob.game.player.session.DisconnectedSessionQueue
 import fr.rob.game.config.GameConfig
 import fr.rob.game.world.GameCoroutines
 import fr.rob.game.world.WorldTaskQueue
@@ -39,6 +41,8 @@ class App(private val config: GameConfig) : KoinComponent {
     private val clock: GameClock by inject()
     private val worldTime: WorldTime by inject()
     private val worldObjectUpdatedNotifier: WorldObjectUpdatedNotifier by inject()
+    private val disconnectedSessionQueue: DisconnectedSessionQueue by inject()
+    private val disconnectedSessionProcessor: DisconnectedSessionProcessor by inject()
 
     fun run() {
         createDatabasePools()
@@ -58,6 +62,8 @@ class App(private val config: GameConfig) : KoinComponent {
             clock,
             worldTime,
             worldObjectUpdatedNotifier,
+            disconnectedSessionQueue,
+            disconnectedSessionProcessor,
         ).run(config.nodesConfig.nodeConfig)
     }
 

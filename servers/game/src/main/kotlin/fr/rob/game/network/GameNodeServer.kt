@@ -10,12 +10,14 @@ import fr.rob.game.world.packet.WorldPacketQueue
 import fr.rob.game.network.packet.BytesToMessageBuilder
 import fr.rob.game.network.session.GatewayGameSession
 import fr.rob.game.network.opcode.OPCODES_MAP
+import fr.rob.game.player.session.DisconnectedSessionQueue
 import com.google.protobuf.InvalidProtocolBufferException
 
 class GameNodeServer(
     private val worldPacketQueue: WorldPacketQueue,
     private val bytesToMessageBuilder: BytesToMessageBuilder,
     private val logger: LoggerInterface,
+    private val disconnectedSessionQueue: DisconnectedSessionQueue,
 ) : Server<Packet>() {
 
     override fun onPacketReceived(session: Session, packet: Packet) {
@@ -47,6 +49,7 @@ class GameNodeServer(
         session.getGameSessions().forEach { gameSession ->
             worldPacketQueue.removeQueue(gameSession)
             session.removeGameSessionFromAccountId(gameSession.accountId)
+            disconnectedSessionQueue.enqueue(gameSession)
         }
     }
 
