@@ -22,27 +22,6 @@ class UnitySplineMovementBrain(
     private val delayedUpdateQueue: DelayedUpdateQueue,
 ) : SplineMovementBrainInterface {
     override fun moveToDestination(source: WorldObject, destination: Position, stepHandler: (SplineMovement) -> Unit) {
-        val sourceGuidRawValue = source.guid.getRawValue()
-
-        physicClientIntegration.send(
-            PhysicProto.Packet.newBuilder()
-                .setOpcode(1)
-                .setBody(
-                    PhysicProto.SpawnRequest.newBuilder()
-                        .setGuid(sourceGuidRawValue)
-                        .setPosition(
-                            PhysicProto.Position.newBuilder()
-                                .setPosX(source.position.x)
-                                .setPosY(source.position.y)
-                                .setPosZ(source.position.z)
-                                .setOrientation(source.position.orientation),
-                        )
-                        .build()
-                        .toByteString(),
-                )
-                .build(),
-        )
-
         val splineMovement = SplineMovement()
 
         physicObjectInteraction.registerObjectInteractionCallback(source.guid, ObjectMoved::class) {
@@ -96,21 +75,28 @@ class UnitySplineMovementBrain(
 
         physicClientIntegration.send(
             PhysicProto.Packet.newBuilder()
-                .setOpcode(2)
+                .setOpcode(MOVE_REQUEST_OPCODE)
                 .setBody(
-                    PhysicProto.MoveToRequest.newBuilder()
-                        .setGuid(sourceGuidRawValue)
-                        .setPosition(
-                            PhysicProto.Position.newBuilder()
-                                .setPosX(destination.x)
-                                .setPosY(destination.y)
-                                .setPosZ(destination.z)
-                                .setOrientation(destination.orientation),
-                        )
+                    PhysicProto.MoveRequest.newBuilder()
+                        .setGuid(source.guid.getRawValue())
+                        .setOrigin(source.position.toPhysicPosition())
+                        .setDestination(destination.toPhysicPosition())
                         .build()
                         .toByteString(),
                 )
                 .build(),
         )
+    }
+
+    private fun Position.toPhysicPosition(): PhysicProto.Position =
+        PhysicProto.Position.newBuilder()
+            .setPosX(x)
+            .setPosY(y)
+            .setPosZ(z)
+            .setOrientation(orientation)
+            .build()
+
+    companion object {
+        const val MOVE_REQUEST_OPCODE = 1
     }
 }

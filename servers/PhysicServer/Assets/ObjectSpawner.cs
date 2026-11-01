@@ -10,7 +10,7 @@ public class ObjectSpawner : MonoBehaviour
     public GameObject Original;
     public ActorsManager actorsManager;
 
-    public void Spawn(ulong entityGuid, Position position) {
+    public GameObject Spawn(ulong entityGuid, Position position) {
         var vec3Position = PositionNormalizer.TransformServerPositionToUnityPosition(position);
 
         var gameObject = Instantiate(Original, vec3Position, Quaternion.identity);
@@ -20,5 +20,7 @@ public class ObjectSpawner : MonoBehaviour
         gameObject.GetComponent<ObjectController>().entityGuid = entityGuid;
 
         actorsManager.RegisterActor(entityGuid, gameObject);
+
+        return gameObject;
     }
 }

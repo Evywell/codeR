@@ -9,14 +9,10 @@ message Packet {
   bytes body = 2;
 }
 
-message SpawnRequest {
+message MoveRequest {
   uint64 guid = 1;
-  Position position = 2;
-}
-
-message MoveToRequest {
-  uint64 guid = 1;
-  Position position = 2;
+  Position origin = 2;
+  Position destination = 3;
 }
 
 message ObjectMoved {

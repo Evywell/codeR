@@ -19,27 +19,16 @@ class SimpleTcpNettyHandler : ChannelInboundHandlerAdapter() {
             PhysicProto.Packet.newBuilder()
                 .setOpcode(1)
                 .setBody(
-                    PhysicProto.SpawnRequest.newBuilder()
+                    PhysicProto.MoveRequest.newBuilder()
                         .setGuid(1)
-                        .setPosition(
+                        .setOrigin(
                             PhysicProto.Position.newBuilder()
                                 .setPosX(10f)
                                 .setPosY(1f)
                                 .setPosZ(30f)
                                 .setOrientation(1f),
                         )
-                        .build()
-                        .toByteString(),
-                ),
-        )
-
-        channel.writeAndFlush(
-            PhysicProto.Packet.newBuilder()
-                .setOpcode(2)
-                .setBody(
-                    PhysicProto.MoveToRequest.newBuilder()
-                        .setGuid(1)
-                        .setPosition(
+                        .setDestination(
                             PhysicProto.Position.newBuilder()
                                 .setPosX(20f)
                                 .setPosY(1f)
