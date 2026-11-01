@@ -55,7 +55,11 @@ namespace Core.Networking.Gateway
             _isConnected = true;
 
             _cts = new CancellationTokenSource();
-            _readThread = new Thread(ReadLoop)
+
+            // Each read thread keeps its own stream and token: a later Connect replaces the fields.
+            NetworkStream stream = _stream;
+            CancellationToken token = _cts.Token;
+            _readThread = new Thread(() => ReadLoop(stream, token))
             {
                 IsBackground = true,
                 Name = "GatewayReadThread"
@@ -117,14 +121,14 @@ namespace Core.Networking.Gateway
         /// <summary>
         /// Background thread: reads from the TCP stream, decodes length-framed packets, enqueues them.
         /// </summary>
-        private void ReadLoop()
+        private void ReadLoop(NetworkStream stream, CancellationToken token)
         {
             byte[] buffer = new byte[ReadBufferSize];
             int bufferCount = 0;
 
             try
             {
-                while (!_cts.Token.IsCancellationRequested)
+                while (!token.IsCancellationRequested)
                 {
                     if (bufferCount >= buffer.Length)
                     {
@@ -133,7 +137,7 @@ namespace Core.Networking.Gateway
                         buffer = newBuffer;
                     }
 
-                    int bytesRead = _stream.Read(buffer, bufferCount, buffer.Length - bufferCount);
+                    int bytesRead = stream.Read(buffer, bufferCount, buffer.Length - bufferCount);
 
                     if (bytesRead == 0)
                     {
@@ -154,14 +158,17 @@ namespace Core.Networking.Gateway
             }
             catch (Exception ex)
             {
-                if (!_cts.Token.IsCancellationRequested)
+                if (!token.IsCancellationRequested)
                 {
                     Debug.LogError($"[GatewayConnection] Read error: {ex.Message}");
                 }
             }
             finally
             {
-                _isConnected = false;
+                if (ReferenceEquals(stream, _stream))
+                {
+                    _isConnected = false;
+                }
             }
         }
 
