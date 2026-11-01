@@ -3,6 +3,7 @@ package fr.rob.game.entity
 import fr.rob.game.entity.guid.ObjectGuid
 import fr.rob.game.entity.movement.WorldObjectMovedEvent
 import fr.rob.game.entity.notifier.WorldObjectVisitorInterface
+import fr.rob.game.entity.scheduler.TaskScheduler
 import fr.rob.game.event.DomainEventCarrierInterface
 import fr.rob.game.event.DomainEventContainer
 import fr.rob.game.event.DomainEventInterface
@@ -34,7 +35,11 @@ open class WorldObject(
     private val components = mutableMapOf<KClass<*>, Any>()
     private val behaviors = BehaviorSet()
 
+    val scheduler = TaskScheduler()
+
     open fun onUpdate(deltaTime: Int) {
+        scheduler.update(deltaTime)
+
         traits.forEach { (_, trait) ->
             if (trait is UpdatableTraitInterface) {
                 trait.update(deltaTime)
@@ -86,6 +91,7 @@ open class WorldObject(
     fun scheduleRemoveFromInstance() {
         mapInstance.scheduleRemoveFromInstance(this)
         isInWorld = false
+        scheduler.cancelAll()
     }
 
     @Deprecated("Use ECS instead")

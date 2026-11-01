@@ -41,7 +41,7 @@ class InstanceUpdateService(
             instance.grid.removeWorldObject(worldObject)
         }
 
-        visibilityService.update(instance, deltaTime)
+        visibilityService.update(instance)
     }
 
     /**

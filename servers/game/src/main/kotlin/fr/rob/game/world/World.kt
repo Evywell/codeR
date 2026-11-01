@@ -2,7 +2,6 @@ package fr.rob.game.world
 
 import fr.rob.game.combat.ObjectSheetUpdatedListener
 import fr.rob.game.entity.movement.NotifyWorldObjectMovedListener
-import fr.rob.game.entity.notifier.Scheduler
 import fr.rob.game.entity.notifier.WorldObjectUpdatedNotifier
 import fr.rob.game.event.ListEventDispatcher
 import fr.rob.game.instance.InstanceManager
@@ -19,12 +18,11 @@ class World(
     private val worldTaskQueue: WorldTaskQueue,
     private val worldObjectUpdatedNotifier: WorldObjectUpdatedNotifier,
 ) {
-    private val updateState: WorldUpdateState = WorldUpdateState()
     private val eventDispatcher = ListEventDispatcher()
 
     init {
         eventDispatcher.attachListener(
-            NotifyWorldObjectMovedListener(Scheduler(), worldObjectUpdatedNotifier, updateState),
+            NotifyWorldObjectMovedListener(worldObjectUpdatedNotifier),
         )
         eventDispatcher.attachListener(ObjectSheetUpdatedListener())
         eventDispatcher.attachListener(NotifyAbilityStateUpdateListener())
@@ -32,9 +30,6 @@ class World(
     }
 
     fun update(deltaTime: Int) {
-        updateState.timeElapsedSinceLastUpdate = deltaTime
-        updateState.timeElapsedSinceStartup += deltaTime
-
         worldTaskQueue.dequeue()
         worldPacketQueue.dequeue()
         delayedUpdateQueue.dequeue(deltaTime)
