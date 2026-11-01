@@ -22,6 +22,21 @@ class UnitySplineMovementBrain(
     private val delayedUpdateQueue: DelayedUpdateQueue,
 ) : SplineMovementBrainInterface {
     override fun moveToDestination(source: WorldObject, destination: Position, stepHandler: (SplineMovement) -> Unit) {
+        // Sent first: if the physic server is not connected, nothing is registered and the fallback brain takes over
+        physicClientIntegration.send(
+            PhysicProto.Packet.newBuilder()
+                .setOpcode(MOVE_REQUEST_OPCODE)
+                .setBody(
+                    PhysicProto.MoveRequest.newBuilder()
+                        .setGuid(source.guid.getRawValue())
+                        .setOrigin(source.position.toPhysicPosition())
+                        .setDestination(destination.toPhysicPosition())
+                        .build()
+                        .toByteString(),
+                )
+                .build(),
+        )
+
         val splineMovement = SplineMovement()
 
         physicObjectInteraction.registerObjectInteractionCallback(source.guid, ObjectMoved::class) {
@@ -72,20 +87,6 @@ class UnitySplineMovementBrain(
                 )
             }
         }
-
-        physicClientIntegration.send(
-            PhysicProto.Packet.newBuilder()
-                .setOpcode(MOVE_REQUEST_OPCODE)
-                .setBody(
-                    PhysicProto.MoveRequest.newBuilder()
-                        .setGuid(source.guid.getRawValue())
-                        .setOrigin(source.position.toPhysicPosition())
-                        .setDestination(destination.toPhysicPosition())
-                        .build()
-                        .toByteString(),
-                )
-                .build(),
-        )
     }
 
     private fun Position.toPhysicPosition(): PhysicProto.Position =

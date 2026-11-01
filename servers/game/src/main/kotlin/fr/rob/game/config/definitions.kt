@@ -73,7 +73,6 @@ import fr.rob.game.physic.ObjectMovingWithDestinationHandler
 import fr.rob.game.physic.ObjectReachedDestinationHandler
 import fr.rob.game.physic.PhysicObjectInteraction
 import fr.rob.game.physic.PhysicOpcodeFunctionRegistry
-import fr.rob.game.physic.unity.UnityClientBuilder
 import fr.rob.game.physic.unity.UnityIntegration
 import fr.rob.game.network.opcode.CMSG_CHEAT_TELEPORT
 import fr.rob.game.network.opcode.CMSG_LOG_INTO_WORLD
@@ -175,9 +174,13 @@ val opcodeModule =
             )
         }
 
-        single { UnityClientBuilder(PhysicOpcodeFunctionRegistry(get(named("PHYSIC_FUNCTION_DEFINITIONS")))) }
-
-        single { UnityIntegration(get()) }
+        single {
+            UnityIntegration(
+                get(),
+                PhysicOpcodeFunctionRegistry(get(named("PHYSIC_FUNCTION_DEFINITIONS"))),
+                get<LoggerFactoryInterface>().create("physic"),
+            )
+        }
 
         single<SplineMovementBrainInterface> {
             val unityBrain = UnitySplineMovementBrain(get(), get(), get())
