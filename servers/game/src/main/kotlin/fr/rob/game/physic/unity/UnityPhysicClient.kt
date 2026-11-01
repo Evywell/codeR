@@ -7,28 +7,16 @@ import fr.rob.core.network.v2.session.SessionSocketInterface
 import fr.rob.core.opcode.v2.OpcodeHandler
 import fr.rob.game.physic.PhysicFunctionParameters
 import fr.rob.game.physic.PhysicOpcodeFunctionRegistry
-import java.util.concurrent.ConcurrentLinkedQueue
 
+/**
+ * Receiving side of the physic connection. Every method runs on the Netty event loop of the connection.
+ * Packets are sent through [UnityIntegration].
+ */
 class UnityPhysicClient(opcodeFunctionRegistry: PhysicOpcodeFunctionRegistry) : AbstractClient<Packet>() {
-    private val awaitingPacketsToBeFlushed = ConcurrentLinkedQueue<Any>()
     private val opcodeHandler = OpcodeHandler(opcodeFunctionRegistry)
 
     override fun onConnectionEstablished(session: Session) {
         this.session = session
-
-        while (awaitingPacketsToBeFlushed.isNotEmpty()) {
-            send(awaitingPacketsToBeFlushed.poll())
-        }
-    }
-
-    override fun send(message: Any) {
-        if (!isSessionInitialized()) {
-            awaitingPacketsToBeFlushed.add(message)
-
-            return
-        }
-
-        super.send(message)
     }
 
     override fun createSession(socket: SessionSocketInterface): Session = Session(socket)

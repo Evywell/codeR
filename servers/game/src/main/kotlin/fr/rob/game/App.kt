@@ -21,6 +21,7 @@ import fr.rob.game.player.session.DisconnectedSessionQueue
 import fr.rob.game.config.GameConfig
 import fr.rob.game.world.GameCoroutines
 import fr.rob.game.world.WorldTaskQueue
+import fr.rob.game.physic.unity.UnityIntegration
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
@@ -43,10 +44,18 @@ class App(private val config: GameConfig) : KoinComponent {
     private val worldObjectUpdatedNotifier: WorldObjectUpdatedNotifier by inject()
     private val disconnectedSessionQueue: DisconnectedSessionQueue by inject()
     private val disconnectedSessionProcessor: DisconnectedSessionProcessor by inject()
+    private val unityIntegration: UnityIntegration by inject()
 
     fun run() {
         createDatabasePools()
-        Runtime.getRuntime().addShutdownHook(Thread { gameCoroutines.close() })
+        Runtime.getRuntime().addShutdownHook(
+            Thread {
+                gameCoroutines.close()
+                unityIntegration.close()
+            },
+        )
+
+        unityIntegration.connect()
 
         Supervisor(
             NodeBuilder(),

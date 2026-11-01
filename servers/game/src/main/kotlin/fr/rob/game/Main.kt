@@ -5,6 +5,7 @@ import fr.rob.core.config.commons.configuration2.ConfigLoader
 import fr.rob.core.config.database.DatabaseConfig
 import fr.rob.game.config.Databases
 import fr.rob.game.config.GameConfig
+import fr.rob.game.config.PhysicConfig
 import fr.rob.game.config.ServerNodesConfig
 import fr.rob.game.config.databaseModule
 import fr.rob.game.config.globalModule
@@ -12,6 +13,7 @@ import fr.rob.game.config.mapModule
 import fr.rob.game.config.opcodeModule
 import fr.rob.game.config.CONFIG_FILE
 import org.koin.core.context.startKoin
+import org.koin.dsl.module
 import java.io.File
 import java.io.InputStream
 import java.nio.file.Paths
@@ -28,7 +30,7 @@ class Main {
             val config = fromGlobal(globalConfig)
 
             startKoin {
-                modules(globalModule, databaseModule, mapModule, opcodeModule)
+                modules(module { single { config.physic } }, globalModule, databaseModule, mapModule, opcodeModule)
             }
 
             val app = App(config)
@@ -60,6 +62,10 @@ class Main {
                 ),
             ),
             ServerNodesConfig(config),
+            PhysicConfig(
+                requireNotNull(config.getString("physic.host")) { "Missing config: physic.host" },
+                requireNotNull(config.getInteger("physic.port")) { "Missing config: physic.port" },
+            ),
         )
 
         private fun getConfigFile(configFileName: String?): File {
